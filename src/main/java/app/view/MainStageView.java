@@ -50,9 +50,6 @@ public class MainStageView extends BorderPane {
 
         addGraphComponents();
 
-        RandomLayout layout = new RandomLayout(graph);
-        layout.execute();
-
 
     }
 
