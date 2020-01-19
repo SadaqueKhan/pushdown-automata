@@ -4,7 +4,9 @@ package app.view;
 import app.controller.MainStageController;
 import app.listeners.MainStageListener;
 import app.model.Model;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 
 public class MainStageView extends BorderPane {
@@ -33,6 +35,15 @@ public class MainStageView extends BorderPane {
 
     private void setUpComponents() {
 
+        BorderPane borderPane = new BorderPane();
+
+        Button button1 = new Button("Button Number 1");
+        Button button2 = new Button("Button Number 2");
+
+        HBox hbox = new HBox(button1, button2);
+
+        this.setTop(hbox);
+
         this.graph = new Graph();
 
         this.setCenter(graph.getScrollPane());
@@ -41,6 +52,8 @@ public class MainStageView extends BorderPane {
 
         RandomLayout layout = new RandomLayout(graph);
         layout.execute();
+
+
     }
 
 
