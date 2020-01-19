@@ -1,5 +1,6 @@
 package app.view;
 
+import app.model.Cell;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 

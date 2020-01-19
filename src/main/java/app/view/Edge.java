@@ -1,5 +1,6 @@
 package app.view;
 
+import app.model.Cell;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 

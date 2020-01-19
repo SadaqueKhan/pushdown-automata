@@ -1,4 +1,7 @@
-package app.view;
+package app.model;
+
+import app.view.Edge;
+import app.view.State;
 
 import java.util.ArrayList;
 import java.util.HashMap;

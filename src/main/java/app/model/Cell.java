@@ -1,4 +1,4 @@
-package app.view;
+package app.model;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;

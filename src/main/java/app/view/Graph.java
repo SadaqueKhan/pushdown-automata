@@ -1,5 +1,7 @@
 package app.view;
 
+import app.model.Cell;
+import app.model.Model;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;

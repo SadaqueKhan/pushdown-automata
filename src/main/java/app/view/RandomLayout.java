@@ -1,5 +1,7 @@
 package app.view;
 
+import app.model.Cell;
+
 import java.util.List;
 import java.util.Random;
 

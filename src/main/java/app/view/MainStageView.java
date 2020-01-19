@@ -3,6 +3,7 @@ package app.view;
 
 import app.controller.MainStageController;
 import app.listeners.MainStageListener;
+import app.model.Model;
 import javafx.scene.layout.BorderPane;
 
 
