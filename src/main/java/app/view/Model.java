@@ -71,18 +71,9 @@ public class Model {
         return allEdges;
     }
 
-    public void addCell(String id, CellType type) {
-
-        switch (type) {
-
-            case STATE:
-                State state = new State(id);
-                addCell(state);
-                break;
-
-            default:
-                throw new UnsupportedOperationException("Unsupported type: " + type);
-        }
+    public void addCell(String id) {
+        State state = new State(id);
+        addCell(state);
     }
 
     private void addCell(Cell cell) {

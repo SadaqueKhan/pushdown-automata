@@ -16,7 +16,6 @@ public class State extends Cell {
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-
         setView(state);
 
     }

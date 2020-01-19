@@ -38,7 +38,7 @@ public class MainStageView extends BorderPane {
 
         addGraphComponents();
 
-        Layout layout = new RandomLayout(graph);
+        RandomLayout layout = new RandomLayout(graph);
         layout.execute();
     }
 
@@ -49,13 +49,13 @@ public class MainStageView extends BorderPane {
 
         graph.beginUpdate();
 
-        model.addCell("Cell A", CellType.STATE);
-        model.addCell("Cell B", CellType.STATE);
-        model.addCell("Cell C", CellType.STATE);
-        model.addCell("Cell D", CellType.STATE);
-        model.addCell("Cell E", CellType.STATE);
-        model.addCell("Cell F", CellType.STATE);
-        model.addCell("Cell G", CellType.STATE);
+        model.addCell("Cell A");
+        model.addCell("Cell B");
+        model.addCell("Cell C");
+        model.addCell("Cell D");
+        model.addCell("Cell E");
+        model.addCell("Cell F");
+        model.addCell("Cell G");
 
         model.addEdge("Cell A", "Cell B");
         model.addEdge("Cell A", "Cell C");

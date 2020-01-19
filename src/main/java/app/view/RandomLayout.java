@@ -3,7 +3,7 @@ package app.view;
 import java.util.List;
 import java.util.Random;
 
-public class RandomLayout extends Layout {
+public class RandomLayout {
 
     Graph graph;
 
