@@ -49,13 +49,13 @@ public class MainStageView extends BorderPane {
 
         graph.beginUpdate();
 
-        model.addCell("Cell A", CellType.RECTANGLE);
-        model.addCell("Cell B", CellType.RECTANGLE);
-        model.addCell("Cell C", CellType.RECTANGLE);
-        model.addCell("Cell D", CellType.TRIANGLE);
-        model.addCell("Cell E", CellType.TRIANGLE);
-        model.addCell("Cell F", CellType.RECTANGLE);
-        model.addCell("Cell G", CellType.RECTANGLE);
+        model.addCell("Cell A", CellType.STATE);
+        model.addCell("Cell B", CellType.STATE);
+        model.addCell("Cell C", CellType.STATE);
+        model.addCell("Cell D", CellType.STATE);
+        model.addCell("Cell E", CellType.STATE);
+        model.addCell("Cell F", CellType.STATE);
+        model.addCell("Cell G", CellType.STATE);
 
         model.addEdge("Cell A", "Cell B");
         model.addEdge("Cell A", "Cell C");
