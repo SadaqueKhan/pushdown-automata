@@ -1,6 +1,6 @@
 package app.view;
 
-import app.model.Cell;
+
 import app.model.Model;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -63,8 +63,8 @@ public class Graph {
         getCellLayer().getChildren().removeAll(model.getRemovedEdges());
 
         // enable dragging of cells
-        for (Cell cell : model.getAddedCells()) {
-            mouseGestures.makeDraggable(cell);
+        for (State state : model.getAddedCells()) {
+            mouseGestures.makeDraggable(state);
         }
 
         // every cell must have a parent, if it doesn't, then the graphParent is

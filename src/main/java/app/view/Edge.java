@@ -1,17 +1,16 @@
 package app.view;
 
-import app.model.Cell;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 
 public class Edge extends Group {
 
-    protected Cell source;
-    protected Cell target;
+    protected State source;
+    protected State target;
 
     Line line;
 
-    public Edge(Cell source, Cell target) {
+    public Edge(State source, State target) {
 
         this.source = source;
         this.target = target;
@@ -31,11 +30,11 @@ public class Edge extends Group {
 
     }
 
-    public Cell getSource() {
+    public State getSource() {
         return source;
     }
 
-    public Cell getTarget() {
+    public State getTarget() {
         return target;
     }
 

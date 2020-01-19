@@ -11,21 +11,21 @@ import java.util.Map;
 
 public class Model {
 
-    Cell graphParent;
+    State graphParent;
 
-    List<Cell> allCells;
-    List<Cell> addedCells;
-    List<Cell> removedCells;
+    List<State> allCells;
+    List<State> addedCells;
+    List<State> removedCells;
 
     List<Edge> allEdges;
     List<Edge> addedEdges;
     List<Edge> removedEdges;
 
-    Map<String, Cell> cellMap; // <id,cell>
+    Map<String, State> cellMap; // <id,cell>
 
     public Model() {
 
-        graphParent = new Cell("_ROOT_");
+        graphParent = new State("_ROOT_");
 
         // clear model, create lists
         clear();
@@ -50,15 +50,15 @@ public class Model {
         addedEdges.clear();
     }
 
-    public List<Cell> getAddedCells() {
+    public List<State> getAddedCells() {
         return addedCells;
     }
 
-    public List<Cell> getRemovedCells() {
+    public List<State> getRemovedCells() {
         return removedCells;
     }
 
-    public List<Cell> getAllCells() {
+    public List<State> getAllCells() {
         return allCells;
     }
 
@@ -79,18 +79,18 @@ public class Model {
         addCell(state);
     }
 
-    private void addCell(Cell cell) {
+    private void addCell(State state) {
 
-        addedCells.add(cell);
+        addedCells.add(state);
 
-        cellMap.put(cell.getCellId(), cell);
+        cellMap.put(state.getCellId(), state);
 
     }
 
     public void addEdge(String sourceId, String targetId) {
 
-        Cell sourceCell = cellMap.get(sourceId);
-        Cell targetCell = cellMap.get(targetId);
+        State sourceCell = cellMap.get(sourceId);
+        State targetCell = cellMap.get(targetId);
 
         Edge edge = new Edge(sourceCell, targetCell);
 
@@ -103,11 +103,11 @@ public class Model {
      *
      * @param cellList
      */
-    public void attachOrphansToGraphParent(List<Cell> cellList) {
+    public void attachOrphansToGraphParent(List<State> cellList) {
 
-        for (Cell cell : cellList) {
-            if (cell.getCellParents().size() == 0) {
-                graphParent.addCellChild(cell);
+        for (State state : cellList) {
+            if (state.getCellParents().size() == 0) {
+                graphParent.addCellChild(state);
             }
         }
 
@@ -118,10 +118,10 @@ public class Model {
      *
      * @param cellList
      */
-    public void disconnectFromGraphParent(List<Cell> cellList) {
+    public void disconnectFromGraphParent(List<State> cellList) {
 
-        for (Cell cell : cellList) {
-            graphParent.removeCellChild(cell);
+        for (State state : cellList) {
+            graphParent.removeCellChild(state);
         }
     }
 

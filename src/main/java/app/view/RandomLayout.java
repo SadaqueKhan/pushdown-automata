@@ -1,7 +1,5 @@
 package app.view;
 
-import app.model.Cell;
-
 import java.util.List;
 import java.util.Random;
 
@@ -19,14 +17,14 @@ public class RandomLayout {
 
     public void execute() {
 
-        List<Cell> cells = graph.getModel().getAllCells();
+        List<State> states = graph.getModel().getAllCells();
 
-        for (Cell cell : cells) {
+        for (State state : states) {
 
             double x = rnd.nextDouble() * 500;
             double y = rnd.nextDouble() * 500;
 
-            cell.relocate(x, y);
+            state.relocate(x, y);
 
         }
 
