@@ -20,6 +20,7 @@ public class Edge extends Group {
 
         line = new Line();
 
+
         line.startXProperty().bind(source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
         line.startYProperty().bind(source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));
 

@@ -35,8 +35,6 @@ public class MainStageView extends BorderPane {
 
     private void setUpComponents() {
 
-        BorderPane borderPane = new BorderPane();
-
         Button button1 = new Button("Button Number 1");
         Button button2 = new Button("Button Number 2");
 
