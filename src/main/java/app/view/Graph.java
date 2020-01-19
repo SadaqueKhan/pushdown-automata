@@ -12,7 +12,7 @@ public class Graph {
      * the top-most and left-most child to the top and left eg when you drag the
      * top child down, the entire scrollpane would move down
      */
-    CellLayer cellLayer;
+    Pane cellLayer;
     private Model model;
     private Group canvas;
     private ZoomableScrollPane scrollPane;
@@ -22,7 +22,7 @@ public class Graph {
         this.model = new Model();
 
         canvas = new Group();
-        cellLayer = new CellLayer();
+        cellLayer = new Pane();
 
         canvas.getChildren().add(cellLayer);
 

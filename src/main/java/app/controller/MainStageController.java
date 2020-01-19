@@ -20,6 +20,7 @@ public class MainStageController extends Application {
 
         this.mainStageView = new MainStageView(this);
 
+
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 500));
         primaryStage.show();
