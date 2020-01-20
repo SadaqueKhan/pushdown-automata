@@ -8,24 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+public class Diagram {
 
-public class Model {
+    private app.view.State graphParent;
 
-    private State graphParent;
-
-    private List<State> allStates;
-    private List<State> addedStates;
-    private List<State> removedStates;
+    private List<app.view.State> allStates;
+    private List<app.view.State> addedStates;
+    private List<app.view.State> removedStates;
 
     private List<Arrow> allArrows;
     private List<Arrow> addedArrows;
     private List<Arrow> removedArrows;
 
-    private Map<String, State> stateMap; // <id,cell>
+    private Map<String, app.view.State> stateMap; // <id,cell>
 
-    public Model() {
+    public Diagram() {
 
-        graphParent = new State("_ROOT_");
+        graphParent = new app.view.State("_ROOT_");
 
         // clear model, create lists
         clear();
@@ -52,11 +51,11 @@ public class Model {
 
 
     public void addCell(String id) {
-        State state = new State(id);
+        app.view.State state = new app.view.State(id);
         addCell(state);
     }
 
-    private void addCell(State state) {
+    private void addCell(app.view.State state) {
 
         addedStates.add(state);
 
@@ -66,8 +65,8 @@ public class Model {
 
     public void addEdge(String sourceId, String targetId) {
 
-        State sourceCell = stateMap.get(sourceId);
-        State targetCell = stateMap.get(targetId);
+        app.view.State sourceCell = stateMap.get(sourceId);
+        app.view.State targetCell = stateMap.get(targetId);
 
         Arrow edge = new Arrow(sourceCell, targetCell);
 
@@ -78,11 +77,12 @@ public class Model {
 
     /**
      * Attach all cells which don't have a parent to graphParent
+     *
      * @param stateList
      */
-    public void attachOrphansToGraphParent(List<State> stateList) {
+    public void attachOrphansToGraphParent(List<app.view.State> stateList) {
 
-        for (State state : stateList) {
+        for (app.view.State state : stateList) {
             if (state.getStateParents().size() == 0) {
                 graphParent.addStateChild(state);
             }
@@ -91,11 +91,12 @@ public class Model {
 
     /**
      * Remove the graphParent reference if it is set
+     *
      * @param stateList
      */
-    public void disconnectFromGraphParent(List<State> stateList) {
+    public void disconnectFromGraphParent(List<app.view.State> stateList) {
 
-        for (State state : stateList) {
+        for (app.view.State state : stateList) {
             graphParent.removeStateChild(state);
         }
     }
@@ -119,11 +120,11 @@ public class Model {
     }
 
 
-    public List<State> getAddedStates() {
+    public List<app.view.State> getAddedStates() {
         return addedStates;
     }
 
-    public List<State> getRemovedStates() {
+    public List<app.view.State> getRemovedStates() {
         return removedStates;
     }
 
@@ -142,4 +143,5 @@ public class Model {
     public List<Arrow> getAllArrows() {
         return allArrows;
     }
+
 }

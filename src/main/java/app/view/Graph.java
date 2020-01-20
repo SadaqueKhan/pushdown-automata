@@ -1,7 +1,6 @@
 package app.view;
 
 
-import app.model.Model;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
@@ -15,13 +14,13 @@ public class Graph {
      * top child down, the entire scrollpane would move down
      */
     private Pane cellLayer;
-    private Model model;
+    private Diagram diagram;
     private Group canvas;
     private ZoomableScrollPane scrollPane;
 
     public Graph() {
 
-        this.model = new Model();
+        this.diagram = new Diagram();
 
         canvas = new Group();
         cellLayer = new Pane();
@@ -35,6 +34,7 @@ public class Graph {
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
+
     }
 
     public ScrollPane getScrollPane() {
@@ -45,8 +45,8 @@ public class Graph {
         return this.cellLayer;
     }
 
-    public Model getModel() {
-        return model;
+    public Diagram getDiagram() {
+        return diagram;
     }
 
     public void beginUpdate() {
@@ -55,27 +55,27 @@ public class Graph {
     public void endUpdate() {
 
         // add components to graph pane
-        getCellLayer().getChildren().addAll(model.getAddedArrows());
-        getCellLayer().getChildren().addAll(model.getAddedStates());
+        getCellLayer().getChildren().addAll(diagram.getAddedArrows());
+        getCellLayer().getChildren().addAll(diagram.getAddedStates());
 
         // remove components from graph pane
-        getCellLayer().getChildren().removeAll(model.getRemovedStates());
-        getCellLayer().getChildren().removeAll(model.getRemovedArrows());
+        getCellLayer().getChildren().removeAll(diagram.getRemovedStates());
+        getCellLayer().getChildren().removeAll(diagram.getRemovedArrows());
 
         // enable dragging of cells
-        for (State state : model.getAddedStates()) {
+        for (State state : diagram.getAddedStates()) {
             mouseGestures.makeDraggable(state);
         }
 
         // every cell must have a parent, if it doesn't, then the graphParent is
         // the parent
-        getModel().attachOrphansToGraphParent(model.getAddedStates());
+        getDiagram().attachOrphansToGraphParent(diagram.getAddedStates());
 
         // remove reference to graphParent
-        getModel().disconnectFromGraphParent(model.getRemovedStates());
+        getDiagram().disconnectFromGraphParent(diagram.getRemovedStates());
 
         // merge added & removed cells with all cells
-        getModel().merge();
+        getDiagram().merge();
 
     }
 
