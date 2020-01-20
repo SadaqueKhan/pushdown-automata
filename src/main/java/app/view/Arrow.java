@@ -11,11 +11,7 @@ public class Arrow extends Group {
     private static final double arrowWidth = 7;
     private final Line line;
 
-    public Arrow() {
-        this(new Line(), new Line(), new Line());
-    }
-
-    private Arrow(Line line, Line arrow1, Line arrow2) {
+    public Arrow(Line line, Line arrow1, Line arrow2) {
         super(line, arrow1, arrow2);
         this.line = line;
         InvalidationListener updater = o -> {
