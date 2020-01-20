@@ -1,5 +1,6 @@
-package app.views;
+package app.listeners;
 
+import app.views.Diagram;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;

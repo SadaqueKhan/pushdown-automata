@@ -1,5 +1,6 @@
 package app.views;
 
+import app.listeners.MouseGestures;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
