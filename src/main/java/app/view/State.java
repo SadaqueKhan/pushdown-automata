@@ -7,7 +7,6 @@ import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class State extends Pane {
 
     private String stateId;
@@ -15,17 +14,12 @@ public class State extends Pane {
     private List<State> children = new ArrayList<>();
     private List<State> parents = new ArrayList<>();
 
-
     private Circle state;
 
-
     public State(String stateId) {
-
         this.stateId = stateId;
-
         //Set up the components to represent the state in the view
         setUpComponents();
-
     }
 
     private void setUpComponents() {
@@ -40,7 +34,7 @@ public class State extends Pane {
 
     }
 
-
+    // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(State state) {
         children.add(state);
     }
@@ -60,8 +54,6 @@ public class State extends Pane {
     public void removeStateChild(State state) {
         children.remove(state);
     }
-
-
 
     public String getStateId() {
         return stateId;

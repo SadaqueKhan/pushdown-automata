@@ -48,6 +48,7 @@ public class MainStageView extends BorderPane {
 
         addGraphComponents();
 
+
     }
 
 

@@ -50,6 +50,9 @@ public class Arrow extends Group {
         this.arrowTipSide2 = new Line();
         arrowTipSide2.setStrokeWidth(3);
 
+
+        //TODO Remove this listeners from the view.
+
         //Create listener to help update positioning of arrows tip on the shaft
         InvalidationListener updater = o -> {
             // Store start/end points of arrow shaft in a variable

@@ -8,13 +8,13 @@ import javafx.scene.layout.Pane;
 
 public class Graph {
 
-    MouseGestures mouseGestures;
+    private MouseGestures mouseGestures;
     /**
      * the pane wrapper is necessary or else the scrollpane would always align
      * the top-most and left-most child to the top and left eg when you drag the
      * top child down, the entire scrollpane would move down
      */
-    Pane cellLayer;
+    private Pane cellLayer;
     private Model model;
     private Group canvas;
     private ZoomableScrollPane scrollPane;
