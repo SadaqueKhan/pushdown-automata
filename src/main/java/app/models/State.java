@@ -1,4 +1,4 @@
-package app.model;
+package app.models;
 
 import java.util.HashSet;
 

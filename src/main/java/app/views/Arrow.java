@@ -1,4 +1,4 @@
-package app.view;
+package app.views;
 
 import javafx.beans.InvalidationListener;
 import javafx.scene.Group;

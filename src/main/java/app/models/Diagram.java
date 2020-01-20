@@ -1,7 +1,7 @@
-package app.model;
+package app.models;
 
-import app.view.Arrow;
-import app.view.State;
+import app.views.Arrow;
+import app.views.State;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,21 +10,21 @@ import java.util.Map;
 
 public class Diagram {
 
-    private app.view.State graphParent;
+    private app.views.State graphParent;
 
-    private List<app.view.State> allStates;
-    private List<app.view.State> addedStates;
-    private List<app.view.State> removedStates;
+    private List<app.views.State> allStates;
+    private List<app.views.State> addedStates;
+    private List<app.views.State> removedStates;
 
     private List<Arrow> allArrows;
     private List<Arrow> addedArrows;
     private List<Arrow> removedArrows;
 
-    private Map<String, app.view.State> stateMap; // <id,cell>
+    private Map<String, app.views.State> stateMap; // <id,cell>
 
     public Diagram() {
 
-        graphParent = new app.view.State("_ROOT_");
+        graphParent = new app.views.State("_ROOT_");
 
         // clear model, create lists
         clear();
@@ -51,11 +51,11 @@ public class Diagram {
 
 
     public void addCell(String id) {
-        app.view.State state = new app.view.State(id);
+        app.views.State state = new app.views.State(id);
         addCell(state);
     }
 
-    private void addCell(app.view.State state) {
+    private void addCell(app.views.State state) {
 
         addedStates.add(state);
 
@@ -65,8 +65,8 @@ public class Diagram {
 
     public void addEdge(String sourceId, String targetId) {
 
-        app.view.State sourceCell = stateMap.get(sourceId);
-        app.view.State targetCell = stateMap.get(targetId);
+        app.views.State sourceCell = stateMap.get(sourceId);
+        app.views.State targetCell = stateMap.get(targetId);
 
         Arrow edge = new Arrow(sourceCell, targetCell);
 
@@ -80,9 +80,9 @@ public class Diagram {
      *
      * @param stateList
      */
-    public void attachOrphansToGraphParent(List<app.view.State> stateList) {
+    public void attachOrphansToGraphParent(List<app.views.State> stateList) {
 
-        for (app.view.State state : stateList) {
+        for (app.views.State state : stateList) {
             if (state.getStateParents().size() == 0) {
                 graphParent.addStateChild(state);
             }
@@ -94,9 +94,9 @@ public class Diagram {
      *
      * @param stateList
      */
-    public void disconnectFromGraphParent(List<app.view.State> stateList) {
+    public void disconnectFromGraphParent(List<app.views.State> stateList) {
 
-        for (app.view.State state : stateList) {
+        for (app.views.State state : stateList) {
             graphParent.removeStateChild(state);
         }
     }
@@ -120,11 +120,11 @@ public class Diagram {
     }
 
 
-    public List<app.view.State> getAddedStates() {
+    public List<app.views.State> getAddedStates() {
         return addedStates;
     }
 
-    public List<app.view.State> getRemovedStates() {
+    public List<app.views.State> getRemovedStates() {
         return removedStates;
     }
 

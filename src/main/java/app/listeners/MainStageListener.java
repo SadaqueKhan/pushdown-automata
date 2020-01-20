@@ -1,7 +1,7 @@
 package app.listeners;
 
 
-import app.controller.MainStageController;
+import app.controllers.MainStageController;
 
 
 public class MainStageListener {

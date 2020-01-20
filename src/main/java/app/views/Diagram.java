@@ -1,4 +1,8 @@
-package app.view;
+package app.views;
+
+import javafx.scene.Group;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +24,93 @@ public class Diagram {
 
     private Map<String, State> stateMap; // <id,cell>
 
+
+    //newStuff
+    private MouseGestures mouseGestures;
+    /**
+     * the pane wrapper is necessary or else the scrollpane would always align
+     * the top-most and left-most child to the top and left eg when you drag the
+     * top child down, the entire scrollpane would move down
+     */
+    private Pane cellLayer;
+    private Group canvas;
+    private ZoomableScrollPane scrollPane;
+
+
     public Diagram() {
 
         graphParent = new State("_ROOT_");
 
         // clear model, create lists
         clear();
+
+        //newStuff
+        canvas = new Group();
+        cellLayer = new Pane();
+
+        canvas.getChildren().add(cellLayer);
+
+        mouseGestures = new MouseGestures(this);
+
+        scrollPane = new ZoomableScrollPane(canvas);
+
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+
+
+
     }
+
+
+    public double getScale() {
+        return this.scrollPane.getScaleValue();
+    }
+
+    public ScrollPane getScrollPane() {
+        return this.scrollPane;
+    }
+
+    public void beginUpdate() {
+    }
+
+    public void endUpdate() {
+
+        // add components to graph pane
+        cellLayer.getChildren().addAll(this.getAddedArrows());
+        cellLayer.getChildren().addAll(this.getAddedStates());
+
+        // remove components from graph pane
+        cellLayer.getChildren().removeAll(this.getRemovedStates());
+        cellLayer.getChildren().removeAll(this.getRemovedArrows());
+
+        // enable dragging of cells
+        for (State state : this.getAddedStates()) {
+            mouseGestures.makeDraggable(state);
+        }
+
+        // every cell must have a parent, if it doesn't, then the graphParent is
+        // the parent
+        this.attachOrphansToGraphParent(this.getAddedStates());
+
+        // remove reference to graphParent
+        this.disconnectFromGraphParent(this.getRemovedStates());
+
+        // merge added & removed cells with all cells
+        this.merge();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void clear() {
 

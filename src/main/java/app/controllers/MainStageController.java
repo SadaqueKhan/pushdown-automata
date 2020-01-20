@@ -1,6 +1,6 @@
-package app.controller;
+package app.controllers;
 
-import app.view.MainStageView;
+import app.views.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
