@@ -1,18 +1,17 @@
 package app.view;
 
+import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 
 public class Edge extends Group {
 
     protected State source;
     protected State target;
 
-    Line line;
+    private static final double arrowLength = 20;
+    private static final double arrowWidth = 7;
+    Line arrowShaft;
 
     public Edge(State source, State target) {
 
@@ -22,66 +21,87 @@ public class Edge extends Group {
         source.addCellChild(target);
         target.addCellParent(source);
 
-        line = new Line();
 
-        line.setStrokeWidth(3);
+        setUpComponents();
 
-
-        line.startXProperty().bind(source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
-        line.startYProperty().bind(source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));
-
-        line.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth() / 2.0));
-        line.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0));
-
-
-        Line arrow1 = new Line();
-        Line arrow2 = new Line();
-
-        Arrow arrow = new Arrow(line, arrow1, arrow2);
-
-        getChildren().add(arrow);
 
     }
 
-    private Path createPath() {
-        Path path = new Path();
+    private void setUpComponents() {
 
-        double startX = 50;
-        double startY = 20;
-        double endX = 70;
-        double endY = 70;
-        double arrowHeadSize = 20;
+        //Create arrow shaft using line object
+        arrowShaft = new Line();
+        arrowShaft.setStrokeWidth(3);
 
-        path.strokeProperty().bind(path.fillProperty());
-        path.setFill(Color.BLACK);
+        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
+        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
+        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));
 
-        System.out.println(path.getLayoutX());
+        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
+        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth() / 2.0));
+        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0));
 
-        //Line
-        path.getElements().add(new MoveTo(startX, startY));
-        path.getElements().add(new LineTo(endX, endY));
+        //Create first side of arrow tip using Line object
+        Line arrowTipSide1 = new Line();
+        arrowTipSide1.setStrokeWidth(3);
 
-        //ArrowHead
-        double angle = Math.atan2((endY - startY), (endX - startX)) - Math.PI / 2.0;
-        double sin = Math.sin(angle);
-        double cos = Math.cos(angle);
+        //Create second side of arrow tip using Line object
+        Line arrowTipSide2 = new Line();
+        arrowTipSide2.setStrokeWidth(3);
+
+        InvalidationListener updater = o -> {
+            // Store start/end points of arrow shaft in a variable
+            double sx = arrowShaft.getStartX();
+            double sy = arrowShaft.getStartY();
+            double ex = arrowShaft.getEndX();
+            double ey = arrowShaft.getEndY();
+
+            // Set start/end points of arrows tips (i.e. the end point of the arrow shaft)
+            arrowTipSide1.setEndX(ex);
+            arrowTipSide1.setEndY(ey);
+            arrowTipSide2.setEndX(ex);
+            arrowTipSide2.setEndY(ey);
 
 
-        //point1
-        double x1 = (-1.0 / 2.0 * cos + Math.sqrt(3) / 2 * sin) * arrowHeadSize + endX;
-        double y1 = (-1.0 / 2.0 * sin - Math.sqrt(3) / 2 * cos) * arrowHeadSize + endY;
-        //point2
-        double x2 = (1.0 / 2.0 * cos + Math.sqrt(3) / 2 * sin) * arrowHeadSize + endX;
-        double y2 = (1.0 / 2.0 * sin - Math.sqrt(3) / 2 * cos) * arrowHeadSize + endY;
+            if (ex == sx && ey == sy) {
+                // arrow parts of length 0
+                arrowTipSide1.setStartX(ex);
+                arrowTipSide1.setStartY(ey);
+                arrowTipSide2.setStartX(ex);
+                arrowTipSide2.setStartY(ey);
+            } else {
+                double factor = arrowLength / Math.hypot(sx - ex, sy - ey);
+                double factorO = arrowWidth / Math.hypot(sx - ex, sy - ey);
+
+                // part in direction of main line
+                double dx = (sx - ex) * factor;
+                double dy = (sy - ey) * factor;
+
+                // part ortogonal to main line
+                double ox = (sx - ex) * factorO;
+                double oy = (sy - ey) * factorO;
+
+                arrowTipSide1.setStartX(ex + dx - oy);
+                arrowTipSide1.setStartY(ey + dy + ox);
+                arrowTipSide2.setStartX(ex + dx + oy);
+                arrowTipSide2.setStartY(ey + dy - ox);
+            }
+        };
+
+        // add updater to properties
+        arrowShaft.startXProperty().addListener(updater);
+        arrowShaft.startYProperty().addListener(updater);
+        arrowShaft.endXProperty().addListener(updater);
+        arrowShaft.endYProperty().addListener(updater);
+        updater.invalidated(null);
 
 
-//        path.getElements().add(new LineTo(x1, y1));
-//        path.getElements().add(new LineTo(x2, y2));
-//        path.getElements().add(new LineTo(endX, endY));
-
-        return path;
+        getChildren().add(arrowShaft);
+        getChildren().add(arrowTipSide1);
+        getChildren().add(arrowTipSide2);
 
     }
+
 
     public State getSource() {
         return source;
