@@ -1,6 +1,5 @@
 package app.view;
 
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,19 +15,28 @@ public class State extends Pane {
     private List<State> children = new ArrayList<>();
     private List<State> parents = new ArrayList<>();
 
-    private Node view;
+
+    private Circle state;
+
 
     public State(String stateId) {
 
         this.stateId = stateId;
-        Circle state = new Circle();
+
+        //Set up the components to represent the state in the view
+        setUpComponents();
+
+    }
+
+    private void setUpComponents() {
+        this.state = new Circle();
         state.setCenterX(100);
         state.setCenterY(100);
         state.setRadius(40);
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-        setView(state);
+        getChildren().add(state);
 
     }
 
@@ -53,16 +61,7 @@ public class State extends Pane {
         children.remove(state);
     }
 
-    public Node getView() {
-        return this.view;
-    }
 
-    public void setView(Node view) {
-
-        this.view = view;
-        getChildren().add(view);
-
-    }
 
     public String getStateId() {
         return stateId;
