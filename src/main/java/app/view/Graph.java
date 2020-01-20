@@ -55,24 +55,24 @@ public class Graph {
     public void endUpdate() {
 
         // add components to graph pane
-        getCellLayer().getChildren().addAll(model.getAddedEdges());
-        getCellLayer().getChildren().addAll(model.getAddedCells());
+        getCellLayer().getChildren().addAll(model.getAddedArrows());
+        getCellLayer().getChildren().addAll(model.getAddedStates());
 
         // remove components from graph pane
-        getCellLayer().getChildren().removeAll(model.getRemovedCells());
-        getCellLayer().getChildren().removeAll(model.getRemovedEdges());
+        getCellLayer().getChildren().removeAll(model.getRemovedStates());
+        getCellLayer().getChildren().removeAll(model.getRemovedArrows());
 
         // enable dragging of cells
-        for (State state : model.getAddedCells()) {
+        for (State state : model.getAddedStates()) {
             mouseGestures.makeDraggable(state);
         }
 
         // every cell must have a parent, if it doesn't, then the graphParent is
         // the parent
-        getModel().attachOrphansToGraphParent(model.getAddedCells());
+        getModel().attachOrphansToGraphParent(model.getAddedStates());
 
         // remove reference to graphParent
-        getModel().disconnectFromGraphParent(model.getRemovedCells());
+        getModel().disconnectFromGraphParent(model.getRemovedStates());
 
         // merge added & removed cells with all cells
         getModel().merge();

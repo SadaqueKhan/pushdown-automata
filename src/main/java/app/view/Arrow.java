@@ -4,16 +4,19 @@ import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 
-public class Edge extends Group {
+public class Arrow extends Group {
 
-    protected State source;
-    protected State target;
+    private State source;
+    private State target;
 
-    private static final double arrowLength = 20;
-    private static final double arrowWidth = 7;
-    Line arrowShaft;
+    private Line arrowShaft;
+    private Line arrowTipSide1;
+    private Line arrowTipSide2;
 
-    public Edge(State source, State target) {
+    private double arrowTipLength = 20;
+    private double arrowTipWidth = 7;
+
+    public Arrow(State source, State target) {
 
         this.source = source;
         this.target = target;
@@ -21,16 +24,14 @@ public class Edge extends Group {
         source.addCellChild(target);
         target.addCellParent(source);
 
-
         setUpComponents();
-
 
     }
 
     private void setUpComponents() {
 
         //Create arrow shaft using line object
-        arrowShaft = new Line();
+        this.arrowShaft = new Line();
         arrowShaft.setStrokeWidth(3);
 
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
@@ -42,13 +43,14 @@ public class Edge extends Group {
         arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0));
 
         //Create first side of arrow tip using Line object
-        Line arrowTipSide1 = new Line();
+        this.arrowTipSide1 = new Line();
         arrowTipSide1.setStrokeWidth(3);
 
         //Create second side of arrow tip using Line object
-        Line arrowTipSide2 = new Line();
+        this.arrowTipSide2 = new Line();
         arrowTipSide2.setStrokeWidth(3);
 
+        //Create listener to help update positioning of arrows tip on the shaft
         InvalidationListener updater = o -> {
             // Store start/end points of arrow shaft in a variable
             double sx = arrowShaft.getStartX();
@@ -70,8 +72,8 @@ public class Edge extends Group {
                 arrowTipSide2.setStartX(ex);
                 arrowTipSide2.setStartY(ey);
             } else {
-                double factor = arrowLength / Math.hypot(sx - ex, sy - ey);
-                double factorO = arrowWidth / Math.hypot(sx - ex, sy - ey);
+                double factor = arrowTipLength / Math.hypot(sx - ex, sy - ey);
+                double factorO = arrowTipWidth / Math.hypot(sx - ex, sy - ey);
 
                 // part in direction of main line
                 double dx = (sx - ex) * factor;
@@ -88,7 +90,7 @@ public class Edge extends Group {
             }
         };
 
-        // add updater to properties
+        // add listener to arrow shafts
         arrowShaft.startXProperty().addListener(updater);
         arrowShaft.startYProperty().addListener(updater);
         arrowShaft.endXProperty().addListener(updater);
@@ -96,6 +98,7 @@ public class Edge extends Group {
         updater.invalidated(null);
 
 
+        // Add arrow shaft/arrowtips into a group to create an arrow
         getChildren().add(arrowShaft);
         getChildren().add(arrowTipSide1);
         getChildren().add(arrowTipSide2);

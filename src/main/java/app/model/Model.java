@@ -1,6 +1,6 @@
 package app.model;
 
-import app.view.Edge;
+import app.view.Arrow;
 import app.view.State;
 
 import java.util.ArrayList;
@@ -11,17 +11,17 @@ import java.util.Map;
 
 public class Model {
 
-    State graphParent;
+    private State graphParent;
 
-    List<State> allCells;
-    List<State> addedCells;
-    List<State> removedCells;
+    private List<State> allStates;
+    private List<State> addedStates;
+    private List<State> removedStates;
 
-    List<Edge> allEdges;
-    List<Edge> addedEdges;
-    List<Edge> removedEdges;
+    private List<Arrow> allArrows;
+    private List<Arrow> addedArrows;
+    private List<Arrow> removedArrows;
 
-    Map<String, State> cellMap; // <id,cell>
+    private Map<String, State> stateMap; // <id,cell>
 
     public Model() {
 
@@ -33,46 +33,23 @@ public class Model {
 
     public void clear() {
 
-        allCells = new ArrayList<>();
-        addedCells = new ArrayList<>();
-        removedCells = new ArrayList<>();
+        allStates = new ArrayList<>();
+        addedStates = new ArrayList<>();
+        removedStates = new ArrayList<>();
 
-        allEdges = new ArrayList<>();
-        addedEdges = new ArrayList<>();
-        removedEdges = new ArrayList<>();
+        allArrows = new ArrayList<>();
+        addedArrows = new ArrayList<>();
+        removedArrows = new ArrayList<>();
 
-        cellMap = new HashMap<>(); // <id,cell>
+        stateMap = new HashMap<>(); // <id,cell>
 
     }
 
     public void clearAddedLists() {
-        addedCells.clear();
-        addedEdges.clear();
+        addedStates.clear();
+        addedArrows.clear();
     }
 
-    public List<State> getAddedCells() {
-        return addedCells;
-    }
-
-    public List<State> getRemovedCells() {
-        return removedCells;
-    }
-
-    public List<State> getAllCells() {
-        return allCells;
-    }
-
-    public List<Edge> getAddedEdges() {
-        return addedEdges;
-    }
-
-    public List<Edge> getRemovedEdges() {
-        return removedEdges;
-    }
-
-    public List<Edge> getAllEdges() {
-        return allEdges;
-    }
 
     public void addCell(String id) {
         State state = new State(id);
@@ -81,46 +58,44 @@ public class Model {
 
     private void addCell(State state) {
 
-        addedCells.add(state);
+        addedStates.add(state);
 
-        cellMap.put(state.getCellId(), state);
+        stateMap.put(state.getCellId(), state);
 
     }
 
     public void addEdge(String sourceId, String targetId) {
 
-        State sourceCell = cellMap.get(sourceId);
-        State targetCell = cellMap.get(targetId);
+        State sourceCell = stateMap.get(sourceId);
+        State targetCell = stateMap.get(targetId);
 
-        Edge edge = new Edge(sourceCell, targetCell);
+        Arrow edge = new Arrow(sourceCell, targetCell);
 
-        addedEdges.add(edge);
+        addedArrows.add(edge);
 
     }
 
+
     /**
      * Attach all cells which don't have a parent to graphParent
-     *
-     * @param cellList
+     * @param stateList
      */
-    public void attachOrphansToGraphParent(List<State> cellList) {
+    public void attachOrphansToGraphParent(List<State> stateList) {
 
-        for (State state : cellList) {
+        for (State state : stateList) {
             if (state.getCellParents().size() == 0) {
                 graphParent.addCellChild(state);
             }
         }
-
     }
 
     /**
      * Remove the graphParent reference if it is set
-     *
-     * @param cellList
+     * @param stateList
      */
-    public void disconnectFromGraphParent(List<State> cellList) {
+    public void disconnectFromGraphParent(List<State> stateList) {
 
-        for (State state : cellList) {
+        for (State state : stateList) {
             graphParent.removeCellChild(state);
         }
     }
@@ -128,18 +103,43 @@ public class Model {
     public void merge() {
 
         // cells
-        allCells.addAll(addedCells);
-        allCells.removeAll(removedCells);
+        allStates.addAll(addedStates);
+        allStates.removeAll(removedStates);
 
-        addedCells.clear();
-        removedCells.clear();
+        addedStates.clear();
+        removedStates.clear();
 
         // edges
-        allEdges.addAll(addedEdges);
-        allEdges.removeAll(removedEdges);
+        allArrows.addAll(addedArrows);
+        allArrows.removeAll(removedArrows);
 
-        addedEdges.clear();
-        removedEdges.clear();
+        addedArrows.clear();
+        removedArrows.clear();
 
+    }
+
+
+    public List<State> getAddedStates() {
+        return addedStates;
+    }
+
+    public List<State> getRemovedStates() {
+        return removedStates;
+    }
+
+    public List<State> getAllStates() {
+        return allStates;
+    }
+
+    public List<Arrow> getAddedArrows() {
+        return addedArrows;
+    }
+
+    public List<Arrow> getRemovedArrows() {
+        return removedArrows;
+    }
+
+    public List<Arrow> getAllArrows() {
+        return allArrows;
     }
 }
