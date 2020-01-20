@@ -44,7 +44,13 @@ public class Diagram {
         // clear model, create lists
         clear();
 
-        //newStuff
+        setUpComponents();
+
+
+    }
+
+    private void setUpComponents() {
+        // <--- Graph Stuff -->
         canvas = new Group();
         cellLayer = new Pane();
 
@@ -57,23 +63,30 @@ public class Diagram {
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
+        // <--- End -->
 
 
-    }
+        // <--- MainStage --->
+        this.addCell("Cell A");
+        this.addCell("Cell B");
+        this.addCell("Cell C");
+        this.addCell("Cell D");
+        this.addCell("Cell E");
+        this.addCell("Cell F");
+        this.addCell("Cell G");
+
+        this.addEdge("Cell A", "Cell B");
+        this.addEdge("Cell A", "Cell C");
+        this.addEdge("Cell B", "Cell C");
+        this.addEdge("Cell C", "Cell D");
+        this.addEdge("Cell B", "Cell E");
+        this.addEdge("Cell D", "Cell F");
+        this.addEdge("Cell D", "Cell G");
+        // <--- End --->
 
 
-    public double getScale() {
-        return this.scrollPane.getScaleValue();
-    }
+        // <---- ENDUPDATE CODE -->
 
-    public ScrollPane getScrollPane() {
-        return this.scrollPane;
-    }
-
-    public void beginUpdate() {
-    }
-
-    public void endUpdate() {
 
         // add components to graph pane
         cellLayer.getChildren().addAll(this.getAddedArrows());
@@ -98,18 +111,19 @@ public class Diagram {
         // merge added & removed cells with all cells
         this.merge();
 
+        // <--- End -->
+
+
     }
 
 
+    public double getScale() {
+        return this.scrollPane.getScaleValue();
+    }
 
-
-
-
-
-
-
-
-
+    public ScrollPane getScrollPane() {
+        return this.scrollPane;
+    }
 
 
     public void clear() {
@@ -132,13 +146,9 @@ public class Diagram {
     }
 
 
-    public void addCell(String id) {
+    private void addCell(String id) {
+
         State state = new State(id);
-        addCell(state);
-    }
-
-    private void addCell(State state) {
-
         addedStates.add(state);
 
         stateMap.put(state.getStateId(), state);
@@ -159,6 +169,7 @@ public class Diagram {
 
     /**
      * Attach all cells which don't have a parent to graphParent
+     *
      * @param stateList
      */
     public void attachOrphansToGraphParent(List<State> stateList) {
@@ -172,6 +183,7 @@ public class Diagram {
 
     /**
      * Remove the graphParent reference if it is set
+     *
      * @param stateList
      */
     public void disconnectFromGraphParent(List<State> stateList) {

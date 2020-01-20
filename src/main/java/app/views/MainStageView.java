@@ -45,36 +45,11 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(diagram.getScrollPane());
 
-        addGraphComponents();
 
 
     }
 
 
-    private void addGraphComponents() {
-
-
-        diagram.beginUpdate();
-
-        diagram.addCell("Cell A");
-        diagram.addCell("Cell B");
-        diagram.addCell("Cell C");
-        diagram.addCell("Cell D");
-        diagram.addCell("Cell E");
-        diagram.addCell("Cell F");
-        diagram.addCell("Cell G");
-
-        diagram.addEdge("Cell A", "Cell B");
-        diagram.addEdge("Cell A", "Cell C");
-        diagram.addEdge("Cell B", "Cell C");
-        diagram.addEdge("Cell C", "Cell D");
-        diagram.addEdge("Cell B", "Cell E");
-        diagram.addEdge("Cell D", "Cell F");
-        diagram.addEdge("Cell D", "Cell G");
-
-        diagram.endUpdate();
-
-    }
 
 
     private void setUpLayout() {
