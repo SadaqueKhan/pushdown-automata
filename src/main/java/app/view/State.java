@@ -24,7 +24,7 @@ public class State extends Pane {
         Circle state = new Circle();
         state.setCenterX(100);
         state.setCenterY(100);
-        state.setRadius(50);
+        state.setRadius(40);
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 

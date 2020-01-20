@@ -25,6 +25,10 @@ public class Arrow extends Group {
             arrow2.setEndX(ex);
             arrow2.setEndY(ey);
 
+
+            arrow1.setStrokeWidth(3);
+            arrow2.setStrokeWidth(3);
+
             if (ex == sx && ey == sy) {
                 // arrow parts of length 0
                 arrow1.setStartX(ex);
