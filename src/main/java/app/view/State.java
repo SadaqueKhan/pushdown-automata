@@ -11,16 +11,16 @@ import java.util.List;
 
 public class State extends Pane {
 
-    String cellId;
+    private String stateId;
 
-    List<State> children = new ArrayList<>();
-    List<State> parents = new ArrayList<>();
+    private List<State> children = new ArrayList<>();
+    private List<State> parents = new ArrayList<>();
 
-    Node view;
+    private Node view;
 
-    public State(String cellId) {
+    public State(String stateId) {
 
-        this.cellId = cellId;
+        this.stateId = stateId;
         Circle state = new Circle();
         state.setCenterX(100);
         state.setCenterY(100);
@@ -33,23 +33,23 @@ public class State extends Pane {
     }
 
 
-    public void addCellChild(State state) {
+    public void addStateChild(State state) {
         children.add(state);
     }
 
-    public List<State> getCellChildren() {
+    public List<State> getStateChildren() {
         return children;
     }
 
-    public void addCellParent(State state) {
+    public void addStateParent(State state) {
         parents.add(state);
     }
 
-    public List<State> getCellParents() {
+    public List<State> getStateParents() {
         return parents;
     }
 
-    public void removeCellChild(State state) {
+    public void removeStateChild(State state) {
         children.remove(state);
     }
 
@@ -64,8 +64,8 @@ public class State extends Pane {
 
     }
 
-    public String getCellId() {
-        return cellId;
+    public String getStateId() {
+        return stateId;
     }
 }
 

@@ -21,8 +21,8 @@ public class Arrow extends Group {
         this.source = source;
         this.target = target;
 
-        source.addCellChild(target);
-        target.addCellParent(source);
+        source.addStateChild(target);
+        target.addStateParent(source);
 
         setUpComponents();
 

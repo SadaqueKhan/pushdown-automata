@@ -60,7 +60,7 @@ public class Model {
 
         addedStates.add(state);
 
-        stateMap.put(state.getCellId(), state);
+        stateMap.put(state.getStateId(), state);
 
     }
 
@@ -83,8 +83,8 @@ public class Model {
     public void attachOrphansToGraphParent(List<State> stateList) {
 
         for (State state : stateList) {
-            if (state.getCellParents().size() == 0) {
-                graphParent.addCellChild(state);
+            if (state.getStateParents().size() == 0) {
+                graphParent.addStateChild(state);
             }
         }
     }
@@ -96,7 +96,7 @@ public class Model {
     public void disconnectFromGraphParent(List<State> stateList) {
 
         for (State state : stateList) {
-            graphParent.removeCellChild(state);
+            graphParent.removeStateChild(state);
         }
     }
 
