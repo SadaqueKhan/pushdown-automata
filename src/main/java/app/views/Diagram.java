@@ -2,7 +2,6 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
-import app.listeners.MouseGestures;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
@@ -24,8 +23,6 @@ public class Diagram {
 
     private Map<String, StateView> stateMap;
 
-
-    private MouseGestures mouseGestures;
     /**
      * the pane wrapper is necessary or else the scrollpane would always align
      * the top-most and left-most child to the top and left eg when you drag the
@@ -56,9 +53,7 @@ public class Diagram {
         cellLayer = new Pane();
 
         canvas.getChildren().add(cellLayer);
-
-        mouseGestures = new MouseGestures(this);
-
+        
         scrollPane = new ZoomableScrollPane(canvas);
 
         scrollPane.setFitToWidth(true);
