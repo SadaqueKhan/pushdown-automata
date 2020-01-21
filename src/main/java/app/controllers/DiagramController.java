@@ -12,12 +12,9 @@ public class DiagramController {
 
     public DiagramController(MainStageView mainStageView) {
 
-
         this.mainStageView = mainStageView;
 
-
     }
-
 
     public void onMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 

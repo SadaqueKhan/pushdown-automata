@@ -103,12 +103,10 @@ public class Diagram {
 
 
     private void addStateView(String id) {
-
         StateView stateView = new StateView(id);
         addedStateViews.add(stateView);
 
         stateMap.put(stateView.getStateId(), stateView);
-
     }
 
     public void addEdge(String sourceId, String targetId) {

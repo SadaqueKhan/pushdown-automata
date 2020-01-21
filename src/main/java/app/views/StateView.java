@@ -20,17 +20,17 @@ public class StateView extends Pane {
     public StateView(String stateId) {
         this.stateId = stateId;
         //Set up the components to represent the state in the view
-        setUpComponents(stateId);
+        setUpComponents();
         setUpListeners();
     }
 
 
-    private void setUpComponents(String stateId) {
+    private void setUpComponents() {
 
         this.state = new Circle();
         state.setCenterX(100);
         state.setCenterY(100);
-        state.setRadius(30);
+        state.setRadius(40);
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
