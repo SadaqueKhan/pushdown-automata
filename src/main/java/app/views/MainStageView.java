@@ -1,6 +1,7 @@
 package app.views;
 
 
+import app.controllers.DiagramController;
 import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import javafx.scene.control.Button;
@@ -16,19 +17,13 @@ public class MainStageView extends BorderPane {
 
     private Diagram diagram;
 
-
     public MainStageView(MainStageController mainStageController) {
-
 
         this.mainStageController = mainStageController;
 
-
         setUpComponents();
-
         setUpLayout();
-
         setUpListeners();
-
     }
 
 
@@ -41,16 +36,20 @@ public class MainStageView extends BorderPane {
 
         this.setTop(hbox);
 
-        this.diagram = new Diagram();
+        //TODO Remove controller creation from here
+        DiagramController diagramController = new DiagramController(this);
+
+        //TODO Need to de-couple mainStageController.getDiagramController()
+        this.diagram = new Diagram(diagramController, this);
 
         this.setCenter(diagram.getScrollPane());
 
 
-
     }
 
-
-
+    public Diagram getDiagram() {
+        return diagram;
+    }
 
     private void setUpLayout() {
 

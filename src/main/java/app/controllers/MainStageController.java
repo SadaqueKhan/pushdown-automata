@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 public class MainStageController extends Application {
 
 
-    private MainStageView mainStageView;
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -18,13 +16,12 @@ public class MainStageController extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        this.mainStageView = new MainStageView(this);
+        MainStageView mainStageView = new MainStageView(this);
 
 
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 500));
         primaryStage.show();
-
 
     }
 

@@ -1,5 +1,7 @@
 package app.views;
 
+import app.controllers.DiagramController;
+import app.listeners.DiagramListener;
 import app.listeners.MouseGestures;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -13,20 +15,16 @@ import java.util.Map;
 
 public class Diagram {
 
-    private StateView graphParent;
+    //Reference to other stuff external files
+    private final DiagramController diagramController;
+    private final MainStageView mainStageView;
 
-    private List<StateView> allStateViews;
     private List<StateView> addedStateViews;
-    private List<StateView> removedStateViews;
-
-    private List<TransitionView> allTransitionViews;
     private List<TransitionView> addedTransitionViews;
-    private List<TransitionView> removedTransitionViews;
 
-    private Map<String, StateView> stateMap; // <id,cell>
+    private Map<String, StateView> stateMap;
 
 
-    //newStuff
     private MouseGestures mouseGestures;
     /**
      * the pane wrapper is necessary or else the scrollpane would always align
@@ -38,17 +36,17 @@ public class Diagram {
     private ZoomableScrollPane scrollPane;
 
 
-    public Diagram() {
+    public Diagram(DiagramController diagramController, MainStageView mainStageView) {
 
-        graphParent = new StateView("_ROOT_");
+        // Reference to the controller of this view
+        this.diagramController = diagramController;
 
-        // clear model, create lists
-        clear();
+        // Reference to the main application container
+        this.mainStageView = mainStageView;
+
 
         setUpComponents();
         setUpListeners();
-
-
     }
 
 
@@ -68,8 +66,13 @@ public class Diagram {
 
         // <--- End -->
 
+        addedStateViews = new ArrayList<>();
 
-        // <--- MainStage --->
+        addedTransitionViews = new ArrayList<>();
+
+        stateMap = new HashMap<>(); // <id,cell>
+
+
         this.addCell("Cell A");
         this.addCell("Cell B");
         this.addCell("Cell C");
@@ -79,116 +82,31 @@ public class Diagram {
         this.addCell("Cell G");
 
         this.addEdge("Cell A", "Cell B");
-        this.addEdge("Cell A", "Cell C");
+        this.addEdge("Cell B", "Cell A");
         this.addEdge("Cell B", "Cell C");
         this.addEdge("Cell C", "Cell D");
         this.addEdge("Cell B", "Cell E");
         this.addEdge("Cell D", "Cell F");
         this.addEdge("Cell D", "Cell G");
-        // <--- End --->
 
 
-        // add components to graph pane
         cellLayer.getChildren().addAll(this.getAddedStateViews());
         cellLayer.getChildren().addAll(this.getAddedTransitionViews());
 
-        for (StateView stateView : this.getAddedStateViews()) {
-            mouseGestures.makeDraggable(stateView);
-        }
-
-        for (StateView stateView : this.getAddedStateViews()) {
-
-            if (stateView.getStateParents().size() == 0) {
-                graphParent.addStateChild(stateView);
-            }
-
-        }
-
-        for (StateView stateView : this.getRemovedStateViews()) {
-            graphParent.removeStateChild(stateView);
-        }
-
-
-        // merge added & removed cells with all cells
-        this.merge();
-
-        // <--- End -->
-
-
     }
-
-    /**
-     * Attach all cells which don't have a parent to graphParent
-     *
-     * @param stateViewList
-     */
-    public void attachOrphansToGraphParent(List<StateView> stateViewList) {
-
-        for (StateView stateView : stateViewList) {
-            if (stateView.getStateParents().size() == 0) {
-                graphParent.addStateChild(stateView);
-            }
-        }
-    }
-
-    /**
-     * Remove the graphParent reference if it is set
-     *
-     * @param stateViewList
-     */
-    public void disconnectFromGraphParent(List<StateView> stateViewList) {
-
-        for (StateView stateView : stateViewList) {
-            graphParent.removeStateChild(stateView);
-        }
-    }
-
-
-
-
-
-
 
 
     private void setUpListeners() {
 
-        System.out.println("HELLOWORLD");
+        //Create listener for this view
+        DiagramListener diagramListener = new DiagramListener(diagramController);
+
         // enable dragging of cells
         for (StateView stateView : this.getAddedStateViews()) {
-            mouseGestures.makeDraggable(stateView);
-
+            stateView.setOnMousePressed(diagramListener);
+            stateView.setOnMouseDragged(diagramListener);
+            stateView.setOnMouseReleased(diagramListener);
         }
-
-
-    }
-
-
-    public double getScale() {
-        return this.scrollPane.getScaleValue();
-    }
-
-    public ScrollPane getScrollPane() {
-        return this.scrollPane;
-    }
-
-
-    public void clear() {
-
-        allStateViews = new ArrayList<>();
-        addedStateViews = new ArrayList<>();
-        removedStateViews = new ArrayList<>();
-
-        allTransitionViews = new ArrayList<>();
-        addedTransitionViews = new ArrayList<>();
-        removedTransitionViews = new ArrayList<>();
-
-        stateMap = new HashMap<>(); // <id,cell>
-
-    }
-
-    public void clearAddedLists() {
-        addedStateViews.clear();
-        addedTransitionViews.clear();
     }
 
 
@@ -213,22 +131,12 @@ public class Diagram {
     }
 
 
-    public void merge() {
+    public double getScale() {
+        return this.scrollPane.getScaleValue();
+    }
 
-        // cells
-        allStateViews.addAll(addedStateViews);
-        allStateViews.removeAll(removedStateViews);
-
-        addedStateViews.clear();
-        removedStateViews.clear();
-
-        // edges
-        allTransitionViews.addAll(addedTransitionViews);
-        allTransitionViews.removeAll(removedTransitionViews);
-
-        addedTransitionViews.clear();
-        removedTransitionViews.clear();
-
+    public ScrollPane getScrollPane() {
+        return this.scrollPane;
     }
 
 
@@ -236,23 +144,10 @@ public class Diagram {
         return addedStateViews;
     }
 
-    public List<StateView> getRemovedStateViews() {
-        return removedStateViews;
-    }
-
-    public List<StateView> getAllStateViews() {
-        return allStateViews;
-    }
 
     public List<TransitionView> getAddedTransitionViews() {
         return addedTransitionViews;
     }
 
-    public List<TransitionView> getRemovedTransitionViews() {
-        return removedTransitionViews;
-    }
 
-    public List<TransitionView> getAllTransitionViews() {
-        return allTransitionViews;
-    }
 }
