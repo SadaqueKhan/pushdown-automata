@@ -6,9 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 
 
@@ -18,8 +17,8 @@ public class Diagram {
     private final DiagramController diagramController;
     private final MainStageView mainStageView;
 
-    private List<StateView> addedStateViews;
-    private List<TransitionView> addedTransitionViews;
+    private HashSet<StateView> addedStateViews;
+    private HashSet<TransitionView> addedTransitionViews;
 
     private Map<String, StateView> stateMap;
 
@@ -53,7 +52,7 @@ public class Diagram {
         cellLayer = new Pane();
 
         canvas.getChildren().add(cellLayer);
-        
+
         scrollPane = new ZoomableScrollPane(canvas);
 
         scrollPane.setFitToWidth(true);
@@ -61,20 +60,20 @@ public class Diagram {
 
         // <--- End -->
 
-        addedStateViews = new ArrayList<>();
+        addedStateViews = new HashSet<>();
 
-        addedTransitionViews = new ArrayList<>();
+        addedTransitionViews = new HashSet<>();
 
         stateMap = new HashMap<>(); // <id,cell>
 
 
-        this.addCell("Cell A");
-        this.addCell("Cell B");
-        this.addCell("Cell C");
-        this.addCell("Cell D");
-        this.addCell("Cell E");
-        this.addCell("Cell F");
-        this.addCell("Cell G");
+        this.addStateView("Cell A");
+        this.addStateView("Cell B");
+        this.addStateView("Cell C");
+        this.addStateView("Cell D");
+        this.addStateView("Cell E");
+        this.addStateView("Cell F");
+        this.addStateView("Cell G");
 
         this.addEdge("Cell A", "Cell B");
         this.addEdge("Cell B", "Cell A");
@@ -105,7 +104,7 @@ public class Diagram {
     }
 
 
-    private void addCell(String id) {
+    private void addStateView(String id) {
 
         StateView stateView = new StateView(id);
         addedStateViews.add(stateView);
@@ -116,12 +115,15 @@ public class Diagram {
 
     public void addEdge(String sourceId, String targetId) {
 
+        //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceId);
         StateView targetCell = stateMap.get(targetId);
 
-        TransitionView edge = new TransitionView(sourceCell, targetCell);
+        //Create TransitionView
+        TransitionView transitionView = new TransitionView(sourceCell, targetCell);
 
-        addedTransitionViews.add(edge);
+        //Add TransitionView to List
+        addedTransitionViews.add(transitionView);
 
     }
 
@@ -135,12 +137,12 @@ public class Diagram {
     }
 
 
-    public List<StateView> getAddedStateViews() {
+    public HashSet<StateView> getAddedStateViews() {
         return addedStateViews;
     }
 
 
-    public List<TransitionView> getAddedTransitionViews() {
+    public HashSet<TransitionView> getAddedTransitionViews() {
         return addedTransitionViews;
     }
 
