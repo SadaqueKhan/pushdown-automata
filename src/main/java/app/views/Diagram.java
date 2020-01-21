@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-
 public class Diagram {
 
     //Reference to other stuff external files
@@ -88,7 +87,6 @@ public class Diagram {
         cellLayer.getChildren().addAll(this.getAddedTransitionViews());
 
     }
-
 
     private void setUpListeners() {
 
