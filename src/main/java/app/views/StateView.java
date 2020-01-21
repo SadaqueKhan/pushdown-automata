@@ -1,5 +1,6 @@
 package app.views;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,7 +21,9 @@ public class StateView extends Pane {
         this.stateId = stateId;
         //Set up the components to represent the state in the view
         setUpComponents(stateId);
+        setUpListeners();
     }
+
 
     private void setUpComponents(String stateId) {
 
@@ -31,9 +34,21 @@ public class StateView extends Pane {
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-        getChildren().add(state);
+        Node view = state;
+        getChildren().add(view);
 
     }
+
+    private void setUpListeners() {
+
+
+    }
+
+
+
+
+
+
 
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {

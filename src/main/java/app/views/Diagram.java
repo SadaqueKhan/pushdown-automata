@@ -88,28 +88,26 @@ public class Diagram {
         // <--- End --->
 
 
-        // <---- ENDUPDATE CODE -->
-
-
         // add components to graph pane
-        cellLayer.getChildren().addAll(this.getAddedTransitionViews());
         cellLayer.getChildren().addAll(this.getAddedStateViews());
+        cellLayer.getChildren().addAll(this.getAddedTransitionViews());
 
-        // remove components from graph pane
-        cellLayer.getChildren().removeAll(this.getRemovedStateViews());
-        cellLayer.getChildren().removeAll(this.getRemovedTransitionViews());
-
-        // enable dragging of cells
         for (StateView stateView : this.getAddedStateViews()) {
             mouseGestures.makeDraggable(stateView);
         }
 
-        // every cell must have a parent, if it doesn't, then the graphParent is
-        // the parent
-        this.attachOrphansToGraphParent(this.getAddedStateViews());
+        for (StateView stateView : this.getAddedStateViews()) {
 
-        // remove reference to graphParent
-        this.disconnectFromGraphParent(this.getRemovedStateViews());
+            if (stateView.getStateParents().size() == 0) {
+                graphParent.addStateChild(stateView);
+            }
+
+        }
+
+        for (StateView stateView : this.getRemovedStateViews()) {
+            graphParent.removeStateChild(stateView);
+        }
+
 
         // merge added & removed cells with all cells
         this.merge();
@@ -119,10 +117,30 @@ public class Diagram {
 
     }
 
+    /**
+     * Attach all cells which don't have a parent to graphParent
+     *
+     * @param stateViewList
+     */
+    public void attachOrphansToGraphParent(List<StateView> stateViewList) {
 
-    private void setUpListeners() {
+        for (StateView stateView : stateViewList) {
+            if (stateView.getStateParents().size() == 0) {
+                graphParent.addStateChild(stateView);
+            }
+        }
+    }
 
+    /**
+     * Remove the graphParent reference if it is set
+     *
+     * @param stateViewList
+     */
+    public void disconnectFromGraphParent(List<StateView> stateViewList) {
 
+        for (StateView stateView : stateViewList) {
+            graphParent.removeStateChild(stateView);
+        }
     }
 
 
@@ -130,6 +148,19 @@ public class Diagram {
 
 
 
+
+
+    private void setUpListeners() {
+
+        System.out.println("HELLOWORLD");
+        // enable dragging of cells
+        for (StateView stateView : this.getAddedStateViews()) {
+            mouseGestures.makeDraggable(stateView);
+
+        }
+
+
+    }
 
 
     public double getScale() {
@@ -181,32 +212,6 @@ public class Diagram {
 
     }
 
-
-    /**
-     * Attach all cells which don't have a parent to graphParent
-     *
-     * @param stateViewList
-     */
-    public void attachOrphansToGraphParent(List<StateView> stateViewList) {
-
-        for (StateView stateView : stateViewList) {
-            if (stateView.getStateParents().size() == 0) {
-                graphParent.addStateChild(stateView);
-            }
-        }
-    }
-
-    /**
-     * Remove the graphParent reference if it is set
-     *
-     * @param stateViewList
-     */
-    public void disconnectFromGraphParent(List<StateView> stateViewList) {
-
-        for (StateView stateView : stateViewList) {
-            graphParent.removeStateChild(stateView);
-        }
-    }
 
     public void merge() {
 
