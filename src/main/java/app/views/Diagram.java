@@ -46,9 +46,11 @@ public class Diagram {
         clear();
 
         setUpComponents();
+        setUpListeners();
 
 
     }
+
 
     private void setUpComponents() {
         // <--- Graph Stuff -->
@@ -116,6 +118,18 @@ public class Diagram {
 
 
     }
+
+
+    private void setUpListeners() {
+
+
+    }
+
+
+
+
+
+
 
 
     public double getScale() {
