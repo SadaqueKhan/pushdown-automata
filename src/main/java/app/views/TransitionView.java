@@ -4,10 +4,10 @@ import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
 
-public class Arrow extends Group {
+public class TransitionView extends Group {
 
-    private State source;
-    private State target;
+    private StateView source;
+    private StateView target;
 
     private Line arrowShaft;
     private Line arrowTipSide1;
@@ -16,7 +16,7 @@ public class Arrow extends Group {
     private double arrowTipLength = 20;
     private double arrowTipWidth = 7;
 
-    public Arrow(State source, State target) {
+    public TransitionView(StateView source, StateView target) {
 
         this.source = source;
         this.target = target;
@@ -109,11 +109,11 @@ public class Arrow extends Group {
     }
 
 
-    public State getSource() {
+    public StateView getSource() {
         return source;
     }
 
-    public State getTarget() {
+    public StateView getTarget() {
         return target;
     }
 

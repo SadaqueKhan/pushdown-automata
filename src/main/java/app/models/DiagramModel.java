@@ -1,22 +1,22 @@
 package app.models;
 
-public class Diagram {
+public class DiagramModel {
 
-//    private app.views.State graphParent;
+//    private app.views.StateListener graphParent;
 //
-//    private List<app.views.State> allStates;
-//    private List<app.views.State> addedStates;
-//    private List<app.views.State> removedStates;
+//    private List<app.views.StateListener> allStates;
+//    private List<app.views.StateListener> addedStates;
+//    private List<app.views.StateListener> removedStates;
 //
-//    private List<Arrow> allArrows;
-//    private List<Arrow> addedArrows;
-//    private List<Arrow> removedArrows;
+//    private List<TransitionView> allArrows;
+//    private List<TransitionView> addedArrows;
+//    private List<TransitionView> removedArrows;
 //
-//    private Map<String, app.views.State> stateMap; // <id,cell>
+//    private Map<String, app.views.StateListener> stateMap; // <id,cell>
 //
-//    public Diagram() {
+//    public DiagramModel() {
 //
-//        graphParent = new app.views.State("_ROOT_");
+//        graphParent = new app.views.StateListener("_ROOT_");
 //
 //        // clear model, create lists
 //        clear();
@@ -43,11 +43,11 @@ public class Diagram {
 //
 //
 //    public void addCell(String id) {
-//        app.views.State state = new app.views.State(id);
+//        app.views.StateListener state = new app.views.StateListener(id);
 //        addCell(state);
 //    }
 //
-//    private void addCell(app.views.State state) {
+//    private void addCell(app.views.StateListener state) {
 //
 //        addedStates.add(state);
 //
@@ -57,10 +57,10 @@ public class Diagram {
 //
 //    public void addEdge(String sourceId, String targetId) {
 //
-//        app.views.State sourceCell = stateMap.get(sourceId);
-//        app.views.State targetCell = stateMap.get(targetId);
+//        app.views.StateListener sourceCell = stateMap.get(sourceId);
+//        app.views.StateListener targetCell = stateMap.get(targetId);
 //
-//        Arrow edge = new Arrow(sourceCell, targetCell);
+//        TransitionView edge = new TransitionView(sourceCell, targetCell);
 //
 //        addedArrows.add(edge);
 //
@@ -72,9 +72,9 @@ public class Diagram {
 //     *
 //     * @param stateList
 //     */
-//    public void attachOrphansToGraphParent(List<app.views.State> stateList) {
+//    public void attachOrphansToGraphParent(List<app.views.StateListener> stateList) {
 //
-//        for (app.views.State state : stateList) {
+//        for (app.views.StateListener state : stateList) {
 //            if (state.getStateParents().size() == 0) {
 //                graphParent.addStateChild(state);
 //            }
@@ -86,9 +86,9 @@ public class Diagram {
 //     *
 //     * @param stateList
 //     */
-//    public void disconnectFromGraphParent(List<app.views.State> stateList) {
+//    public void disconnectFromGraphParent(List<app.views.StateListener> stateList) {
 //
-//        for (app.views.State state : stateList) {
+//        for (app.views.StateListener state : stateList) {
 //            graphParent.removeStateChild(state);
 //        }
 //    }
@@ -112,27 +112,27 @@ public class Diagram {
 //    }
 //
 //
-//    public List<app.views.State> getAddedStates() {
+//    public List<app.views.StateListener> getAddedStateViews() {
 //        return addedStates;
 //    }
 //
-//    public List<app.views.State> getRemovedStates() {
+//    public List<app.views.StateListener> getRemovedStateViews() {
 //        return removedStates;
 //    }
 //
-//    public List<State> getAllStates() {
+//    public List<StateListener> getAllStateViews() {
 //        return allStates;
 //    }
 //
-//    public List<Arrow> getAddedArrows() {
+//    public List<TransitionView> getAddedTransitionViews() {
 //        return addedArrows;
 //    }
 //
-//    public List<Arrow> getRemovedArrows() {
+//    public List<TransitionView> getRemovedTransitionViews() {
 //        return removedArrows;
 //    }
 //
-//    public List<Arrow> getAllArrows() {
+//    public List<TransitionView> getAllTransitionViews() {
 //        return allArrows;
 //    }
 

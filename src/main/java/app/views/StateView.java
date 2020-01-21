@@ -7,16 +7,16 @@ import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class State extends Pane {
+public class StateView extends Pane {
 
     private String stateId;
 
-    private List<State> children = new ArrayList<>();
-    private List<State> parents = new ArrayList<>();
+    private List<StateView> children = new ArrayList<>();
+    private List<StateView> parents = new ArrayList<>();
 
     private Circle state;
 
-    public State(String stateId) {
+    public StateView(String stateId) {
         this.stateId = stateId;
         //Set up the components to represent the state in the view
         setUpComponents(stateId);
@@ -36,24 +36,24 @@ public class State extends Pane {
     }
 
     // TODO Remove these getters/setters from the view and break it down into MVC
-    public void addStateChild(State state) {
-        children.add(state);
+    public void addStateChild(StateView stateView) {
+        children.add(stateView);
     }
 
-    public List<State> getStateChildren() {
+    public List<StateView> getStateChildren() {
         return children;
     }
 
-    public void addStateParent(State state) {
-        parents.add(state);
+    public void addStateParent(StateView stateView) {
+        parents.add(stateView);
     }
 
-    public List<State> getStateParents() {
+    public List<StateView> getStateParents() {
         return parents;
     }
 
-    public void removeStateChild(State state) {
-        children.remove(state);
+    public void removeStateChild(StateView stateView) {
+        children.remove(stateView);
     }
 
     public String getStateId() {

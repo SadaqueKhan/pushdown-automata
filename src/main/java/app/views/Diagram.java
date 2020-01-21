@@ -13,17 +13,17 @@ import java.util.Map;
 
 public class Diagram {
 
-    private State graphParent;
+    private StateView graphParent;
 
-    private List<State> allStates;
-    private List<State> addedStates;
-    private List<State> removedStates;
+    private List<StateView> allStateViews;
+    private List<StateView> addedStateViews;
+    private List<StateView> removedStateViews;
 
-    private List<Arrow> allArrows;
-    private List<Arrow> addedArrows;
-    private List<Arrow> removedArrows;
+    private List<TransitionView> allTransitionViews;
+    private List<TransitionView> addedTransitionViews;
+    private List<TransitionView> removedTransitionViews;
 
-    private Map<String, State> stateMap; // <id,cell>
+    private Map<String, StateView> stateMap; // <id,cell>
 
 
     //newStuff
@@ -40,7 +40,7 @@ public class Diagram {
 
     public Diagram() {
 
-        graphParent = new State("_ROOT_");
+        graphParent = new StateView("_ROOT_");
 
         // clear model, create lists
         clear();
@@ -92,24 +92,24 @@ public class Diagram {
 
 
         // add components to graph pane
-        cellLayer.getChildren().addAll(this.getAddedArrows());
-        cellLayer.getChildren().addAll(this.getAddedStates());
+        cellLayer.getChildren().addAll(this.getAddedTransitionViews());
+        cellLayer.getChildren().addAll(this.getAddedStateViews());
 
         // remove components from graph pane
-        cellLayer.getChildren().removeAll(this.getRemovedStates());
-        cellLayer.getChildren().removeAll(this.getRemovedArrows());
+        cellLayer.getChildren().removeAll(this.getRemovedStateViews());
+        cellLayer.getChildren().removeAll(this.getRemovedTransitionViews());
 
         // enable dragging of cells
-        for (State state : this.getAddedStates()) {
-            mouseGestures.makeDraggable(state);
+        for (StateView stateView : this.getAddedStateViews()) {
+            mouseGestures.makeDraggable(stateView);
         }
 
         // every cell must have a parent, if it doesn't, then the graphParent is
         // the parent
-        this.attachOrphansToGraphParent(this.getAddedStates());
+        this.attachOrphansToGraphParent(this.getAddedStateViews());
 
         // remove reference to graphParent
-        this.disconnectFromGraphParent(this.getRemovedStates());
+        this.disconnectFromGraphParent(this.getRemovedStateViews());
 
         // merge added & removed cells with all cells
         this.merge();
@@ -143,41 +143,41 @@ public class Diagram {
 
     public void clear() {
 
-        allStates = new ArrayList<>();
-        addedStates = new ArrayList<>();
-        removedStates = new ArrayList<>();
+        allStateViews = new ArrayList<>();
+        addedStateViews = new ArrayList<>();
+        removedStateViews = new ArrayList<>();
 
-        allArrows = new ArrayList<>();
-        addedArrows = new ArrayList<>();
-        removedArrows = new ArrayList<>();
+        allTransitionViews = new ArrayList<>();
+        addedTransitionViews = new ArrayList<>();
+        removedTransitionViews = new ArrayList<>();
 
         stateMap = new HashMap<>(); // <id,cell>
 
     }
 
     public void clearAddedLists() {
-        addedStates.clear();
-        addedArrows.clear();
+        addedStateViews.clear();
+        addedTransitionViews.clear();
     }
 
 
     private void addCell(String id) {
 
-        State state = new State(id);
-        addedStates.add(state);
+        StateView stateView = new StateView(id);
+        addedStateViews.add(stateView);
 
-        stateMap.put(state.getStateId(), state);
+        stateMap.put(stateView.getStateId(), stateView);
 
     }
 
     public void addEdge(String sourceId, String targetId) {
 
-        State sourceCell = stateMap.get(sourceId);
-        State targetCell = stateMap.get(targetId);
+        StateView sourceCell = stateMap.get(sourceId);
+        StateView targetCell = stateMap.get(targetId);
 
-        Arrow edge = new Arrow(sourceCell, targetCell);
+        TransitionView edge = new TransitionView(sourceCell, targetCell);
 
-        addedArrows.add(edge);
+        addedTransitionViews.add(edge);
 
     }
 
@@ -185,13 +185,13 @@ public class Diagram {
     /**
      * Attach all cells which don't have a parent to graphParent
      *
-     * @param stateList
+     * @param stateViewList
      */
-    public void attachOrphansToGraphParent(List<State> stateList) {
+    public void attachOrphansToGraphParent(List<StateView> stateViewList) {
 
-        for (State state : stateList) {
-            if (state.getStateParents().size() == 0) {
-                graphParent.addStateChild(state);
+        for (StateView stateView : stateViewList) {
+            if (stateView.getStateParents().size() == 0) {
+                graphParent.addStateChild(stateView);
             }
         }
     }
@@ -199,55 +199,55 @@ public class Diagram {
     /**
      * Remove the graphParent reference if it is set
      *
-     * @param stateList
+     * @param stateViewList
      */
-    public void disconnectFromGraphParent(List<State> stateList) {
+    public void disconnectFromGraphParent(List<StateView> stateViewList) {
 
-        for (State state : stateList) {
-            graphParent.removeStateChild(state);
+        for (StateView stateView : stateViewList) {
+            graphParent.removeStateChild(stateView);
         }
     }
 
     public void merge() {
 
         // cells
-        allStates.addAll(addedStates);
-        allStates.removeAll(removedStates);
+        allStateViews.addAll(addedStateViews);
+        allStateViews.removeAll(removedStateViews);
 
-        addedStates.clear();
-        removedStates.clear();
+        addedStateViews.clear();
+        removedStateViews.clear();
 
         // edges
-        allArrows.addAll(addedArrows);
-        allArrows.removeAll(removedArrows);
+        allTransitionViews.addAll(addedTransitionViews);
+        allTransitionViews.removeAll(removedTransitionViews);
 
-        addedArrows.clear();
-        removedArrows.clear();
+        addedTransitionViews.clear();
+        removedTransitionViews.clear();
 
     }
 
 
-    public List<State> getAddedStates() {
-        return addedStates;
+    public List<StateView> getAddedStateViews() {
+        return addedStateViews;
     }
 
-    public List<State> getRemovedStates() {
-        return removedStates;
+    public List<StateView> getRemovedStateViews() {
+        return removedStateViews;
     }
 
-    public List<State> getAllStates() {
-        return allStates;
+    public List<StateView> getAllStateViews() {
+        return allStateViews;
     }
 
-    public List<Arrow> getAddedArrows() {
-        return addedArrows;
+    public List<TransitionView> getAddedTransitionViews() {
+        return addedTransitionViews;
     }
 
-    public List<Arrow> getRemovedArrows() {
-        return removedArrows;
+    public List<TransitionView> getRemovedTransitionViews() {
+        return removedTransitionViews;
     }
 
-    public List<Arrow> getAllArrows() {
-        return allArrows;
+    public List<TransitionView> getAllTransitionViews() {
+        return allTransitionViews;
     }
 }
