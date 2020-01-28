@@ -15,9 +15,9 @@ public class DiagramListener implements EventHandler<javafx.scene.input.MouseEve
     }
 
 
+    //Handle click event on the diagram
     @Override
     public void handle(javafx.scene.input.MouseEvent event) {
-
 
         //TODO Make a more refined guess of the event type using the state i.e. give state an id
         String eventType = event.getEventType().toString();

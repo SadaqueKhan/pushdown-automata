@@ -69,22 +69,15 @@ public class Diagram {
         this.addStateView("Cell A");
         this.addStateView("Cell B");
         this.addStateView("Cell C");
-        this.addStateView("Cell D");
-        this.addStateView("Cell E");
-        this.addStateView("Cell F");
-        this.addStateView("Cell G");
+
 
         this.addEdge("Cell A", "Cell B");
-        this.addEdge("Cell B", "Cell A");
         this.addEdge("Cell B", "Cell C");
-        this.addEdge("Cell C", "Cell D");
-        this.addEdge("Cell B", "Cell E");
-        this.addEdge("Cell D", "Cell F");
-        this.addEdge("Cell D", "Cell G");
 
 
-        cellLayer.getChildren().addAll(this.getAddedStateViews());
         cellLayer.getChildren().addAll(this.getAddedTransitionViews());
+        cellLayer.getChildren().addAll(this.getAddedStateViews());
+
 
     }
 
@@ -97,7 +90,6 @@ public class Diagram {
         for (StateView stateView : this.getAddedStateViews()) {
             stateView.setOnMousePressed(diagramListener);
             stateView.setOnMouseDragged(diagramListener);
-            stateView.setOnMouseReleased(diagramListener);
         }
     }
 

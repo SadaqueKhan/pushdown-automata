@@ -29,12 +29,14 @@ public class MainStageView extends BorderPane {
 
     private void setUpComponents() {
 
-        Button button1 = new Button("Button Number 1");
-        Button button2 = new Button("Button Number 2");
+        Button button1 = new Button("Create State");
+        Button button2 = new Button("Create Transitions");
+        Button button3 = new Button("Transition Table");
+        Button button4 = new Button("Simulate");
 
-        HBox hbox = new HBox(button1, button2);
+        HBox topBar = new HBox(button1, button2, button3, button4);
 
-        this.setTop(hbox);
+        this.setTop(topBar);
 
         //TODO Remove controller creation from here
         DiagramController diagramController = new DiagramController(this);
@@ -44,6 +46,13 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(diagram.getScrollPane());
 
+
+        Button save = new Button("Save");
+        Button load = new Button("Load");
+
+        HBox bottomBar = new HBox(save, load);
+
+        this.setBottom(bottomBar);
 
     }
 

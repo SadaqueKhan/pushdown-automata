@@ -1,6 +1,7 @@
 package app.views;
 
-import javafx.scene.Node;
+//Complete
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -34,8 +35,7 @@ public class StateView extends Pane {
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-        Node view = state;
-        getChildren().add(view);
+        getChildren().add(state);
 
     }
 

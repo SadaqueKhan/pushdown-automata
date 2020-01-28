@@ -1,3 +1,5 @@
+//Complete
+
 package app.views;
 
 import javafx.beans.InvalidationListener;
@@ -34,13 +36,23 @@ public class TransitionView extends Group {
         this.arrowShaft = new Line();
         arrowShaft.setStrokeWidth(3);
 
+
+        double x = 140;
+        double y = 100;
+
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
-        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
-        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));
+        arrowShaft.startXProperty().bind(source.layoutXProperty().add(x));
+        arrowShaft.startYProperty().bind(source.layoutYProperty().add(y));
+
+        System.out.println("Start point:" + "x = " + x);
+        System.out.println("Start point:" + "y = " + y);
 
         //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
         arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth() / 2.0));
         arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0));
+
+        System.out.println("End point:" + "x = " + target.getBoundsInParent().getWidth() / 2.0);
+        System.out.println("End point:" + "y = " + target.getBoundsInParent().getHeight() / 2.0);
 
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();
