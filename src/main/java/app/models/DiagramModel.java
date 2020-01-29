@@ -112,7 +112,7 @@ public class DiagramModel {
 //    }
 //
 //
-//    public List<app.views.StateListener> getAddedStateViews() {
+//    public List<app.views.StateListener> getStateViewSet() {
 //        return addedStates;
 //    }
 //
@@ -124,7 +124,7 @@ public class DiagramModel {
 //        return allStates;
 //    }
 //
-//    public List<TransitionView> getAddedTransitionViews() {
+//    public List<TransitionView> getTransitionViewSet() {
 //        return addedArrows;
 //    }
 //

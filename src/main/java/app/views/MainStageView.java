@@ -2,7 +2,6 @@ package app.views;
 
 
 import app.controllers.MainStageController;
-import app.controllers.StateController;
 import app.listeners.MainStageListener;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -13,7 +12,6 @@ public class MainStageView extends BorderPane {
 
 
     private final MainStageController mainStageController;
-
 
     private Diagram diagram;
 
@@ -38,11 +36,9 @@ public class MainStageView extends BorderPane {
 
         this.setTop(topBar);
 
-        //TODO Remove controller creation from here
-        StateController stateController = new StateController(this);
 
         //TODO Need to de-couple mainStageController.getDiagramController()
-        this.diagram = new Diagram(stateController, this);
+        this.diagram = new Diagram(this);
 
         this.setCenter(diagram);
 

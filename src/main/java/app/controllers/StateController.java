@@ -2,6 +2,11 @@ package app.controllers;
 
 import app.views.MainStageView;
 import app.views.StateView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Side;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 
 public class StateController {
 
@@ -42,4 +47,19 @@ public class StateController {
     }
 
 
+    public void createPopup(StateView stateView) {
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                mainStageView.getDiagram().getChildren().remove(stateView);
+            }
+        });
+        contextMenu.getItems().add(deleteItem);
+
+        contextMenu.show(stateView, Side.RIGHT, 5, 5);
+
+
+    }
 }
