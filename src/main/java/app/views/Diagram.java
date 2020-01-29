@@ -1,6 +1,7 @@
 package app.views;
 
 import app.controllers.StateController;
+import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 
@@ -65,31 +66,28 @@ public class Diagram extends Pane {
     private void setUpListeners() {
 
         // Need to separate this out
-        this.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                double X = e.getX(); // remove pane's coordinate system here
-                double Y = e.getY(); // remove pane's coordinate system here
+        this.setOnMousePressed(e -> {
 
-                this.addStateView(X, Y);
+
+            if (e.getButton() == MouseButton.PRIMARY) {
+
+                Node picked = e.getPickResult().getIntersectedNode();
+
+                //Check if mouse is pressing on state node
+                if (picked instanceof StateView) {
+                    //No nothing
+                } else {
+                    double X = e.getX(); // remove pane's coordinate system here
+                    double Y = e.getY(); // remove pane's coordinate system here
+
+                    this.addStateView(X, Y);
 //                this.addStateView(X, Y);
 //                this.addEdge("Q0", "Q1");
-//
+                }
+
             }
 
-//            } else if (e.getButton() == MouseButton.SECONDARY) {
-//                // check if cicle was clicked and remove it if this is the case
-//                Node picked = e.getPickResult().getIntersectedNode();
-//
-//
-//
-//
-//
-//
-//                System.out.println(picked instanceof Circle);
-//                if (picked instanceof Circle) {
-//                    this.getChildren().remove(picked);
-//                }
-//            }
+
         });
 
     }

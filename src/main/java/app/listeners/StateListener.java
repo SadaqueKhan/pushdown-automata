@@ -33,22 +33,22 @@ public class StateListener implements EventHandler<javafx.scene.input.MouseEvent
         double yPositionOfMouse = event.getScreenY();
 
 
+
         if (eventType.equals("MOUSE_PRESSED")) {
             stateController.onMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
-            System.out.println("MOUSE_PRESSED");
+
+            System.out.println("Triggered");
+            // Popup dialog
+            if (event.isPopupTrigger()) {
+                stateController.createPopup(stateView);
+
+            }
         }
 
-        if (event.isPopupTrigger()) {
-            stateController.createPopup(stateView);
-        }
-
-//        if(event.isPopupTrigger()){
-//
-//        }
 
         if (eventType.equals("MOUSE_DRAGGED")) {
             stateController.onMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
-            System.out.println("MOUSE_DRAGGED");
+
         }
 
 
