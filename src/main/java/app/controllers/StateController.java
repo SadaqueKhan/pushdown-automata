@@ -3,14 +3,14 @@ package app.controllers;
 import app.views.MainStageView;
 import app.views.StateView;
 
-public class DiagramController {
+public class StateController {
 
     private final MainStageView mainStageView;
 
     private double dragContextX = 0.0;
     private double dragContextY = 0.0;
 
-    public DiagramController(MainStageView mainStageView) {
+    public StateController(MainStageView mainStageView) {
 
         this.mainStageView = mainStageView;
 

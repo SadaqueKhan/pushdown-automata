@@ -2,21 +2,21 @@ package app.models;
 
 public class DiagramModel {
 
-//    private app.views.DiagramListener graphParent;
+//    private app.views.StateListener graphParent;
 //
-//    private List<app.views.DiagramListener> allStates;
-//    private List<app.views.DiagramListener> addedStates;
-//    private List<app.views.DiagramListener> removedStates;
+//    private List<app.views.StateListener> allStates;
+//    private List<app.views.StateListener> addedStates;
+//    private List<app.views.StateListener> removedStates;
 //
 //    private List<TransitionView> allArrows;
 //    private List<TransitionView> addedArrows;
 //    private List<TransitionView> removedArrows;
 //
-//    private Map<String, app.views.DiagramListener> stateMap; // <id,cell>
+//    private Map<String, app.views.StateListener> stateMap; // <id,cell>
 //
 //    public DiagramModel() {
 //
-//        graphParent = new app.views.DiagramListener("_ROOT_");
+//        graphParent = new app.views.StateListener("_ROOT_");
 //
 //        // clear model, create lists
 //        clear();
@@ -43,11 +43,11 @@ public class DiagramModel {
 //
 //
 //    public void addCell(String id) {
-//        app.views.DiagramListener state = new app.views.DiagramListener(id);
+//        app.views.StateListener state = new app.views.StateListener(id);
 //        addCell(state);
 //    }
 //
-//    private void addCell(app.views.DiagramListener state) {
+//    private void addCell(app.views.StateListener state) {
 //
 //        addedStates.add(state);
 //
@@ -57,8 +57,8 @@ public class DiagramModel {
 //
 //    public void addEdge(String sourceId, String targetId) {
 //
-//        app.views.DiagramListener sourceCell = stateMap.get(sourceId);
-//        app.views.DiagramListener targetCell = stateMap.get(targetId);
+//        app.views.StateListener sourceCell = stateMap.get(sourceId);
+//        app.views.StateListener targetCell = stateMap.get(targetId);
 //
 //        TransitionView edge = new TransitionView(sourceCell, targetCell);
 //
@@ -72,9 +72,9 @@ public class DiagramModel {
 //     *
 //     * @param stateList
 //     */
-//    public void attachOrphansToGraphParent(List<app.views.DiagramListener> stateList) {
+//    public void attachOrphansToGraphParent(List<app.views.StateListener> stateList) {
 //
-//        for (app.views.DiagramListener state : stateList) {
+//        for (app.views.StateListener state : stateList) {
 //            if (state.getStateParents().size() == 0) {
 //                graphParent.addStateChild(state);
 //            }
@@ -86,9 +86,9 @@ public class DiagramModel {
 //     *
 //     * @param stateList
 //     */
-//    public void disconnectFromGraphParent(List<app.views.DiagramListener> stateList) {
+//    public void disconnectFromGraphParent(List<app.views.StateListener> stateList) {
 //
-//        for (app.views.DiagramListener state : stateList) {
+//        for (app.views.StateListener state : stateList) {
 //            graphParent.removeStateChild(state);
 //        }
 //    }
@@ -112,15 +112,15 @@ public class DiagramModel {
 //    }
 //
 //
-//    public List<app.views.DiagramListener> getAddedStateViews() {
+//    public List<app.views.StateListener> getAddedStateViews() {
 //        return addedStates;
 //    }
 //
-//    public List<app.views.DiagramListener> getRemovedStateViews() {
+//    public List<app.views.StateListener> getRemovedStateViews() {
 //        return removedStates;
 //    }
 //
-//    public List<DiagramListener> getAllStateViews() {
+//    public List<StateListener> getAllStateViews() {
 //        return allStates;
 //    }
 //

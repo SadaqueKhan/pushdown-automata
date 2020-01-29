@@ -1,17 +1,17 @@
 package app.listeners;
 
-import app.controllers.DiagramController;
+import app.controllers.StateController;
 import app.views.StateView;
 import javafx.event.EventHandler;
 
-public class DiagramListener implements EventHandler<javafx.scene.input.MouseEvent> {
+public class StateListener implements EventHandler<javafx.scene.input.MouseEvent> {
 
 
-    private final DiagramController diagramController;
+    private final StateController stateController;
 
-    public DiagramListener(DiagramController diagramController) {
+    public StateListener(StateController stateController) {
 
-        this.diagramController = diagramController;
+        this.stateController = stateController;
     }
 
 
@@ -34,11 +34,11 @@ public class DiagramListener implements EventHandler<javafx.scene.input.MouseEve
 
 
         if (eventType.equals("MOUSE_PRESSED")) {
-            diagramController.onMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
+            stateController.onMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
         }
 
         if (eventType.equals("MOUSE_DRAGGED")) {
-            diagramController.onMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
+            stateController.onMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
         }
 
 

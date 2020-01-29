@@ -1,19 +1,23 @@
 package app.views;
 
-import app.controllers.DiagramController;
-import app.listeners.DiagramListener;
+import app.controllers.StateController;
+import app.listeners.StateListener;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class Diagram {
+public class Diagram extends Pane {
 
     //Reference to other stuff external files
-    private final DiagramController diagramController;
+    private final StateController stateController;
     private final MainStageView mainStageView;
 
     private HashSet<StateView> addedStateViews;
@@ -31,17 +35,17 @@ public class Diagram {
     private ZoomableScrollPane scrollPane;
 
 
-    public Diagram(DiagramController diagramController, MainStageView mainStageView) {
+    public Diagram(StateController stateController, MainStageView mainStageView) {
 
         // Reference to the controller of this view
-        this.diagramController = diagramController;
+        this.stateController = stateController;
 
         // Reference to the main application container
         this.mainStageView = mainStageView;
 
 
         setUpComponents();
-        setUpListeners();
+//        setUpListeners();
     }
 
 
@@ -50,9 +54,8 @@ public class Diagram {
         canvas = new Group();
         cellLayer = new Pane();
 
-        canvas.getChildren().add(cellLayer);
 
-        scrollPane = new ZoomableScrollPane(canvas);
+        scrollPane = new ZoomableScrollPane(this);
 
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
@@ -66,30 +69,55 @@ public class Diagram {
         stateMap = new HashMap<>(); // <id,cell>
 
 
-        this.addStateView("Cell A");
-        this.addStateView("Cell B");
-        this.addStateView("Cell C");
+//        Pane pane = new Pane();
+        double radius = 30;
+        this.setOnMouseClicked(e -> {
+            System.out.println("helloworld");
+            if (e.getButton() == MouseButton.PRIMARY) {
+                double X = e.getX(); // remove pane's coordinate system here
+                double Y = e.getY(); // remove pane's coordinate system here
+
+                System.out.println("X coordinate=" + X + "Y coordinate");
+                Circle circle = new Circle(X, Y, radius);
+                circle.setFill(javafx.scene.paint.Color.RED);
+                circle.setStroke(Color.BLACK);
+
+                this.getChildren().add(circle);
+
+            } else if (e.getButton() == MouseButton.SECONDARY) {
+                // check if cicle was clicked and remove it if this is the case
+                Node picked = e.getPickResult().getIntersectedNode();
+                if (picked instanceof Circle) {
+                    this.getChildren().remove(picked);
+                }
+            }
+        });
 
 
-        this.addEdge("Cell A", "Cell B");
-        this.addEdge("Cell B", "Cell C");
-
-
-        cellLayer.getChildren().addAll(this.getAddedTransitionViews());
-        cellLayer.getChildren().addAll(this.getAddedStateViews());
-
+//        this.addStateView("Cell A");
+//        this.addStateView("Cell B");
+//        this.addStateView("Cell C");
+//
+//
+//        this.addEdge("Cell A", "Cell B");
+//        this.addEdge("Cell B", "Cell C");
+//
+//
+//        cellLayer.getChildren().addAll(this.getAddedTransitionViews());
+//        cellLayer.getChildren().addAll(this.getAddedStateViews());
+//
 
     }
 
     private void setUpListeners() {
 
         //Create listener for this view
-        DiagramListener diagramListener = new DiagramListener(diagramController);
+        StateListener stateListener = new StateListener(stateController);
 
         // enable dragging of cells
         for (StateView stateView : this.getAddedStateViews()) {
-            stateView.setOnMousePressed(diagramListener);
-            stateView.setOnMouseDragged(diagramListener);
+            stateView.setOnMousePressed(stateListener);
+            stateView.setOnMouseDragged(stateListener);
         }
     }
 
