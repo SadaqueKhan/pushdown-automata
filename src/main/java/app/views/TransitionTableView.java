@@ -1,12 +1,12 @@
 package app.views;
 
+import app.listeners.TransitionTableListener;
 import app.models.TransitionModel;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class TransitionTableView extends BorderPane {
@@ -14,14 +14,29 @@ public class TransitionTableView extends BorderPane {
 
     private TableView<TransitionModel> transitionTable;
 
+    //Configuration Column
     private TableColumn configurationCol;
-    private TableColumn stateSymbolCol;
+    private TableColumn currentStateCol;
     private TableColumn inputSymbolCol;
-    private TableColumn topStackSymbolToPopCol;
+    private TableColumn stackSymbolToPopCol;
 
+    //Action Column
     private TableColumn actionCol;
-    private TableColumn stateAfterEventCol;
-    private TableColumn topStackSymbolToPushCol;
+    private TableColumn resultingStateCol;
+    private TableColumn stackSymbolToPushCol;
+
+
+    //Configuration Textfields
+    private TextField currentStateTextField;
+    private TextField inputSymbolTextField;
+    private TextField stackSymbolToPopTextField;
+
+    //Action Textfields
+    private TextField resultingStateTextField;
+    private TextField stackSymbolToPushTextField;
+
+    //Submit transition button
+    private Button submitTransitionButton;
 
 
     public TransitionTableView() {
@@ -43,93 +58,115 @@ public class TransitionTableView extends BorderPane {
         //Set the default message output for the table when it is empty
         transitionTable.setPlaceholder(new Label("No transition defined"));
 
-        //Distribute extra space in table column header among the columns.
+        //Disable default constrained resize policy
         transitionTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
 //<---Create configuration column --->
         configurationCol = new TableColumn("Configuration");
 
+        this.currentStateCol = new TableColumn("Current state");
+        currentStateCol.setMinWidth(250);
+        currentStateCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("currentStateModel"));
 
-        //<---Make first column --->
-        //Create first column of the table
-        this.stateSymbolCol = new TableColumn("State");
-        stateSymbolCol.setMinWidth(250);
-
-        //Setting data properities to columns
-        stateSymbolCol.setCellValueFactory(
-                new PropertyValueFactory<TransitionModel, String>("state"));
-
-
-        //<---Make second column --->
-        //Create second column of the table
         this.inputSymbolCol = new TableColumn("Input symbol");
         inputSymbolCol.setMinWidth(250);
+        inputSymbolCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("inputSymbol"));
 
-        //Setting data properities to columns
-        inputSymbolCol.setCellValueFactory(
-                new PropertyValueFactory<TransitionModel, String>("inputSymbol"));
+        this.stackSymbolToPopCol = new TableColumn("Stack symbol to pop");
+        stackSymbolToPopCol.setMinWidth(250);
+        stackSymbolToPopCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("stackSymbolToPop"));
 
-
-        //<---Make third column --->
-        //Create third column of the table
-        this.topStackSymbolToPopCol = new TableColumn("Top stack symbol to pop");
-        topStackSymbolToPopCol.setMinWidth(250);
-
-        //Setting data properities to columns
-        topStackSymbolToPopCol.setCellValueFactory(
-                new PropertyValueFactory<TransitionModel, String>("topStackSymbolToPop"));
-
-
-        configurationCol.getColumns().addAll(stateSymbolCol, inputSymbolCol, topStackSymbolToPopCol);
+        configurationCol.getColumns().addAll(currentStateCol, inputSymbolCol, stackSymbolToPopCol);
 
 
 //<---Create action column --->
         actionCol = new TableColumn("Action");
 
+        this.resultingStateCol = new TableColumn("Resulting state");
+        resultingStateCol.setMinWidth(250);
+        resultingStateCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("resultingStateModel"));
 
-        //<---Make first column --->
-        //Create first column of the table
-        this.stateAfterEventCol = new TableColumn("State");
-        stateAfterEventCol.setMinWidth(250);
+        this.stackSymbolToPushCol = new TableColumn("Stack symbol to push");
+        stackSymbolToPushCol.setMinWidth(250);
 
-        //Setting data properities to columns
-        stateAfterEventCol.setCellValueFactory(
-                new PropertyValueFactory<TransitionModel, String>("state"));
+        stackSymbolToPushCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("stackSymbolToPush"));
 
+        actionCol.getColumns().addAll(resultingStateCol, stackSymbolToPushCol);
 
-        //<---Make second column --->
-        //Create second column of the table
-        this.topStackSymbolToPushCol = new TableColumn("Input symbol");
-        topStackSymbolToPushCol.setMinWidth(250);
-
-        //Setting data properities to columns
-        topStackSymbolToPushCol.setCellValueFactory(
-                new PropertyValueFactory<TransitionModel, String>("inputSymbol"));
-
-
-        actionCol.getColumns().addAll(stateAfterEventCol, topStackSymbolToPushCol);
-
-
-//Add configuration column and action column to the transition table
         transitionTable.getColumns().addAll(configurationCol, actionCol);
 
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
 
-        vbox.getChildren().add(transitionTable);
+//Create input widgets for the user to enter a configuration
+        this.currentStateTextField = new TextField();
+        currentStateTextField.setPrefWidth(50);
 
+        this.inputSymbolTextField = new TextField();
+        inputSymbolTextField.setPrefWidth(50);
 
-        this.setCenter(vbox);
+        this.stackSymbolToPopTextField = new TextField();
+        stackSymbolToPopTextField.setPrefWidth(50);
+
+// Create a arrow label to connect the configuration input widgets to action input widgets
+        final Label arrowLabel = new Label("->");
+
+//Create input widgets for the user to enter a configuration
+        this.resultingStateTextField = new TextField();
+        resultingStateTextField.setPrefWidth(50);
+
+        this.stackSymbolToPushTextField = new TextField();
+        stackSymbolToPushTextField.setPrefWidth(50);
+
+//Create submit button for the user to submit a transition
+        this.submitTransitionButton = new Button("Submit");
+
+        final HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10, 10, 10, 10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton);
+
+        final VBox vBox = new VBox();
+        vBox.setPadding(new Insets(10, 10, 10, 10));
+        vBox.setSpacing(10);
+        vBox.getChildren().addAll(transitionTable, hBox);
+
+        this.setCenter(vBox);
     }
 
 
     private void setUpLayout() {
+        //Create listener for this view
+        TransitionTableListener transitionTableListener = new TransitionTableListener(this);
+
+        //Set a listener that is triggered when the submit button is clicked
+        submitTransitionButton.setOnAction(transitionTableListener);
+
     }
 
     private void setUpListeners() {
     }
 
+    public TableView<TransitionModel> getTransitionTable() {
+        return transitionTable;
+    }
 
+    public TextField getCurrentStateTextField() {
+        return currentStateTextField;
+    }
+
+    public TextField getInputSymbolTextField() {
+        return inputSymbolTextField;
+    }
+
+    public TextField getStackSymbolToPopTextField() {
+        return stackSymbolToPopTextField;
+    }
+
+    public TextField getResultingStateTextField() {
+        return resultingStateTextField;
+    }
+
+    public TextField getStackSymbolToPushTextField() {
+        return stackSymbolToPushTextField;
+    }
 }

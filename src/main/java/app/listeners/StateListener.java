@@ -3,8 +3,9 @@ package app.listeners;
 import app.controllers.StateController;
 import app.views.StateView;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 
-public class StateListener implements EventHandler<javafx.scene.input.MouseEvent> {
+public class StateListener implements EventHandler<MouseEvent> {
 
 
     private final StateController stateController;
@@ -17,7 +18,7 @@ public class StateListener implements EventHandler<javafx.scene.input.MouseEvent
 
     //Handle click event on the diagram
     @Override
-    public void handle(javafx.scene.input.MouseEvent event) {
+    public void handle(MouseEvent event) {
 
         //TODO Make a more refined guess of the event type using the state i.e. give state an id
         String eventType = event.getEventType().toString();
