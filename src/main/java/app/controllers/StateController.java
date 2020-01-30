@@ -27,7 +27,7 @@ public class StateController {
     public void onMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 
         //TODO Remove this coupling
-        double scale = mainStageView.getDiagram().getScale();
+        double scale = mainStageView.getDiagramView().getScale();
 
         dragContextX = stateView.getBoundsInParent().getMinX() * scale - xPositionOfMouse;
         dragContextY = stateView.getBoundsInParent().getMinY() * scale - yPositionOfMouse;
@@ -38,7 +38,7 @@ public class StateController {
     public void onMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 
         //TODO Remove this coupling
-        double scale = mainStageView.getDiagram().getScale();
+        double scale = mainStageView.getDiagramView().getScale();
 
         double offsetX = xPositionOfMouse + dragContextX;
         double offsetY = yPositionOfMouse + dragContextY;
@@ -71,7 +71,7 @@ public class StateController {
 
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                mainStageView.getDiagram().getChildren().remove(stateView);
+                mainStageView.getDiagramView().getChildren().remove(stateView);
             }
         });
 

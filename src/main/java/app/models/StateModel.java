@@ -8,7 +8,7 @@ public class StateModel {
     private HashSet<TransitionModel> setOfTransitionModels;
     private HashSet<StateModel> setOfStateModels;
 
-    public StateModel(HashSet<StateModel> setOfStateModels, HashSet<TransitionModel> setOfTransitionModels) {
+    public StateModel(String id) {
 
         this.setOfStateModels = setOfStateModels;
         this.setOfTransitionModels = setOfTransitionModels;

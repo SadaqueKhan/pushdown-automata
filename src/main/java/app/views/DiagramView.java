@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class Diagram extends Pane {
+public class DiagramView extends Pane {
 
     //Reference to other stuff external files
     private final StateController stateController;
@@ -30,7 +30,7 @@ public class Diagram extends Pane {
     private ZoomableScrollPane scrollPane;
 
 
-    public Diagram(MainStageView mainStageView) {
+    public DiagramView(MainStageView mainStageView) {
 
         // Reference to the controller of this view
         this.stateController = new StateController(mainStageView);

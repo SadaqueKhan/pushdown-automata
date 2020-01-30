@@ -13,7 +13,7 @@ public class MainStageView extends BorderPane {
 
     private final MainStageController mainStageController;
 
-    private Diagram diagram;
+    private DiagramView diagramView;
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -38,9 +38,9 @@ public class MainStageView extends BorderPane {
 
 
         //TODO Need to de-couple mainStageController.getDiagramController()
-        this.diagram = new Diagram(this);
+        this.diagramView = new DiagramView(this);
 
-        this.setCenter(diagram);
+        this.setCenter(diagramView);
 
 
         Button save = new Button("Save");
@@ -52,8 +52,8 @@ public class MainStageView extends BorderPane {
 
     }
 
-    public Diagram getDiagram() {
-        return diagram;
+    public DiagramView getDiagramView() {
+        return diagramView;
     }
 
     private void setUpLayout() {
