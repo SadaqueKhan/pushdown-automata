@@ -13,14 +13,20 @@ public class StateController {
 
     private final MainStageView mainStageView;
     private final DiagramView diagramView;
+    private final TransitionTableController transitionTableController;
+
 
     private double dragContextX = 0.0;
     private double dragContextY = 0.0;
 
-    public StateController(MainStageView mainStageView, DiagramView diagramView) {
+    public StateController(MainStageView mainStageView, DiagramView diagramView, TransitionTableController transitionTableController) {
 
         this.mainStageView = mainStageView;
         this.diagramView = diagramView;
+
+
+        this.transitionTableController = transitionTableController;
+
 
     }
 
@@ -64,7 +70,7 @@ public class StateController {
         //TODO need to remove this listeners logic
         createTransition.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                TransitionTableController transitionTableController = new TransitionTableController();
+                transitionTableController.load();
             }
         });
 

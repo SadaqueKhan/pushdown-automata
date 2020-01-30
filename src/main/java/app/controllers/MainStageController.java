@@ -22,10 +22,13 @@ public class MainStageController extends Application implements Serializable {
 
         MainStageView mainStageView = new MainStageView(this);
 
+
         //Basically acting
         DiagramModel diagramModel = new DiagramModel();
 
-        new DiagramController(mainStageView, diagramModel);
+        TransitionTableController transitionTableController = new TransitionTableController(diagramModel);
+
+        new DiagramController(mainStageView, diagramModel, transitionTableController);
 
 
 

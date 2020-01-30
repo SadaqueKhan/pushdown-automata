@@ -7,12 +7,20 @@ public class StateModel {
     private String stateId;
 
     public StateModel() {
-
         this.stateId = "Q" + (num++);
-
     }
 
+    public StateModel(String userEntryStateID) {
+        this.stateId = userEntryStateID;
+    }
+
+
     public String getStateId() {
+        return stateId;
+    }
+
+    @Override
+    public String toString() {
         return stateId;
     }
 }

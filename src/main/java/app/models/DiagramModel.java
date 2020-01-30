@@ -16,4 +16,17 @@ public class DiagramModel implements Serializable {
         stateModelSet.add(newStateModel);
 
     }
+
+    public StateModel checkIfStateExists(String userEntryStateID) {
+
+        for (StateModel stateModel : stateModelSet) {
+
+            if (userEntryStateID.equals(stateModel.getStateId())) {
+                return stateModel;
+            }
+
+        }
+
+        return new StateModel(userEntryStateID);
+    }
 }

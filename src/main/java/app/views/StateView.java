@@ -4,8 +4,6 @@ package app.views;
 
 import app.controllers.StateController;
 import app.listeners.StateListener;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -22,12 +20,6 @@ public class StateView extends Circle {
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
 
-
-
-    //Popup component
-    private ContextMenu contextMenu;
-    private MenuItem createTransition;
-    private MenuItem deleteItem;
 
     public StateView(double x, double y, StateController stateController, String stateId) {
         this.centerX = x;

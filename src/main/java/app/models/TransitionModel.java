@@ -2,19 +2,19 @@ package app.models;
 
 public class TransitionModel {
 
-    private String currentStateModel;
+    private StateModel currentStateModel;
     private String inputSymbol;
     private String stackSymbolToPop;
 
-    private String resultingStateModel;
+    private StateModel resultingStateModel;
     private String stackSymbolToPush;
 
     public TransitionModel(
-            String currentStateModel,
+            StateModel currentStateModel,
             String inputSymbol,
             String stackSymbolToPop,
 
-            String resultingStateModel,
+            StateModel resultingStateModel,
             String stackSymbolToPush
     ) {
         this.currentStateModel = currentStateModel;
@@ -26,11 +26,12 @@ public class TransitionModel {
 
     }
 
-    public String getCurrentStateModel() {
+
+    public StateModel getCurrentStateModel() {
         return currentStateModel;
     }
 
-    public void setCurrentStateModel(String currentStateModel) {
+    public void setCurrentStateModel(StateModel currentStateModel) {
         this.currentStateModel = currentStateModel;
     }
 
@@ -50,12 +51,11 @@ public class TransitionModel {
         this.stackSymbolToPop = stackSymbolToPop;
     }
 
-    
-    public String getResultingStateModel() {
+    public StateModel getResultingStateModel() {
         return resultingStateModel;
     }
 
-    public void setResultingStateModel(String resultingStateModel) {
+    public void setResultingStateModel(StateModel resultingStateModel) {
         this.resultingStateModel = resultingStateModel;
     }
 
