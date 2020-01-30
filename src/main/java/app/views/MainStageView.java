@@ -10,7 +10,6 @@ import javafx.scene.layout.HBox;
 
 public class MainStageView extends BorderPane {
 
-
     private final MainStageController mainStageController;
 
     private DiagramView diagramView;
@@ -37,10 +36,7 @@ public class MainStageView extends BorderPane {
         this.setTop(topBar);
 
 
-        //TODO Need to de-couple mainStageController.getDiagramController()
-        this.diagramView = new DiagramView(this);
 
-        this.setCenter(diagramView);
 
 
         Button save = new Button("Save");

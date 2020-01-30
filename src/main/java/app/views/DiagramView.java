@@ -1,5 +1,6 @@
 package app.views;
 
+import app.controllers.DiagramController;
 import app.controllers.StateController;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
@@ -12,8 +13,10 @@ import java.util.Map;
 public class DiagramView extends Pane {
 
     //Reference to other stuff external files
-    private final StateController stateController;
     private final MainStageView mainStageView;
+
+    private final DiagramController diagramController;
+    private final StateController stateController;
 
 
     private HashSet<StateView> stateViewSet;
@@ -21,22 +24,16 @@ public class DiagramView extends Pane {
 
     private Map<String, StateView> stateMap;
 
-    /**
-     * the pane wrapper is necessary or else the scrollpane would always align
-     * the top-most and left-most child to the top and left eg when you drag the
-     * top child down, the entire scrollpane would move down
-     */
-
     private ZoomableScrollPane scrollPane;
 
 
-    public DiagramView(MainStageView mainStageView) {
-
-        // Reference to the controller of this view
-        this.stateController = new StateController(mainStageView);
+    public DiagramView(DiagramController diagramController, MainStageView mainStageView) {
 
         // Reference to the main application container
         this.mainStageView = mainStageView;
+
+        this.diagramController = diagramController;
+        this.stateController = new StateController(mainStageView);
 
 
         setUpComponents();
@@ -60,6 +57,8 @@ public class DiagramView extends Pane {
         transitionViewSet = new HashSet<>();
 
         stateMap = new HashMap<>(); // <id,cell>
+
+        mainStageView.setCenter(this);
 
     }
 

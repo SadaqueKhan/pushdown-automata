@@ -16,7 +16,12 @@ public class MainStageController extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+
         MainStageView mainStageView = new MainStageView(this);
+
+
+        DiagramController diagramController = new DiagramController(mainStageView);
+
 
 
         primaryStage.setTitle("Pushdown Automata");

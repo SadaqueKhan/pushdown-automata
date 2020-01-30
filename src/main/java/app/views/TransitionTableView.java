@@ -135,15 +135,16 @@ public class TransitionTableView extends BorderPane {
 
 
     private void setUpLayout() {
+
+
+    }
+
+    private void setUpListeners() {
         //Create listener for this view
         TransitionTableListener transitionTableListener = new TransitionTableListener(this);
 
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
-
-    }
-
-    private void setUpListeners() {
     }
 
     public TableView<TransitionModel> getTransitionTable() {
