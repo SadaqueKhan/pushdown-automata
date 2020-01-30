@@ -2,8 +2,7 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.controllers.StateController;
-import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
+import app.listeners.DiagramListener;
 import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
@@ -63,40 +62,20 @@ public class DiagramView extends Pane {
     }
 
     private void setUpListeners() {
+        
+        //Create listener for this view
+        DiagramListener diagramListener = new DiagramListener(diagramController);
 
-        // Need to separate this out
-        this.setOnMousePressed(e -> {
-
-
-            if (e.getButton() == MouseButton.PRIMARY) {
-
-                Node picked = e.getPickResult().getIntersectedNode();
-
-                //Check if mouse is pressing on state node
-                if (picked instanceof StateView) {
-                    //No nothing
-                } else {
-                    double X = e.getX(); // remove pane's coordinate system here
-                    double Y = e.getY(); // remove pane's coordinate system here
-
-                    this.addStateView(X, Y);
-//                this.addStateView(X, Y);
-//                this.addEdge("Q0", "Q1");
-                }
-
-            }
-
-
-        });
+        this.setOnMousePressed(diagramListener);
 
     }
 
 
     private void addStateView(double x, double y) {
         StateView stateView = new StateView(x, y, stateController);
-        stateViewSet.add(stateView);
-
-        stateMap.put(stateView.getStateId(), stateView);
+//        stateViewSet.add(stateView);
+//
+//        stateMap.put(stateView.getStateId(), stateView);
         this.getChildren().add(stateView);
     }
 
