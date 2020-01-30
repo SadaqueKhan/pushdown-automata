@@ -59,6 +59,15 @@ public class DiagramView extends Pane {
 
     }
 
+    public void addStateView(double x, double y, StateController stateController, String stateId) {
+
+        StateView stateView = new StateView(x, y, stateController, stateId);
+
+        this.getChildren().add(stateView);
+
+        stateMap.put(stateId, stateView);
+    }
+
     public void addEdge(String sourceId, String targetId) {
 
         //Get state from map using state ID
@@ -68,7 +77,7 @@ public class DiagramView extends Pane {
         //Create TransitionView
         TransitionView transitionView = new TransitionView(sourceCell, targetCell);
 
-
+        this.getChildren().add(transitionView);
     }
 
 
@@ -77,10 +86,4 @@ public class DiagramView extends Pane {
     }
 
 
-    public void addStateView(double x, double y, StateController stateController, String stateId) {
-
-        StateView stateView = new StateView(x, y, stateController, stateId);
-        this.getChildren().add(stateView);
-
-    }
 }

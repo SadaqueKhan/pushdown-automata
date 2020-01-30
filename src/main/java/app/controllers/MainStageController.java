@@ -26,10 +26,8 @@ public class MainStageController extends Application implements Serializable {
         //Basically acting
         DiagramModel diagramModel = new DiagramModel();
 
-        TransitionTableController transitionTableController = new TransitionTableController(diagramModel);
 
-        new DiagramController(mainStageView, diagramModel, transitionTableController);
-
+        new DiagramController(mainStageView, diagramModel);
 
 
         primaryStage.setTitle("Pushdown Automata");

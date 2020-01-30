@@ -16,14 +16,14 @@ public class DiagramController {
     private final TransitionTableController transitionTableController;
 
 
-    public DiagramController(MainStageView mainStageView, DiagramModel diagramModel, TransitionTableController transitionTableController) {
+    public DiagramController(MainStageView mainStageView, DiagramModel diagramModel) {
 
         this.mainStageView = mainStageView;
         this.diagramModel = diagramModel;
 
-        this.transitionTableController = transitionTableController;
 
         this.diagramView = new DiagramView(this, mainStageView);
+        this.transitionTableController = new TransitionTableController(diagramModel, diagramView);
 
     }
 
@@ -38,6 +38,7 @@ public class DiagramController {
 
 
         diagramView.addStateView(x, y, newStateController, newStateModel.getStateId());
+
 
     }
 }

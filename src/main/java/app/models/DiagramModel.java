@@ -7,9 +7,11 @@ import java.util.HashSet;
 public class DiagramModel implements Serializable {
 
     private HashSet<StateModel> stateModelSet;
+    private HashSet<TransitionModel> transitionModelSet;
 
     public DiagramModel() throws IOException {
         this.stateModelSet = new HashSet<StateModel>();
+        this.transitionModelSet = new HashSet<TransitionModel>();
     }
 
     public void addStateModel(StateModel newStateModel) {
@@ -17,16 +19,30 @@ public class DiagramModel implements Serializable {
 
     }
 
-    public StateModel checkIfStateExists(String userEntryStateID) {
+    public void addTransitionModel(TransitionModel newTransitionModel) {
+        transitionModelSet.add(newTransitionModel);
+    }
 
+
+    public boolean stateExists(String stateId) {
         for (StateModel stateModel : stateModelSet) {
+            if (stateId.equals(stateModel.getStateId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-            if (userEntryStateID.equals(stateModel.getStateId())) {
+
+    public StateModel getStateModel(String stateId) {
+        for (StateModel stateModel : stateModelSet) {
+            if (stateId.equals(stateModel.getStateId())) {
                 return stateModel;
             }
-
         }
 
-        return new StateModel(userEntryStateID);
+        return null;
     }
+
+
 }

@@ -3,6 +3,7 @@ package app.controllers;
 import app.models.DiagramModel;
 import app.models.StateModel;
 import app.models.TransitionModel;
+import app.views.DiagramView;
 import app.views.TransitionTableView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,13 +11,15 @@ import javafx.stage.Stage;
 public class TransitionTableController {
 
     private final DiagramModel diagramModel;
+    private final DiagramView diagramView;
     private TransitionTableView transitionTableView;
 
 
-    public TransitionTableController(DiagramModel diagramModel) {
+    public TransitionTableController(DiagramModel diagramModel, DiagramView diagramView) {
 
 
         this.diagramModel = diagramModel;
+        this.diagramView = diagramView;
 
     }
 
@@ -32,17 +35,40 @@ public class TransitionTableController {
         String userEntryResultingStateId = transitionTableView.getResultingStateTextField().getText();
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushTextField().getText();
 
+        // Create placeholders for state models
+        StateModel currentStateModel;
+        StateModel resultingStateModel;
 
-        StateModel currentStateModel = diagramModel.checkIfStateExists(userEntryCurrentStateId);
-        StateModel resultingStateModel = diagramModel.checkIfStateExists(userEntryResultingStateId);
+        // Check to see if current state id exists
+        if (diagramModel.stateExists(userEntryCurrentStateId)) {
+            currentStateModel = diagramModel.getStateModel(userEntryCurrentStateId);
+            System.out.println(currentStateModel.getStateId());
+        } else {
+            currentStateModel = new StateModel(userEntryCurrentStateId);
+            diagramModel.addStateModel(currentStateModel);
+        }
+
+        // Check to see if resulting state id exists
+        if (diagramModel.stateExists(userEntryResultingStateId)) {
+            resultingStateModel = diagramModel.getStateModel(userEntryResultingStateId);
+            System.out.println(resultingStateModel.getStateId());
+        } else {
+            resultingStateModel = new StateModel(userEntryResultingStateId);
+            diagramModel.addStateModel(resultingStateModel);
+        }
 
 
         //Add user input for configuration and action into the table
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
+        diagramModel.addTransitionModel(newTransitionModel);
+
+        diagramView.addEdge(currentStateModel.getStateId(), resultingStateModel.getStateId());
+
 
     }
+
 
     public void load() {
         this.transitionTableView = new TransitionTableView(this);
