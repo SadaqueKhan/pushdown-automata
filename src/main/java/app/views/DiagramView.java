@@ -32,7 +32,7 @@ public class DiagramView extends Pane {
         this.mainStageView = mainStageView;
 
         this.diagramController = diagramController;
-        this.stateController = new StateController(mainStageView);
+        this.stateController = new StateController(mainStageView, this);
 
 
         setUpComponents();
@@ -62,7 +62,7 @@ public class DiagramView extends Pane {
     }
 
     private void setUpListeners() {
-        
+
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);
 
@@ -99,4 +99,10 @@ public class DiagramView extends Pane {
     }
 
 
+    public void addStateToView(double x, double y, StateController stateController) {
+
+        StateView stateView = new StateView(x, y, stateController);
+        this.getChildren().add(stateView);
+
+    }
 }

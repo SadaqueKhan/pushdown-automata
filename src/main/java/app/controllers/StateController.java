@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.views.DiagramView;
 import app.views.MainStageView;
 import app.views.StateView;
 import app.views.TransitionTableView;
@@ -14,20 +15,23 @@ import javafx.stage.Stage;
 public class StateController {
 
     private final MainStageView mainStageView;
+    private final DiagramView diagramView;
 
     private double dragContextX = 0.0;
     private double dragContextY = 0.0;
 
-    public StateController(MainStageView mainStageView) {
+    public StateController(MainStageView mainStageView, DiagramView diagramView) {
 
         this.mainStageView = mainStageView;
+        this.diagramView = diagramView;
 
     }
+
 
     public void onMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 
         //TODO Remove this coupling
-        double scale = mainStageView.getDiagramView().getScale();
+        double scale = diagramView.getScale();
 
         dragContextX = stateView.getBoundsInParent().getMinX() * scale - xPositionOfMouse;
         dragContextY = stateView.getBoundsInParent().getMinY() * scale - yPositionOfMouse;
@@ -37,8 +41,12 @@ public class StateController {
 
     public void onMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 
+
+        if (mainStageView == null) {
+            System.out.println("MainStageView is null");
+        }
         //TODO Remove this coupling
-        double scale = mainStageView.getDiagramView().getScale();
+        double scale = diagramView.getScale();
 
         double offsetX = xPositionOfMouse + dragContextX;
         double offsetY = yPositionOfMouse + dragContextY;
@@ -59,7 +67,6 @@ public class StateController {
 
         createTransition.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-
                 Scene scene = new Scene(new TransitionTableView(), 500, 500);
                 Stage stage = new Stage();
                 stage.setTitle("Transition Table");
@@ -71,7 +78,7 @@ public class StateController {
 
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                mainStageView.getDiagramView().getChildren().remove(stateView);
+                diagramView.getChildren().remove(stateView);
             }
         });
 
