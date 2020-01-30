@@ -1,5 +1,7 @@
 package app.controllers;
 
+import app.models.DiagramModel;
+import app.models.StateModel;
 import app.views.DiagramView;
 import app.views.MainStageView;
 
@@ -10,9 +12,13 @@ public class DiagramController {
     private final DiagramView diagramView;
 
 
-    public DiagramController(MainStageView mainStageView) {
+    private final DiagramModel diagramModel;
+
+
+    public DiagramController(MainStageView mainStageView, DiagramModel diagramModel) {
 
         this.mainStageView = mainStageView;
+        this.diagramModel = diagramModel;
 
         this.diagramView = new DiagramView(this, mainStageView);
 
@@ -21,9 +27,12 @@ public class DiagramController {
 
     public void addStateToView(double x, double y) {
 
-        StateController stateController = new StateController(mainStageView, diagramView);
+        StateController newStateController = new StateController(mainStageView, diagramView);
 
-        diagramView.addStateToView(x, y, stateController);
+        StateModel newStateModel = new StateModel();
+
+
+        diagramView.addStateToView(x, y, newStateController, newStateModel.getStateId());
 
     }
 }

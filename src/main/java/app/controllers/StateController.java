@@ -39,9 +39,7 @@ public class StateController {
     public void onMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
 
 
-        if (mainStageView == null) {
-            System.out.println("MainStageView is null");
-        }
+
         //TODO Remove this coupling
         double scale = diagramView.getScale();
 
@@ -63,6 +61,7 @@ public class StateController {
         MenuItem deleteItem = new MenuItem("Delete");
 
 
+        //TODO need to remove this listeners logic
         createTransition.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 TransitionTableController transitionTableController = new TransitionTableController();

@@ -1,18 +1,19 @@
 package app.models;
 
-import java.util.HashSet;
-
 public class StateModel {
 
+    private static int num = 0;
 
-    private HashSet<TransitionModel> setOfTransitionModels;
-    private HashSet<StateModel> setOfStateModels;
+    private String stateId;
 
-    public StateModel(String id) {
+    public StateModel() {
 
-        this.setOfStateModels = setOfStateModels;
-        this.setOfTransitionModels = setOfTransitionModels;
+        this.stateId = "Q" + (num++);
 
+    }
+
+    public String getStateId() {
+        return stateId;
     }
 }
 

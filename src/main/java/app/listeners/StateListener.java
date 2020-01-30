@@ -37,7 +37,6 @@ public class StateListener implements EventHandler<MouseEvent> {
         if (eventType.equals("MOUSE_PRESSED")) {
             stateController.onMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
 
-            System.out.println("Triggered");
             // Popup dialog
             if (event.isPopupTrigger()) {
                 stateController.createPopup(stateView);

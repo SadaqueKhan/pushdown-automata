@@ -70,15 +70,6 @@ public class DiagramView extends Pane {
 
     }
 
-
-    private void addStateView(double x, double y) {
-        StateView stateView = new StateView(x, y, stateController);
-//        stateViewSet.add(stateView);
-//
-//        stateMap.put(stateView.getStateId(), stateView);
-        this.getChildren().add(stateView);
-    }
-
     public void addEdge(String sourceId, String targetId) {
 
         //Get state from map using state ID
@@ -99,9 +90,9 @@ public class DiagramView extends Pane {
     }
 
 
-    public void addStateToView(double x, double y, StateController stateController) {
+    public void addStateToView(double x, double y, StateController stateController, String stateId) {
 
-        StateView stateView = new StateView(x, y, stateController);
+        StateView stateView = new StateView(x, y, stateController, stateId);
         this.getChildren().add(stateView);
 
     }

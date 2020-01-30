@@ -21,9 +21,8 @@ public class TransitionTableController {
         stage.show();
     }
 
-    
-    public void addTransitionEntry() {
 
+    public void addTransitionEntry() {
 
         //User input for a configuration
         String newCurrentState = transitionTableView.getCurrentStateTextField().getText();
@@ -33,6 +32,7 @@ public class TransitionTableController {
         //User input for a action
         String newResultingState = transitionTableView.getResultingStateTextField().getText();
         String newStackSymbolToPush = transitionTableView.getStackSymbolToPushTextField().getText();
+
 
         //Add user input for configuration and action into the table
         TransitionModel newTransitionModel = new TransitionModel(newCurrentState, newInputSymbol, newStackSymbolToPop, newResultingState, newStackSymbolToPush);

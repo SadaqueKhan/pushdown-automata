@@ -14,15 +14,14 @@ import java.util.List;
 
 public class StateView extends Circle {
 
-    private static int num = 0;
-
     private String stateId;
     private final StateController stateController;
     private double centerX;
+    private double centerY;
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
-    private double centerY;
+
 
 
     //Popup component
@@ -30,11 +29,11 @@ public class StateView extends Circle {
     private MenuItem createTransition;
     private MenuItem deleteItem;
 
-    public StateView(double x, double y, StateController stateController) {
+    public StateView(double x, double y, StateController stateController, String stateId) {
         this.centerX = x;
         this.centerY = y;
 
-        this.stateId = "Q" + (num++);
+        this.stateId = stateId;
 
         // Reference to the controller of this view
         this.stateController = stateController;
