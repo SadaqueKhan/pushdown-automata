@@ -30,9 +30,10 @@ public class DiagramController {
         StateController newStateController = new StateController(mainStageView, diagramView);
 
         StateModel newStateModel = new StateModel();
+        diagramModel.addStateModel(newStateModel);
 
 
-        diagramView.addStateToView(x, y, newStateController, newStateModel.getStateId());
+        diagramView.addStateView(x, y, newStateController, newStateModel.getStateId());
 
     }
 }

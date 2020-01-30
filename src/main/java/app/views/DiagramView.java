@@ -6,7 +6,6 @@ import app.listeners.DiagramListener;
 import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class DiagramView extends Pane {
@@ -15,11 +14,7 @@ public class DiagramView extends Pane {
     private final MainStageView mainStageView;
 
     private final DiagramController diagramController;
-    private final StateController stateController;
 
-
-    private HashSet<StateView> stateViewSet;
-    private HashSet<TransitionView> transitionViewSet;
 
     private Map<String, StateView> stateMap;
 
@@ -32,7 +27,6 @@ public class DiagramView extends Pane {
         this.mainStageView = mainStageView;
 
         this.diagramController = diagramController;
-        this.stateController = new StateController(mainStageView, this);
 
 
         setUpComponents();
@@ -49,11 +43,6 @@ public class DiagramView extends Pane {
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
-        // <--- End -->
-
-        stateViewSet = new HashSet<>();
-
-        transitionViewSet = new HashSet<>();
 
         stateMap = new HashMap<>(); // <id,cell>
 
@@ -79,8 +68,6 @@ public class DiagramView extends Pane {
         //Create TransitionView
         TransitionView transitionView = new TransitionView(sourceCell, targetCell);
 
-        //Add TransitionView to List
-        transitionViewSet.add(transitionView);
 
     }
 
@@ -90,7 +77,7 @@ public class DiagramView extends Pane {
     }
 
 
-    public void addStateToView(double x, double y, StateController stateController, String stateId) {
+    public void addStateView(double x, double y, StateController stateController, String stateId) {
 
         StateView stateView = new StateView(x, y, stateController, stateId);
         this.getChildren().add(stateView);

@@ -6,8 +6,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.Serializable;
 
-public class MainStageController extends Application {
+
+public class MainStageController extends Application implements Serializable {
 
 
     public static void main(String[] args) {
@@ -15,14 +17,15 @@ public class MainStageController extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
 
 
         MainStageView mainStageView = new MainStageView(this);
 
+        //Basically acting
         DiagramModel diagramModel = new DiagramModel();
 
-        DiagramController diagramController = new DiagramController(mainStageView, diagramModel);
+        new DiagramController(mainStageView, diagramModel);
 
 
 
