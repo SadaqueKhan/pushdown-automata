@@ -2,9 +2,27 @@ package app.controllers;
 
 import app.models.TransitionModel;
 import app.views.TransitionTableView;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class TransitionTableController {
-    public void addTransitionEntry(TransitionTableView transitionTableView) {
+
+    private final TransitionTableView transitionTableView;
+
+
+    public TransitionTableController() {
+
+        this.transitionTableView = new TransitionTableView(this);
+
+        Scene scene = new Scene(transitionTableView, 500, 500);
+        Stage stage = new Stage();
+        stage.setTitle("Transition Table");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    
+    public void addTransitionEntry() {
 
 
         //User input for a configuration

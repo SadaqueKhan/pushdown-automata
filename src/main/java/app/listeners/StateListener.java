@@ -34,7 +34,6 @@ public class StateListener implements EventHandler<MouseEvent> {
         double yPositionOfMouse = event.getScreenY();
 
 
-
         if (eventType.equals("MOUSE_PRESSED")) {
             stateController.onMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
 

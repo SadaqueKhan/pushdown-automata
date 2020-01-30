@@ -1,5 +1,6 @@
 package app.views;
 
+import app.controllers.TransitionTableController;
 import app.listeners.TransitionTableListener;
 import app.models.TransitionModel;
 import javafx.geometry.Insets;
@@ -11,35 +12,39 @@ import javafx.scene.layout.VBox;
 
 public class TransitionTableView extends BorderPane {
 
+    private final TransitionTableController transitionTableController;
 
+    // Transition Table GUI
     private TableView<TransitionModel> transitionTable;
 
-    //Configuration Column
+    //Configuration Column GUI
     private TableColumn configurationCol;
     private TableColumn currentStateCol;
     private TableColumn inputSymbolCol;
     private TableColumn stackSymbolToPopCol;
 
-    //Action Column
+    //Action Column GUI
     private TableColumn actionCol;
     private TableColumn resultingStateCol;
     private TableColumn stackSymbolToPushCol;
 
 
-    //Configuration Textfields
+    //Configuration Textfields GUI
     private TextField currentStateTextField;
     private TextField inputSymbolTextField;
     private TextField stackSymbolToPopTextField;
 
-    //Action Textfields
+    //Action Textfields GUI
     private TextField resultingStateTextField;
     private TextField stackSymbolToPushTextField;
 
-    //Submit transition button
+    //Submit transition button GUI
     private Button submitTransitionButton;
 
 
-    public TransitionTableView() {
+    public TransitionTableView(TransitionTableController transitionTableController) {
+
+        this.transitionTableController = transitionTableController;
 
         setUpComponents();
         setUpLayout();
@@ -141,7 +146,7 @@ public class TransitionTableView extends BorderPane {
 
     private void setUpListeners() {
         //Create listener for this view
-        TransitionTableListener transitionTableListener = new TransitionTableListener(this);
+        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableController);
 
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
