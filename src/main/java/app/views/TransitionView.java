@@ -4,8 +4,12 @@ package app.views;
 
 import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.QuadCurve;
 import javafx.scene.text.Text;
+
+import java.util.Random;
 
 public class TransitionView extends Group {
 
@@ -32,8 +36,50 @@ public class TransitionView extends Group {
         source.addStateChild(target);
         target.addStateParent(source);
 
-        setUpComponents();
 
+        if (source.equals(target)) {
+            setUpReflexiveTranitiveComponents();
+        } else {
+            setUpComponents();
+        }
+
+    }
+
+    private void setUpReflexiveTranitiveComponents() {
+
+        double highestValue = 40.0;
+        double lowestValue = -40.0;
+
+
+        QuadCurve quadCurve = new QuadCurve();
+
+
+        Random rand = new Random();
+
+
+        double randomX = rand.nextDouble() * (highestValue - lowestValue) + lowestValue;
+        double randomY = rand.nextDouble() * (highestValue - lowestValue) + lowestValue;
+
+
+        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
+        quadCurve.startXProperty().bind(source.layoutXProperty().add(0));
+        quadCurve.startYProperty().bind(source.layoutYProperty().add(-40));
+
+
+        quadCurve.setControlX(20);
+        quadCurve.setControlY(0);
+
+
+        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
+        quadCurve.endXProperty().bind(target.layoutXProperty().add(randomX));
+        quadCurve.endYProperty().bind(target.layoutYProperty().add(randomY));
+
+
+        quadCurve.setStroke(Color.BLACK);
+        quadCurve.setStrokeWidth(5);
+        quadCurve.setFill(null);
+
+        getChildren().add(quadCurve);
     }
 
     private void setUpComponents() {
@@ -49,17 +95,10 @@ public class TransitionView extends Group {
         arrowShaft.startXProperty().bind(source.layoutXProperty().add(x));
         arrowShaft.startYProperty().bind(source.layoutYProperty().add(y));
 
-        System.out.println("X direction of source: " + source.getBoundsInParent().getWidth());
-        System.out.println("Y direction of source: " + source.getBoundsInParent().getHeight());
-
-
         //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
         arrowShaft.endXProperty().bind(target.layoutXProperty().add(x));
         arrowShaft.endYProperty().bind(target.layoutYProperty().add(y));
 
-
-        System.out.println("X direction of target: " + target.getBoundsInParent().getWidth() / 2.0);
-        System.out.println("Y direction of target: " + target.getBoundsInParent().getHeight() / 2.0);
 
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();
