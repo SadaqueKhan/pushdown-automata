@@ -32,8 +32,7 @@ public class DiagramListener implements EventHandler<MouseEvent> {
                 double Y = event.getY(); // remove pane's coordinate system here
 
                 diagramController.addStateToView(X, Y);
-//                this.addStateView(X, Y);
-//                this.addEdge("Q0", "Q1");
+
             }
 
         }

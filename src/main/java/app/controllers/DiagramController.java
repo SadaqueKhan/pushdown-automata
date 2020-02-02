@@ -35,8 +35,6 @@ public class DiagramController {
         StateModel newStateModel = new StateModel();
 
         diagramModel.addStateModel(newStateModel);
-
-
         diagramView.addStateView(x, y, newStateController, newStateModel.getStateId());
 
 

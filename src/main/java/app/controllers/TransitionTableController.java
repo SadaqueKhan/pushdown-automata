@@ -47,8 +47,6 @@ public class TransitionTableController {
 
             StateController newStateController = new StateController(diagramModel, diagramView, this);
             diagramView.addStateView(0.0, 0.0, newStateController, userEntryCurrentStateId);
-            System.out.println("triggered");
-
         }
 
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
@@ -60,7 +58,6 @@ public class TransitionTableController {
 
             StateController newStateController = new StateController(diagramModel, diagramView, this);
             diagramView.addStateView(0.0, 0.0, newStateController, userEntryResultingStateId);
-            System.out.println("triggered");
         }
 
 
@@ -69,7 +66,7 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
         diagramModel.addTransitionModel(newTransitionModel);
-        diagramView.addEdge(currentStateModel.getStateId(), resultingStateModel.getStateId());
+        diagramView.addTransitionView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
 
 
     }

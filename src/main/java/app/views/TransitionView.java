@@ -5,11 +5,14 @@ package app.views;
 import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 public class TransitionView extends Group {
 
     private StateView source;
     private StateView target;
+
+    private final String transitions;
 
     private Line arrowShaft;
     private Line arrowTipSide1;
@@ -18,10 +21,11 @@ public class TransitionView extends Group {
     private double arrowTipLength = 20;
     private double arrowTipWidth = 7;
 
-    public TransitionView(StateView source, StateView target) {
+    public TransitionView(StateView source, StateView target, String transitions) {
 
         this.source = source;
         this.target = target;
+        this.transitions = transitions; 
 
         source.addStateChild(target);
         target.addStateParent(source);
@@ -109,10 +113,18 @@ public class TransitionView extends Group {
         updater.invalidated(null);
 
 
+        // Label for state GUI
+        Text text = new Text(transitions);
+        text.relocate(target.getBoundsInParent().getWidth() / 2.0, target.getBoundsInParent().getWidth() / 2.0);
+
+
+
         // Add arrow shaft/arrowtips into a group to create an arrow
         getChildren().add(arrowShaft);
         getChildren().add(arrowTipSide1);
         getChildren().add(arrowTipSide2);
+
+        getChildren().add(text);
 
     }
 

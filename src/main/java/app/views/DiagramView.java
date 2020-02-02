@@ -73,14 +73,14 @@ public class DiagramView extends Pane {
         stateMap.put(stateId, stateView);
     }
 
-    public void addEdge(String sourceId, String targetId) {
+    public void addTransitionView(String sourceId, String targetId, String transitions) {
 
         //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceId);
         StateView targetCell = stateMap.get(targetId);
 
         //Create TransitionView
-        TransitionView transitionView = new TransitionView(sourceCell, targetCell);
+        TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitions);
 
         this.getChildren().add(transitionView);
     }

@@ -66,4 +66,9 @@ public class TransitionModel {
     public void setStackSymbolToPush(String stackSymbolToPush) {
         this.stackSymbolToPush = stackSymbolToPush;
     }
+
+    @Override
+    public String toString() {
+        return inputSymbol + ',' + stackSymbolToPop + "->" + stackSymbolToPush;
+    }
 }

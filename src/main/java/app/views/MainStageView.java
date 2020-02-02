@@ -36,9 +36,6 @@ public class MainStageView extends BorderPane {
         this.setTop(topBar);
 
 
-
-
-
         Button save = new Button("Save");
         Button load = new Button("Load");
 
