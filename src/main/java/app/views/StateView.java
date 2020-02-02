@@ -21,12 +21,7 @@ public class StateView extends Group {
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
-
-    String cssLayout = "-fx-border-color: black;\n" +
-            "-fx-border-insets: 5;\n" +
-            "-fx-border-width: 3;\n" +
-            "-fx-border-style: solid;\n";
-
+    
     public StateView(double x, double y, StateController stateController, String stateId) {
         this.centerX = x;
         this.centerY = y;
@@ -44,6 +39,7 @@ public class StateView extends Group {
 
     private void setUpComponents() {
 
+        //State GUI
         Circle state = new Circle();
         state.setCenterX(centerX);
         state.setCenterY(centerY);
@@ -51,16 +47,11 @@ public class StateView extends Group {
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-
+        // Label for state GUI
         Text text = new Text(stateId);
-
         text.relocate(centerX - 6, centerY - 6);
 
-        this.setStyle(cssLayout);
-
-
         this.getChildren().addAll(state, text);
-
 
     }
 
