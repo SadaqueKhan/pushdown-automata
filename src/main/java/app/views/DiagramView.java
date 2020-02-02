@@ -20,6 +20,10 @@ public class DiagramView extends Pane {
 
     private ZoomableScrollPane scrollPane;
 
+    String cssLayout = "-fx-border-color: black;\n" +
+            "-fx-border-insets: 5;\n" +
+            "-fx-border-width: 3;\n" +
+            "-fx-border-style: solid;\n";
 
     public DiagramView(DiagramController diagramController, MainStageView mainStageView) {
 
@@ -46,6 +50,7 @@ public class DiagramView extends Pane {
 
         stateMap = new HashMap<>(); // <id,cell>
 
+        this.setStyle(cssLayout);
         mainStageView.setCenter(this);
 
     }

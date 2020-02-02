@@ -4,13 +4,15 @@ package app.views;
 
 import app.controllers.StateController;
 import app.listeners.StateListener;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateView extends Circle {
+public class StateView extends Group {
 
     private String stateId;
     private final StateController stateController;
@@ -20,6 +22,10 @@ public class StateView extends Circle {
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
 
+    String cssLayout = "-fx-border-color: black;\n" +
+            "-fx-border-insets: 5;\n" +
+            "-fx-border-width: 3;\n" +
+            "-fx-border-style: solid;\n";
 
     public StateView(double x, double y, StateController stateController, String stateId) {
         this.centerX = x;
@@ -37,11 +43,24 @@ public class StateView extends Circle {
 
 
     private void setUpComponents() {
-        this.setCenterX(centerX);
-        this.setCenterY(centerY);
-        this.setRadius(40);
-        this.setStroke(Color.GREEN);
-        this.setFill(Color.RED);
+
+        Circle state = new Circle();
+        state.setCenterX(centerX);
+        state.setCenterY(centerY);
+        state.setRadius(40);
+        state.setStroke(Color.GREEN);
+        state.setFill(Color.RED);
+
+
+        Text text = new Text(stateId);
+
+        text.relocate(centerX - 6, centerY - 6);
+
+        this.setStyle(cssLayout);
+
+
+        this.getChildren().addAll(state, text);
+
 
     }
 
