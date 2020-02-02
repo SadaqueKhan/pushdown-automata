@@ -21,11 +21,13 @@ public class TransitionView extends Group {
     private double arrowTipLength = 20;
     private double arrowTipWidth = 7;
 
+    private Text arrowLabel;
+
     public TransitionView(StateView source, StateView target, String transitions) {
 
         this.source = source;
         this.target = target;
-        this.transitions = transitions; 
+        this.transitions = transitions;
 
         source.addStateChild(target);
         target.addStateParent(source);
@@ -63,6 +65,8 @@ public class TransitionView extends Group {
         arrowTipSide2.setStrokeWidth(3);
 
 
+        arrowLabel = new Text(transitions);
+
         //TODO Remove this listeners from the view.
 
         //Create listener to help update positioning of arrows tip on the shaft
@@ -79,6 +83,8 @@ public class TransitionView extends Group {
             arrowTipSide2.setEndX(ex);
             arrowTipSide2.setEndY(ey);
 
+            arrowLabel.setX((sx + ex) / 2);
+            arrowLabel.setY((sy + ey) / 2);
 
             if (ex == sx && ey == sy) {
                 // arrow parts of length 0
@@ -110,22 +116,19 @@ public class TransitionView extends Group {
         arrowShaft.startYProperty().addListener(updater);
         arrowShaft.endXProperty().addListener(updater);
         arrowShaft.endYProperty().addListener(updater);
+
+        // add listener to text
+        arrowLabel.xProperty().addListener(updater);
+        arrowLabel.yProperty().addListener(updater);
+
         updater.invalidated(null);
-
-
-        // Label for state GUI
-        Text text = new Text(transitions);
-        text.relocate(target.getBoundsInParent().getWidth() / 2.0, target.getBoundsInParent().getWidth() / 2.0);
-
 
 
         // Add arrow shaft/arrowtips into a group to create an arrow
         getChildren().add(arrowShaft);
         getChildren().add(arrowTipSide1);
         getChildren().add(arrowTipSide2);
-
-        getChildren().add(text);
-
+        getChildren().add(arrowLabel);
     }
 
 

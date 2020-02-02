@@ -75,7 +75,7 @@ public class TransitionTableController {
     public void load() {
         this.transitionTableView = new TransitionTableView(this);
 
-        Scene scene = new Scene(transitionTableView, 500, 500);
+        Scene scene = new Scene(transitionTableView, 1000, 1000);
         Stage stage = new Stage();
         stage.setTitle("Transition Table");
         stage.setScene(scene);
