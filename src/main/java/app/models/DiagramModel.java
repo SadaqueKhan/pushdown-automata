@@ -19,6 +19,11 @@ public class DiagramModel implements Serializable {
 
     }
 
+    public void removeStateModel(String stateModelId) {
+        StateModel stateModelToRemove = getStateModel(stateModelId);
+        stateModelSet.remove(stateModelToRemove);
+    }
+
     public void addTransitionModel(TransitionModel newTransitionModel) {
         transitionModelSet.add(newTransitionModel);
     }

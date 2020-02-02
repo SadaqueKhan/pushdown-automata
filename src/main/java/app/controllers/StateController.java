@@ -1,7 +1,7 @@
 package app.controllers;
 
+import app.models.DiagramModel;
 import app.views.DiagramView;
-import app.views.MainStageView;
 import app.views.StateView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,29 +11,22 @@ import javafx.scene.control.MenuItem;
 
 public class StateController {
 
-    private final MainStageView mainStageView;
+    private final DiagramModel diagramModel;
     private final DiagramView diagramView;
-    private final TransitionTableController transitionTableController;
 
+    private final TransitionTableController transitionTableController;
 
     private double dragContextX = 0.0;
     private double dragContextY = 0.0;
 
-    public StateController(MainStageView mainStageView, DiagramView diagramView, TransitionTableController transitionTableController) {
-
-        this.mainStageView = mainStageView;
+    public StateController(DiagramModel diagramModel, DiagramView diagramView, TransitionTableController transitionTableController) {
+        this.diagramModel = diagramModel;
         this.diagramView = diagramView;
-
-
         this.transitionTableController = transitionTableController;
-
-
     }
 
 
     public void onMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-
-        //TODO Remove this coupling
         double scale = diagramView.getScale();
 
         dragContextX = stateView.getBoundsInParent().getMinX() * scale - xPositionOfMouse;
@@ -43,10 +36,6 @@ public class StateController {
 
 
     public void onMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-
-
-
-        //TODO Remove this coupling
         double scale = diagramView.getScale();
 
         double offsetX = xPositionOfMouse + dragContextX;
@@ -60,33 +49,29 @@ public class StateController {
 
 
     public void createPopup(StateView stateView) {
-
         //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem createTransition = new MenuItem("Add transition");
-        MenuItem deleteItem = new MenuItem("Delete");
-
+        MenuItem createTransitionItem = new MenuItem("Create transition");
+        MenuItem deleteStateItem = new MenuItem("Delete");
 
         //TODO need to remove this listeners logic
-        createTransition.setOnAction(new EventHandler<ActionEvent>() {
+        createTransitionItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 transitionTableController.load();
             }
         });
 
-
-        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+        deleteStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
+                diagramModel.removeStateModel(stateView.getStateId());
                 diagramView.getChildren().remove(stateView);
             }
         });
 
-
-        contextMenu.getItems().add(createTransition);
-        contextMenu.getItems().add(deleteItem);
+        contextMenu.getItems().add(createTransitionItem);
+        contextMenu.getItems().add(deleteStateItem);
 
         contextMenu.show(stateView, Side.RIGHT, 5, 5);
-
 
     }
 }

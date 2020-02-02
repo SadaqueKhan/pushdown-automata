@@ -17,7 +17,6 @@ public class TransitionTableController {
 
     public TransitionTableController(DiagramModel diagramModel, DiagramView diagramView) {
 
-
         this.diagramModel = diagramModel;
         this.diagramView = diagramView;
 
@@ -39,22 +38,26 @@ public class TransitionTableController {
         StateModel currentStateModel;
         StateModel resultingStateModel;
 
-        // Check to see if current state id exists
+        // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (diagramModel.stateExists(userEntryCurrentStateId)) {
             currentStateModel = diagramModel.getStateModel(userEntryCurrentStateId);
-            System.out.println(currentStateModel.getStateId());
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             diagramModel.addStateModel(currentStateModel);
+
+            StateController newStateController = new StateController(diagramModel, diagramView, this);
+            diagramView.addStateView(0.0, 0.0, newStateController, userEntryCurrentStateId);
         }
 
-        // Check to see if resulting state id exists
+        // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (diagramModel.stateExists(userEntryResultingStateId)) {
             resultingStateModel = diagramModel.getStateModel(userEntryResultingStateId);
-            System.out.println(resultingStateModel.getStateId());
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             diagramModel.addStateModel(resultingStateModel);
+
+            StateController newStateController = new StateController(diagramModel, diagramView, this);
+            diagramView.addStateView(0.0, 0.0, newStateController, userEntryResultingStateId);
         }
 
 
@@ -63,7 +66,6 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
         diagramModel.addTransitionModel(newTransitionModel);
-
         diagramView.addEdge(currentStateModel.getStateId(), resultingStateModel.getStateId());
 
 

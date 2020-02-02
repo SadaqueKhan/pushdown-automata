@@ -23,10 +23,6 @@ public class TransitionView extends Group {
         this.source = source;
         this.target = target;
 
-
-        System.out.println(source);
-        System.out.println(target);
-
         source.addStateChild(target);
         target.addStateParent(source);
 

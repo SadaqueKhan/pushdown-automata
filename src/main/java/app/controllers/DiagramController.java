@@ -30,7 +30,7 @@ public class DiagramController {
 
     public void addStateToView(double x, double y) {
 
-        StateController newStateController = new StateController(mainStageView, diagramView, transitionTableController);
+        StateController newStateController = new StateController(diagramModel, diagramView, transitionTableController);
 
         StateModel newStateModel = new StateModel();
 
