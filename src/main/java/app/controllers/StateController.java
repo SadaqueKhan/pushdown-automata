@@ -44,7 +44,30 @@ public class StateController {
         offsetX /= scale;
         offsetY /= scale;
 
+//        System.out.println("X coordinate: " + offsetX);
+//        System.out.println("Y coordinate" + offsetY);
+
+
+        if (!(stateView.getStateParents().isEmpty())) {
+            //Target
+
+            for (StateView stateView1 : stateView.getStateParents()) {
+
+                if (stateView1.getCenterX() < offsetX) {
+
+                    System.out.println("----");
+                    System.out.println("TargetXONLEFT:" + offsetX);
+                    System.out.println("SourceYONRIGHT:" + stateView1.getCenterX());
+                    System.out.println("----");
+                }
+
+            }
+        }
+
+        stateView.setCenterX(offsetX);
+        stateView.setCenterY(offsetY);
         stateView.relocate(offsetX, offsetY);
+
     }
 
 

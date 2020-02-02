@@ -21,7 +21,7 @@ public class StateView extends Group {
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
-    
+
     public StateView(double x, double y, StateController stateController, String stateId) {
         this.centerX = x;
         this.centerY = y;
@@ -90,6 +90,22 @@ public class StateView extends Group {
 
     public String getStateId() {
         return stateId;
+    }
+
+    public double getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(double centerX) {
+        this.centerX = centerX;
+    }
+
+    public double getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(double centerY) {
+        this.centerY = centerY;
     }
 }
 

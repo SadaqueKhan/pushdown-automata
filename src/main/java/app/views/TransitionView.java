@@ -42,19 +42,24 @@ public class TransitionView extends Group {
         this.arrowShaft = new Line();
         arrowShaft.setStrokeWidth(3);
 
-
-        double x = 140;
-        double y = 100;
+        double x = 40.0;
+        double y = 0.0;
 
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
         arrowShaft.startXProperty().bind(source.layoutXProperty().add(x));
         arrowShaft.startYProperty().bind(source.layoutYProperty().add(y));
 
+        System.out.println("X direction of source: " + source.getBoundsInParent().getWidth());
+        System.out.println("Y direction of source: " + source.getBoundsInParent().getHeight());
+
 
         //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
-        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth() / 2.0));
-        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight() / 2.0));
+        arrowShaft.endXProperty().bind(target.layoutXProperty().add(x));
+        arrowShaft.endYProperty().bind(target.layoutYProperty().add(y));
 
+
+        System.out.println("X direction of target: " + target.getBoundsInParent().getWidth() / 2.0);
+        System.out.println("Y direction of target: " + target.getBoundsInParent().getHeight() / 2.0);
 
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();
@@ -129,6 +134,8 @@ public class TransitionView extends Group {
         getChildren().add(arrowTipSide1);
         getChildren().add(arrowTipSide2);
         getChildren().add(arrowLabel);
+
+
     }
 
 
@@ -139,5 +146,6 @@ public class TransitionView extends Group {
     public StateView getTarget() {
         return target;
     }
+
 
 }
