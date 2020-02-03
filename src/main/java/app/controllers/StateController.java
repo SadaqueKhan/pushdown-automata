@@ -74,8 +74,19 @@ public class StateController {
     public void createPopup(StateView stateView) {
         //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
+        MenuItem toggleFinalStateItem = new MenuItem("Create transition");
         MenuItem createTransitionItem = new MenuItem("Create transition");
         MenuItem deleteStateItem = new MenuItem("Delete");
+
+
+        //TODO need to remove this listeners logic
+        createTransitionItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                transitionTableController.load();
+            }
+        });
+
+
 
         //TODO need to remove this listeners logic
         createTransitionItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -90,7 +101,8 @@ public class StateController {
                 diagramView.getChildren().remove(stateView);
             }
         });
-
+        
+        contextMenu.getItems().add(toggleFinalStateItem);
         contextMenu.getItems().add(createTransitionItem);
         contextMenu.getItems().add(deleteStateItem);
 

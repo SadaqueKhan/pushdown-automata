@@ -5,11 +5,11 @@ package app.views;
 import javafx.beans.InvalidationListener;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.QuadCurve;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
-
-import java.util.Random;
 
 public class TransitionView extends Group {
 
@@ -46,39 +46,15 @@ public class TransitionView extends Group {
     }
 
     private void setUpReflexiveTransitionComponents() {
-
-        double highestValue = 40.0;
-        double lowestValue = -40.0;
-
-
-        QuadCurve quadCurve = new QuadCurve();
-
-
-        Random rand = new Random();
+        Arc arc = new Arc(50, 50, 25, 25, 0, 360);
+        arc.setType(ArcType.OPEN);
+        arc.setStrokeWidth(3);
+        arc.setStroke(Color.BLACK);
+        arc.setStrokeType(StrokeType.INSIDE);
+        arc.setFill(null);
 
 
-        double randomX = rand.nextDouble() * (highestValue - lowestValue) + lowestValue;
-        double randomY = rand.nextDouble() * (highestValue - lowestValue) + lowestValue;
-
-
-        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
-        quadCurve.startXProperty().bind(source.layoutXProperty().add(0));
-        quadCurve.startYProperty().bind(source.layoutYProperty().add(40));
-
-
-        quadCurve.startXProperty().bind(source.layoutXProperty().add(0));
-        quadCurve.controlYProperty().bind(source.layoutYProperty().add(-40));
-
-        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
-        quadCurve.endXProperty().bind(target.layoutXProperty().add(randomX));
-        quadCurve.endYProperty().bind(target.layoutYProperty().add(randomY));
-
-
-        quadCurve.setStroke(Color.BLACK);
-        quadCurve.setStrokeWidth(5);
-        quadCurve.setFill(null);
-
-        getChildren().add(quadCurve);
+        getChildren().add(arc);
     }
 
     private void setUpStandardTransitionComponents() {

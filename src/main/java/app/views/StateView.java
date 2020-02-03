@@ -6,7 +6,10 @@ import app.controllers.StateController;
 import app.listeners.StateListener;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class StateView extends Group {
         this.stateController = stateController;
 
         //Set up the components to represent the state in the view
+
         setUpComponents();
         setUpListeners();
     }
@@ -51,7 +55,17 @@ public class StateView extends Group {
         Text text = new Text(stateId);
         text.relocate(centerX - 6, centerY - 6);
 
-        this.getChildren().addAll(state, text);
+
+        Arc arc = new Arc(centerX, centerY, 30, 30, 0, 360);
+
+        arc.setType(ArcType.OPEN);
+        arc.setStrokeWidth(3);
+        arc.setStroke(Color.BLACK);
+        arc.setStrokeType(StrokeType.INSIDE);
+        arc.setFill(null);
+
+
+        this.getChildren().addAll(state, text, arc);
 
     }
 
