@@ -36,12 +36,12 @@ public class StateView extends Group {
 
         //Set up the components to represent the state in the view
 
-        setUpComponents();
-        setUpListeners();
+        setUpStandardStateUIComponents();
+        setUpUIListeners();
     }
 
 
-    private void setUpComponents() {
+    public void setUpStandardStateUIComponents() {
 
         //State GUI
         Circle state = new Circle();
@@ -55,6 +55,11 @@ public class StateView extends Group {
         Text text = new Text(stateId);
         text.relocate(centerX - 6, centerY - 6);
 
+        this.getChildren().addAll(state, text);
+
+    }
+
+    public void setUpFinalStateUIComponent() {
 
         Arc arc = new Arc(centerX, centerY, 30, 30, 0, 360);
 
@@ -64,12 +69,10 @@ public class StateView extends Group {
         arc.setStrokeType(StrokeType.INSIDE);
         arc.setFill(null);
 
-
-        this.getChildren().addAll(state, text, arc);
-
+        this.getChildren().add(arc);
     }
 
-    private void setUpListeners() {
+    private void setUpUIListeners() {
 
         //Create listener for this view
         StateListener stateListener = new StateListener(stateController);
