@@ -26,12 +26,10 @@ public class MainStageView extends BorderPane {
 
     private void setUpComponents() {
 
-        Button button1 = new Button("Create State");
-        Button button2 = new Button("Create Transitions");
         Button button3 = new Button("Transition Table");
         Button button4 = new Button("Simulate");
 
-        HBox topBar = new HBox(button1, button2, button3, button4);
+        HBox topBar = new HBox(button3, button4);
 
         this.setTop(topBar);
 

@@ -38,14 +38,14 @@ public class TransitionView extends Group {
 
 
         if (source.equals(target)) {
-            setUpReflexiveTranitiveComponents();
+            setUpReflexiveTransitionComponents();
         } else {
-            setUpComponents();
+            setUpStandardTransitionComponents();
         }
 
     }
 
-    private void setUpReflexiveTranitiveComponents() {
+    private void setUpReflexiveTransitionComponents() {
 
         double highestValue = 40.0;
         double lowestValue = -40.0;
@@ -63,12 +63,11 @@ public class TransitionView extends Group {
 
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
         quadCurve.startXProperty().bind(source.layoutXProperty().add(0));
-        quadCurve.startYProperty().bind(source.layoutYProperty().add(-40));
+        quadCurve.startYProperty().bind(source.layoutYProperty().add(40));
 
 
-        quadCurve.setControlX(20);
-        quadCurve.setControlY(0);
-
+        quadCurve.startXProperty().bind(source.layoutXProperty().add(0));
+        quadCurve.controlYProperty().bind(source.layoutYProperty().add(-40));
 
         //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
         quadCurve.endXProperty().bind(target.layoutXProperty().add(randomX));
@@ -82,7 +81,7 @@ public class TransitionView extends Group {
         getChildren().add(quadCurve);
     }
 
-    private void setUpComponents() {
+    private void setUpStandardTransitionComponents() {
 
         //Create arrow shaft using line object
         this.arrowShaft = new Line();
