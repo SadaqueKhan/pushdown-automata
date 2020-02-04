@@ -2,8 +2,8 @@ package app.views;
 
 //Complete
 
-import app.controllers.StateController;
-import app.listeners.StateListener;
+import app.controllers.DiagramController;
+import app.listeners.DiagramListener;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -18,21 +18,22 @@ import java.util.List;
 public class StateView extends Group {
 
     private String stateId;
-    private final StateController stateController;
+    private final DiagramController diagramController;
     private double centerX;
     private double centerY;
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
 
-    public StateView(double x, double y, StateController stateController, String stateId) {
+
+    public StateView(double x, double y, DiagramController diagramController, String stateId) {
         this.centerX = x;
         this.centerY = y;
 
         this.stateId = stateId;
 
         // Reference to the controller of this view
-        this.stateController = stateController;
+        this.diagramController = diagramController;
 
         //Set up the components to represent the state in the view
 
@@ -51,12 +52,11 @@ public class StateView extends Group {
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
-        // Label for state GUI
-        Text text = new Text(stateId);
-        text.relocate(centerX - 6, centerY - 6);
+        // Text for state GUI
+        Text stateIdText = new Text(stateId);
+        stateIdText.relocate(centerX - 6, centerY - 6);
 
-        this.getChildren().addAll(state, text);
-
+        this.getChildren().addAll(state, stateIdText);
     }
 
     public void setUpFinalStateUIComponent() {
@@ -75,11 +75,11 @@ public class StateView extends Group {
     private void setUpUIListeners() {
 
         //Create listener for this view
-        StateListener stateListener = new StateListener(stateController);
+        DiagramListener diagramListener = new DiagramListener(diagramController);
 
         //Link listeners to events
-        this.setOnMousePressed(stateListener);
-        this.setOnMouseDragged(stateListener);
+        this.setOnMousePressed(diagramListener);
+        this.setOnMouseDragged(diagramListener);
 
     }
 

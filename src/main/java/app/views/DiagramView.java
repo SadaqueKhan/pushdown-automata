@@ -1,7 +1,6 @@
 package app.views;
 
 import app.controllers.DiagramController;
-import app.controllers.StateController;
 import app.listeners.DiagramListener;
 import javafx.scene.layout.Pane;
 
@@ -64,23 +63,23 @@ public class DiagramView extends Pane {
 
     }
 
-    public void addStateView(double x, double y, StateController stateController, String stateId) {
+    public void addStateView(double x, double y, DiagramController diagramController, String stateId) {
 
-        StateView stateView = new StateView(x, y, stateController, stateId);
+        StateView stateView = new StateView(x, y, diagramController, stateId);
 
         this.getChildren().add(stateView);
 
         stateMap.put(stateId, stateView);
     }
 
-    public void addTransitionView(String sourceId, String targetId, String transitions) {
+    public void addTransitionView(String sourceID, String targetID, String transitionsID) {
 
         //Get state from map using state ID
-        StateView sourceCell = stateMap.get(sourceId);
-        StateView targetCell = stateMap.get(targetId);
+        StateView sourceCell = stateMap.get(sourceID);
+        StateView targetCell = stateMap.get(targetID);
 
         //Create TransitionView
-        TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitions);
+        TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitionsID);
 
         this.getChildren().add(transitionView);
     }
@@ -91,4 +90,8 @@ public class DiagramView extends Pane {
     }
 
 
+    @Override
+    public String toString() {
+        return "DiagramView";
+    }
 }

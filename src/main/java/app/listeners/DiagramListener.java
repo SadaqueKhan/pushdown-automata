@@ -1,10 +1,13 @@
 package app.listeners;
 
 import app.controllers.DiagramController;
+import app.views.DiagramView;
+import app.views.StateView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
@@ -18,22 +21,46 @@ public class DiagramListener implements EventHandler<MouseEvent> {
 
     @Override
     public void handle(MouseEvent event) {
-        if (event.getButton() == MouseButton.PRIMARY) {
+        //Node selected
+        Node picked = event.getPickResult().getIntersectedNode();
 
-            Node picked = event.getPickResult().getIntersectedNode();
+        //absolute horizontal x position of the event.
+        double xPositionOfMouse = event.getScreenX();
 
-            //Check if mouse is pressing on state node
-            if (picked instanceof Circle || picked instanceof Text) {
-                //Do nothing
-            } else {
-                //Add the state to diagram
-                double X = event.getX(); // remove pane's coordinate system here
-                double Y = event.getY(); // remove pane's coordinate system here
+        //absolute vertical y position of the event.
+        double yPositionOfMouse = event.getScreenY();
 
-                diagramController.addStateToView(X, Y);
 
+        if (picked instanceof DiagramView) {
+            if (event.getSource() instanceof DiagramView) {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    //Add the state to diagram
+                    double X = event.getX(); // remove pane's coordinate system here
+                    double Y = event.getY(); // remove pane's coordinate system here
+                    diagramController.addStateToViewMouseEventResponse(X, Y);
+                }
             }
+        }
 
+        if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
+            if (event.getSource() instanceof StateView) {
+                StateView stateView = (StateView) event.getSource();
+                String eventType = event.getEventType().toString();
+                if (eventType.equals("MOUSE_PRESSED")) {
+                    diagramController.stateViewOnMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
+                    // Popup dialog
+                    if (event.isPopupTrigger()) {
+                        diagramController.stateViewCreateContextMenuPopUp(stateView);
+                    }
+                }
+
+                if (eventType.equals("MOUSE_DRAGGED")) {
+                    diagramController.stateViewOnMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
+                }
+            }
         }
     }
 }
+
+
+

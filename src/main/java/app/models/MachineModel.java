@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 
-public class DiagramModel implements Serializable {
+public class MachineModel implements Serializable {
 
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
 
-    public DiagramModel() throws IOException {
+    public MachineModel() throws IOException {
         this.stateModelSet = new HashSet<StateModel>();
         this.transitionModelSet = new HashSet<TransitionModel>();
     }

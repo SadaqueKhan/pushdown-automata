@@ -1,25 +1,24 @@
 package app.controllers;
 
-import app.models.DiagramModel;
+import app.models.MachineModel;
 import app.models.StateModel;
 import app.models.TransitionModel;
-import app.views.DiagramView;
+import app.views.MainStageView;
 import app.views.TransitionTableView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class TransitionTableController {
 
-    private final DiagramModel diagramModel;
-    private final DiagramView diagramView;
+    private final MachineModel machineModel;
+    private final DiagramController diagramController;
+
     private TransitionTableView transitionTableView;
 
 
-    public TransitionTableController(DiagramModel diagramModel, DiagramView diagramView) {
-
-        this.diagramModel = diagramModel;
-        this.diagramView = diagramView;
-
+    public TransitionTableController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
+        this.machineModel = machineModel;
+        this.diagramController = mainStageController.getDiagramController();
     }
 
 
@@ -39,25 +38,23 @@ public class TransitionTableController {
         StateModel resultingStateModel;
 
         // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (diagramModel.stateExists(userEntryCurrentStateId)) {
-            currentStateModel = diagramModel.getStateModel(userEntryCurrentStateId);
+        if (machineModel.stateExists(userEntryCurrentStateId)) {
+            currentStateModel = machineModel.getStateModel(userEntryCurrentStateId);
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
-            diagramModel.addStateModel(currentStateModel);
+            machineModel.addStateModel(currentStateModel);
 
-            StateController newStateController = new StateController(diagramModel, diagramView, this);
-            diagramView.addStateView(0.0, 0.0, newStateController, userEntryCurrentStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryCurrentStateId);
         }
 
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (diagramModel.stateExists(userEntryResultingStateId)) {
-            resultingStateModel = diagramModel.getStateModel(userEntryResultingStateId);
+        if (machineModel.stateExists(userEntryResultingStateId)) {
+            resultingStateModel = machineModel.getStateModel(userEntryResultingStateId);
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
-            diagramModel.addStateModel(resultingStateModel);
+            machineModel.addStateModel(resultingStateModel);
 
-            StateController newStateController = new StateController(diagramModel, diagramView, this);
-            diagramView.addStateView(0.0, 0.0, newStateController, userEntryResultingStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryResultingStateId);
         }
 
 
@@ -65,10 +62,9 @@ public class TransitionTableController {
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
-        diagramModel.addTransitionModel(newTransitionModel);
-        diagramView.addTransitionView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+        machineModel.addTransitionModel(newTransitionModel);
 
-
+        diagramController.addTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
     }
 
 
