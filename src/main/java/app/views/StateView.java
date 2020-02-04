@@ -13,19 +13,20 @@ import java.util.List;
 
 public class StateView extends Group {
 
-    private String stateId;
     private final DiagramController diagramController;
-    private double centerX;
-    private double centerY;
+
+    private String stateId;
+    private double currentStateXPosition;
+    private double currentStateYPosition;
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
     private Circle state;
 
 
-    public StateView(double x, double y, DiagramController diagramController, String stateId) {
-        this.centerX = x;
-        this.centerY = y;
+    public StateView(double currentStateXPosition, double currentStateYPosition, DiagramController diagramController, String stateId) {
+        this.currentStateXPosition = currentStateXPosition;
+        this.currentStateYPosition = currentStateYPosition;
 
         this.stateId = stateId;
 
@@ -42,15 +43,15 @@ public class StateView extends Group {
 
         //State GUI
         this.state = new Circle();
-        state.setCenterX(centerX);
-        state.setCenterY(centerY);
+        state.setCenterX(currentStateXPosition);
+        state.setCenterY(currentStateYPosition);
         state.setRadius(40);
         state.setStroke(Color.GREEN);
         state.setFill(Color.RED);
 
         // Text for state GUI
         Text stateIdText = new Text(stateId);
-        stateIdText.relocate(centerX - 6, centerY - 6);
+        stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
 
         this.getChildren().addAll(state, stateIdText);
     }
@@ -71,7 +72,7 @@ public class StateView extends Group {
         startStatePointLine1.setEndX(15);
         startStatePointLine1.setEndY(15);
 
-        startStatePointLine1.relocate(centerX - 40, centerY);
+        startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
 
 
         //Create arrow shaft using line object
@@ -88,7 +89,7 @@ public class StateView extends Group {
         startStatePointLine2.setEndX(15);
         startStatePointLine2.setEndY(15);
 
-        startStatePointLine2.relocate(centerX - 40, centerY);
+        startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
 
         this.getChildren().addAll(startStatePointLine1, startStatePointLine2);
@@ -97,7 +98,7 @@ public class StateView extends Group {
 
     public void setUpFinalStateUIComponent() {
 
-        Arc arc = new Arc(centerX, centerY, 30, 30, 0, 360);
+        Arc arc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
 
         arc.setType(ArcType.OPEN);
         arc.setStrokeWidth(3);
@@ -120,6 +121,25 @@ public class StateView extends Group {
 
     }
 
+    public String getStateId() {
+        return stateId;
+    }
+
+    public double getCurrentStateXPosition() {
+        return currentStateXPosition;
+    }
+
+    public void setCurrentStateXPosition(double currentStateXPosition) {
+        this.currentStateXPosition = currentStateXPosition;
+    }
+
+    public double getCurrentStateYPosition() {
+        return currentStateYPosition;
+    }
+
+    public void setCurrentStateYPosition(double currentStateYPosition) {
+        this.currentStateYPosition = currentStateYPosition;
+    }
 
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {
@@ -142,24 +162,4 @@ public class StateView extends Group {
         children.remove(stateView);
     }
 
-    public String getStateId() {
-        return stateId;
-    }
-
-    public double getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(double centerX) {
-        this.centerX = centerX;
-    }
-
-    public double getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(double centerY) {
-        this.centerY = centerY;
-    }
 }
-

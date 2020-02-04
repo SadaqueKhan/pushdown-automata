@@ -23,7 +23,6 @@ public class StateModel {
         return stateId;
     }
 
-
     //Getters/Setters
     public boolean isStandardState() {
         return isStandardState;

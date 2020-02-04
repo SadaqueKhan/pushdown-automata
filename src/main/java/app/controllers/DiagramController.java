@@ -69,20 +69,22 @@ public class DiagramController {
 
             for (StateView stateView1 : stateView.getStateParents()) {
 
-                if (stateView1.getCenterX() < offsetX) {
+                if (stateView1.getCurrentStateXPosition() < offsetX) {
 
                     System.out.println("----");
                     System.out.println("TargetXONLEFT:" + offsetX);
-                    System.out.println("SourceYONRIGHT:" + stateView1.getCenterX());
+                    System.out.println("SourceYONRIGHT:" + stateView1.getCurrentStateXPosition());
                     System.out.println("----");
                 }
 
             }
         }
 
-        stateView.setCenterX(offsetX);
-        stateView.setCenterY(offsetY);
+        stateView.setCurrentStateXPosition(offsetX);
+        stateView.setCurrentStateYPosition(offsetY);
+
         stateView.relocate(offsetX, offsetY);
+
 
     }
 
