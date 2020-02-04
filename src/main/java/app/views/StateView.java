@@ -1,7 +1,5 @@
 package app.views;
 
-//Complete
-
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
 import javafx.scene.Group;
@@ -80,11 +78,9 @@ public class StateView extends Group {
         //Create arrow shaft using line object
         Line startStatePointLine2 = new Line();
         startStatePointLine2.setStrokeWidth(3);
-
-        startStatePointLine2.setStroke(Color.GREEN);
+        
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
-
         //setting properties for the rotate object.
         rotate2.setAngle(90);
         startStatePointLine2.getTransforms().add(rotate2);
