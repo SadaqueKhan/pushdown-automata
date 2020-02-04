@@ -21,8 +21,13 @@ public class StateView extends Group {
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
-    private Circle state;
 
+    // GUI Components
+    private Circle stateCircle;
+    private Text stateIdText;
+    private Line startStatePointLine1;
+    private Line startStatePointLine2;
+    private Arc finalStateArc;
 
     public StateView(double currentStateXPosition, double currentStateYPosition, DiagramController diagramController, String stateId) {
         this.currentStateXPosition = currentStateXPosition;
@@ -33,39 +38,37 @@ public class StateView extends Group {
         // Reference to the controller of this view
         this.diagramController = diagramController;
 
-        //Set up the components to represent the state in the view
-        setUpStandardStateUIComponents();
+        //Set up the components to represent the stateCircle in the view
+        setUpUIComponents();
         setUpUIListeners();
     }
 
 
-    public void setUpStandardStateUIComponents() {
-
+    public void setUpUIComponents() {
+//<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
-        this.state = new Circle();
-        state.setCenterX(currentStateXPosition);
-        state.setCenterY(currentStateYPosition);
-        state.setRadius(40);
-        state.setStroke(Color.GREEN);
-        state.setFill(Color.RED);
+        this.stateCircle = new Circle();
+        stateCircle.setCenterX(currentStateXPosition);
+        stateCircle.setCenterY(currentStateYPosition);
+        stateCircle.setRadius(40);
+        stateCircle.setStroke(Color.GREEN);
+        stateCircle.setFill(Color.RED);
 
-        // Text for state GUI
-        Text stateIdText = new Text(stateId);
+        // Text for stateCircle GUI
+        this.stateIdText = new Text(stateId);
         stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
 
-        this.getChildren().addAll(state, stateIdText);
-    }
-
-    public void setUpStartStateUIComponent() {
-
+//<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
-        Line startStatePointLine1 = new Line();
+        this.startStatePointLine1 = new Line();
         startStatePointLine1.setStrokeWidth(3);
+        startStatePointLine1.setStroke(Color.GREEN);
 
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
         //setting properties for the rotate object.
         rotate1.setAngle(180);
+
         startStatePointLine1.getTransforms().add(rotate1);
         startStatePointLine1.setStartX(0);
         startStatePointLine1.setStartY(0);
@@ -76,7 +79,7 @@ public class StateView extends Group {
 
 
         //Create arrow shaft using line object
-        Line startStatePointLine2 = new Line();
+        this.startStatePointLine2 = new Line();
         startStatePointLine2.setStrokeWidth(3);
 
         // instantiating the Rotate class.
@@ -91,22 +94,39 @@ public class StateView extends Group {
 
         startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
+        startStatePointLine1.setVisible(false);
+        startStatePointLine2.setVisible(false);
 
-        this.getChildren().addAll(startStatePointLine1, startStatePointLine2);
+
+//<<< CREATE START STATE UI COMPONENT >>>
+        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
+
+        finalStateArc.setType(ArcType.OPEN);
+        finalStateArc.setStrokeWidth(3);
+        finalStateArc.setStroke(Color.BLACK);
+        finalStateArc.setStrokeType(StrokeType.INSIDE);
+        finalStateArc.setFill(null);
+
+        finalStateArc.setVisible(false);
+
+        this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
+    }
+
+    public void toggleStandardStateUIComponent() {
+        startStatePointLine1.setVisible(false);
+        startStatePointLine2.setVisible(false);
+        finalStateArc.setVisible(false);
     }
 
 
-    public void setUpFinalStateUIComponent() {
+    public void toggleStartStateUIComponent() {
+        startStatePointLine1.setVisible(true);
+        startStatePointLine2.setVisible(true);
+    }
 
-        Arc arc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
 
-        arc.setType(ArcType.OPEN);
-        arc.setStrokeWidth(3);
-        arc.setStroke(Color.BLACK);
-        arc.setStrokeType(StrokeType.INSIDE);
-        arc.setFill(null);
-
-        this.getChildren().add(arc);
+    public void toggleFinalStateUIComponent() {
+        finalStateArc.setVisible(true);
     }
 
 
@@ -131,6 +151,8 @@ public class StateView extends Group {
 
     public void setCurrentStateXPosition(double currentStateXPosition) {
         this.currentStateXPosition = currentStateXPosition;
+        System.out.println("currentStateXPosition SETTER: " + currentStateXPosition);
+
     }
 
     public double getCurrentStateYPosition() {
@@ -139,6 +161,7 @@ public class StateView extends Group {
 
     public void setCurrentStateYPosition(double currentStateYPosition) {
         this.currentStateYPosition = currentStateYPosition;
+        System.out.println("currentStateYPosition SETTER: " + currentStateYPosition);
     }
 
     // TODO Remove these getters/setters from the view and break it down into MVC
@@ -161,5 +184,6 @@ public class StateView extends Group {
     public void removeStateChild(StateView stateView) {
         children.remove(stateView);
     }
+
 
 }

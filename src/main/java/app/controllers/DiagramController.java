@@ -58,6 +58,7 @@ public class DiagramController {
     public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
         double scale = diagramView.getScale();
 
+        System.out.println("Mouse position: " + xPositionOfMouse + "," + yPositionOfMouse);
         double offsetX = xPositionOfMouse + dragContextX;
         double offsetY = yPositionOfMouse + dragContextY;
 
@@ -83,6 +84,9 @@ public class DiagramController {
         stateView.setCurrentStateXPosition(offsetX);
         stateView.setCurrentStateYPosition(offsetY);
 
+        System.out.println("Mouse position: " + xPositionOfMouse + "," + yPositionOfMouse);
+        System.out.println("Offset position: " + offsetX + "," + offsetY);
+
         stateView.relocate(offsetX, offsetY);
 
 
@@ -103,14 +107,14 @@ public class DiagramController {
 
         toggleStandardStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.setUpStandardStateUIComponents();
+                stateView.toggleStandardStateUIComponent();
                 stateModel.setStandardState(true);
             }
         });
 
         toggleStartStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.setUpStartStateUIComponent();
+                stateView.toggleStartStateUIComponent();
                 stateModel.setStartState(true);
             }
         });
@@ -118,7 +122,7 @@ public class DiagramController {
         //TODO need to remove this listeners logic
         toggleFinalStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.setUpFinalStateUIComponent();
+                stateView.toggleFinalStateUIComponent();
                 stateModel.setFinalState(true);
             }
         });
