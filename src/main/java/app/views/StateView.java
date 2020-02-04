@@ -112,21 +112,21 @@ public class StateView extends Group {
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
     }
 
-    public void toggleStandardStateUIComponent() {
-        startStatePointLine1.setVisible(false);
-        startStatePointLine2.setVisible(false);
-        finalStateArc.setVisible(false);
+    public void toggleStandardStateUIComponent(boolean isStandardStateVisible) {
+        startStatePointLine1.setVisible(isStandardStateVisible);
+        startStatePointLine2.setVisible(isStandardStateVisible);
+        finalStateArc.setVisible(isStandardStateVisible);
     }
 
 
-    public void toggleStartStateUIComponent() {
-        startStatePointLine1.setVisible(true);
-        startStatePointLine2.setVisible(true);
+    public void toggleStartStateUIComponent(boolean isStartStateVisible) {
+        startStatePointLine1.setVisible(isStartStateVisible);
+        startStatePointLine2.setVisible(isStartStateVisible);
     }
 
 
-    public void toggleFinalStateUIComponent() {
-        finalStateArc.setVisible(true);
+    public void toggleFinalStateUIComponent(boolean isFinalStateVisible) {
+        finalStateArc.setVisible(isFinalStateVisible);
     }
 
 

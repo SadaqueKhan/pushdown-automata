@@ -107,23 +107,41 @@ public class DiagramController {
 
         toggleStandardStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.toggleStandardStateUIComponent();
-                stateModel.setStandardState(true);
+                if (stateModel.isStandardState()) {
+                    stateModel.setStandardState(false);
+                    stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+                } else {
+                    stateModel.setStandardState(true);
+                    stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+
+                }
             }
+
         });
 
         toggleStartStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.toggleStartStateUIComponent();
-                stateModel.setStartState(true);
+                if (stateModel.isStartState()) {
+                    stateModel.setStartState(false);
+                    stateView.toggleStartStateUIComponent(stateModel.isStartState());
+                } else {
+                    stateModel.setStartState(true);
+                    stateView.toggleStartStateUIComponent(stateModel.isStartState());
+
+                }
             }
         });
 
         //TODO need to remove this listeners logic
         toggleFinalStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                stateView.toggleFinalStateUIComponent();
-                stateModel.setFinalState(true);
+                if (stateModel.isFinalState()) {
+                    stateModel.setFinalState(false);
+                    stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
+                } else {
+                    stateModel.setFinalState(true);
+                    stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
+                }
             }
         });
 
