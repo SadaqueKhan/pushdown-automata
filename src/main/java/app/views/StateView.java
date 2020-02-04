@@ -151,8 +151,6 @@ public class StateView extends Group {
 
     public void setCurrentStateXPosition(double currentStateXPosition) {
         this.currentStateXPosition = currentStateXPosition;
-        System.out.println("currentStateXPosition SETTER: " + currentStateXPosition);
-
     }
 
     public double getCurrentStateYPosition() {
@@ -161,7 +159,6 @@ public class StateView extends Group {
 
     public void setCurrentStateYPosition(double currentStateYPosition) {
         this.currentStateYPosition = currentStateYPosition;
-        System.out.println("currentStateYPosition SETTER: " + currentStateYPosition);
     }
 
     // TODO Remove these getters/setters from the view and break it down into MVC

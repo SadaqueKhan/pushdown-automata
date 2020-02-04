@@ -72,7 +72,6 @@ public class DiagramView extends Pane {
     }
 
     public void addTransitionView(String sourceID, String targetID, String transitionsID) {
-
         //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceID);
         StateView targetCell = stateMap.get(targetID);

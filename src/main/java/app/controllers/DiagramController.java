@@ -38,7 +38,6 @@ public class DiagramController {
     //DiagramPaneGUIEventResponses
     public void addStateToViewMouseEventResponse(double x, double y) {
         StateModel newStateModel = new StateModel();
-
         machineModel.addStateModel(newStateModel);
         diagramView.addStateView(x, y, this, newStateModel.getStateId());
     }
@@ -56,9 +55,8 @@ public class DiagramController {
 
 
     public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-        double scale = diagramView.getScale();
 
-        System.out.println("Mouse position: " + xPositionOfMouse + "," + yPositionOfMouse);
+        double scale = diagramView.getScale();
         double offsetX = xPositionOfMouse + dragContextX;
         double offsetY = yPositionOfMouse + dragContextY;
 
@@ -71,11 +69,10 @@ public class DiagramController {
             for (StateView stateView1 : stateView.getStateParents()) {
 
                 if (stateView1.getCurrentStateXPosition() < offsetX) {
-
-                    System.out.println("----");
-                    System.out.println("TargetXONLEFT:" + offsetX);
-                    System.out.println("SourceYONRIGHT:" + stateView1.getCurrentStateXPosition());
-                    System.out.println("----");
+//                    System.out.println("----");
+//                    System.out.println("TargetXONLEFT:" + offsetX);
+//                    System.out.println("SourceYONRIGHT:" + stateView1.getCurrentStateXPosition());
+//                    System.out.println("----");
                 }
 
             }
@@ -83,9 +80,6 @@ public class DiagramController {
 
         stateView.setCurrentStateXPosition(offsetX);
         stateView.setCurrentStateYPosition(offsetY);
-
-        System.out.println("Mouse position: " + xPositionOfMouse + "," + yPositionOfMouse);
-        System.out.println("Offset position: " + offsetX + "," + offsetY);
 
         stateView.relocate(offsetX, offsetY);
 
@@ -173,10 +167,7 @@ public class DiagramController {
 
     //TransitionTableGUIEventResponses
     public void addStateToViewTransitionTableInputEventResponse(double x, double y, String userEntryCurrentStateId) {
-        StateModel newStateModel = new StateModel();
-
-        machineModel.addStateModel(newStateModel);
-        diagramView.addStateView(x, y, this, newStateModel.getStateId());
+        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
     }
 
 

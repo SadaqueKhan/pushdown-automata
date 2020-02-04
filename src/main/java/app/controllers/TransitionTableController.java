@@ -11,14 +11,14 @@ import javafx.stage.Stage;
 public class TransitionTableController {
 
     private final MachineModel machineModel;
-    private final DiagramController diagramController;
+    private final MainStageController mainStageController;
+    private DiagramController diagramController;
 
     private TransitionTableView transitionTableView;
 
-
     public TransitionTableController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.machineModel = machineModel;
-        this.diagramController = mainStageController.getDiagramController();
+        this.mainStageController = mainStageController;
     }
 
 
@@ -43,7 +43,6 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
-
             diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryCurrentStateId);
         }
 
@@ -53,22 +52,24 @@ public class TransitionTableController {
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModel(resultingStateModel);
-
             diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryResultingStateId);
         }
 
 
-        //Add user input for configuration and action into the table
+        //Create transition model
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
-        transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
+        //Add transition model to machinemodel
         machineModel.addTransitionModel(newTransitionModel);
 
+        //Update diagram view and table view
+        transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
         diagramController.addTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
     }
 
 
     public void load() {
+        this.diagramController = mainStageController.getDiagramController();
         this.transitionTableView = new TransitionTableView(this);
 
         Scene scene = new Scene(transitionTableView, 1000, 1000);

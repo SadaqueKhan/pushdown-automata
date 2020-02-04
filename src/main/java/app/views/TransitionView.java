@@ -36,13 +36,11 @@ public class TransitionView extends Group {
         source.addStateChild(target);
         target.addStateParent(source);
 
-
         if (source.equals(target)) {
             setUpUIReflexiveTransitionComponents();
         } else {
             setUpUIStandardTransitionComponents();
         }
-
     }
 
     private void setUpUIReflexiveTransitionComponents() {
@@ -52,8 +50,7 @@ public class TransitionView extends Group {
         arc.setStroke(Color.BLACK);
         arc.setStrokeType(StrokeType.INSIDE);
         arc.setFill(null);
-
-
+        
         getChildren().add(arc);
     }
 
