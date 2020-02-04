@@ -32,13 +32,13 @@ public class DiagramView extends Pane {
         this.diagramController = diagramController;
 
 
-        setUpComponents();
-        setUpListeners();
+        setUpUIComponents();
+        setUpUIListeners();
 
     }
 
 
-    private void setUpComponents() {
+    private void setUpUIComponents() {
         // <--- Graph Stuff -->
 
         scrollPane = new ZoomableScrollPane(this);
@@ -54,7 +54,7 @@ public class DiagramView extends Pane {
 
     }
 
-    private void setUpListeners() {
+    private void setUpUIListeners() {
 
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);

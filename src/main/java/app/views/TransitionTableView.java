@@ -46,13 +46,13 @@ public class TransitionTableView extends BorderPane {
 
         this.transitionTableController = transitionTableController;
 
-        setUpComponents();
-        setUpLayout();
-        setUpListeners();
+        setUpUIComponents();
+        setUpUILayout();
+        setUpUIListeners();
     }
 
 
-    private void setUpComponents() {
+    private void setUpUIComponents() {
 
         //Create table
         transitionTable = new TableView<TransitionModel>();
@@ -139,12 +139,12 @@ public class TransitionTableView extends BorderPane {
     }
 
 
-    private void setUpLayout() {
+    private void setUpUILayout() {
 
 
     }
 
-    private void setUpListeners() {
+    private void setUpUIListeners() {
         //Create listener for this view
         TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableController);
 

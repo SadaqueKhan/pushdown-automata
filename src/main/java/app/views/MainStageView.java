@@ -18,13 +18,13 @@ public class MainStageView extends BorderPane {
 
         this.mainStageController = mainStageController;
 
-        setUpComponents();
-        setUpLayout();
-        setUpListeners();
+        setUpUIComponents();
+        setUpUILayout();
+        setUpUIListeners();
     }
 
 
-    private void setUpComponents() {
+    private void setUpUIComponents() {
 
         Button button3 = new Button("Transition Table");
         Button button4 = new Button("Simulate");
@@ -47,13 +47,10 @@ public class MainStageView extends BorderPane {
         return diagramView;
     }
 
-    private void setUpLayout() {
-
-
+    private void setUpUILayout() {
     }
 
-
-    private void setUpListeners() {
+    private void setUpUIListeners() {
 
         MainStageListener mainStageListener = new MainStageListener(mainStageController);
 

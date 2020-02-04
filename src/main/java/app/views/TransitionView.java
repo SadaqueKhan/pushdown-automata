@@ -38,14 +38,14 @@ public class TransitionView extends Group {
 
 
         if (source.equals(target)) {
-            setUpReflexiveTransitionComponents();
+            setUpUIReflexiveTransitionComponents();
         } else {
-            setUpStandardTransitionComponents();
+            setUpUIStandardTransitionComponents();
         }
 
     }
 
-    private void setUpReflexiveTransitionComponents() {
+    private void setUpUIReflexiveTransitionComponents() {
         Arc arc = new Arc(50, 50, 25, 25, 0, 360);
         arc.setType(ArcType.OPEN);
         arc.setStrokeWidth(3);
@@ -57,7 +57,7 @@ public class TransitionView extends Group {
         getChildren().add(arc);
     }
 
-    private void setUpStandardTransitionComponents() {
+    private void setUpUIStandardTransitionComponents() {
 
         //Create arrow shaft using line object
         this.arrowShaft = new Line();
