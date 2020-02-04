@@ -59,6 +59,21 @@ public class StateView extends Group {
         this.getChildren().addAll(state, stateIdText);
     }
 
+    public void setUpStartStateUIComponent() {
+
+        Arc arc = new Arc(40, 0, 30, 30, 0, 360);
+
+        arc.setType(ArcType.OPEN);
+        arc.setStrokeWidth(3);
+        arc.setStroke(Color.BLACK);
+        arc.setStrokeType(StrokeType.INSIDE);
+        arc.setFill(null);
+
+        this.getChildren().add(arc);
+    }
+
+
+
     public void setUpFinalStateUIComponent() {
 
         Arc arc = new Arc(centerX, centerY, 30, 30, 0, 360);
@@ -71,6 +86,7 @@ public class StateView extends Group {
 
         this.getChildren().add(arc);
     }
+
 
     private void setUpUIListeners() {
 

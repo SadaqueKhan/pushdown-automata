@@ -14,7 +14,6 @@ public class DiagramView extends Pane {
 
     private final DiagramController diagramController;
 
-
     private Map<String, StateView> stateMap;
 
     private ZoomableScrollPane scrollPane;

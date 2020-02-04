@@ -99,12 +99,25 @@ public class DiagramController {
         MenuItem createTransitionItem = new MenuItem("Create transition");
         MenuItem deleteStateItem = new MenuItem("Delete");
 
+        toggleStandardStateItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                stateView.setUpStandardStateUIComponents();
+                stateModel.setType("standard");
+            }
+        });
+
+        toggleStartStateItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                stateView.setUpStartStateUIComponent();
+                stateModel.setType("start");
+            }
+        });
 
         //TODO need to remove this listeners logic
         toggleFinalStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 stateView.setUpFinalStateUIComponent();
-                stateModel.setFinalState(true);
+                stateModel.setType("final");
             }
         });
 
@@ -146,7 +159,6 @@ public class DiagramController {
     public void addTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
         diagramView.addTransitionView(sourceStateID, targetStateID, transitionsID);
     }
-
 
 
 }
