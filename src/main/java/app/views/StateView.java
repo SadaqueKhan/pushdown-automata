@@ -6,11 +6,9 @@ import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +22,7 @@ public class StateView extends Group {
 
     private List<StateView> children = new ArrayList<>();
     private List<StateView> parents = new ArrayList<>();
+    private Circle state;
 
 
     public StateView(double x, double y, DiagramController diagramController, String stateId) {
@@ -45,7 +44,7 @@ public class StateView extends Group {
     public void setUpStandardStateUIComponents() {
 
         //State GUI
-        Circle state = new Circle();
+        this.state = new Circle();
         state.setCenterX(centerX);
         state.setCenterY(centerY);
         state.setRadius(40);
@@ -61,17 +60,44 @@ public class StateView extends Group {
 
     public void setUpStartStateUIComponent() {
 
-        Arc arc = new Arc(40, 0, 30, 30, 0, 360);
+        //Create arrow shaft using line object
+        Line startStatePointLine1 = new Line();
+        startStatePointLine1.setStrokeWidth(3);
 
-        arc.setType(ArcType.OPEN);
-        arc.setStrokeWidth(3);
-        arc.setStroke(Color.BLACK);
-        arc.setStrokeType(StrokeType.INSIDE);
-        arc.setFill(null);
+        // instantiating the Rotate class.
+        Rotate rotate1 = new Rotate();
+        //setting properties for the rotate object.
+        rotate1.setAngle(180);
+        startStatePointLine1.getTransforms().add(rotate1);
+        startStatePointLine1.setStartX(0);
+        startStatePointLine1.setStartY(0);
+        startStatePointLine1.setEndX(15);
+        startStatePointLine1.setEndY(15);
 
-        this.getChildren().add(arc);
+        startStatePointLine1.relocate(centerX - 40, centerY);
+
+
+        //Create arrow shaft using line object
+        Line startStatePointLine2 = new Line();
+        startStatePointLine2.setStrokeWidth(3);
+
+        startStatePointLine2.setStroke(Color.GREEN);
+        // instantiating the Rotate class.
+        Rotate rotate2 = new Rotate();
+
+        //setting properties for the rotate object.
+        rotate2.setAngle(90);
+        startStatePointLine2.getTransforms().add(rotate2);
+        startStatePointLine2.setStartX(0);
+        startStatePointLine2.setStartY(0);
+        startStatePointLine2.setEndX(15);
+        startStatePointLine2.setEndY(15);
+
+        startStatePointLine2.relocate(centerX - 40, centerY);
+
+
+        this.getChildren().addAll(startStatePointLine1, startStatePointLine2);
     }
-
 
 
     public void setUpFinalStateUIComponent() {
