@@ -102,14 +102,14 @@ public class DiagramController {
         toggleStandardStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 stateView.setUpStandardStateUIComponents();
-                stateModel.setType("standard");
+                stateModel.setStandardState(true);
             }
         });
 
         toggleStartStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 stateView.setUpStartStateUIComponent();
-                stateModel.setType("start");
+                stateModel.setStartState(true);
             }
         });
 
@@ -117,7 +117,7 @@ public class DiagramController {
         toggleFinalStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 stateView.setUpFinalStateUIComponent();
-                stateModel.setType("final");
+                stateModel.setFinalState(true);
             }
         });
 

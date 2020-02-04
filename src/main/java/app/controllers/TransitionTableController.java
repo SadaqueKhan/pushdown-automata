@@ -41,7 +41,7 @@ public class TransitionTableController {
         if (machineModel.stateExists(userEntryCurrentStateId)) {
             currentStateModel = machineModel.getStateModel(userEntryCurrentStateId);
         } else {
-            currentStateModel = new StateModel(userEntryCurrentStateId, "standard");
+            currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
 
             diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryCurrentStateId);
@@ -51,7 +51,7 @@ public class TransitionTableController {
         if (machineModel.stateExists(userEntryResultingStateId)) {
             resultingStateModel = machineModel.getStateModel(userEntryResultingStateId);
         } else {
-            resultingStateModel = new StateModel(userEntryResultingStateId, "standard");
+            resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModel(resultingStateModel);
 
             diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryResultingStateId);

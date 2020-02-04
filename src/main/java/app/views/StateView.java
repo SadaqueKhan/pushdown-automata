@@ -33,7 +33,6 @@ public class StateView extends Group {
         this.diagramController = diagramController;
 
         //Set up the components to represent the state in the view
-
         setUpStandardStateUIComponents();
         setUpUIListeners();
     }
@@ -78,7 +77,7 @@ public class StateView extends Group {
         //Create arrow shaft using line object
         Line startStatePointLine2 = new Line();
         startStatePointLine2.setStrokeWidth(3);
-        
+
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
         //setting properties for the rotate object.

@@ -3,19 +3,19 @@ package app.models;
 public class StateModel {
 
     private static int num = 0;
-    private String type;
-
     private String stateId;
+
+    private boolean isStandardState = true;
+    private boolean isStartState = false;
+    private boolean isFinalState = false;
 
 
     public StateModel() {
         this.stateId = "Q" + (num++);
-        this.type = "standard";
     }
 
-    public StateModel(String stateID, String type) {
+    public StateModel(String stateID) {
         this.stateId = stateID;
-        this.type = type;
     }
 
 
@@ -24,12 +24,33 @@ public class StateModel {
     }
 
 
-    public String getType() {
-        return type;
+    //Getters/Setters
+    public boolean isStandardState() {
+        return isStandardState;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setStandardState(boolean standardState) {
+        isStandardState = standardState;
+        isStartState = false;
+        isFinalState = false;
+    }
+
+    public boolean isStartState() {
+        return isStartState;
+    }
+
+    public void setStartState(boolean startState) {
+        isStartState = startState;
+        isStandardState = false;
+    }
+
+    public boolean isFinalState() {
+        return isFinalState;
+    }
+
+    public void setFinalState(boolean finalState) {
+        isFinalState = finalState;
+        isStandardState = false;
     }
 
     @Override
@@ -37,4 +58,3 @@ public class StateModel {
         return stateId;
     }
 }
-
