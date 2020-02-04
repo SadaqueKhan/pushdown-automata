@@ -44,12 +44,30 @@ public class TransitionView extends Group {
     }
 
     private void setUpUIReflexiveTransitionComponents() {
-        Arc arc = new Arc(50, 50, 25, 25, 0, 360);
+
+        double x = 0.0;
+        double y = -30.0;
+
+        Arc arc = new Arc();
+
+        arc.setCenterX(50);
+        arc.setCenterY(50);
+
+        arc.setRadiusX(40);
+        arc.setRadiusY(40);
+
+        arc.setStartAngle(340);
+        arc.setLength(220);
+
         arc.setType(ArcType.OPEN);
         arc.setStrokeWidth(3);
         arc.setStroke(Color.BLACK);
         arc.setStrokeType(StrokeType.INSIDE);
         arc.setFill(null);
+
+        arc.centerXProperty().bind(source.layoutXProperty().add(x));
+        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
+        arc.centerYProperty().bind(source.layoutYProperty().add(y));
         
         getChildren().add(arc);
     }

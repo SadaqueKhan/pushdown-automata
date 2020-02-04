@@ -62,7 +62,6 @@ public class StateView extends Group {
         //Create arrow shaft using line object
         this.startStatePointLine1 = new Line();
         startStatePointLine1.setStrokeWidth(3);
-        startStatePointLine1.setStroke(Color.GREEN);
 
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
