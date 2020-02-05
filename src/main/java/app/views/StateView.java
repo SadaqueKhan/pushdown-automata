@@ -160,6 +160,7 @@ public class StateView extends Group {
         this.currentStateYPosition = currentStateYPosition;
     }
 
+
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {
         children.add(stateView);

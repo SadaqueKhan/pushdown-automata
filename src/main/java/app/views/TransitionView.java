@@ -51,7 +51,7 @@ public class TransitionView extends Group {
         Arc arc = new Arc();
 
         arc.setCenterX(50);
-        arc.setCenterY(50);
+        arc.setCenterY(70);
 
         arc.setRadiusX(40);
         arc.setRadiusY(40);
@@ -68,7 +68,7 @@ public class TransitionView extends Group {
         arc.centerXProperty().bind(source.layoutXProperty().add(x));
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
         arc.centerYProperty().bind(source.layoutYProperty().add(y));
-        
+
         getChildren().add(arc);
     }
 
@@ -82,13 +82,18 @@ public class TransitionView extends Group {
         double y = 0.0;
 
         //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
-        arrowShaft.startXProperty().bind(source.layoutXProperty().add(x));
-        arrowShaft.startYProperty().bind(source.layoutYProperty().add(y));
+        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getCurrentStateXPosition() / 2));
+        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getCurrentStateYPosition() / 2));
 
         //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
-        arrowShaft.endXProperty().bind(target.layoutXProperty().add(x));
-        arrowShaft.endYProperty().bind(target.layoutYProperty().add(y));
+        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getCurrentStateXPosition() / 2));
+        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getCurrentStateYPosition() / 2));
 
+
+        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.translateXProperty()).add(source.widthProperty().divide(2)));
+        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.translateYProperty()).add(source.heightProperty().divide(2)));
+        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.translateXProperty()).add(target.widthProperty().divide(2)));
+        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.translateYProperty()).add(target.heightProperty().divide(2)));
 
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();

@@ -8,6 +8,8 @@ import app.views.TransitionTableView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Random;
+
 public class TransitionTableController {
 
     private final MachineModel machineModel;
@@ -23,6 +25,14 @@ public class TransitionTableController {
 
 
     public void addTransitionEntry() {
+
+        Random rnd = new Random();
+
+        double x1 = rnd.nextDouble() * 500;
+        double y1 = rnd.nextDouble() * 500;
+
+        double x2 = rnd.nextDouble() * 500;
+        double y2 = rnd.nextDouble() * 500;
 
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateTextField().getText();
@@ -43,7 +53,7 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryCurrentStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(x1, y1, userEntryCurrentStateId);
         }
 
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
@@ -52,7 +62,7 @@ public class TransitionTableController {
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModel(resultingStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(0.0, 0.0, userEntryResultingStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
         }
 
 

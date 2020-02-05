@@ -78,8 +78,8 @@ public class DiagramController {
             }
         }
 
-        stateView.setCurrentStateXPosition(offsetX);
-        stateView.setCurrentStateYPosition(offsetY);
+        stateView.setCurrentStateXPosition(xPositionOfMouse);
+        stateView.setCurrentStateYPosition(yPositionOfMouse);
 
         stateView.relocate(offsetX, offsetY);
 
