@@ -6,10 +6,15 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
@@ -26,6 +31,8 @@ public class DiagramView extends Pane {
     private Map<String, StateView> stateMap;
 
     private ZoomableScrollPane scrollPane;
+
+    double sceneX, sceneY, layoutX, layoutY;
 
     String cssLayout = "-fx-border-color: black;\n" +
             "-fx-border-insets: 5;\n" +
@@ -71,13 +78,13 @@ public class DiagramView extends Pane {
 
     }
 
-    public void addStateView(double x, double y, DiagramController diagramController, String stateId) {
+    public void addStateView(double x, double y, DiagramController diagramController, String stateID) {
 
-        StateView stateView = new StateView(x, y, diagramController, stateId);
+        StateView stateView = new StateView(x, y, diagramController, stateID);
 
         this.getChildren().add(stateView);
 
-        stateMap.put(stateId, stateView);
+        stateMap.put(stateID, stateView);
     }
 
     public void addTransitionView(String sourceID, String targetID, String transitionsID) {
@@ -86,15 +93,17 @@ public class DiagramView extends Pane {
         StateView targetCell = stateMap.get(targetID);
 
         //Create TransitionView
-        //   TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitionsID);
+        TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitionsID);
 
-        buildBiDirectionalLine(true, sourceCell, targetCell);
-        buildBiDirectionalLine(false, targetCell, sourceCell);
+        this.getChildren().remove(sourceCell);
+        this.getChildren().remove(targetCell);
+        buildBiDirectionalLine(sourceCell, targetCell);
+        this.getChildren().addAll(sourceCell, targetCell);
 
     }
 
 
-    private void buildBiDirectionalLine(boolean isEnd, StackPane startDot, StackPane endDot) {
+    private void buildBiDirectionalLine(StackPane startDot, StackPane endDot) {
         Line virtualCenterLine = getLine(startDot, endDot);
         virtualCenterLine.setOpacity(0);
         StackPane centerLineArrowAB = getArrow(true, virtualCenterLine, startDot, endDot);
@@ -106,7 +115,7 @@ public class DiagramView extends Pane {
         directedLine.setStroke(Color.RED);
         directedLine.setStrokeWidth(2);
 
-        double diff = isEnd ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
+        double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
             Rotate r = new Rotate();
             r.setPivotX(virtualCenterLine.getStartX());
@@ -131,18 +140,11 @@ public class DiagramView extends Pane {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
-        StackPane mainArrow = getArrow(isEnd, directedLine, startDot, endDot);
+        StackPane mainArrow = getArrow(true, directedLine, startDot, endDot);
         this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, directedLine, mainArrow);
     }
 
 
-    /**
-     * Builds a line between the provided start and end panes center point.
-     *
-     * @param startDot Pane for considering start point
-     * @param endDot   Pane for considering end point
-     * @return Line joining the layout center points of the provided panes.
-     */
     private Line getLine(StackPane startDot, StackPane endDot) {
         Line line = new Line();
         line.setStroke(Color.BLUE);
@@ -155,15 +157,6 @@ public class DiagramView extends Pane {
     }
 
 
-    /**
-     * Builds an arrow on the provided line pointing towards the specified pane.
-     *
-     * @param toLineEnd Specifies whether the arrow to point towards end pane or start pane.
-     * @param line      Line joining the layout center points of the provided panes.
-     * @param startDot  Pane which is considered as start point of line
-     * @param endDot    Pane which is considered as end point of line
-     * @return Arrow towards the specified pane.
-     */
     private StackPane getArrow(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
         StackPane arrow = new StackPane();
@@ -231,6 +224,85 @@ public class DiagramView extends Pane {
 
         return arrow;
     }
+
+
+    /**
+     * Builds a pane consisting of circle with the provided specifications.
+     *
+     * @param color Color of the circle
+     * @param text  Text inside the circle
+     * @return Draggable pane consisting a circle.
+     */
+    private StackPane getDot(String color, String text) {
+        double radius = 50;
+        double paneSize = 2 * radius;
+        StackPane dotPane = new StackPane();
+        Circle dot = new Circle();
+        dot.setRadius(radius);
+        dot.setStyle("-fx-fill:" + color + ";-fx-stroke-width:2px;-fx-stroke:black;");
+
+        Label txt = new Label(text);
+        txt.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
+        dotPane.getChildren().addAll(dot, txt);
+        dotPane.setPrefSize(paneSize, paneSize);
+        dotPane.setMaxSize(paneSize, paneSize);
+        dotPane.setMinSize(paneSize, paneSize);
+        dotPane.setOnMousePressed(e -> {
+            sceneX = e.getSceneX();
+            sceneY = e.getSceneY();
+            layoutX = dotPane.getLayoutX();
+            layoutY = dotPane.getLayoutY();
+        });
+
+        EventHandler<MouseEvent> dotOnMouseDraggedEventHandler = e -> {
+            // Offset of drag
+            double offsetX = e.getSceneX() - sceneX;
+            double offsetY = e.getSceneY() - sceneY;
+
+            // Taking parent bounds
+            Bounds parentBounds = dotPane.getParent().getLayoutBounds();
+
+            // Drag node bounds
+            double currPaneLayoutX = dotPane.getLayoutX();
+            double currPaneWidth = dotPane.getWidth();
+            double currPaneLayoutY = dotPane.getLayoutY();
+            double currPaneHeight = dotPane.getHeight();
+
+            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                dotPane.setTranslateX(offsetX);
+            } else if (currPaneLayoutX + offsetX < 0) {
+                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                // which makes the final layout position to 0 in mouse released event.
+                dotPane.setTranslateX(-currPaneLayoutX);
+            } else {
+                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                dotPane.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            }
+
+            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                dotPane.setTranslateY(offsetY);
+            } else if (currPaneLayoutY + offsetY < 0) {
+                dotPane.setTranslateY(-currPaneLayoutY);
+            } else {
+                dotPane.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            }
+        };
+        dotPane.setOnMouseDragged(dotOnMouseDraggedEventHandler);
+        dotPane.setOnMouseReleased(e -> {
+            // Updating the new layout positions
+            dotPane.setLayoutX(layoutX + dotPane.getTranslateX());
+            dotPane.setLayoutY(layoutY + dotPane.getTranslateY());
+
+            // Resetting the translate positions
+            dotPane.setTranslateX(0);
+            dotPane.setTranslateY(0);
+        });
+        return dotPane;
+    }
+
+
+
 
 
     public double getScale() {

@@ -2,6 +2,7 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -45,18 +46,23 @@ public class StateView extends StackPane {
 
 
     public void setUpUIComponents() {
+
+        double radius = 50;
+        double paneSize = 2 * radius;
+
+
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
-        stateCircle.setCenterX(0);
-        stateCircle.setCenterY(0);
-        stateCircle.setRadius(40);
-        stateCircle.setStroke(Color.GREEN);
-        stateCircle.setFill(Color.RED);
 
-        // Text for stateCircle GUI
-        this.stateIdText = new Text(stateId);
-        //stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
+        stateCircle.setRadius(radius);
+        stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
+
+        Label stateIdText = new Label(stateId);
+        stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
+        this.setPrefSize(paneSize, paneSize);
+        this.setMaxSize(paneSize, paneSize);
+        this.setMinSize(paneSize, paneSize);
 
 //<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
