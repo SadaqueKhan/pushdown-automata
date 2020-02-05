@@ -99,7 +99,6 @@ public class DiagramView extends Pane {
         this.getChildren().remove(targetCell);
         buildBiDirectionalLine(sourceCell, targetCell);
         this.getChildren().addAll(sourceCell, targetCell);
-
     }
 
 
