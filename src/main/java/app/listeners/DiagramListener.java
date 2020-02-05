@@ -31,6 +31,7 @@ public class DiagramListener implements EventHandler<MouseEvent> {
         double yPositionOfMouse = event.getScreenY();
 
 
+        System.out.println(picked.toString());
         if (picked instanceof DiagramView) {
             if (event.getSource() instanceof DiagramView) {
                 if (event.getButton() == MouseButton.PRIMARY) {
@@ -43,6 +44,7 @@ public class DiagramListener implements EventHandler<MouseEvent> {
         }
 
         if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
+            System.out.println("helloworld");
             if (event.getSource() instanceof StateView) {
                 StateView stateView = (StateView) event.getSource();
                 String eventType = event.getEventType().toString();
@@ -50,12 +52,16 @@ public class DiagramListener implements EventHandler<MouseEvent> {
                     diagramController.stateViewOnMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
                     // Popup dialog
                     if (event.isPopupTrigger()) {
-                        diagramController.stateViewCreateContextMenuPopUp(stateView);
+                        diagramController.stateViewContextMenuPopUp(stateView);
                     }
                 }
 
                 if (eventType.equals("MOUSE_DRAGGED")) {
                     diagramController.stateViewOnMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
+                }
+
+                if (eventType.equals("MOUSE_RELEASED")) {
+                    diagramController.stateViewOnMouseReleased(stateView);
                 }
             }
         }

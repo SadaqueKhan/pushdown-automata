@@ -7,6 +7,7 @@ import app.views.MainStageView;
 import app.views.StateView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -21,8 +22,13 @@ public class DiagramController {
 
     private final DiagramView diagramView;
 
-    private double dragContextX = 0.0;
-    private double dragContextY = 0.0;
+    // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
+    private double layoutX;
+    private double layoutY;
+
+    private double sceneX;
+    private double sceneY;
+
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
 
@@ -43,51 +49,63 @@ public class DiagramController {
     }
 
 
-//StateGUIEventResponses
-
+    //StateGUIEventResponses
     public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-        double scale = diagramView.getScale();
+        sceneX = xPositionOfMouse;
+        sceneY = yPositionOfMouse;
 
-        dragContextX = stateView.getBoundsInParent().getMinX() * scale - xPositionOfMouse;
-        dragContextY = stateView.getBoundsInParent().getMinY() * scale - yPositionOfMouse;
-
+        layoutX = stateView.getLayoutX();
+        layoutY = stateView.getLayoutY();
     }
 
 
     public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
+        // Offset of drag
+        double offsetX = xPositionOfMouse - sceneX;
+        double offsetY = yPositionOfMouse - sceneY;
 
-        double scale = diagramView.getScale();
-        double offsetX = xPositionOfMouse + dragContextX;
-        double offsetY = yPositionOfMouse + dragContextY;
+        // Taking parent bounds
+        Bounds parentBounds = stateView.getParent().getLayoutBounds();
 
-        offsetX /= scale;
-        offsetY /= scale;
+        // Drag node bounds
+        double currPaneLayoutX = stateView.getLayoutX();
+        double currPaneWidth = stateView.getWidth();
+        double currPaneLayoutY = stateView.getLayoutY();
+        double currPaneHeight = stateView.getHeight();
 
-        if (!(stateView.getStateParents().isEmpty())) {
-            //Target
-
-            for (StateView stateView1 : stateView.getStateParents()) {
-
-                if (stateView1.getCurrentStateXPosition() < offsetX) {
-//                    System.out.println("----");
-//                    System.out.println("TargetXONLEFT:" + offsetX);
-//                    System.out.println("SourceYONRIGHT:" + stateView1.getCurrentStateXPosition());
-//                    System.out.println("----");
-                }
-
-            }
+        if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+            // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+            stateView.setTranslateX(offsetX);
+        } else if (currPaneLayoutX + offsetX < 0) {
+            // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+            // which makes the final layout position to 0 in mouse released event.
+            stateView.setTranslateX(-currPaneLayoutX);
+        } else {
+            // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+            stateView.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
         }
 
-        stateView.setCurrentStateXPosition(xPositionOfMouse);
-        stateView.setCurrentStateYPosition(yPositionOfMouse);
+        if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+            stateView.setTranslateY(offsetY);
+        } else if (currPaneLayoutY + offsetY < 0) {
+            stateView.setTranslateY(-currPaneLayoutY);
+        } else {
+            stateView.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+        }
+    }
 
-        stateView.relocate(offsetX, offsetY);
+    public void stateViewOnMouseReleased(StateView stateView) {
+        // Updating the new layout positions
+        stateView.setLayoutX(layoutX + stateView.getTranslateX());
+        stateView.setLayoutY(layoutY + stateView.getTranslateY());
 
-
+        // Resetting the translate positions
+        stateView.setTranslateX(0);
+        stateView.setTranslateY(0);
     }
 
 
-    public void stateViewCreateContextMenuPopUp(StateView stateView) {
+    public void stateViewContextMenuPopUp(StateView stateView) {
 
         StateModel stateModel = machineModel.getStateModel(stateView.getStateId());
 

@@ -2,7 +2,7 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
-import javafx.scene.Group;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
@@ -11,7 +11,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateView extends Group {
+public class StateView extends StackPane {
 
     private final DiagramController diagramController;
 
@@ -48,15 +48,15 @@ public class StateView extends Group {
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
-        stateCircle.setCenterX(currentStateXPosition);
-        stateCircle.setCenterY(currentStateYPosition);
+        stateCircle.setCenterX(0);
+        stateCircle.setCenterY(0);
         stateCircle.setRadius(40);
         stateCircle.setStroke(Color.GREEN);
         stateCircle.setFill(Color.RED);
 
         // Text for stateCircle GUI
         this.stateIdText = new Text(stateId);
-        stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
+        //stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
 
 //<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
@@ -74,7 +74,7 @@ public class StateView extends Group {
         startStatePointLine1.setEndX(15);
         startStatePointLine1.setEndY(15);
 
-        startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
+        // startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
 
 
         //Create arrow shaft using line object
@@ -91,7 +91,7 @@ public class StateView extends Group {
         startStatePointLine2.setEndX(15);
         startStatePointLine2.setEndY(15);
 
-        startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
+        //  startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
         startStatePointLine1.setVisible(false);
         startStatePointLine2.setVisible(false);
@@ -107,6 +107,8 @@ public class StateView extends Group {
         finalStateArc.setFill(null);
 
         finalStateArc.setVisible(false);
+
+        this.relocate(currentStateXPosition, currentStateYPosition);
 
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
     }
