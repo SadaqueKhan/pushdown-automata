@@ -65,7 +65,9 @@ public class DiagramView extends Pane {
         stateMap = new HashMap<>(); // <id,cell>
 
         this.setStyle(cssLayout);
-        mainStageView.setCenter(this);
+
+        mainStageView.getCenterContent().getChildren().add(this);
+
 
     }
 

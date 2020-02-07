@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 
 public class TransitionTableView extends BorderPane {
 
+    private final MainStageView mainStageView;
+
     private final TransitionTableController transitionTableController;
 
     // Transition Table GUI
@@ -42,9 +44,10 @@ public class TransitionTableView extends BorderPane {
     private Button submitTransitionButton;
 
 
-    public TransitionTableView(TransitionTableController transitionTableController) {
+    public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
 
         this.transitionTableController = transitionTableController;
+        this.mainStageView = mainStageView;
 
         setUpUIComponents();
         setUpUILayout();
@@ -135,7 +138,7 @@ public class TransitionTableView extends BorderPane {
         vBox.setSpacing(10);
         vBox.getChildren().addAll(transitionTable, hBox);
 
-        this.setCenter(vBox);
+        // mainStageView.getCenterContent().getChildren().add(vBox);
     }
 
 

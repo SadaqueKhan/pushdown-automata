@@ -4,15 +4,20 @@ package app.views;
 import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import org.controlsfx.control.SegmentedButton;
 
 
 public class MainStageView extends BorderPane {
 
     private final MainStageController mainStageController;
 
-    private DiagramView diagramView;
+
+    private HBox centerContent;
+
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -26,12 +31,25 @@ public class MainStageView extends BorderPane {
 
     private void setUpUIComponents() {
 
-        Button button3 = new Button("Transition Table");
+
         Button button4 = new Button("Simulate");
+        
+        ToggleButton toggleDiagramButton = new ToggleButton("Diagram");
+        ToggleButton toggleTableButton = new ToggleButton("Table");
 
-        HBox topBar = new HBox(button3, button4);
 
-        this.setTop(topBar);
+        SegmentedButton segmentedButton = new SegmentedButton();
+        segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTableButton);
+
+        VBox topBar = new VBox(button4);
+
+        this.setCenter(segmentedButton);
+
+
+        this.centerContent = new HBox(toggleDiagramButton, toggleTableButton);
+
+        this.setTop(centerContent);
+
 
 
         Button save = new Button("Save");
@@ -43,8 +61,8 @@ public class MainStageView extends BorderPane {
 
     }
 
-    public DiagramView getDiagramView() {
-        return diagramView;
+    public HBox getCenterContent() {
+        return centerContent;
     }
 
     private void setUpUILayout() {

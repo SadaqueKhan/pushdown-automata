@@ -32,12 +32,11 @@ public class DiagramController {
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
 
-        this.mainStageView = mainStageView;
         this.mainStageController = mainStageController;
+        this.mainStageView = mainStageView;
         this.machineModel = machineModel;
 
         this.transitionTableController = mainStageController.getTransitionTableController();
-
         this.diagramView = new DiagramView(this, mainStageView);
     }
 

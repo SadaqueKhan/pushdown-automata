@@ -13,7 +13,9 @@ import java.util.Random;
 public class TransitionTableController {
 
     private final MachineModel machineModel;
+    private final MainStageView mainStageView;
     private final MainStageController mainStageController;
+
     private DiagramController diagramController;
 
     private TransitionTableView transitionTableView;
@@ -21,6 +23,7 @@ public class TransitionTableController {
     public TransitionTableController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStageController = mainStageController;
+        this.mainStageView = mainStageView; 
     }
 
 
@@ -80,7 +83,7 @@ public class TransitionTableController {
 
     public void load() {
         this.diagramController = mainStageController.getDiagramController();
-        this.transitionTableView = new TransitionTableView(this);
+        this.transitionTableView = new TransitionTableView(mainStageView, this);
 
         Scene scene = new Scene(transitionTableView, 1000, 1000);
         Stage stage = new Stage();
