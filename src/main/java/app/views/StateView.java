@@ -47,7 +47,7 @@ public class StateView extends StackPane {
 
     public void setUpUIComponents() {
 
-        double radius = 50;
+        double radius = 25;
         double paneSize = 2 * radius;
 
 
@@ -67,7 +67,7 @@ public class StateView extends StackPane {
 //<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
         this.startStatePointLine1 = new Line();
-        startStatePointLine1.setStrokeWidth(3);
+        startStatePointLine1.setStrokeWidth(2);
 
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
@@ -85,7 +85,7 @@ public class StateView extends StackPane {
 
         //Create arrow shaft using line object
         this.startStatePointLine2 = new Line();
-        startStatePointLine2.setStrokeWidth(3);
+        startStatePointLine2.setStrokeWidth(2);
 
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
@@ -103,11 +103,11 @@ public class StateView extends StackPane {
         startStatePointLine2.setVisible(false);
 
 
-//<<< CREATE START STATE UI COMPONENT >>>
-        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
+//<<< CREATE FINAL STATE UI COMPONENT >>>
+        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, radius / 1.25, radius / 1.25, 0, 360);
 
         finalStateArc.setType(ArcType.OPEN);
-        finalStateArc.setStrokeWidth(3);
+        finalStateArc.setStrokeWidth(2);
         finalStateArc.setStroke(Color.BLACK);
         finalStateArc.setStrokeType(StrokeType.INSIDE);
         finalStateArc.setFill(null);

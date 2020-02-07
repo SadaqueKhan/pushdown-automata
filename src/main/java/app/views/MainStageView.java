@@ -21,19 +21,21 @@ public class MainStageView extends BorderPane {
 
     private final MainStageController mainStageController;
 
+    //Top content elements
+    private TextField inputTextField;
+    AutoCompletionBinding<String> autoCompletionBinding;
     String cssLayout = "-fx-border-color: black;\n" +
             "-fx-border-insets: 5;\n" +
             "-fx-border-width: 3;\n" +
             "-fx-border-style: solid;\n";
-    private Set<String> inputWordSet;
-    AutoCompletionBinding<String> autoCompletionBinding;
-    //Top content elements
-    private TextField inputTextField;
     //Center content elements
     private ToggleButton toggleDiagramButton;
     private ToggleButton toggleTableButton;
     private SegmentedButton segmentedButton;
     private VBox containerForCenterNodes;
+    private Set<String> inputWordSet;
+    //Bottom content elements
+    private Accordion simulationsAccordianContainer;
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -80,7 +82,7 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(containerForCenterNodes);
 
-        Accordion accordion = new Accordion();
+        this.simulationsAccordianContainer = new Accordion();
 
         TitledPane pane1 = new TitledPane("Boats", new Label("Show all boats available"));
         TitledPane pane2 = new TitledPane("Cars", new Label("Show all cars available"));
@@ -90,16 +92,16 @@ public class MainStageView extends BorderPane {
         TitledPane pane5 = new TitledPane("Cars", new Label("Show all cars available"));
         TitledPane pane6 = new TitledPane("Planes", new Label("Show all planes available"));
 
-        accordion.getPanes().add(pane1);
-        accordion.getPanes().add(pane2);
-        accordion.getPanes().add(pane3);
-        accordion.getPanes().add(pane4);
-        accordion.getPanes().add(pane5);
-        accordion.getPanes().add(pane6);
+        simulationsAccordianContainer.getPanes().add(pane1);
+        simulationsAccordianContainer.getPanes().add(pane2);
+        simulationsAccordianContainer.getPanes().add(pane3);
+        simulationsAccordianContainer.getPanes().add(pane4);
+        simulationsAccordianContainer.getPanes().add(pane5);
+        simulationsAccordianContainer.getPanes().add(pane6);
 
-        accordion.setMinSize(200, 200);
+        simulationsAccordianContainer.setMinSize(200, 200);
 
-        this.setBottom(accordion);
+        this.setBottom(simulationsAccordianContainer);
 
     }
 
