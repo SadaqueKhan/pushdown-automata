@@ -66,7 +66,7 @@ public class DiagramView extends Pane {
 
         this.setStyle(cssLayout);
 
-        mainStageView.getCenterContent().getChildren().add(this);
+//        mainStageView.getCenterContent().getChildren().add(this);
 
 
     }
