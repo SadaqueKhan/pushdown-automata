@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -81,17 +80,19 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(containerForCenterNodes);
 
-        Button button4 = new Button("Simulate");
-        Button save = new Button("Save");
-        Button load = new Button("Load");
+        Accordion accordion = new Accordion();
 
-        HBox bottomBar = new HBox(button4, save, load);
+        TitledPane pane1 = new TitledPane("Boats", new Label("Show all boats available"));
+        TitledPane pane2 = new TitledPane("Cars", new Label("Show all cars available"));
+        TitledPane pane3 = new TitledPane("Planes", new Label("Show all planes available"));
 
-        HiddenSidesPane pane = new HiddenSidesPane();
-        pane.setContent(new TableView());
-        pane.setRight(new ListView());
+        accordion.getPanes().add(pane1);
+        accordion.getPanes().add(pane2);
+        accordion.getPanes().add(pane3);
 
-        this.setBottom(pane);
+        accordion.setMinSize(200, 200);
+
+        this.setBottom(accordion);
 
     }
 

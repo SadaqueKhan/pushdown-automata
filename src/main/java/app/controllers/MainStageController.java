@@ -40,7 +40,6 @@ public class MainStageController extends Application implements Serializable {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
-        primaryStage.setResizable(false);
         primaryStage.show();
 
     }
