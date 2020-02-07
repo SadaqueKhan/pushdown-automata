@@ -25,6 +25,7 @@ public class MainStageListener implements EventHandler {
 
         String eventType = event.getEventType().toString();
 
+        System.out.println(event.getEventType());
         if (eventType.equals("KEY_PRESSED")) {
             TextField isInputTextField = (TextField) event.getSource();
             KeyEvent keyEvent = (KeyEvent) event;
