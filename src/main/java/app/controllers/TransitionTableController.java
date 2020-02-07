@@ -23,7 +23,9 @@ public class TransitionTableController {
     public TransitionTableController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStageController = mainStageController;
-        this.mainStageView = mainStageView; 
+        this.mainStageView = mainStageView;
+
+        this.transitionTableView = new TransitionTableView(mainStageView, this);
     }
 
 

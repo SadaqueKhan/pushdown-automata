@@ -5,6 +5,7 @@ import app.controllers.MainStageController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -32,6 +33,18 @@ public class MainStageListener implements EventHandler {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 mainStageController.saveInputWord(isInputTextField.getText());
             }
+        }
+
+        if (eventType.equals("ACTION")) {
+            ToggleButton isToggleButton = (ToggleButton) event.getSource();
+            String triggeredToggleButtonName = isToggleButton.getText();
+
+            if (triggeredToggleButtonName.equals("Diagram")) {
+                mainStageController.triggerDiagramScene();
+            } else {
+                mainStageController.triggerTransitionTableScene();
+            }
+
         }
     }
 }

@@ -35,9 +35,9 @@ public class DiagramView extends Pane {
     double sceneX, sceneY, layoutX, layoutY;
 
     String cssLayout = "-fx-border-color: black;\n" +
-            "-fx-border-insets: 5;\n" +
-            "-fx-border-width: 3;\n" +
-            "-fx-border-style: solid;\n";
+            "-fx-background-color: whitesmoke,\n" +
+            "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
+            "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)";
 
     public DiagramView(DiagramController diagramController, MainStageView mainStageView) {
 
@@ -64,10 +64,12 @@ public class DiagramView extends Pane {
 
         stateMap = new HashMap<>(); // <id,cell>
 
+
         this.setStyle(cssLayout);
 
-//        mainStageView.getCenterContent().getChildren().add(this);
+        this.setMinSize(200, 500);
 
+        mainStageView.getContainerForCenterNodes().getChildren().add(this);
 
     }
 
@@ -301,9 +303,6 @@ public class DiagramView extends Pane {
         });
         return dotPane;
     }
-
-
-
 
 
     public double getScale() {

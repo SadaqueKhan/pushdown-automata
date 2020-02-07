@@ -3,13 +3,14 @@ package app.views;
 
 import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -30,10 +31,10 @@ public class MainStageView extends BorderPane {
     //Top content elements
     private TextField inputTextField;
     //Center content elements
-    private BorderPane borderPane;
     private ToggleButton toggleDiagramButton;
     private ToggleButton toggleTableButton;
-
+    private SegmentedButton segmentedButton;
+    private VBox containerForCenterNodes;
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -48,24 +49,37 @@ public class MainStageView extends BorderPane {
 
         //Setup top GUI elements
         inputTextField = new TextField();
+        inputTextField.setPromptText("Enter input word");
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
+        VBox containerForTopNodes = new VBox();
+        containerForTopNodes.getChildren().addAll(new Text("Input Word"), inputTextField);
 
-        this.setTop(inputTextField);
-        
+        this.setTop(containerForTopNodes);
+
         //Setup center GUI elements
         this.toggleDiagramButton = new ToggleButton("Diagram");
         this.toggleTableButton = new ToggleButton("Table");
 
-        SegmentedButton segmentedButton = new SegmentedButton();
+
+        this.segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTableButton);
 
-        VBox vBox = new VBox(segmentedButton);
-        vBox.setAlignment(Pos.TOP_CENTER);
+        HBox hBox = new HBox(segmentedButton);
+
 
         toggleDiagramButton.setSelected(true);
 
-        this.setCenter(vBox);
+        this.containerForCenterNodes = new VBox();
+        containerForCenterNodes.setPadding(new Insets(10, 50, 50, 50));
+        containerForCenterNodes.setSpacing(10);
+        containerForCenterNodes.setAlignment(Pos.TOP_CENTER);
+        containerForCenterNodes.setStyle(cssLayout);
+
+        containerForCenterNodes.getChildren().add(segmentedButton);
+
+
+        this.setCenter(containerForCenterNodes);
 
         Button button4 = new Button("Simulate");
         Button save = new Button("Save");
@@ -73,12 +87,16 @@ public class MainStageView extends BorderPane {
 
         HBox bottomBar = new HBox(button4, save, load);
 
-        this.setBottom(bottomBar);
+        HiddenSidesPane pane = new HiddenSidesPane();
+        pane.setContent(new TableView());
+        pane.setRight(new ListView());
+
+        this.setBottom(pane);
 
     }
 
     private void setUpUILayout() {
-        this.setStyle(cssLayout);
+
     }
 
     private void setUpUIListeners() {
@@ -105,5 +123,9 @@ public class MainStageView extends BorderPane {
 
     public void setAutoCompletionBinding(AutoCompletionBinding<String> autoCompletionBinding) {
         this.autoCompletionBinding = autoCompletionBinding;
+    }
+
+    public VBox getContainerForCenterNodes() {
+        return containerForCenterNodes;
     }
 }

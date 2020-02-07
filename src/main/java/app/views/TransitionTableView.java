@@ -138,7 +138,8 @@ public class TransitionTableView extends BorderPane {
         vBox.setSpacing(10);
         vBox.getChildren().addAll(transitionTable, hBox);
 
-        // mainStageView.getCenterContent().getChildren().add(vBox);
+
+        mainStageView.getContainerForCenterNodes().getChildren().add(vBox);
     }
 
 
