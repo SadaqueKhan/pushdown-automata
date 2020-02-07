@@ -8,9 +8,14 @@ import app.views.StateView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class DiagramController {
 
@@ -160,7 +165,46 @@ public class DiagramController {
         //TODO need to remove this listeners logic
         createTransitionItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                transitionTableController.load();
+
+
+//Create input widgets for the user to enter a configuration
+                TextField currentStateTextField = new TextField();
+                currentStateTextField.setPrefWidth(50);
+
+                TextField inputSymbolTextField = new TextField();
+                inputSymbolTextField.setPrefWidth(50);
+
+                TextField stackSymbolToPopTextField = new TextField();
+                stackSymbolToPopTextField.setPrefWidth(50);
+
+// Create a arrow label to connect the configuration input widgets to action input widgets
+                final Label arrowLabel = new Label("->");
+
+//Create input widgets for the user to enter a configuration
+                TextField resultingStateTextField = new TextField();
+                resultingStateTextField.setPrefWidth(50);
+
+                TextField stackSymbolToPushTextField = new TextField();
+                stackSymbolToPushTextField.setPrefWidth(50);
+
+//Create submit button for the user to submit a transition
+                Button submitTransitionButton = new Button("Submit");
+
+
+                final HBox hBox = new HBox();
+                hBox.setPadding(new Insets(10, 10, 10, 10));
+                hBox.setSpacing(10);
+                hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField);
+
+                final VBox vBox = new VBox(hBox, submitTransitionButton);
+                vBox.setAlignment(Pos.CENTER);
+                
+                Scene scene = new Scene(vBox, 340, 100);
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.setTitle("Create Transition");
+                stage.setScene(scene);
+                stage.show();
             }
         });
 

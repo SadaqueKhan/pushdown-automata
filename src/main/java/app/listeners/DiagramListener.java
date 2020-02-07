@@ -30,8 +30,6 @@ public class DiagramListener implements EventHandler<MouseEvent> {
         //absolute vertical y position of the event.
         double yPositionOfMouse = event.getScreenY();
 
-
-        System.out.println(picked.toString());
         if (picked instanceof DiagramView) {
             if (event.getSource() instanceof DiagramView) {
                 if (event.getButton() == MouseButton.PRIMARY) {
@@ -44,7 +42,6 @@ public class DiagramListener implements EventHandler<MouseEvent> {
         }
 
         if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
-            System.out.println("helloworld");
             if (event.getSource() instanceof StateView) {
                 StateView stateView = (StateView) event.getSource();
                 String eventType = event.getEventType().toString();

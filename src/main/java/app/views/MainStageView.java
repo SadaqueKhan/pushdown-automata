@@ -86,9 +86,16 @@ public class MainStageView extends BorderPane {
         TitledPane pane2 = new TitledPane("Cars", new Label("Show all cars available"));
         TitledPane pane3 = new TitledPane("Planes", new Label("Show all planes available"));
 
+        TitledPane pane4 = new TitledPane("Boats", new Label("Show all boats available"));
+        TitledPane pane5 = new TitledPane("Cars", new Label("Show all cars available"));
+        TitledPane pane6 = new TitledPane("Planes", new Label("Show all planes available"));
+
         accordion.getPanes().add(pane1);
         accordion.getPanes().add(pane2);
         accordion.getPanes().add(pane3);
+        accordion.getPanes().add(pane4);
+        accordion.getPanes().add(pane5);
+        accordion.getPanes().add(pane6);
 
         accordion.setMinSize(200, 200);
 
