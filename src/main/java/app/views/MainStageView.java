@@ -6,7 +6,6 @@ import app.listeners.MainStageListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.SegmentedButton;
@@ -21,11 +20,10 @@ public class MainStageView extends BorderPane {
     private final MainStageController mainStageController;
 
 
-    private HBox centerContent;
-
-    AutoCompletionBinding<String> autoCompletionBinding;
-    private TextField input;
+    //User input textfield fields
+    private TextField inputTextField;
     private Set<String> inputWordSet;
+    AutoCompletionBinding<String> autoCompletionBinding;
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -38,29 +36,15 @@ public class MainStageView extends BorderPane {
 
 
     private void setUpUIComponents() {
+        inputTextField = new TextField();
+        inputWordSet = new HashSet<>();
+        autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
 
-        Button button4 = new Button("Simulate");
+        this.setTop(inputTextField);
+
 
         ToggleButton toggleDiagramButton = new ToggleButton("Diagram");
         ToggleButton toggleTableButton = new ToggleButton("Table");
-
-        inputWordSet = new HashSet<>();
-
-
-        input = new TextField();
-        autoCompletionBinding = TextFields.bindAutoCompletion(input, inputWordSet);
-
-
-        input.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                learnWord(input.getText());
-            }
-        });
-
-        this.setTop(input);
-
-//        TextField textField = new TextField();
-//     textField.bindAutoCompletion(input, poss)
 
         SegmentedButton segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTableButton);
@@ -68,7 +52,7 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(segmentedButton);
 
-
+        Button button4 = new Button("Simulate");
         Button save = new Button("Save");
         Button load = new Button("Load");
 
@@ -79,17 +63,14 @@ public class MainStageView extends BorderPane {
     }
 
     private void learnWord(String text) {
-        inputWordSet.add(input.getText());
+        inputWordSet.add(inputTextField.getText());
         if (autoCompletionBinding != null) {
             autoCompletionBinding.dispose();
         }
-        autoCompletionBinding = TextFields.bindAutoCompletion(input, inputWordSet);
+        autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
 
     }
 
-    public HBox getCenterContent() {
-        return centerContent;
-    }
 
     private void setUpUILayout() {
     }
@@ -98,7 +79,23 @@ public class MainStageView extends BorderPane {
 
         MainStageListener mainStageListener = new MainStageListener(mainStageController);
 
+        inputTextField.setOnKeyPressed(mainStageListener);
+
     }
 
+    public TextField getInputTextField() {
+        return inputTextField;
+    }
 
+    public Set<String> getInputWordSet() {
+        return inputWordSet;
+    }
+
+    public AutoCompletionBinding<String> getAutoCompletionBinding() {
+        return autoCompletionBinding;
+    }
+
+    public void setAutoCompletionBinding(AutoCompletionBinding<String> autoCompletionBinding) {
+        this.autoCompletionBinding = autoCompletionBinding;
+    }
 }
