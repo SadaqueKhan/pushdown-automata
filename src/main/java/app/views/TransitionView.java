@@ -81,19 +81,20 @@ public class TransitionView extends Group {
         double x = 40.0;
         double y = 0.0;
 
-        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
-        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getCurrentStateXPosition() / 2));
-        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getCurrentStateYPosition() / 2));
+//        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
+//        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getCurrentStateXPosition() / 2));
+//        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getCurrentStateYPosition() / 2));
+//
+//        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
+//        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getCurrentStateXPosition() / 2));
+//        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getCurrentStateYPosition() / 2));
+//
 
-        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
-        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getCurrentStateXPosition() / 2));
-        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getCurrentStateYPosition() / 2));
+        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.translateXProperty()).add(source.getCurrentStateXPosition() / 2));
+        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.translateYProperty()).add(source.getCurrentStateYPosition() / 2));
+        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.translateXProperty()).add(target.getCurrentStateXPosition() / 2));
+        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.translateYProperty()).add(target.getCurrentStateYPosition() / 2));
 
-
-        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.translateXProperty()).add(source.widthProperty().divide(2)));
-        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.translateYProperty()).add(source.heightProperty().divide(2)));
-        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.translateXProperty()).add(target.widthProperty().divide(2)));
-        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.translateYProperty()).add(target.heightProperty().divide(2)));
 
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();
@@ -161,7 +162,6 @@ public class TransitionView extends Group {
         arrowLabel.yProperty().addListener(updater);
 
         updater.invalidated(null);
-
 
         // Add arrow shaft/arrowtips into a group to create an arrow
         getChildren().add(arrowShaft);

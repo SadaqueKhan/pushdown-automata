@@ -2,8 +2,7 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
@@ -12,7 +11,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateView extends StackPane {
+public class StateView extends Group {
 
     private final DiagramController diagramController;
 
@@ -46,28 +45,23 @@ public class StateView extends StackPane {
 
 
     public void setUpUIComponents() {
-
-        double radius = 25;
-        double paneSize = 2 * radius;
-
-
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
+        stateCircle.setCenterX(currentStateXPosition);
+        stateCircle.setCenterY(currentStateYPosition);
+        stateCircle.setRadius(40);
+        stateCircle.setStroke(Color.GREEN);
+        stateCircle.setFill(Color.RED);
 
-        stateCircle.setRadius(radius);
-        stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
-
-        Label stateIdText = new Label(stateId);
-        stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
-        this.setPrefSize(paneSize, paneSize);
-        this.setMaxSize(paneSize, paneSize);
-        this.setMinSize(paneSize, paneSize);
+        // Text for stateCircle GUI
+        this.stateIdText = new Text(stateId);
+        stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
 
 //<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
         this.startStatePointLine1 = new Line();
-        startStatePointLine1.setStrokeWidth(2);
+        startStatePointLine1.setStrokeWidth(3);
 
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
@@ -80,12 +74,12 @@ public class StateView extends StackPane {
         startStatePointLine1.setEndX(15);
         startStatePointLine1.setEndY(15);
 
-        // startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
+        startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
 
 
         //Create arrow shaft using line object
         this.startStatePointLine2 = new Line();
-        startStatePointLine2.setStrokeWidth(2);
+        startStatePointLine2.setStrokeWidth(3);
 
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
@@ -97,24 +91,22 @@ public class StateView extends StackPane {
         startStatePointLine2.setEndX(15);
         startStatePointLine2.setEndY(15);
 
-        //  startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
+        startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
         startStatePointLine1.setVisible(false);
         startStatePointLine2.setVisible(false);
 
 
-//<<< CREATE FINAL STATE UI COMPONENT >>>
-        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, radius / 1.25, radius / 1.25, 0, 360);
+//<<< CREATE START STATE UI COMPONENT >>>
+        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
 
         finalStateArc.setType(ArcType.OPEN);
-        finalStateArc.setStrokeWidth(2);
+        finalStateArc.setStrokeWidth(3);
         finalStateArc.setStroke(Color.BLACK);
         finalStateArc.setStrokeType(StrokeType.INSIDE);
         finalStateArc.setFill(null);
 
         finalStateArc.setVisible(false);
-
-        this.relocate(currentStateXPosition, currentStateYPosition);
 
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
     }
@@ -167,7 +159,6 @@ public class StateView extends StackPane {
     public void setCurrentStateYPosition(double currentStateYPosition) {
         this.currentStateYPosition = currentStateYPosition;
     }
-
 
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {

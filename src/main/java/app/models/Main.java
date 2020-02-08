@@ -1,12 +1,16 @@
 package app.models;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Stack;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
         MachineModel machineModel = new MachineModel();
+        Stack<String> stack = new Stack<>();
+
         String userInputWord = "ABC";
 
         StateModel stateModelA = new StateModel("A");
@@ -20,7 +24,7 @@ public class Main {
         machineModel.addStateModel(stateModelB);
         machineModel.addStateModel(stateModelC);
 
-        TransitionModel transitionModel1 = new TransitionModel(stateModelA, "A", "X", stateModelB, "Y");
+        TransitionModel transitionModel1 = new TransitionModel(stateModelA, "A", "", stateModelB, "Z0");
         TransitionModel transitionModel2 = new TransitionModel(stateModelB, "B", "X", stateModelC, "Y");
 
         machineModel.addTransitionModel(transitionModel1);
@@ -43,8 +47,15 @@ public class Main {
     }
 
     private static String checkAcceptance(String userInputWord, MachineModel machineModel) {
+        String[] splitUserInputArray = userInputWord.split("");
+        HashSet<TransitionModel> transitionModelSet = machineModel.g
 
+        for (String inputSymbol : splitUserInputArray) {
+
+
+        }
 
         return "";
     }
+
 }
