@@ -30,7 +30,6 @@ public class TransitionTableController {
 
 
     public void loadTransitionTable(DiagramController diagramController) {
-        System.out.println("Does diagramcontroller does not exist: " + (this.diagramController == null));
         this.diagramController = diagramController;
         transitionTableView.loadToMainStage();
     }
@@ -65,7 +64,6 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
-            System.out.println("Does diagramcontroller does not exist: " + (diagramController == null));
             diagramController.addStateToViewTransitionTableInputEventResponse(63.0, 152.0, userEntryCurrentStateId);
         }
 

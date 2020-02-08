@@ -89,27 +89,21 @@ public class DiagramView extends Pane {
         stateMap.put(stateID, stateView);
     }
 
+
     public void addTransitionView(String sourceID, String targetID, String transitionsID) {
         //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceID);
         StateView targetCell = stateMap.get(targetID);
 
-        //Create TransitionView
-        TransitionView transitionView = new TransitionView(sourceCell, targetCell, transitionsID);
-
-        this.getChildren().remove(sourceCell);
-        this.getChildren().remove(targetCell);
-        buildBiDirectionalLine(sourceCell, targetCell);
-        this.getChildren().addAll(sourceCell, targetCell);
-    }
-
-
-    private void buildBiDirectionalLine(StackPane startDot, StackPane endDot) {
-        Line virtualCenterLine = getLine(startDot, endDot);
+        Line virtualCenterLine = getLine(sourceCell, targetCell);
         virtualCenterLine.setOpacity(0);
-        StackPane centerLineArrowAB = getArrow(true, virtualCenterLine, startDot, endDot);
-        centerLineArrowAB.setOpacity(0);
-        StackPane centerLineArrowBA = getArrow(false, virtualCenterLine, startDot, endDot);
+        // this.getChildren().remove(sourceCell);
+        // this.getChildren().remove(targetCell);
+
+
+        StackPane centerLineArrowAB = getArrowTip(true, virtualCenterLine, sourceCell, targetCell);
+        centerLineArrowAB.setOpacity(100);
+        StackPane centerLineArrowBA = getArrowTip(false, virtualCenterLine, sourceCell, targetCell);
         centerLineArrowBA.setOpacity(0);
 
         Line directedLine = new Line();
@@ -141,24 +135,13 @@ public class DiagramView extends Pane {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
-        StackPane mainArrow = getArrow(true, directedLine, startDot, endDot);
-        this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, directedLine, mainArrow);
+        StackPane mainArrow = getArrowTip(true, directedLine, sourceCell, targetCell);
+        this.getChildren().addAll(directedLine, mainArrow);
+//        this.getChildren().addAll(sourceCell, targetCell);
     }
 
 
-    private Line getLine(StackPane startDot, StackPane endDot) {
-        Line line = new Line();
-        line.setStroke(Color.BLUE);
-        line.setStrokeWidth(2);
-        line.startXProperty().bind(startDot.layoutXProperty().add(startDot.translateXProperty()).add(startDot.widthProperty().divide(2)));
-        line.startYProperty().bind(startDot.layoutYProperty().add(startDot.translateYProperty()).add(startDot.heightProperty().divide(2)));
-        line.endXProperty().bind(endDot.layoutXProperty().add(endDot.translateXProperty()).add(endDot.widthProperty().divide(2)));
-        line.endYProperty().bind(endDot.layoutYProperty().add(endDot.translateYProperty()).add(endDot.heightProperty().divide(2)));
-        return line;
-    }
-
-
-    private StackPane getArrow(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
+    private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
         StackPane arrow = new StackPane();
         arrow.setStyle("-fx-background-color:#333333;-fx-border-width:1px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");//
@@ -224,6 +207,18 @@ public class DiagramView extends Pane {
         arrow.rotateProperty().bind(endArrowAngle);
 
         return arrow;
+    }
+
+
+    private Line getLine(StackPane startDot, StackPane endDot) {
+        Line line = new Line();
+        line.setStroke(Color.BLUE);
+        line.setStrokeWidth(2);
+        line.startXProperty().bind(startDot.layoutXProperty().add(startDot.translateXProperty()).add(startDot.widthProperty().divide(2)));
+        line.startYProperty().bind(startDot.layoutYProperty().add(startDot.translateYProperty()).add(startDot.heightProperty().divide(2)));
+        line.endXProperty().bind(endDot.layoutXProperty().add(endDot.translateXProperty()).add(endDot.widthProperty().divide(2)));
+        line.endYProperty().bind(endDot.layoutYProperty().add(endDot.translateYProperty()).add(endDot.heightProperty().divide(2)));
+        return line;
     }
 
     public double getScale() {
