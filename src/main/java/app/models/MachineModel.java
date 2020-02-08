@@ -49,5 +49,11 @@ public class MachineModel implements Serializable {
         return null;
     }
 
+    public HashSet<StateModel> getStateModelSet() {
+        return stateModelSet;
+    }
 
+    public HashSet<TransitionModel> getTransitionModelSet() {
+        return transitionModelSet;
+    }
 }

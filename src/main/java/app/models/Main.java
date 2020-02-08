@@ -1,7 +1,9 @@
 package app.models;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Stack;
 
 public class Main {
@@ -31,31 +33,57 @@ public class Main {
         machineModel.addTransitionModel(transitionModel2);
 
 
-        String check = checkAcceptance(userInputWord, machineModel);
+        String check = checkAcceptance(userInputWord, machineModel, stack);
 
-        if (check.equals("SUCCESS")) {
-            System.out.println("SUCCESS");
-        } else if (check.equals("STUCK")) {
-            System.out.println("STUCK");
-        } else if (check.equals("FAIL")) {
-            System.out.println("FAIL");
+        System.out.println(check);
+
+    }
+
+    private static String checkAcceptance(String userInputWord, MachineModel machineModel, Stack<String> stack) {
+
+        List<String> splitUserInputArrayList = Arrays.asList(userInputWord.split(""));
+        HashSet<TransitionModel> transitionModelSet = machineModel.getTransitionModelSet();
+
+        TransitionModel startTransition = searchForStartState(transitionModelSet);
+
+        TransitionModel transitionRelatedToState = searchForStartState(transitionModelSet);
+
+
+        StateModel newCurrenStateModel;
+
+
+        if (startTransition == null) {
+            return "No start state defined";
         } else {
-            System.out.println("Transition processes: " + check);
+            for (int i = 0; i < splitUserInputArrayList.size(); i++) {
+                if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(i)) && startTransition.getStackSymbolToPop().equals("")) {
+                    newCurrenStateModel = startTransition.getResultingStateModel();
+                    stack.push(startTransition.getStackSymbolToPush());
+                    transitionModelSet.remove(startTransition);
+                    splitUserInputArrayList.remove(i);
+
+                    startTransition = sea
+
+
+                    for (int j = 0; j < splitUserInputArrayList.size(); j++) {
+                        if ()
+                    }
+                }
+
+            }
+            return "";
         }
-
-
     }
 
-    private static String checkAcceptance(String userInputWord, MachineModel machineModel) {
-        String[] splitUserInputArray = userInputWord.split("");
-        HashSet<TransitionModel> transitionModelSet = machineModel.g
-
-        for (String inputSymbol : splitUserInputArray) {
-
-
+    private static TransitionModel searchForStartState(HashSet<TransitionModel> transitionModelSet) {
+        for (TransitionModel transitionIsStart : transitionModelSet) {
+            StateModel stateModel = transitionIsStart.getCurrentStateModel();
+            if (stateModel.isStartState()) {
+                return transitionIsStart;
+            }
         }
-
-        return "";
+        return null;
     }
+
 
 }
