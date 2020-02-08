@@ -45,6 +45,10 @@ public class DiagramController {
         this.diagramView = new DiagramView(this, mainStageView);
     }
 
+    public void loadDiagramView() {
+        diagramView.loadToMainStage();
+    }
+
     //DiagramPaneGUIEventResponses
     public void addStateToViewMouseEventResponse(double x, double y) {
         StateModel newStateModel = new StateModel();

@@ -33,29 +33,25 @@ public class MainStageController extends Application implements Serializable {
         this.diagramController = new DiagramController(mainStageView, this, machineModel);
 
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
+
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
         primaryStage.show();
 
     }
 
-    public TransitionTableController getTransitionTableController() {
-        return transitionTableController;
-    }
 
-    public DiagramController getDiagramController() {
-        return diagramController;
-    }
-
-
-    public void triggerDiagramScene() {
+    public void triggerDiagramView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        diagramController = new DiagramController(mainStageView, this, machineModel);
+        diagramController.loadDiagramView();
     }
 
-    public void triggerTransitionTableScene() {
+    public void triggerTransitionTableView() {
+
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
+
+
+        transitionTableController.loadTransitionTable(diagramController);
     }
 
     public void saveInputWord(String userInputWord) {
@@ -65,4 +61,14 @@ public class MainStageController extends Application implements Serializable {
         }
         mainStageView.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStageView.getInputTextField(), mainStageView.getInputWordSet()));
     }
+
+
+    public TransitionTableController getTransitionTableController() {
+        return transitionTableController;
+    }
+
+    public DiagramController getDiagramController() {
+        return diagramController;
+    }
+
 }

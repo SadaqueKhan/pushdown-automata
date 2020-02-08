@@ -42,6 +42,8 @@ public class TransitionTableView extends BorderPane {
 
     //Submit transition button GUI
     private Button submitTransitionButton;
+    private VBox transitionTableContainer;
+
 
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
@@ -52,6 +54,10 @@ public class TransitionTableView extends BorderPane {
         setUpUIComponents();
         setUpUILayout();
         setUpUIListeners();
+    }
+
+    public void loadToMainStage() {
+        mainStageView.getContainerForCenterNodes().getChildren().add(transitionTableContainer);
     }
 
 
@@ -133,13 +139,12 @@ public class TransitionTableView extends BorderPane {
         hBox.setSpacing(10);
         hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton);
 
-        final VBox vBox = new VBox();
-        vBox.setPadding(new Insets(10, 10, 10, 10));
-        vBox.setSpacing(10);
-        vBox.getChildren().addAll(transitionTable, hBox);
+        transitionTableContainer = new VBox();
+        transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
+        transitionTableContainer.setSpacing(10);
+        transitionTableContainer.getChildren().addAll(transitionTable, hBox);
 
-
-        mainStageView.getContainerForCenterNodes().getChildren().add(vBox);
+        loadToMainStage();
     }
 
 

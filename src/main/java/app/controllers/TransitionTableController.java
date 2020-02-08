@@ -29,6 +29,13 @@ public class TransitionTableController {
     }
 
 
+    public void loadTransitionTable(DiagramController diagramController) {
+        System.out.println("Does diagramcontroller does not exist: " + (this.diagramController == null));
+        this.diagramController = diagramController;
+        transitionTableView.loadToMainStage();
+    }
+
+
     public void addTransitionEntry() {
 
         Random rnd = new Random();
@@ -58,8 +65,10 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(x1, y1, userEntryCurrentStateId);
+            System.out.println("Does diagramcontroller does not exist: " + (diagramController == null));
+            diagramController.addStateToViewTransitionTableInputEventResponse(63.0, 152.0, userEntryCurrentStateId);
         }
+
 
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (machineModel.stateExists(userEntryResultingStateId)) {
@@ -67,7 +76,7 @@ public class TransitionTableController {
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModel(resultingStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(63.0, 152.0, userEntryResultingStateId);
         }
 
 
@@ -81,5 +90,4 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
         diagramController.addTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
     }
-
 }

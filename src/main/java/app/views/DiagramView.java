@@ -47,6 +47,10 @@ public class DiagramView extends Pane {
 
     }
 
+    public void loadToMainStage() {
+        mainStageView.getContainerForCenterNodes().getChildren().add(this);
+    }
+
 
     private void setUpUIComponents() {
         // <--- Graph Stuff -->
@@ -64,8 +68,7 @@ public class DiagramView extends Pane {
 
         this.setMinSize(200, 500);
 
-        mainStageView.getContainerForCenterNodes().getChildren().add(this);
-
+        loadToMainStage();
     }
 
     private void setUpUIListeners() {
@@ -232,4 +235,6 @@ public class DiagramView extends Pane {
     public String toString() {
         return "DiagramView";
     }
+
+
 }
