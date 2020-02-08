@@ -5,8 +5,6 @@ import app.models.StateModel;
 import app.models.TransitionModel;
 import app.views.MainStageView;
 import app.views.TransitionTableView;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.util.Random;
 
@@ -24,6 +22,8 @@ public class TransitionTableController {
         this.machineModel = machineModel;
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
+
+        this.diagramController = mainStageController.getDiagramController();
 
         this.transitionTableView = new TransitionTableView(mainStageView, this);
     }
@@ -82,16 +82,4 @@ public class TransitionTableController {
         diagramController.addTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
     }
 
-
-    public void load() {
-        this.diagramController = mainStageController.getDiagramController();
-        this.transitionTableView = new TransitionTableView(mainStageView, this);
-
-        Scene scene = new Scene(transitionTableView, 1000, 1000);
-        Stage stage = new Stage();
-        stage.setTitle("Transition Table");
-        stage.setScene(scene);
-        stage.show();
-
-    }
 }

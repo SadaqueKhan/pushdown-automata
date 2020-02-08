@@ -1,6 +1,5 @@
 package app.views;
 
-
 import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import javafx.geometry.Insets;

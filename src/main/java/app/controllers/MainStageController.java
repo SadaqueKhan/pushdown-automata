@@ -3,7 +3,6 @@ package app.controllers;
 import app.models.MachineModel;
 import app.views.MainStageView;
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
@@ -33,10 +32,6 @@ public class MainStageController extends Application implements Serializable {
         this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
         this.diagramController = new DiagramController(mainStageView, this, machineModel);
 
-        for (Node node : mainStageView.getContainerForCenterNodes().getChildren()) {
-            System.out.println("Start " + node.toString());
-        }
-
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
@@ -54,19 +49,11 @@ public class MainStageController extends Application implements Serializable {
 
 
     public void triggerDiagramScene() {
-
-        for (Node node : mainStageView.getContainerForCenterNodes().getChildren()) {
-            System.out.println("Diagram button clicked: " + node.toString());
-        }
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
         diagramController = new DiagramController(mainStageView, this, machineModel);
     }
 
     public void triggerTransitionTableScene() {
-
-        for (Node node : mainStageView.getContainerForCenterNodes().getChildren()) {
-            System.out.println("Transition button clicked: " + node.toString());
-        }
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
         transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
     }
