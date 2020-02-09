@@ -83,8 +83,7 @@ public class StateView extends StackPane {
         startStatePointLine1.setEndY(radius);
 
         // startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
-
-
+        
         //Create arrow shaft using line object
         this.startStatePointLine2 = new Line();
         startStatePointLine2.setStrokeWidth(2);
