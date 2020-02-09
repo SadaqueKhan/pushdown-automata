@@ -8,6 +8,11 @@ import java.util.Stack;
 
 public class Main {
 
+    static int inputSymbolRead = 0;
+    static int inputTapeSize = 0;
+    static boolean startFlag = true;
+
+
     public static void main(String[] args) throws IOException {
 
         MachineModel machineModel = new MachineModel();
@@ -42,47 +47,60 @@ public class Main {
     private static String checkAcceptance(String userInputWord, MachineModel machineModel, Stack<String> stack) {
 
         List<String> splitUserInputArrayList = Arrays.asList(userInputWord.split(""));
+        inputTapeSize = splitUserInputArrayList.size();
         HashSet<TransitionModel> transitionModelSet = machineModel.getTransitionModelSet();
-
-        TransitionModel startTransition = searchForStartState(transitionModelSet);
-
-        TransitionModel transitionRelatedToState = searchForStartState(transitionModelSet);
+        HashSet<StateModel> stateModelSet = machineModel.getStateModelSet();
 
 
-        StateModel newCurrenStateModel;
-
-
-        if (startTransition == null) {
-            return "No start state defined";
-        } else {
-            for (int i = 0; i < splitUserInputArrayList.size(); i++) {
-                if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(i)) && startTransition.getStackSymbolToPop().equals("")) {
-                    newCurrenStateModel = startTransition.getResultingStateModel();
-                    stack.push(startTransition.getStackSymbolToPush());
-                    transitionModelSet.remove(startTransition);
-                    splitUserInputArrayList.remove(i);
-
-                    startTransition = sea
-
-
-                    for (int j = 0; j < splitUserInputArrayList.size(); j++) {
-                        if ()
-                    }
+        while (inputTapeSize != inputSymbolRead) {
+            for (int i = 0; i < stateModelSet.size(); i++) {
+                for (TransitionModel transitionModelToSearch1 : applicableTransitionToSearch(transitionModelSet, splitUserInputArrayList)) {
+                    for (transitionModelToSearch1)
                 }
-
             }
-            return "";
+
         }
+
+
+        return "";
+
+
     }
 
-    private static TransitionModel searchForStartState(HashSet<TransitionModel> transitionModelSet) {
-        for (TransitionModel transitionIsStart : transitionModelSet) {
-            StateModel stateModel = transitionIsStart.getCurrentStateModel();
-            if (stateModel.isStartState()) {
-                return transitionIsStart;
+    private static HashSet<TransitionModel> applicableTransitionToSearch(HashSet<TransitionModel> transitionModelSet, List<String> splitUserInputArrayList) {
+
+        StateModel stateModel = transitionModelToSearch1.getResultingStateModel();
+
+        inputSymbolRead++;
+
+        HashSet<TransitionModel> toReturnSet = new HashSet<>();
+
+        for (TransitionModel transitionModel : transitionModelSet) {
+            if (startFlag && transitionModel.getCurrentStateModel().isStartState() && transitionModel.getInputSymbol().equals(splitUserInputArrayList.get(inputSymbolRead)) && transitionModel.getStackSymbolToPop().equals("")) {
+                toReturnSet.add(transitionModel);
+                startFlag = false;
+            } else {
+                if (transitionModel.getCurrentStateModel().getStateId().equals(stateModel.getStateId()) && splitUserInputArrayList.get(inputSymbolRead).equals(transitionModel.getInputSymbol())) {
+                    toReturnSet.add(transitionModel);
+                }
             }
+
+
         }
-        return null;
+        return toReturnSet;
+
+    }
+
+
+    private static HashSet<TransitionModel> searchForApplicableTransitions(HashSet<TransitionModel> startTransition, List<String> splitUserInputArrayList) {
+        String inputSymbolToRead = splitUserInputArrayList.get(inputSymbolRead);
+        inputSymbolRead++;
+
+        HashSet<TransitionModel> toReturnSet = new HashSet<>();
+        for (TransitionModel transitionModel : startTransition) {
+
+        }
+        return toReturnSet;
     }
 
 
