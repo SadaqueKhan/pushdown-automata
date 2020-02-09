@@ -2,7 +2,8 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
-import javafx.scene.Group;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
@@ -11,7 +12,7 @@ import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StateView extends Group {
+public class StateView extends StackPane {
 
     private final DiagramController diagramController;
 
@@ -45,23 +46,28 @@ public class StateView extends Group {
 
 
     public void setUpUIComponents() {
+
+        double radius = 25;
+        double paneSize = 2 * radius;
+
+
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
-        stateCircle.setCenterX(currentStateXPosition);
-        stateCircle.setCenterY(currentStateYPosition);
-        stateCircle.setRadius(40);
-        stateCircle.setStroke(Color.GREEN);
-        stateCircle.setFill(Color.RED);
 
-        // Text for stateCircle GUI
-        this.stateIdText = new Text(stateId);
-        stateIdText.relocate(currentStateXPosition - 6, currentStateYPosition - 6);
+        stateCircle.setRadius(radius);
+        stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
+
+        Label stateIdText = new Label(stateId);
+        stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
+        this.setPrefSize(paneSize, paneSize);
+        this.setMaxSize(paneSize, paneSize);
+        this.setMinSize(paneSize, paneSize);
 
 //<<< CREATE START STATE UI COMPONENT >>>
         //Create arrow shaft using line object
         this.startStatePointLine1 = new Line();
-        startStatePointLine1.setStrokeWidth(3);
+        startStatePointLine1.setStrokeWidth(2);
 
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
@@ -69,44 +75,51 @@ public class StateView extends Group {
         rotate1.setAngle(180);
 
         startStatePointLine1.getTransforms().add(rotate1);
-        startStatePointLine1.setStartX(0);
-        startStatePointLine1.setStartY(0);
-        startStatePointLine1.setEndX(15);
-        startStatePointLine1.setEndY(15);
+        startStatePointLine1.setStartX(radius / 2);
+        startStatePointLine1.setStartY(40);
 
-        startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
+
+        startStatePointLine1.setEndX(0);
+        startStatePointLine1.setEndY(radius);
+
+        // startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
 
 
         //Create arrow shaft using line object
         this.startStatePointLine2 = new Line();
-        startStatePointLine2.setStrokeWidth(3);
+        startStatePointLine2.setStrokeWidth(2);
 
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
         //setting properties for the rotate object.
         rotate2.setAngle(90);
-        startStatePointLine2.getTransforms().add(rotate2);
-        startStatePointLine2.setStartX(0);
-        startStatePointLine2.setStartY(0);
-        startStatePointLine2.setEndX(15);
-        startStatePointLine2.setEndY(15);
 
-        startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
+
+        startStatePointLine2.getTransforms().add(rotate2);
+        startStatePointLine2.setStartX(radius / 2);
+        startStatePointLine2.setStartY(20);
+        startStatePointLine2.setEndX(0);
+        startStatePointLine2.setEndY(radius);
+
+
+        //  startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
         startStatePointLine1.setVisible(false);
         startStatePointLine2.setVisible(false);
 
 
-//<<< CREATE START STATE UI COMPONENT >>>
-        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, 30, 30, 0, 360);
+//<<< CREATE FINAL STATE UI COMPONENT >>>
+        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, radius / 1.25, radius / 1.25, 0, 360);
 
         finalStateArc.setType(ArcType.OPEN);
-        finalStateArc.setStrokeWidth(3);
+        finalStateArc.setStrokeWidth(2);
         finalStateArc.setStroke(Color.BLACK);
         finalStateArc.setStrokeType(StrokeType.INSIDE);
         finalStateArc.setFill(null);
 
         finalStateArc.setVisible(false);
+
+        this.relocate(currentStateXPosition, currentStateYPosition);
 
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
     }
@@ -136,6 +149,7 @@ public class StateView extends Group {
 
         //Link listeners to events
         this.setOnMousePressed(diagramListener);
+        this.setOnMouseDragged(diagramListener);
 
     }
 
@@ -143,6 +157,21 @@ public class StateView extends Group {
         return stateId;
     }
 
+    public double getCurrentStateXPosition() {
+        return currentStateXPosition;
+    }
+
+    public void setCurrentStateXPosition(double currentStateXPosition) {
+        this.currentStateXPosition = currentStateXPosition;
+    }
+
+    public double getCurrentStateYPosition() {
+        return currentStateYPosition;
+    }
+
+    public void setCurrentStateYPosition(double currentStateYPosition) {
+        this.currentStateYPosition = currentStateYPosition;
+    }
 
 
     // TODO Remove these getters/setters from the view and break it down into MVC

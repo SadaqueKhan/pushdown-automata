@@ -42,8 +42,10 @@ public class TransitionView extends Group {
             setUpUIReflexiveTransitionComponents();
         } else {
             setUpUIStandardTransitionComponents();
+
         }
     }
+
 
     private void setUpUIReflexiveTransitionComponents() {
 
@@ -67,8 +69,9 @@ public class TransitionView extends Group {
         arc.setStrokeType(StrokeType.INSIDE);
         arc.setFill(null);
 
-        arc.centerXProperty().bind(source.layoutXProperty().add(x));
-        arc.centerYProperty().bind(source.layoutYProperty().add(y));
+        arc.centerXProperty().bind(source.layoutXProperty().add(source.getBoundsInParent().getWidth() / 2.0));
+        arc.centerYProperty().bind(source.layoutYProperty().add(source.getBoundsInParent().getHeight() / 2.0));
+
 
         getChildren().add(arc);
     }

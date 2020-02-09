@@ -7,6 +7,7 @@ import app.views.MainStageView;
 import app.views.StateView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
@@ -26,6 +27,14 @@ public class DiagramController {
 
     private final DiagramView diagramView;
 
+    // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
+    private double layoutX;
+    private double layoutY;
+
+    private double sceneX;
+    private double sceneY;
+
+
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
 
         this.mainStageController = mainStageController;
@@ -40,15 +49,67 @@ public class DiagramController {
         diagramView.loadToMainStage();
     }
 
-
-    //TransitionTableGUIEventResponses
-    public void addStateToViewTransitionTableInputEventResponse(double x, double y, String userEntryCurrentStateId) {
-        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
+    //DiagramPaneGUIEventResponses
+    public void addStateToViewMouseEventResponse(double x, double y) {
+        StateModel newStateModel = new StateModel();
+        machineModel.addStateModel(newStateModel);
+        diagramView.addStateView(x, y, this, newStateModel.getStateId());
     }
 
 
-    public void addTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
-        diagramView.addTransitionView(sourceStateID, targetStateID, transitionsID);
+    //StateGUIEventResponses
+    public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
+        sceneX = xPositionOfMouse;
+        sceneY = yPositionOfMouse;
+
+        layoutX = stateView.getLayoutX();
+        layoutY = stateView.getLayoutY();
+    }
+
+
+    public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
+        // Offset of drag
+        double offsetX = xPositionOfMouse - sceneX;
+        double offsetY = yPositionOfMouse - sceneY;
+
+        // Taking parent bounds
+        Bounds parentBounds = stateView.getParent().getLayoutBounds();
+
+        // Drag node bounds
+        double currPaneLayoutX = stateView.getLayoutX();
+        double currPaneWidth = stateView.getWidth();
+        double currPaneLayoutY = stateView.getLayoutY();
+        double currPaneHeight = stateView.getHeight();
+
+        if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+            // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+            stateView.setTranslateX(offsetX);
+        } else if (currPaneLayoutX + offsetX < 0) {
+            // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+            // which makes the final layout position to 0 in mouse released event.
+            stateView.setTranslateX(-currPaneLayoutX);
+        } else {
+            // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+            stateView.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+        }
+
+        if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+            stateView.setTranslateY(offsetY);
+        } else if (currPaneLayoutY + offsetY < 0) {
+            stateView.setTranslateY(-currPaneLayoutY);
+        } else {
+            stateView.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+        }
+    }
+
+    public void stateViewOnMouseReleased(StateView stateView) {
+        // Updating the new layout positions
+        stateView.setLayoutX(layoutX + stateView.getTranslateX());
+        stateView.setLayoutY(layoutY + stateView.getTranslateY());
+
+        // Resetting the translate positions
+        stateView.setTranslateX(0);
+        stateView.setTranslateY(0);
     }
 
 
@@ -141,7 +202,7 @@ public class DiagramController {
 
                 final VBox vBox = new VBox(hBox, submitTransitionButton);
                 vBox.setAlignment(Pos.CENTER);
-                
+
                 Scene scene = new Scene(vBox, 340, 100);
                 Stage stage = new Stage();
                 stage.setResizable(false);
@@ -169,7 +230,20 @@ public class DiagramController {
     }
 
 
+    //TransitionTableGUIEventResponses
+    public void addStateToViewTransitionTableInputEventResponse(double x, double y, String userEntryCurrentStateId) {
+        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
+    }
 
 
+    public void addDirectionalTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
+        diagramView.addDirectionalTransitionView(sourceStateID, targetStateID, transitionsID);
+    }
+
+
+    public void addReflexiveTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
+        diagramView.addReflexiveTransitionView(sourceStateID, targetStateID, transitionsID);
+
+    }
 
 }

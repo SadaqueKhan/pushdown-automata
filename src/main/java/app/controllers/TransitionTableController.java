@@ -86,6 +86,11 @@ public class TransitionTableController {
 
         //Update diagram view and table view
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
-        diagramController.addTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+
+        if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
+            diagramController.addReflexiveTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+        } else {
+            diagramController.addDirectionalTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+        }
     }
 }
