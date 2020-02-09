@@ -3,6 +3,8 @@
 package app.views;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -66,7 +68,6 @@ public class TransitionView extends Group {
         arc.setFill(null);
 
         arc.centerXProperty().bind(source.layoutXProperty().add(x));
-        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
         arc.centerYProperty().bind(source.layoutYProperty().add(y));
 
         getChildren().add(arc);
@@ -78,24 +79,23 @@ public class TransitionView extends Group {
         this.arrowShaft = new Line();
         arrowShaft.setStrokeWidth(3);
 
-        double x = 40.0;
-        double y = 0.0;
+        arrowShaft.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+            Bounds b = source.getBoundsInParent();
+            return b.getMinX() + b.getWidth() / 2;
+        }, source.boundsInParentProperty()));
+        arrowShaft.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+            Bounds b = source.getBoundsInParent();
+            return b.getMinY() + b.getHeight() / 2;
+        }, source.boundsInParentProperty()));
 
-//        //Bind arrow shaft start point to the source state (i.e. where the arrow will be point from)
-//        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.getCurrentStateXPosition() / 2));
-//        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.getCurrentStateYPosition() / 2));
-//
-//        //Bind arrow shaft end point to the target state (i.e. where the arrow will be point towards)
-//        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.getCurrentStateXPosition() / 2));
-//        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.getCurrentStateYPosition() / 2));
-//
-
-        arrowShaft.startXProperty().bind(source.layoutXProperty().add(source.translateXProperty()).add(source.getCurrentStateXPosition() / 2));
-        arrowShaft.startYProperty().bind(source.layoutYProperty().add(source.translateYProperty()).add(source.getCurrentStateYPosition() / 2));
-        arrowShaft.endXProperty().bind(target.layoutXProperty().add(target.translateXProperty()).add(target.getCurrentStateXPosition() / 2));
-        arrowShaft.endYProperty().bind(target.layoutYProperty().add(target.translateYProperty()).add(target.getCurrentStateYPosition() / 2));
-
-
+        arrowShaft.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+            Bounds b = target.getBoundsInParent();
+            return b.getMinX() + b.getWidth() / 2;
+        }, target.boundsInParentProperty()));
+        arrowShaft.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+            Bounds b = target.getBoundsInParent();
+            return b.getMinY() + b.getHeight() / 2;
+        }, target.boundsInParentProperty()));
         //Create first side of arrow tip using Line object
         this.arrowTipSide1 = new Line();
         arrowTipSide1.setStrokeWidth(3);

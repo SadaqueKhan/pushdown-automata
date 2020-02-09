@@ -1,9 +1,6 @@
 package app.models;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Stack;
 
 public class Main {
@@ -45,62 +42,7 @@ public class Main {
     }
 
     private static String checkAcceptance(String userInputWord, MachineModel machineModel, Stack<String> stack) {
-
-        List<String> splitUserInputArrayList = Arrays.asList(userInputWord.split(""));
-        inputTapeSize = splitUserInputArrayList.size();
-        HashSet<TransitionModel> transitionModelSet = machineModel.getTransitionModelSet();
-        HashSet<StateModel> stateModelSet = machineModel.getStateModelSet();
-
-
-        while (inputTapeSize != inputSymbolRead) {
-            for (int i = 0; i < stateModelSet.size(); i++) {
-                for (TransitionModel transitionModelToSearch1 : applicableTransitionToSearch(transitionModelSet, splitUserInputArrayList)) {
-                    for (transitionModelToSearch1)
-                }
-            }
-
-        }
-
-
         return "";
-
-
-    }
-
-    private static HashSet<TransitionModel> applicableTransitionToSearch(HashSet<TransitionModel> transitionModelSet, List<String> splitUserInputArrayList) {
-
-        StateModel stateModel = transitionModelToSearch1.getResultingStateModel();
-
-        inputSymbolRead++;
-
-        HashSet<TransitionModel> toReturnSet = new HashSet<>();
-
-        for (TransitionModel transitionModel : transitionModelSet) {
-            if (startFlag && transitionModel.getCurrentStateModel().isStartState() && transitionModel.getInputSymbol().equals(splitUserInputArrayList.get(inputSymbolRead)) && transitionModel.getStackSymbolToPop().equals("")) {
-                toReturnSet.add(transitionModel);
-                startFlag = false;
-            } else {
-                if (transitionModel.getCurrentStateModel().getStateId().equals(stateModel.getStateId()) && splitUserInputArrayList.get(inputSymbolRead).equals(transitionModel.getInputSymbol())) {
-                    toReturnSet.add(transitionModel);
-                }
-            }
-
-
-        }
-        return toReturnSet;
-
-    }
-
-
-    private static HashSet<TransitionModel> searchForApplicableTransitions(HashSet<TransitionModel> startTransition, List<String> splitUserInputArrayList) {
-        String inputSymbolToRead = splitUserInputArrayList.get(inputSymbolRead);
-        inputSymbolRead++;
-
-        HashSet<TransitionModel> toReturnSet = new HashSet<>();
-        for (TransitionModel transitionModel : startTransition) {
-
-        }
-        return toReturnSet;
     }
 
 

@@ -18,8 +18,6 @@ public class DiagramView extends Pane {
 
     private ZoomableScrollPane scrollPane;
 
-    double sceneX, sceneY, layoutX, layoutY;
-
     String cssLayout = "-fx-border-color: black;\n" +
             "-fx-background-color: aliceblue,\n" +
             "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
@@ -31,7 +29,6 @@ public class DiagramView extends Pane {
         this.mainStageView = mainStageView;
 
         this.diagramController = diagramController;
-
 
         setUpUIComponents();
         setUpUIListeners();
@@ -54,7 +51,6 @@ public class DiagramView extends Pane {
 
         stateMap = new HashMap<>(); // <id,cell>
 
-
         this.setStyle(cssLayout);
 
         this.setMinSize(200, 500);
@@ -63,12 +59,8 @@ public class DiagramView extends Pane {
     }
 
     private void setUpUIListeners() {
-
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);
-
-        this.setOnMousePressed(diagramListener);
-
     }
 
     public void addStateView(double x, double y, DiagramController diagramController, String stateID) {
@@ -90,7 +82,6 @@ public class DiagramView extends Pane {
 
         this.getChildren().add(transitionView);
     }
-
 
 
     public double getScale() {

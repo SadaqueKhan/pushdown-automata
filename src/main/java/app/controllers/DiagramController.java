@@ -26,17 +26,6 @@ public class DiagramController {
 
     private final DiagramView diagramView;
 
-    // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
-    private double layoutX;
-    private double layoutY;
-
-    private double sceneX;
-    private double sceneY;
-
-    private double dragContextX = 0.0;
-    private double dragContextY = 0.0;
-
-
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
 
         this.mainStageController = mainStageController;
@@ -51,65 +40,15 @@ public class DiagramController {
         diagramView.loadToMainStage();
     }
 
-    //DiagramPaneGUIEventResponses
-    public void addStateToViewMouseEventResponse(double x, double y) {
-        StateModel newStateModel = new StateModel();
-        machineModel.addStateModel(newStateModel);
-        diagramView.addStateView(x, y, this, newStateModel.getStateId());
+
+    //TransitionTableGUIEventResponses
+    public void addStateToViewTransitionTableInputEventResponse(double x, double y, String userEntryCurrentStateId) {
+        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
     }
 
 
-    //StateGUIEventResponses
-
-    public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-        double scale = diagramView.getScale();
-
-        dragContextX = stateView.getBoundsInParent().getMinX() * scale - xPositionOfMouse;
-        dragContextY = stateView.getBoundsInParent().getMinY() * scale - yPositionOfMouse;
-
-    }
-
-
-    public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
-
-        double scale = diagramView.getScale();
-        double offsetX = xPositionOfMouse + dragContextX;
-        double offsetY = yPositionOfMouse + dragContextY;
-
-        offsetX /= scale;
-        offsetY /= scale;
-
-        if (!(stateView.getStateParents().isEmpty())) {
-            //Target
-
-            for (StateView stateView1 : stateView.getStateParents()) {
-
-                if (stateView1.getCurrentStateXPosition() < offsetX) {
-//                    System.out.println("----");
-//                    System.out.println("TargetXONLEFT:" + offsetX);
-//                    System.out.println("SourceYONRIGHT:" + stateView1.getCurrentStateXPosition());
-//                    System.out.println("----");
-                }
-
-            }
-        }
-
-        stateView.setCurrentStateXPosition(offsetX);
-        stateView.setCurrentStateYPosition(offsetY);
-
-        stateView.relocate(offsetX, offsetY);
-
-
-    }
-
-    public void stateViewOnMouseReleased(StateView stateView) {
-        // Updating the new layout positions
-        stateView.setLayoutX(layoutX + stateView.getTranslateX());
-        stateView.setLayoutY(layoutY + stateView.getTranslateY());
-
-        // Resetting the translate positions
-        stateView.setTranslateX(0);
-        stateView.setTranslateY(0);
+    public void addTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
+        diagramView.addTransitionView(sourceStateID, targetStateID, transitionsID);
     }
 
 
@@ -230,15 +169,7 @@ public class DiagramController {
     }
 
 
-    //TransitionTableGUIEventResponses
-    public void addStateToViewTransitionTableInputEventResponse(double x, double y, String userEntryCurrentStateId) {
-        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
-    }
 
-
-    public void addTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
-        diagramView.addTransitionView(sourceStateID, targetStateID, transitionsID);
-    }
 
 
 }

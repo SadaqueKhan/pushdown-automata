@@ -64,7 +64,7 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModel(currentStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(63.0, 152.0, userEntryCurrentStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(x1, y1, userEntryCurrentStateId);
         }
 
 
@@ -74,7 +74,7 @@ public class TransitionTableController {
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModel(resultingStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(63.0, 152.0, userEntryResultingStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
         }
 
 

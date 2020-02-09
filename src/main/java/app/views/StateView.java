@@ -136,7 +136,6 @@ public class StateView extends Group {
 
         //Link listeners to events
         this.setOnMousePressed(diagramListener);
-        this.setOnMouseDragged(diagramListener);
 
     }
 
@@ -144,21 +143,7 @@ public class StateView extends Group {
         return stateId;
     }
 
-    public double getCurrentStateXPosition() {
-        return currentStateXPosition;
-    }
 
-    public void setCurrentStateXPosition(double currentStateXPosition) {
-        this.currentStateXPosition = currentStateXPosition;
-    }
-
-    public double getCurrentStateYPosition() {
-        return currentStateYPosition;
-    }
-
-    public void setCurrentStateYPosition(double currentStateYPosition) {
-        this.currentStateYPosition = currentStateYPosition;
-    }
 
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {
