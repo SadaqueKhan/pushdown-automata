@@ -59,21 +59,21 @@ public class TransitionTableController {
         StateModel resultingStateModel;
 
         // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (machineModel.stateExists(userEntryCurrentStateId)) {
-            currentStateModel = machineModel.getStateModel(userEntryCurrentStateId);
+        if (machineModel.stateExistsInStateModelSet(userEntryCurrentStateId)) {
+            currentStateModel = machineModel.getStateModelFromStateModelSet(userEntryCurrentStateId);
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
-            machineModel.addStateModel(currentStateModel);
+            machineModel.addStateModelToStateModelSet(currentStateModel);
             diagramController.addStateToViewTransitionTableInputEventResponse(x1, y1, userEntryCurrentStateId);
         }
 
 
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (machineModel.stateExists(userEntryResultingStateId)) {
-            resultingStateModel = machineModel.getStateModel(userEntryResultingStateId);
+        if (machineModel.stateExistsInStateModelSet(userEntryResultingStateId)) {
+            resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateId);
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
-            machineModel.addStateModel(resultingStateModel);
+            machineModel.addStateModelToStateModelSet(resultingStateModel);
             diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
         }
 
@@ -82,7 +82,7 @@ public class TransitionTableController {
 
 
         //Add transition model to machinemodel
-        machineModel.addTransitionModel(newTransitionModel);
+        machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
 
         //Update diagram view and table view

@@ -69,6 +69,6 @@ public class TransitionModel {
 
     @Override
     public String toString() {
-        return inputSymbol + ',' + stackSymbolToPop + "->" + stackSymbolToPush;
+        return "(" + currentStateModel + "," + inputSymbol + "," + stackSymbolToPop + ")" + "->" + "(" + resultingStateModel + "," + stackSymbolToPush + ")";
     }
 }

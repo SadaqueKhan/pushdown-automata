@@ -52,7 +52,7 @@ public class DiagramController {
     //DiagramPaneGUIEventResponses
     public void addStateToViewMouseEventResponse(double x, double y) {
         StateModel newStateModel = new StateModel();
-        machineModel.addStateModel(newStateModel);
+        machineModel.addStateModelToStateModelSet(newStateModel);
         diagramView.addStateView(x, y, this, newStateModel.getStateId());
     }
 
@@ -115,7 +115,7 @@ public class DiagramController {
 
     public void stateViewContextMenuPopUp(StateView stateView) {
 
-        StateModel stateModel = machineModel.getStateModel(stateView.getStateId());
+        StateModel stateModel = machineModel.getStateModelFromStateModelSet(stateView.getStateId());
 
         //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
@@ -214,7 +214,7 @@ public class DiagramController {
 
         deleteStateItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                machineModel.removeStateModel(stateView.getStateId());
+                machineModel.removeStateModelFromStateModelSet(stateView.getStateId());
                 diagramView.getChildren().remove(stateView);
             }
         });

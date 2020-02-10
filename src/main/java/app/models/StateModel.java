@@ -10,7 +10,7 @@ public class StateModel {
     private boolean isStandardState = true;
     private boolean isStartState = false;
     private boolean isFinalState = false;
-    private HashSet<TransitionModel> transitionModelSet;
+    private HashSet<TransitionModel> transitionModelsAttachedToStateSet = new HashSet<>();
 
 
     public StateModel() {
@@ -21,12 +21,9 @@ public class StateModel {
         this.stateId = stateID;
     }
 
-
     public void attachTransitionToStateModel(TransitionModel transitionModel) {
-        transitionModelSet.add(transitionModel);
+        transitionModelsAttachedToStateSet.add(transitionModel);
     }
-
-
 
 
 
@@ -61,6 +58,11 @@ public class StateModel {
     public void setFinalState(boolean finalState) {
         isFinalState = finalState;
         isStandardState = false;
+    }
+
+
+    public HashSet<TransitionModel> getTransitionModelsAttachedToStateSet() {
+        return transitionModelsAttachedToStateSet;
     }
 
     @Override
