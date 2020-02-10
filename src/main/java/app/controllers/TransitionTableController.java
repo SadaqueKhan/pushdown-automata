@@ -77,12 +77,13 @@ public class TransitionTableController {
             diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
         }
 
-
         //Create transition model
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
+
         //Add transition model to machinemodel
         machineModel.addTransitionModel(newTransitionModel);
+
 
         //Update diagram view and table view
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);

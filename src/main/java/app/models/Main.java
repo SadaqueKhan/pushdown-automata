@@ -1,6 +1,7 @@
 package app.models;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Stack;
 
 public class Main {
@@ -33,6 +34,14 @@ public class Main {
 
         machineModel.addTransitionModel(transitionModel1);
         machineModel.addTransitionModel(transitionModel2);
+
+
+        HashSet<String> stringSet = new HashSet<String>();
+
+        stringSet.add("a");
+        stringSet.add("a");
+
+        System.out.println(stringSet.size());
 
 
         String check = checkAcceptance(userInputWord, machineModel, stack);

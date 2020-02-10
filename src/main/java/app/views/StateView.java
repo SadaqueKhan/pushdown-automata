@@ -54,6 +54,7 @@ public class StateView extends StackPane {
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
+       
 
         stateCircle.setRadius(radius);
         stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");

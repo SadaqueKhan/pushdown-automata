@@ -1,5 +1,7 @@
 package app.models;
 
+import java.util.HashSet;
+
 public class StateModel {
 
     private static int num = 0;
@@ -8,6 +10,7 @@ public class StateModel {
     private boolean isStandardState = true;
     private boolean isStartState = false;
     private boolean isFinalState = false;
+    private HashSet<TransitionModel> transitionModelSet;
 
 
     public StateModel() {
@@ -17,6 +20,14 @@ public class StateModel {
     public StateModel(String stateID) {
         this.stateId = stateID;
     }
+
+
+    public void attachTransitionToStateModel(TransitionModel transitionModel) {
+        transitionModelSet.add(transitionModel);
+    }
+
+
+
 
 
     public String getStateId() {
