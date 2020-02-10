@@ -32,17 +32,25 @@ public class Main {
         machineModel.addStateModelToStateModelSet(stateModelB);
         machineModel.addStateModelToStateModelSet(stateModelC);
 
+        //A transitions
         TransitionModel transitionModel1 = new TransitionModel(stateModelA, "1", "", stateModelB, "X");
         stateModelA.attachTransitionToStateModel(transitionModel1);
-        TransitionModel transitionModel2 = new TransitionModel(stateModelB, "2", "X", stateModelC, "Y");
-        stateModelB.attachTransitionToStateModel(transitionModel2);
-        TransitionModel transitionModel3 = new TransitionModel(stateModelC, "3", "Y", stateModelA, "Y");
+        TransitionModel transitionModel2 = new TransitionModel(stateModelA, "1", "", stateModelC, "X");
+        stateModelA.attachTransitionToStateModel(transitionModel2);
+
+        //B transitions
+        TransitionModel transitionModel3 = new TransitionModel(stateModelB, "2", "X", stateModelC, "Y");
         stateModelB.attachTransitionToStateModel(transitionModel3);
+
+        //C transitions
+        TransitionModel transitionModel4 = new TransitionModel(stateModelC, "3", "Y", stateModelA, "Y");
+        stateModelC.attachTransitionToStateModel(transitionModel4);
 
 
         machineModel.addTransitionModelToTransitionModelSet(transitionModel1);
         machineModel.addTransitionModelToTransitionModelSet(transitionModel2);
         machineModel.addTransitionModelToTransitionModelSet(transitionModel3);
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel4);
 
         machineModel.setStartStateModel(machineModel.findStartStateModel());
 
@@ -68,30 +76,35 @@ public class Main {
         int numberOfSymbolsRead = 0;
 
 
-        for (TransitionModel transition : startStateModel.getTransitionModelsAttachedToStateSet()) {
+        for (TransitionModel startTransition : startStateModel.getTransitionModelsAttachedToStateSet()) {
             //check if valid transition exists
 
-
-            if ((transition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || transition.getInputSymbol().equals("")) && transition.getStackSymbolToPop().equals(stack.peek())) {
+            System.out.println(startTransition.getResultingStateModel());
+            if ((startTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || startTransition.getInputSymbol().equals("")) && startTransition.getStackSymbolToPop().equals(stack.peek())) {
+                System.out.println("H" + startTransition.getResultingStateModel());
                 //Move to transition
-                pathList.add(transition);
+                pathList.add(startTransition);
                 //Update number of symbols read
                 ++numberOfSymbolsRead;
                 //Update stack
-                updateStack(stack, transition.getStackSymbolToPush());
-                if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), transition.getResultingStateModel())) {
-                    System.out.println(pathList);
-                } else {
-                    printAllPathsUtil(transition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
-                }
+                updateStack(stack, startTransition.getStackSymbolToPush());
+                printAllPathsUtil(startTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
             }
-        }
 
+            pathList.remove(startTransition);
+            numberOfSymbolsRead = 0;
+
+            stack.clear();
+            stack.add("");
+        }
     }
 
+
     private static void printAllPathsUtil(TransitionModel currentTransition, ArrayList<TransitionModel> pathList, int numberOfSymbolsRead, List<String> splitUserInputArrayList, Stack<String> stack) {
-        
+
+
         if ((numberOfSymbolsRead == splitUserInputArrayList.size())) {
+
             if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), currentTransition.getResultingStateModel())) {
                 System.out.println(pathList);
                 return;
