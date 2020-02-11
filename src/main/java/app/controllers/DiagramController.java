@@ -47,13 +47,6 @@ public class DiagramController {
         diagramView.loadToMainStage();
     }
 
-    //DiagramPaneGUIEventResponses
-    public void addStateToViewMouseEventResponse(double x, double y) {
-        StateModel newStateModel = new StateModel();
-        machineModel.addStateModelToStateModelSet(newStateModel);
-        diagramView.addStateView(x, y, this, newStateModel.getStateId());
-    }
-
 
     //StateGUIEventResponses
     public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {

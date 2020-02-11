@@ -1,11 +1,9 @@
 package app.listeners;
 
 import app.controllers.DiagramController;
-import app.views.DiagramView;
 import app.views.StateView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
@@ -29,17 +27,6 @@ public class DiagramListener implements EventHandler<MouseEvent> {
 
         //absolute vertical y position of the event.
         double yPositionOfMouse = event.getScreenY();
-
-        if (picked instanceof DiagramView) {
-            if (event.getSource() instanceof DiagramView) {
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    //Add the state to diagram
-                    double X = event.getX(); // remove pane's coordinate system here
-                    double Y = event.getY(); // remove pane's coordinate system here
-                    diagramController.addStateToViewMouseEventResponse(X, Y);
-                }
-            }
-        }
 
         if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
             if (event.getSource() instanceof StateView) {

@@ -10,10 +10,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeType;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
 import java.util.HashMap;
@@ -237,7 +234,6 @@ public class DiagramView extends Pane {
 
     public void addReflexiveTransitionView(String sourceStateID, String targetStateID, String transitionsID) {
 
-        //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceStateID);
 
 
@@ -258,8 +254,18 @@ public class DiagramView extends Pane {
         arc.setStrokeType(StrokeType.INSIDE);
         arc.setFill(null);
 
-        arc.centerXProperty().bind(sourceCell.layoutXProperty().add(sourceCell.getBoundsInParent().getWidth() / 2.0));
-        arc.centerYProperty().bind(sourceCell.layoutYProperty().add(sourceCell.getBoundsInParent().getHeight() / 2.0));
+        arc.centerXProperty().bind((sourceCell.layoutXProperty().add(sourceCell.translateXProperty()).add(sourceCell.widthProperty().divide(2))));
+        arc.centerYProperty().bind(sourceCell.layoutYProperty().add(sourceCell.translateYProperty()).add(sourceCell.heightProperty().divide(2)));
+
+        Polygon arrowHead = new Polygon();
+        arrowHead.getPoints().addAll(0.0, 0.0,
+                20.0, 10.0,
+                10.0, 20.0);
+        arrowHead.setFill(Color.BLACK);
+
+        arrowHead.layoutXProperty().bind(arc.centerXProperty().add(arc.translateXProperty()));
+        arrowHead.layoutYProperty().bind(arc.centerYProperty().add(arc.translateYProperty()));
+
 
         this.getChildren().add(arc);
 
