@@ -7,9 +7,7 @@ import javafx.scene.control.Button;
 
 public class TransitionTableListener implements EventHandler<ActionEvent> {
 
-
     private final TransitionTableController transitionTableController;
-
 
     public TransitionTableListener(TransitionTableController transitionTableController) {
 

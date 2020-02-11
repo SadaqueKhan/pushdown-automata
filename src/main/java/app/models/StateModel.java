@@ -4,18 +4,12 @@ import java.util.HashSet;
 
 public class StateModel {
 
-    private static int num = 0;
     private String stateId;
 
     private boolean isStandardState = true;
     private boolean isStartState = false;
     private boolean isFinalState = false;
     private HashSet<TransitionModel> transitionModelsAttachedToStateSet = new HashSet<>();
-
-
-    public StateModel() {
-        this.stateId = "Q" + (num++);
-    }
 
     public StateModel(String stateID) {
         this.stateId = stateID;

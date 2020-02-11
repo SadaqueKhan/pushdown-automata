@@ -36,9 +36,8 @@ public class MainStageListener implements EventHandler {
 
         if (eventType.equals("ACTION")) {
             ToggleButton isToggleButton = (ToggleButton) event.getSource();
-            String triggeredToggleButtonName = isToggleButton.getText();
 
-            if (triggeredToggleButtonName.equals("Diagram")) {
+            if (isToggleButton.getText().equals("Diagram")) {
                 mainStageController.triggerDiagramView();
             } else {
                 mainStageController.triggerTransitionTableView();
