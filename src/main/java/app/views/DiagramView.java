@@ -1,7 +1,6 @@
 package app.views;
 
 import app.controllers.DiagramController;
-import app.listeners.DiagramListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -31,16 +30,11 @@ public class DiagramView extends Pane {
             "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)";
 
     public DiagramView(DiagramController diagramController, MainStageView mainStageView) {
-
         // Reference to the main application container
         this.mainStageView = mainStageView;
-
+        // Reference to diagram controller
         this.diagramController = diagramController;
-
-
         setUpUIComponents();
-        setUpUIListeners();
-
     }
 
     public void loadToMainStage() {
@@ -49,32 +43,16 @@ public class DiagramView extends Pane {
 
 
     private void setUpUIComponents() {
-        // <--- Graph Stuff -->
-
-        stateMap = new HashMap<>(); // <id,cell>
-
+        stateMap = new HashMap<>(); //
         this.setStyle(cssLayout);
-
         this.setMinSize(200, 500);
-
         loadToMainStage();
     }
 
-    private void setUpUIListeners() {
-
-        //Create listener for this view
-        DiagramListener diagramListener = new DiagramListener(diagramController);
-
-        this.setOnMousePressed(diagramListener);
-
-    }
 
     public void addStateView(double x, double y, DiagramController diagramController, String stateID) {
-
         StateView stateView = new StateView(x, y, diagramController, stateID);
-
         this.getChildren().add(stateView);
-
         stateMap.put(stateID, stateView);
     }
 
@@ -200,7 +178,7 @@ public class DiagramView extends Pane {
 
         return arrow;
     }
-    
+
     private Line getLine(StackPane startDot, StackPane endDot) {
         Line line = new Line();
         line.setStroke(Color.BLUE);

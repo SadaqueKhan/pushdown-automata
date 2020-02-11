@@ -149,8 +149,6 @@ public class TransitionTableView extends BorderPane {
 
 
     private void setUpUILayout() {
-
-
     }
 
     private void setUpUIListeners() {

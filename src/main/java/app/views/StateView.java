@@ -6,29 +6,26 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StateView extends StackPane {
 
+    //Reference to diagram controller
     private final DiagramController diagramController;
 
+    //Data fields for view
     private String stateId;
     private double currentStateXPosition;
     private double currentStateYPosition;
 
-    private List<StateView> children = new ArrayList<>();
-    private List<StateView> parents = new ArrayList<>();
-
-    // GUI Components
+    // State GUI Components
     private Circle stateCircle;
-    private Text stateIdText;
+    private Label stateIdText;
     private Line startStatePointLine1;
     private Line startStatePointLine2;
     private Arc finalStateArc;
+
+    //Reflexive arc transition GUI components
     private Arc reflexiveArrowShaftArc;
     private Polygon reflexiveArrowTipPolygon;
 
@@ -49,10 +46,8 @@ public class StateView extends StackPane {
 
 
     public void setUpUIComponents() {
-
         double radius = 25;
         double paneSize = 2 * radius;
-
 
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
@@ -62,7 +57,7 @@ public class StateView extends StackPane {
         stateCircle.setRadius(radius);
         stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
 
-        Label stateIdText = new Label(stateId);
+        stateIdText = new Label(stateId);
         stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
         this.setPrefSize(paneSize, paneSize);
         this.setMaxSize(paneSize, paneSize);
@@ -181,30 +176,15 @@ public class StateView extends StackPane {
 
 
     private void setUpUIListeners() {
-
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);
-
-        //Link listeners to events
+        //Link listener to events
         this.setOnMousePressed(diagramListener);
         this.setOnMouseDragged(diagramListener);
-
     }
 
     public String getStateId() {
         return stateId;
     }
-
-    // TODO Remove these getters/setters from the view and break it down into MVC
-    public void addStateChild(StateView stateView) {
-        children.add(stateView);
-    }
-
-
-    public void addStateParent(StateView stateView) {
-        parents.add(stateView);
-    }
-
-
 
 }

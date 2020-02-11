@@ -29,7 +29,7 @@ public class MainStageView extends BorderPane {
             "-fx-border-style: solid;\n";
     //Center content elements
     private ToggleButton toggleDiagramButton;
-    private ToggleButton toggleTableButton;
+    private ToggleButton toggleTransitionTableButton;
     private SegmentedButton segmentedButton;
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
@@ -59,11 +59,11 @@ public class MainStageView extends BorderPane {
 
         //Setup center GUI elements
         this.toggleDiagramButton = new ToggleButton("Diagram");
-        this.toggleTableButton = new ToggleButton("Table");
+        this.toggleTransitionTableButton = new ToggleButton("Table");
 
 
         this.segmentedButton = new SegmentedButton();
-        segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTableButton);
+        segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTransitionTableButton);
 
         HBox hBox = new HBox(segmentedButton);
 
@@ -105,17 +105,13 @@ public class MainStageView extends BorderPane {
     }
 
     private void setUpUILayout() {
-
     }
 
     private void setUpUIListeners() {
         MainStageListener mainStageListener = new MainStageListener(mainStageController);
-
         inputTextField.setOnKeyPressed(mainStageListener);
-
         toggleDiagramButton.setOnAction(mainStageListener);
-        toggleTableButton.setOnAction(mainStageListener);
-
+        toggleTransitionTableButton.setOnAction(mainStageListener);
     }
 
     public TextField getInputTextField() {
