@@ -110,6 +110,9 @@ public class TransitionTableView extends BorderPane {
 
         transitionTable.getColumns().addAll(configurationCol, actionCol);
 
+        // Designate sorting procedure
+        // TODO: Refine this current implementation is decent as it takes the letter and sorts it alphabetically
+        transitionTable.getSortOrder().add(currentStateCol);
 
 //Create input widgets for the user to enter a configuration
         this.currentStateTextField = new TextField();

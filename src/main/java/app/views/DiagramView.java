@@ -7,6 +7,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -29,6 +30,8 @@ public class DiagramView extends Pane {
 
     private Map<String, StateView> stateMap;
 
+    private Map<StateView, HashSet<Node>> linkedNodesToStateViewMap;
+
     String cssLayout = "-fx-border-color: black;\n" +
             "-fx-background-color: whitesmoke,\n" +
             "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
@@ -48,7 +51,8 @@ public class DiagramView extends Pane {
 
 
     private void setUpUIComponents() {
-        stateMap = new HashMap<>(); //
+        stateMap = new HashMap<>();
+        linkedNodesToStateViewMap = new HashMap<StateView, HashSet<Node>>();//
         this.setStyle(cssLayout);
         this.setMinSize(200, 500);
         loadToMainStage();
@@ -59,6 +63,8 @@ public class DiagramView extends Pane {
         StateView stateView = new StateView(x, y, diagramController, stateID);
         this.getChildren().add(stateView);
         stateMap.put(stateID, stateView);
+
+        linkedNodesToStateViewMap.put(stateView, new HashSet<Node>());
     }
 
 
@@ -80,7 +86,6 @@ public class DiagramView extends Pane {
         Line directedLine = new Line();
         directedLine.setStroke(Color.BLACK);
         directedLine.setStrokeWidth(2);
-
 
         //Create popover to list applicable transitions for given transition
         VBox vBox = new VBox();
@@ -126,8 +131,15 @@ public class DiagramView extends Pane {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
-        StackPane mainArrow = getArrowTip(true, directedLine, sourceCell, targetCell);
-        this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, directedLine, mainArrow);
+        StackPane arrowTip = getArrowTip(true, directedLine, sourceCell, targetCell);
+
+        linkedNodesToStateViewMap.get(sourceCell).add(virtualCenterLine);
+        linkedNodesToStateViewMap.get(sourceCell).add(centerLineArrowAB);
+        linkedNodesToStateViewMap.get(sourceCell).add(centerLineArrowBA);
+        linkedNodesToStateViewMap.get(sourceCell).add(directedLine);
+        linkedNodesToStateViewMap.get(sourceCell).add(arrowTip);
+
+        this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, directedLine, arrowTip);
         this.getChildren().addAll(sourceCell, targetCell);
     }
 
@@ -221,4 +233,10 @@ public class DiagramView extends Pane {
     }
 
 
+    public void deleteStateView(StateView stateView) {
+        for (Node node : linkedNodesToStateViewMap.get(stateView)) {
+            this.getChildren().remove(node);
+        }
+        this.getChildren().remove(stateView);
+    }
 }

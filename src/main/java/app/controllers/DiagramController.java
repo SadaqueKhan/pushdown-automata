@@ -10,6 +10,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -204,7 +205,11 @@ public class DiagramController {
 
         deleteStateItem.setOnAction(e -> {
             machineModel.removeStateModelFromStateModelSet(stateView.getStateId());
-            diagramView.getChildren().remove(stateView);
+            diagramView.deleteStateView(stateView);
+
+            for (Node node : diagramView.getChildren()) {
+                System.out.println(node.toString());
+            }
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);
