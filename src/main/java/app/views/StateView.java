@@ -2,6 +2,7 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -119,9 +120,37 @@ public class StateView extends StackPane {
 
         finalStateArc.setVisible(false);
 
-        this.relocate(currentStateXPosition, currentStateYPosition);
 
-        this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2);
+        Group group = new Group(arc, );
+
+        Arc arc = new Arc();
+
+        arc.setCenterX(0);
+        arc.setCenterY(25);
+
+        arc.setRadiusX(25);
+        arc.setRadiusY(25);
+
+        arc.setStartAngle(340);
+        arc.setLength(220);
+
+        arc.setType(ArcType.OPEN);
+        arc.setStrokeWidth(3);
+        arc.setStroke(Color.BLACK);
+        arc.setStrokeType(StrokeType.INSIDE);
+        arc.setFill(null);
+
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(0.0, 0.0,
+                20.0, 10.0,
+                10.0, 20.0);
+
+
+        arc.setTranslateX(0);
+        arc.setTranslateY(-28);
+
+        this.relocate(currentStateXPosition, currentStateYPosition);
+        this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, arc);
     }
 
     public void toggleStandardStateUIComponent(boolean isStandardStateVisible) {
