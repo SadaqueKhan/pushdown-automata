@@ -20,7 +20,7 @@ public class Main {
         MachineModel machineModel = new MachineModel();
 
 
-        String userInputWord = "12";
+        String userInputWord = "123";
 
         StateModel stateModelA = new StateModel("A");
         stateModelA.setStartState(true);
@@ -35,25 +35,30 @@ public class Main {
         machineModel.addStateModelToStateModelSet(stateModelC);
 
         //A transitions
-        TransitionModel transitionModelA1 = new TransitionModel(stateModelA, "", "", stateModelB, "X");
+        TransitionModel transitionModelA1 = new TransitionModel(stateModelA, "1", "", stateModelA, "X");
         stateModelA.attachTransitionToStateModel(transitionModelA1);
-        TransitionModel transitionModelA2 = new TransitionModel(stateModelA, "", "", stateModelC, "X");
+        TransitionModel transitionModelA2 = new TransitionModel(stateModelA, "2", "X", stateModelA, "X");
         stateModelA.attachTransitionToStateModel(transitionModelA2);
-        TransitionModel transitionModelA3 = new TransitionModel(stateModelA, "", "", stateModelA, "X");
+        TransitionModel transitionModelA3 = new TransitionModel(stateModelA, "3", "X", stateModelA, "X");
         stateModelA.attachTransitionToStateModel(transitionModelA3);
+        TransitionModel transitionModelA4 = new TransitionModel(stateModelA, "1", "", stateModelB, "X");
+        stateModelA.attachTransitionToStateModel(transitionModelA4);
 
         //B transitions
-        TransitionModel transitionModel3 = new TransitionModel(stateModelB, "1", "X", stateModelC, "Y");
+        TransitionModel transitionModel3 = new TransitionModel(stateModelB, "2", "X", stateModelC, "Y");
         stateModelB.attachTransitionToStateModel(transitionModel3);
 
         //C transitions
-        TransitionModel transitionModel4 = new TransitionModel(stateModelC, "2", "Y", stateModelA, "Y");
+        TransitionModel transitionModel4 = new TransitionModel(stateModelC, "3", "Y", stateModelA, "Y");
         stateModelC.attachTransitionToStateModel(transitionModel4);
 
 
         machineModel.addTransitionModelToTransitionModelSet(transitionModelA1);
         machineModel.addTransitionModelToTransitionModelSet(transitionModelA2);
         machineModel.addTransitionModelToTransitionModelSet(transitionModelA3);
+        machineModel.addTransitionModelToTransitionModelSet(transitionModelA4);
+
+
         machineModel.addTransitionModelToTransitionModelSet(transitionModel3);
         machineModel.addTransitionModelToTransitionModelSet(transitionModel4);
 
@@ -83,7 +88,9 @@ public class Main {
         for (TransitionModel startTransition : startStateModel.getTransitionModelsAttachedToStateSet()) {
             //check if valid transition exists
 
+
             if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) && startTransition.getStackSymbolToPop().equals(stack.peek())) {
+
                 //Move to transition
                 pathList.add(startTransition);
                 //Update number of symbols read
@@ -99,22 +106,24 @@ public class Main {
                 printAllPathsUtil(startTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
             }
 
-            pathList.remove(startTransition);
+            pathList.removeAll(pathList);
+
             numberOfSymbolsRead = 0;
 
             stack.clear();
             stack.add("");
         }
 
+
     }
 
 
     private static void printAllPathsUtil(TransitionModel currentTransition, ArrayList<TransitionModel> pathList, int numberOfSymbolsRead, List<String> splitUserInputArrayList, Stack<String> stack) {
 
-
         if ((numberOfSymbolsRead == splitUserInputArrayList.size())) {
-
             if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), currentTransition.getResultingStateModel())) {
+
+                System.out.println(currentTransition.getResultingStateModel());
                 System.out.println(pathList);
                 return;
             }
@@ -123,80 +132,22 @@ public class Main {
         }
 
 
-        for (TransitionModel transition : currentTransition.getResultingStateModel().getTransitionModelsAttachedToStateSet()) {
-            if ((transition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || transition.getInputSymbol().equals("")) && transition.getStackSymbolToPop().equals(stack.peek())) {
-                pathList.add(transition);
-                updateStack(stack, transition.getStackSymbolToPush());
-                ++numberOfSymbolsRead;
-                printAllPathsUtil(transition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
-            } else if (transition.getInputSymbol().equals("") && transition.getStackSymbolToPop().equals(stack.peek())) {
-                pathList.add(transition);
-                updateStack(stack, transition.getStackSymbolToPush());
-                printAllPathsUtil(transition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
-            }
-        }
-    }
-
-
-//    private static String simulateAcceptanceByFinalState(String userInputWord, MachineModel machineModel) {
-//
-//        Stack<String> stack = new Stack<>();
-//        stack.push("");
-//
-//        //Split the input word into symbols
-//        List<String> splitUserInputArrayList = Arrays.asList(userInputWord.split(""));
-//
-//        int numberOfSymbolsRead = 0;
-//
-//        StateModel startStateModel = machineModel.getStartStateModel();
-//
-//        StringBuilder stringOfTransitions = new StringBuilder();
-//
-//
-//        for (TransitionModel transition : startStateModel.getTransitionModelsAttachedToStateSet()) {
-//            //check if valid transition exists
-//            if ((transition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || transition.getInputSymbol().equals("")) && transition.getStackSymbolToPop().equals(stack.peek())) {
-//                //Move to transition
-//                // Store this transition in a string
-//                stringOfTransitions.append(transition.toString()).append("\n");
-//                //Update number of symbols read
-//                ++numberOfSymbolsRead;
-//                //Update stack
-//                updateStack(stack, transition.getStackSymbolToPush());
-//                if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), transition.getResultingStateModel())) {
-//                    return String.valueOf(stringOfTransitions);
-//                } else {
-//
-//                    return anotherTransition(transition, stringOfTransitions, numberOfSymbolsRead, splitUserInputArrayList, stack);
-//                }
-//            }
-//        }
-//
-//        return String.valueOf(stringOfTransitions);
-//    }
-
-
-    public static String anotherTransition(TransitionModel computedTransition, StringBuilder stringOfTransitions, int numberOfSymbolsRead, List<String> splitUserInputArrayList, Stack<String> stack) {
-
-
-        for (TransitionModel nextTransition : computedTransition.getResultingStateModel().getTransitionModelsAttachedToStateSet()) {
+        for (TransitionModel nextTransition : currentTransition.getResultingStateModel().getTransitionModelsAttachedToStateSet()) {
             if ((nextTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || nextTransition.getInputSymbol().equals("")) && nextTransition.getStackSymbolToPop().equals(stack.peek())) {
-                stringOfTransitions.append(nextTransition.toString()).append("\n");
-                ++numberOfSymbolsRead;
+                pathList.add(nextTransition);
                 updateStack(stack, nextTransition.getStackSymbolToPush());
-                //Check if all input word is read and that the resulting state is a final state
-                if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), nextTransition.getResultingStateModel())) {
-                    //then return string of transitions
-                    return String.valueOf(stringOfTransitions);
-                } else {
+                ++numberOfSymbolsRead;
+                printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
+                --numberOfSymbolsRead;
 
-                    anotherTransition(nextTransition, stringOfTransitions, numberOfSymbolsRead, splitUserInputArrayList, stack);
-                }
+            } else if (nextTransition.getInputSymbol().equals("") && nextTransition.getStackSymbolToPop().equals(stack.peek())) {
+                pathList.add(nextTransition);
+                updateStack(stack, nextTransition.getStackSymbolToPush());
+                printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
             }
-
         }
-        return String.valueOf(stringOfTransitions);
     }
+
 
     private static boolean checkAcceptance(int numberOfSymbolsRead, int size, StateModel resultingStateModel) {
         return (numberOfSymbolsRead == size) && (resultingStateModel.isFinalState());
