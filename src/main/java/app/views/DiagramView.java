@@ -25,10 +25,6 @@ public class DiagramView extends Pane {
 
     private Map<String, StateView> stateMap;
 
-    private ZoomableScrollPane scrollPane;
-
-    double sceneX, sceneY, layoutX, layoutY;
-
     String cssLayout = "-fx-border-color: black;\n" +
             "-fx-background-color: whitesmoke,\n" +
             "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
@@ -55,14 +51,7 @@ public class DiagramView extends Pane {
     private void setUpUIComponents() {
         // <--- Graph Stuff -->
 
-        scrollPane = new ZoomableScrollPane(this);
-
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-
-
         stateMap = new HashMap<>(); // <id,cell>
-
 
         this.setStyle(cssLayout);
 
@@ -99,7 +88,6 @@ public class DiagramView extends Pane {
         virtualCenterLine.setOpacity(0);
         this.getChildren().remove(sourceCell);
         this.getChildren().remove(targetCell);
-
 
         StackPane centerLineArrowAB = getArrowTip(true, virtualCenterLine, sourceCell, targetCell);
         centerLineArrowAB.setOpacity(0);
@@ -140,6 +128,10 @@ public class DiagramView extends Pane {
         this.getChildren().addAll(sourceCell, targetCell);
     }
 
+    public void addReflexiveTransitionView(String sourceStateID, String targetStateID, String transitionsID) {
+        StateView sourceCell = stateMap.get(sourceStateID);
+        sourceCell.toggleReflexiveArrowUIComponent(true);
+    }
 
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
@@ -208,8 +200,7 @@ public class DiagramView extends Pane {
 
         return arrow;
     }
-
-
+    
     private Line getLine(StackPane startDot, StackPane endDot) {
         Line line = new Line();
         line.setStroke(Color.BLUE);
@@ -221,19 +212,10 @@ public class DiagramView extends Pane {
         return line;
     }
 
-    public double getScale() {
-        return this.scrollPane.getScaleValue();
-    }
-
-
     @Override
     public String toString() {
         return "DiagramView";
     }
 
 
-    public void addReflexiveTransitionView(String sourceStateID, String targetStateID, String transitionsID) {
-        StateView sourceCell = stateMap.get(sourceStateID);
-        sourceCell.toggleReflexiveArrowUIComponent(true);
-    }
 }
