@@ -10,7 +10,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
 import java.util.HashMap;
@@ -107,7 +107,7 @@ public class DiagramView extends Pane {
         centerLineArrowBA.setOpacity(0);
 
         Line directedLine = new Line();
-        directedLine.setStroke(Color.RED);
+        directedLine.setStroke(Color.BLACK);
         directedLine.setStrokeWidth(2);
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
@@ -144,7 +144,7 @@ public class DiagramView extends Pane {
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
         StackPane arrow = new StackPane();
-        arrow.setStyle("-fx-background-color:#333333;-fx-border-width:1px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");//
+        arrow.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");//
         arrow.setPrefSize(size, size);
         arrow.setMaxSize(size, size);
         arrow.setMinSize(size, size);
@@ -233,41 +233,7 @@ public class DiagramView extends Pane {
 
 
     public void addReflexiveTransitionView(String sourceStateID, String targetStateID, String transitionsID) {
-
         StateView sourceCell = stateMap.get(sourceStateID);
-
-
-        Arc arc = new Arc();
-
-        arc.setCenterX(50);
-        arc.setCenterY(70);
-
-        arc.setRadiusX(25);
-        arc.setRadiusY(25);
-
-        arc.setStartAngle(340);
-        arc.setLength(220);
-
-        arc.setType(ArcType.OPEN);
-        arc.setStrokeWidth(3);
-        arc.setStroke(Color.BLACK);
-        arc.setStrokeType(StrokeType.INSIDE);
-        arc.setFill(null);
-
-        arc.centerXProperty().bind((sourceCell.layoutXProperty().add(sourceCell.translateXProperty()).add(sourceCell.widthProperty().divide(2))));
-        arc.centerYProperty().bind(sourceCell.layoutYProperty().add(sourceCell.translateYProperty()).add(sourceCell.heightProperty().divide(2)));
-
-        Polygon arrowHead = new Polygon();
-        arrowHead.getPoints().addAll(0.0, 0.0,
-                20.0, 10.0,
-                10.0, 20.0);
-        arrowHead.setFill(Color.BLACK);
-
-        arrowHead.layoutXProperty().bind(arc.centerXProperty().add(arc.translateXProperty()));
-        arrowHead.layoutYProperty().bind(arc.centerYProperty().add(arc.translateYProperty()));
-
-
-        this.getChildren().add(arc);
-
+        sourceCell.toggleReflexiveArrowUIComponent(true);
     }
 }

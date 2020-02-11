@@ -2,7 +2,6 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
-import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -30,6 +29,9 @@ public class StateView extends StackPane {
     private Line startStatePointLine1;
     private Line startStatePointLine2;
     private Arc finalStateArc;
+    private Arc reflexiveArrowShaftArc;
+    private Polygon reflexiveArrowTipPolygon;
+
 
     public StateView(double currentStateXPosition, double currentStateYPosition, DiagramController diagramController, String stateId) {
         this.currentStateXPosition = currentStateXPosition;
@@ -120,37 +122,39 @@ public class StateView extends StackPane {
 
         finalStateArc.setVisible(false);
 
+//<<< CREATE FINAL STATE UI COMPONENT >>>
 
-        Group group = new Group(arc, );
+        // Reflexive arrow shaft
+        reflexiveArrowShaftArc = new Arc();
+        reflexiveArrowShaftArc.setCenterX(0);
+        reflexiveArrowShaftArc.setCenterY(-50);
+        reflexiveArrowShaftArc.setRadiusX(25);
+        reflexiveArrowShaftArc.setRadiusY(25);
+        reflexiveArrowShaftArc.setStartAngle(340);
+        reflexiveArrowShaftArc.setLength(220);
+        reflexiveArrowShaftArc.setType(ArcType.OPEN);
+        reflexiveArrowShaftArc.setStrokeWidth(2);
+        reflexiveArrowShaftArc.setStroke(Color.BLACK);
+        reflexiveArrowShaftArc.setStrokeType(StrokeType.INSIDE);
+        reflexiveArrowShaftArc.setFill(null);
+        reflexiveArrowShaftArc.setTranslateX(0);
+        reflexiveArrowShaftArc.setTranslateY(-28);
 
-        Arc arc = new Arc();
+        // Reflexive arrow tip
+        reflexiveArrowTipPolygon = new Polygon(4, 0, 8, 8, 0, 8);
+        reflexiveArrowTipPolygon.setFill(Color.BLACK);
+        reflexiveArrowTipPolygon.setStroke(Color.BLACK);
+        reflexiveArrowTipPolygon.setStrokeWidth(2);
+        reflexiveArrowTipPolygon.setRotate(65);
+        reflexiveArrowTipPolygon.setTranslateX(25);
+        reflexiveArrowTipPolygon.setTranslateY(-20);
 
-        arc.setCenterX(0);
-        arc.setCenterY(25);
-
-        arc.setRadiusX(25);
-        arc.setRadiusY(25);
-
-        arc.setStartAngle(340);
-        arc.setLength(220);
-
-        arc.setType(ArcType.OPEN);
-        arc.setStrokeWidth(3);
-        arc.setStroke(Color.BLACK);
-        arc.setStrokeType(StrokeType.INSIDE);
-        arc.setFill(null);
-
-        Polygon polygon = new Polygon();
-        polygon.getPoints().addAll(0.0, 0.0,
-                20.0, 10.0,
-                10.0, 20.0);
-
-
-        arc.setTranslateX(0);
-        arc.setTranslateY(-28);
+        reflexiveArrowShaftArc.setVisible(false);
+        reflexiveArrowTipPolygon.setVisible(false);
 
         this.relocate(currentStateXPosition, currentStateYPosition);
-        this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, arc);
+
+        this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, reflexiveArrowShaftArc, reflexiveArrowTipPolygon);
     }
 
     public void toggleStandardStateUIComponent(boolean isStandardStateVisible) {
@@ -168,6 +172,11 @@ public class StateView extends StackPane {
 
     public void toggleFinalStateUIComponent(boolean isFinalStateVisible) {
         finalStateArc.setVisible(isFinalStateVisible);
+    }
+
+    public void toggleReflexiveArrowUIComponent(boolean isReflexiveArrowVisible) {
+        reflexiveArrowShaftArc.setVisible(isReflexiveArrowVisible);
+        reflexiveArrowTipPolygon.setVisible(isReflexiveArrowVisible);
     }
 
 
