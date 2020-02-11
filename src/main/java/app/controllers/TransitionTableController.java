@@ -5,6 +5,7 @@ import app.models.StateModel;
 import app.models.TransitionModel;
 import app.views.MainStageView;
 import app.views.TransitionTableView;
+import javafx.collections.ObservableList;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -97,6 +98,23 @@ public class TransitionTableController {
             diagramController.addReflexiveTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
         } else {
             diagramController.addDirectionalTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
+        }
+    }
+
+    public void deleteStateEntry(String stateId) {
+
+        //Remove from machine model
+        machineModel.removeStateModelFromStateModelSet(stateId);
+
+        ObservableList<TransitionModel> allEntriesInPeopleRecordTable;
+        allEntriesInPeopleRecordTable = transitionTableView.getTransitionTable().getItems();
+
+        //See what this prints 
+        for (TransitionModel transitionModel : allEntriesInPeopleRecordTable) {
+            if (transitionModel.getCurrentStateModel().getStateId().equals(stateId)) {
+                allEntriesInPeopleRecordTable.remove(transitionModel);
+            }
+
         }
     }
 }
