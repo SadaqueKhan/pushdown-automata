@@ -195,43 +195,16 @@ public class StateView extends StackPane {
         return stateId;
     }
 
-    public double getCurrentStateXPosition() {
-        return currentStateXPosition;
-    }
-
-    public void setCurrentStateXPosition(double currentStateXPosition) {
-        this.currentStateXPosition = currentStateXPosition;
-    }
-
-    public double getCurrentStateYPosition() {
-        return currentStateYPosition;
-    }
-
-    public void setCurrentStateYPosition(double currentStateYPosition) {
-        this.currentStateYPosition = currentStateYPosition;
-    }
-
-
     // TODO Remove these getters/setters from the view and break it down into MVC
     public void addStateChild(StateView stateView) {
         children.add(stateView);
     }
 
-    public List<StateView> getStateChildren() {
-        return children;
-    }
 
     public void addStateParent(StateView stateView) {
         parents.add(stateView);
     }
 
-    public List<StateView> getStateParents() {
-        return parents;
-    }
-
-    public void removeStateChild(StateView stateView) {
-        children.remove(stateView);
-    }
 
 
 }
