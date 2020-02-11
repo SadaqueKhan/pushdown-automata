@@ -54,7 +54,7 @@ public class StateView extends StackPane {
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
         //State GUI
         this.stateCircle = new Circle();
-       
+
 
         stateCircle.setRadius(radius);
         stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
@@ -73,18 +73,19 @@ public class StateView extends StackPane {
         // instantiating the Rotate class.
         Rotate rotate1 = new Rotate();
         //setting properties for the rotate object.
-        rotate1.setAngle(180);
+        rotate1.setAngle(90);
 
+
+        startStatePointLine1.setStartX(0);
+        startStatePointLine1.setStartY(0);
+        startStatePointLine1.setEndX(10);
+        startStatePointLine1.setEndY(10);
         startStatePointLine1.getTransforms().add(rotate1);
-        startStatePointLine1.setStartX(radius / 2);
-        startStatePointLine1.setStartY(40);
-
-
-        startStatePointLine1.setEndX(0);
-        startStatePointLine1.setEndY(radius);
-
         // startStatePointLine1.relocate(currentStateXPosition - 40, currentStateYPosition);
-        
+
+        startStatePointLine1.setTranslateX(-21);
+        startStatePointLine1.setTranslateY(5);
+
         //Create arrow shaft using line object
         this.startStatePointLine2 = new Line();
         startStatePointLine2.setStrokeWidth(2);
@@ -92,16 +93,17 @@ public class StateView extends StackPane {
         // instantiating the Rotate class.
         Rotate rotate2 = new Rotate();
         //setting properties for the rotate object.
-        rotate2.setAngle(90);
+        rotate2.setAngle(180);
 
 
+        startStatePointLine2.setStartX(0);
+        startStatePointLine2.setStartY(0);
+        startStatePointLine2.setEndX(10);
+        startStatePointLine2.setEndY(10);
         startStatePointLine2.getTransforms().add(rotate2);
-        startStatePointLine2.setStartX(radius / 2);
-        startStatePointLine2.setStartY(20);
-        startStatePointLine2.setEndX(0);
-        startStatePointLine2.setEndY(radius);
 
-
+        startStatePointLine2.setTranslateX(-21);
+        startStatePointLine2.setTranslateY(5);
         //  startStatePointLine2.relocate(currentStateXPosition - 40, currentStateYPosition);
 
         startStatePointLine1.setVisible(false);
@@ -109,7 +111,7 @@ public class StateView extends StackPane {
 
 
 //<<< CREATE FINAL STATE UI COMPONENT >>>
-        this.finalStateArc = new Arc(currentStateXPosition, currentStateYPosition, radius / 1.25, radius / 1.25, 0, 360);
+        this.finalStateArc = new Arc(0, 0, radius / 1.25, radius / 1.25, 0, 360);
 
         finalStateArc.setType(ArcType.OPEN);
         finalStateArc.setStrokeWidth(2);
