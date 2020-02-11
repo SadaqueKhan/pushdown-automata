@@ -75,7 +75,6 @@ public class StateView extends StackPane {
         //setting properties for the rotate object.
         rotate1.setAngle(90);
 
-
         startStatePointLine1.setStartX(0);
         startStatePointLine1.setStartY(0);
         startStatePointLine1.setEndX(10);
@@ -94,7 +93,6 @@ public class StateView extends StackPane {
         Rotate rotate2 = new Rotate();
         //setting properties for the rotate object.
         rotate2.setAngle(180);
-
 
         startStatePointLine2.setStartX(0);
         startStatePointLine2.setStartY(0);

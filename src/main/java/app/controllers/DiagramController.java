@@ -5,8 +5,6 @@ import app.models.StateModel;
 import app.views.DiagramView;
 import app.views.MainStageView;
 import app.views.StateView;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -125,98 +123,90 @@ public class DiagramController {
         MenuItem createTransitionItem = new MenuItem("Create transition");
         MenuItem deleteStateItem = new MenuItem("Delete");
 
-        toggleStandardStateItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                if (stateModel.isStandardState()) {
-                    stateModel.setStandardState(false);
-                    stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
-                } else {
-                    stateModel.setStandardState(true);
-                    stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+        toggleStandardStateItem.setOnAction(e -> {
+            if (stateModel.isStandardState()) {
+                stateModel.setStandardState(false);
+                stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+            } else {
+                stateModel.setStandardState(true);
+                stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
 
-                }
             }
-
         });
 
-        toggleStartStateItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                if (stateModel.isStartState()) {
-                    stateModel.setStartState(false);
-                    stateView.toggleStartStateUIComponent(stateModel.isStartState());
+        toggleStartStateItem.setOnAction(e -> {
+            if (stateModel.isStartState()) {
+                stateModel.setStartState(false);
+                stateView.toggleStartStateUIComponent(stateModel.isStartState());
+            } else {
+                if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
+                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                            "Initial state already defined for machine.", ButtonType.OK);
+                    invalidActionAlert.show();
                 } else {
                     stateModel.setStartState(true);
                     stateView.toggleStartStateUIComponent(stateModel.isStartState());
-
                 }
             }
         });
 
         //TODO need to remove this listeners logic
-        toggleFinalStateItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                if (stateModel.isFinalState()) {
-                    stateModel.setFinalState(false);
-                    stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
-                } else {
-                    stateModel.setFinalState(true);
-                    stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
-                }
+        toggleFinalStateItem.setOnAction(e -> {
+            if (stateModel.isFinalState()) {
+                stateModel.setFinalState(false);
+                stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
+            } else {
+                stateModel.setFinalState(true);
+                stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
             }
         });
 
 
         //TODO need to remove this listeners logic
-        createTransitionItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-
-
+        createTransitionItem.setOnAction(e -> {
 //Create input widgets for the user to enter a configuration
-                TextField currentStateTextField = new TextField();
-                currentStateTextField.setPrefWidth(50);
+            TextField currentStateTextField = new TextField();
+            currentStateTextField.setPrefWidth(50);
 
-                TextField inputSymbolTextField = new TextField();
-                inputSymbolTextField.setPrefWidth(50);
+            TextField inputSymbolTextField = new TextField();
+            inputSymbolTextField.setPrefWidth(50);
 
-                TextField stackSymbolToPopTextField = new TextField();
-                stackSymbolToPopTextField.setPrefWidth(50);
+            TextField stackSymbolToPopTextField = new TextField();
+            stackSymbolToPopTextField.setPrefWidth(50);
 
 // Create a arrow label to connect the configuration input widgets to action input widgets
-                final Label arrowLabel = new Label("->");
+            final Label arrowLabel = new Label("->");
 
 //Create input widgets for the user to enter a configuration
-                TextField resultingStateTextField = new TextField();
-                resultingStateTextField.setPrefWidth(50);
+            TextField resultingStateTextField = new TextField();
+            resultingStateTextField.setPrefWidth(50);
 
-                TextField stackSymbolToPushTextField = new TextField();
-                stackSymbolToPushTextField.setPrefWidth(50);
+            TextField stackSymbolToPushTextField = new TextField();
+            stackSymbolToPushTextField.setPrefWidth(50);
 
 //Create submit button for the user to submit a transition
-                Button submitTransitionButton = new Button("Submit");
+            Button submitTransitionButton = new Button("Submit");
 
 
-                final HBox hBox = new HBox();
-                hBox.setPadding(new Insets(10, 10, 10, 10));
-                hBox.setSpacing(10);
-                hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField);
+            final HBox hBox = new HBox();
+            hBox.setPadding(new Insets(10, 10, 10, 10));
+            hBox.setSpacing(10);
+            hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField);
 
-                final VBox vBox = new VBox(hBox, submitTransitionButton);
-                vBox.setAlignment(Pos.CENTER);
+            final VBox vBox = new VBox(hBox, submitTransitionButton);
+            vBox.setAlignment(Pos.CENTER);
 
-                Scene scene = new Scene(vBox, 340, 100);
-                Stage stage = new Stage();
-                stage.setResizable(false);
-                stage.setTitle("Create Transition");
-                stage.setScene(scene);
-                stage.show();
-            }
+            Scene scene = new Scene(vBox, 350, 150);
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setTitle("Create Transition");
+            stage.setScene(scene);
+            stage.show();
         });
 
-        deleteStateItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                machineModel.removeStateModelFromStateModelSet(stateView.getStateId());
-                diagramView.getChildren().remove(stateView);
-            }
+        deleteStateItem.setOnAction(e -> {
+            machineModel.removeStateModelFromStateModelSet(stateView.getStateId());
+            diagramView.getChildren().remove(stateView);
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);

@@ -62,9 +62,6 @@ public class Main {
         machineModel.addTransitionModelToTransitionModelSet(transitionModel3);
         machineModel.addTransitionModelToTransitionModelSet(transitionModel4);
 
-        machineModel.setStartStateModel(machineModel.findStartStateModel());
-
-
         simulateAcceptanceByFinalState1(userInputWord, machineModel);
 
     }
