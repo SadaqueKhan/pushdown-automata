@@ -82,7 +82,7 @@ public class Main {
         int numberOfSymbolsRead = 0;
 
 
-        for (TransitionModel startTransition : startStateModel.getTransitionModelsAttachedToStateSet()) {
+        for (TransitionModel startTransition : startStateModel.getTransitionModelsAttachedToStateModelSet()) {
             //check if valid transition exists
 
 
@@ -129,7 +129,7 @@ public class Main {
         }
 
 
-        for (TransitionModel nextTransition : currentTransition.getResultingStateModel().getTransitionModelsAttachedToStateSet()) {
+        for (TransitionModel nextTransition : currentTransition.getResultingStateModel().getTransitionModelsAttachedToStateModelSet()) {
             if ((nextTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || nextTransition.getInputSymbol().equals("")) && nextTransition.getStackSymbolToPop().equals(stack.peek())) {
                 pathList.add(nextTransition);
                 updateStack(stack, nextTransition.getStackSymbolToPush());

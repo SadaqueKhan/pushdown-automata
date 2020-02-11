@@ -6,6 +6,7 @@ import app.models.TransitionModel;
 import app.views.MainStageView;
 import app.views.TransitionTableView;
 
+import java.util.HashSet;
 import java.util.Random;
 
 public class TransitionTableController {
@@ -80,18 +81,22 @@ public class TransitionTableController {
         //Create transition model
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
+        //Attach transition model to current state model
+        currentStateModel.attachTransitionToStateModel(newTransitionModel);
 
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
-
-        //Update diagram view and table view
+        //Update table view
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
+        //Update diagram view
+        HashSet<TransitionModel> transitionsLinkingToResultingStateSet = currentStateModel.getTransitionLinkedToStateX(resultingStateModel);
+
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
-            diagramController.addReflexiveTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+            diagramController.addReflexiveTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
         } else {
-            diagramController.addDirectionalTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.toString());
+            diagramController.addDirectionalTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
         }
     }
 }

@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.models.MachineModel;
 import app.models.StateModel;
+import app.models.TransitionModel;
 import app.views.DiagramView;
 import app.views.MainStageView;
 import app.views.StateView;
@@ -14,6 +15,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.HashSet;
 
 public class DiagramController {
 
@@ -221,14 +224,13 @@ public class DiagramController {
     }
 
 
-    public void addDirectionalTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
-        diagramView.addDirectionalTransitionView(sourceStateID, targetStateID, transitionsID);
+    public void addDirectionalTransitionToViewTransitionTableEventResponse(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+        diagramView.addDirectionalTransitionView(currentStateID, resultingStateID, transitionsLinkingToResultingStateSet);
     }
 
 
-    public void addReflexiveTransitionToViewTransitionTableEventResponse(String sourceStateID, String targetStateID, String transitionsID) {
-        diagramView.addReflexiveTransitionView(sourceStateID, targetStateID, transitionsID);
-
+    public void addReflexiveTransitionToViewTransitionTableEventResponse(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+        diagramView.addReflexiveTransitionView(currentStateID, resultingStateID, transitionsLinkingToResultingStateSet);
     }
 
 }

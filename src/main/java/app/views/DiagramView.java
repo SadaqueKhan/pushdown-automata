@@ -1,18 +1,23 @@
 package app.views;
 
 import app.controllers.DiagramController;
+import app.models.TransitionModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
+import org.controlsfx.control.PopOver;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class DiagramView extends Pane {
@@ -57,7 +62,7 @@ public class DiagramView extends Pane {
     }
 
 
-    public void addDirectionalTransitionView(String sourceID, String targetID, String transitionsID) {
+    public void addDirectionalTransitionView(String sourceID, String targetID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         //Get state from map using state ID
         StateView sourceCell = stateMap.get(sourceID);
         StateView targetCell = stateMap.get(targetID);
@@ -75,6 +80,26 @@ public class DiagramView extends Pane {
         Line directedLine = new Line();
         directedLine.setStroke(Color.BLACK);
         directedLine.setStrokeWidth(2);
+
+
+        //Create popover to list applicable transitions for given transition
+        VBox vBox = new VBox();
+        for (TransitionModel transitionModel : transitionsLinkingToResultingStateSet) {
+            Label newLabel = new Label(transitionModel.toString());
+            vBox.getChildren().add(newLabel);
+        }
+
+        PopOver listOfTransitionsPopOver = new PopOver(vBox);
+
+        directedLine.setOnMouseEntered(mouseEvent -> {
+            listOfTransitionsPopOver.show(directedLine);
+        });
+
+        directedLine.setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            listOfTransitionsPopOver.hide();
+        });
+
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
@@ -106,9 +131,9 @@ public class DiagramView extends Pane {
         this.getChildren().addAll(sourceCell, targetCell);
     }
 
-    public void addReflexiveTransitionView(String sourceStateID, String targetStateID, String transitionsID) {
+    public void addReflexiveTransitionView(String sourceStateID, String targetStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         StateView sourceCell = stateMap.get(sourceStateID);
-        sourceCell.toggleReflexiveArrowUIComponent(true);
+        sourceCell.toggleReflexiveArrowUIComponent(true, transitionsLinkingToResultingStateSet);
     }
 
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {

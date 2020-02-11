@@ -2,11 +2,16 @@ package app.views;
 
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
+import app.models.TransitionModel;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import org.controlsfx.control.PopOver;
+
+import java.util.HashSet;
 
 public class StateView extends StackPane {
 
@@ -169,7 +174,26 @@ public class StateView extends StackPane {
         finalStateArc.setVisible(isFinalStateVisible);
     }
 
-    public void toggleReflexiveArrowUIComponent(boolean isReflexiveArrowVisible) {
+    public void toggleReflexiveArrowUIComponent(boolean isReflexiveArrowVisible, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+
+        //Create popover to list applicable transitions for given transition
+        VBox vBox = new VBox();
+        for (TransitionModel transitionModel : transitionsLinkingToResultingStateSet) {
+            Label newLabel = new Label(transitionModel.toString());
+            vBox.getChildren().add(newLabel);
+        }
+
+        PopOver listOfTransitionsPopOver = new PopOver(vBox);
+
+        reflexiveArrowShaftArc.setOnMouseEntered(mouseEvent -> {
+            listOfTransitionsPopOver.show(reflexiveArrowShaftArc);
+        });
+
+        reflexiveArrowShaftArc.setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            listOfTransitionsPopOver.hide();
+        });
+
         reflexiveArrowShaftArc.setVisible(isReflexiveArrowVisible);
         reflexiveArrowTipPolygon.setVisible(isReflexiveArrowVisible);
     }
