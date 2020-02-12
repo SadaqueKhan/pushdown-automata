@@ -42,9 +42,8 @@ public class TransitionTableView extends BorderPane {
 
     //Submit transition button GUI
     private Button submitTransitionButton;
+    private Button deleteTransitionButton;
     private VBox transitionTableContainer;
-
-
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
 
@@ -114,6 +113,8 @@ public class TransitionTableView extends BorderPane {
         // TODO: Refine this current implementation is decent as it takes the letter and sorts it alphabetically
         transitionTable.getSortOrder().add(currentStateCol);
 
+        transitionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
 //Create input widgets for the user to enter a configuration
         this.currentStateTextField = new TextField();
         currentStateTextField.setPrefWidth(50);
@@ -137,10 +138,13 @@ public class TransitionTableView extends BorderPane {
 //Create submit button for the user to submit a transition
         this.submitTransitionButton = new Button("Submit");
 
+        //Create submit button for the user to submit a transition
+        this.deleteTransitionButton = new Button("Delete");
+
         final HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 10, 10));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton);
+        hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
 
         transitionTableContainer = new VBox();
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
@@ -160,6 +164,7 @@ public class TransitionTableView extends BorderPane {
 
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
+        deleteTransitionButton.setOnAction(transitionTableListener);
     }
 
     public TableView<TransitionModel> getTransitionTable() {

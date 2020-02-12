@@ -32,7 +32,6 @@ public class TransitionTableController {
         this.transitionTableView = new TransitionTableView(mainStageView, this);
     }
 
-
     public void loadTransitionTable(DiagramController diagramController) {
         this.diagramController = diagramController;
         transitionTableView.loadToMainStage();
@@ -114,20 +113,13 @@ public class TransitionTableController {
         }
     }
 
-    public void deleteStateEntry(String stateId) {
+    public void deleteTransitionEntries() {
+        ObservableList<TransitionModel> selectedRows = transitionTableView.getTransitionTable().getSelectionModel().getSelectedItems();
+        transitionTableView.getTransitionTable().getItems().removeAll(selectedRows);
+    }
 
+    public void deleteStateEntry(String stateId) {
         //Remove from machine model
         machineModel.removeStateModelFromStateModelSet(stateId);
-
-        ObservableList<TransitionModel> allEntriesInPeopleRecordTable;
-        allEntriesInPeopleRecordTable = transitionTableView.getTransitionTable().getItems();
-
-        //See what this prints
-        for (TransitionModel transitionModel : allEntriesInPeopleRecordTable) {
-            if (transitionModel.getCurrentStateModel().getStateId().equals(stateId)) {
-                allEntriesInPeopleRecordTable.remove(transitionModel);
-            }
-
-        }
     }
 }

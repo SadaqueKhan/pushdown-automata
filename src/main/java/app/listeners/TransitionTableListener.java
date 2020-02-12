@@ -25,6 +25,9 @@ public class TransitionTableListener implements EventHandler<ActionEvent> {
         if (tempIsButton.equals("Submit")) {
             transitionTableController.addTransitionEntry();
         }
+        if (tempIsButton.equals("Delete")) {
+            transitionTableController.deleteTransitionEntries();
+        }
 
     }
 }
