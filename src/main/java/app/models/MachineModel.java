@@ -11,8 +11,8 @@ public class MachineModel implements Serializable {
     private StateModel startStateModel;
 
     public MachineModel() throws IOException {
-        this.stateModelSet = new HashSet<StateModel>();
-        this.transitionModelSet = new HashSet<TransitionModel>();
+        this.stateModelSet = new HashSet<>();
+        this.transitionModelSet = new HashSet<>();
         this.startStateModel = findStartStateModel();
     }
 
@@ -31,23 +31,12 @@ public class MachineModel implements Serializable {
     }
 
 
-    public boolean stateExistsInStateModelSet(String stateId) {
-        for (StateModel stateModel : stateModelSet) {
-            if (stateId.equals(stateModel.getStateId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public StateModel getStateModelFromStateModelSet(String stateId) {
         for (StateModel stateModel : stateModelSet) {
             if (stateId.equals(stateModel.getStateId())) {
                 return stateModel;
             }
         }
-
         return null;
     }
 
@@ -58,6 +47,15 @@ public class MachineModel implements Serializable {
             }
         }
         return null;
+    }
+
+    public boolean stateExistsInStateModelSet(String stateId) {
+        for (StateModel stateModel : stateModelSet) {
+            if (stateId.equals(stateModel.getStateId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public StateModel getStartStateModel() {

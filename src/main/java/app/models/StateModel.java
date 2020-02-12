@@ -61,10 +61,6 @@ public class StateModel {
         return transitionModelsAttachedToStateModelSet;
     }
 
-    @Override
-    public String toString() {
-        return stateId;
-    }
 
     public HashSet<TransitionModel> getTransitionLinkedToStateX(StateModel resultingStateModel) {
 
@@ -75,5 +71,10 @@ public class StateModel {
             }
         }
         return linkedTransitions;
+    }
+
+    @Override
+    public String toString() {
+        return stateId;
     }
 }

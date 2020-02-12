@@ -6,6 +6,8 @@ import app.models.TransitionModel;
 import app.views.MainStageView;
 import app.views.TransitionTableView;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -79,12 +81,24 @@ public class TransitionTableController {
             diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
         }
 
+
         //Create transition model
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
+        //Check to see if the transition already exists
+        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsAttachedToStateModelSet()) {
+            if (transitionModel.equals(newTransitionModel)) {
+                // if transition exists alert the user and don't do anything further
+                Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                        "Transition '" + newTransitionModel + "' already exists.", ButtonType.OK);
+                invalidActionAlert.setHeaderText("Information");
+                invalidActionAlert.setTitle("Invalid Action");
+                invalidActionAlert.show();
+                return;
+            }
+        }
         //Attach transition model to current state model
         currentStateModel.attachTransitionToStateModel(newTransitionModel);
-
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
@@ -93,7 +107,6 @@ public class TransitionTableController {
 
         //Update diagram view
         HashSet<TransitionModel> transitionsLinkingToResultingStateSet = currentStateModel.getTransitionLinkedToStateX(resultingStateModel);
-
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
             diagramController.addReflexiveTransitionToViewTransitionTableEventResponse(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
         } else {
@@ -109,7 +122,7 @@ public class TransitionTableController {
         ObservableList<TransitionModel> allEntriesInPeopleRecordTable;
         allEntriesInPeopleRecordTable = transitionTableView.getTransitionTable().getItems();
 
-        //See what this prints 
+        //See what this prints
         for (TransitionModel transitionModel : allEntriesInPeopleRecordTable) {
             if (transitionModel.getCurrentStateModel().getStateId().equals(stateId)) {
                 allEntriesInPeopleRecordTable.remove(transitionModel);
