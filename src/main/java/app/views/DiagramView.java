@@ -1,6 +1,7 @@
 package app.views;
 
 import app.controllers.DiagramController;
+import app.models.StateModel;
 import app.models.TransitionModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -273,17 +274,16 @@ public class DiagramView extends Pane {
                         if (node instanceof TransitionView) {
                             TransitionView transitionViewToUpdate = (TransitionView) node;
                             if (transitionViewToUpdate.getSource().getStateId().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateId().equals(resultingStateModelID)) {
-//                                if (changedTransition.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet().isEmpty()) {
-//                                    nodesSetsToRemove.add(nextHashSet);
-//                                }
-                                createNewListOfTransitionsPopOver(transitionViewToUpdate, changedTransition.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet());
+                                if (getUpdatedTransitionsForTransitionView(changedTransition).isEmpty()) {
+                                    nodesSetsToRemove.add(nextHashSet);
+                                }
+                                createNewListOfTransitionsPopOver(transitionViewToUpdate, getUpdatedTransitionsForTransitionView(changedTransition));
                             }
                         }
                     }
                 }
             }
         }
-
         if (currentStateView != null && !(nodesSetsToRemove.isEmpty())) {
             Iterator<HashSet<Node>> iter = linkedTransitionViewsMap.get(currentStateView).iterator();
             while (iter.hasNext()) {
@@ -318,4 +318,15 @@ public class DiagramView extends Pane {
     }
 
 
+    public HashSet<TransitionModel> getUpdatedTransitionsForTransitionView(TransitionModel changedTransition) {
+        HashSet<TransitionModel> toReturn = new HashSet<>();
+        StateModel currentStateModel = changedTransition.getCurrentStateModel();
+        StateModel resultingStateModel = changedTransition.getResultingStateModel();
+        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsPointingAwayFromStateModelSet()) {
+            if (transitionModel.getCurrentStateModel().equals(currentStateModel) && transitionModel.getResultingStateModel().equals(resultingStateModel)) {
+                toReturn.add(transitionModel);
+            }
+        }
+        return toReturn;
+    }
 }
