@@ -3,6 +3,7 @@ package app.views;
 import app.controllers.DiagramController;
 import app.listeners.DiagramListener;
 import app.models.TransitionModel;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -12,6 +13,7 @@ import javafx.scene.transform.Rotate;
 import org.controlsfx.control.PopOver;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class StateView extends StackPane {
 
@@ -33,7 +35,7 @@ public class StateView extends StackPane {
     //Reflexive arc transition GUI components
     private Arc reflexiveArrowShaftArc;
     private Polygon reflexiveArrowTipPolygon;
-
+    private VBox listOfTransitionsVBox;
 
     public StateView(double currentStateXPosition, double currentStateYPosition, DiagramController diagramController, String stateId) {
         this.currentStateXPosition = currentStateXPosition;
@@ -177,13 +179,13 @@ public class StateView extends StackPane {
     public void toggleReflexiveArrowUIComponent(boolean isReflexiveArrowVisible, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
 
         //Create popover to list applicable transitions for given transition
-        VBox vBox = new VBox();
+        listOfTransitionsVBox = new VBox();
         for (TransitionModel transitionModel : transitionsLinkingToResultingStateSet) {
             Label newLabel = new Label(transitionModel.toString());
-            vBox.getChildren().add(newLabel);
+            listOfTransitionsVBox.getChildren().add(newLabel);
         }
 
-        PopOver listOfTransitionsPopOver = new PopOver(vBox);
+        PopOver listOfTransitionsPopOver = new PopOver(listOfTransitionsVBox);
 
         reflexiveArrowShaftArc.setOnMouseEntered(mouseEvent -> {
             listOfTransitionsPopOver.show(reflexiveArrowShaftArc);
@@ -196,6 +198,21 @@ public class StateView extends StackPane {
 
         reflexiveArrowShaftArc.setVisible(isReflexiveArrowVisible);
         reflexiveArrowTipPolygon.setVisible(isReflexiveArrowVisible);
+    }
+
+    public void removeReflexiveTransition(TransitionModel transitionModelToRemove) {
+        Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
+
+        while (iter.hasNext()) {
+            Label labelToRemove = (Label) iter.next();
+            if (labelToRemove.getText().equals(transitionModelToRemove.toString())) {
+                iter.remove();
+            }
+        }
+        if (listOfTransitionsVBox.getChildren().isEmpty()) {
+            reflexiveArrowShaftArc.setVisible(false);
+            reflexiveArrowTipPolygon.setVisible(false);
+        }
     }
 
 

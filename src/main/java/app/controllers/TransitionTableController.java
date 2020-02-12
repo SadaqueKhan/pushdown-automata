@@ -85,7 +85,7 @@ public class TransitionTableController {
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
         //Check to see if the transition already exists
-        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsAttachedToStateModelSet()) {
+        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsPointingAwayFromStateModelSet()) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
                 Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -97,7 +97,9 @@ public class TransitionTableController {
             }
         }
         //Attach transition model to current state model
-        currentStateModel.attachTransitionToStateModel(newTransitionModel);
+        currentStateModel.getTransitionModelsPointingAwayFromStateModelSet().add(newTransitionModel);
+        resultingStateModel.getIsResultingStateModelsToSet().add(currentStateModel);
+
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
@@ -118,29 +120,23 @@ public class TransitionTableController {
         // Retrieve selected rows
         ObservableList<TransitionModel> selectedRows = transitionTableView.getTransitionTable().getSelectionModel().getSelectedItems();
 
-        HashSet<StateModel> changedStateModelsSet = new HashSet<StateModel>();
+        HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
+        removeTransitionSet.addAll(selectedRows);
 
-        //Update effected state models
-        for (TransitionModel transitionModel : selectedRows) {
-            //flag state that has been changed
-            changedStateModelsSet.add(transitionModel.getCurrentStateModel());
-
-            transitionModel.getCurrentStateModel().getTransitionModelsAttachedToStateModelSet().remove(transitionModel);
-            if (transitionModel.getCurrentStateModel().getTransitionModelsAttachedToStateModelSet().isEmpty()) {
-                // If state model no longer has transition remove the state model from the machine model
-                machineModel.removeStateModelFromStateModelSet(transitionModel.getCurrentStateModel().getStateId());
-            }
+        //Update all affected state models
+        for (TransitionModel transitionModel : removeTransitionSet) {
+            transitionModel.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet().remove(transitionModel);
         }
 
         //Update machine model
-        machineModel.getTransitionModelSet().removeAll(selectedRows);
-
+        machineModel.getTransitionModelSet().removeAll(removeTransitionSet);
 
         //Update transition table view
-        transitionTableView.getTransitionTable().getItems().removeAll(selectedRows);
+        transitionTableView.getTransitionTable().getItems().removeAll(removeTransitionSet);
+
 
         //Update diagram view
-        diagramController.deleteTransitionTransitionTableEventRequest(changedStateModelsSet);
+        diagramController.deleteTransitionTransitionTableEventRequest(removeTransitionSet);
 
     }
 

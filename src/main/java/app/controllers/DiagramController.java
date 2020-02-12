@@ -235,7 +235,7 @@ public class DiagramController {
         diagramView.addReflexiveTransitionView(currentStateID, resultingStateID, transitionsLinkingToResultingStateSet);
     }
 
-    public void deleteTransitionTransitionTableEventRequest(HashSet<StateModel> changedStateModelsSet) {
-        diagramView.deleteTransitionView(changedStateModelsSet);
+    public void deleteTransitionTransitionTableEventRequest(HashSet<TransitionModel> changedTransitionModelsSet) {
+        diagramView.deleteTransitionView(changedTransitionModelsSet);
     }
 }

@@ -9,16 +9,17 @@ public class StateModel {
     private boolean isStandardState = true;
     private boolean isStartState = false;
     private boolean isFinalState = false;
-    private HashSet<TransitionModel> transitionModelsAttachedToStateModelSet = new HashSet<>();
+    private HashSet<TransitionModel> transitionModelsPointingAwayFromStateModelSet = new HashSet<>();
+    private HashSet<StateModel> isResultingStateModelsToSet = new HashSet<>();
 
     public StateModel(String stateID) {
         this.stateId = stateID;
     }
 
-    public void attachTransitionToStateModel(TransitionModel transitionModel) {
-        transitionModelsAttachedToStateModelSet.add(transitionModel);
-    }
 
+    public HashSet<StateModel> getIsResultingStateModelsToSet() {
+        return isResultingStateModelsToSet;
+    }
 
     public String getStateId() {
         return stateId;
@@ -54,18 +55,18 @@ public class StateModel {
     }
 
     public void attachTransitionModelToStateModel(TransitionModel newTransitionModel) {
-        transitionModelsAttachedToStateModelSet.add(newTransitionModel);
+        transitionModelsPointingAwayFromStateModelSet.add(newTransitionModel);
     }
 
-    public HashSet<TransitionModel> getTransitionModelsAttachedToStateModelSet() {
-        return transitionModelsAttachedToStateModelSet;
+    public HashSet<TransitionModel> getTransitionModelsPointingAwayFromStateModelSet() {
+        return transitionModelsPointingAwayFromStateModelSet;
     }
 
 
     public HashSet<TransitionModel> getTransitionLinkedToStateX(StateModel resultingStateModel) {
 
         HashSet<TransitionModel> linkedTransitions = new HashSet<>();
-        for (TransitionModel transitionModel : transitionModelsAttachedToStateModelSet) {
+        for (TransitionModel transitionModel : transitionModelsPointingAwayFromStateModelSet) {
             if (resultingStateModel == transitionModel.getResultingStateModel()) {
                 linkedTransitions.add(transitionModel);
             }
