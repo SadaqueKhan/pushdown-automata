@@ -19,6 +19,7 @@ import org.controlsfx.control.PopOver;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 public class DiagramView extends Pane {
@@ -102,7 +103,6 @@ public class DiagramView extends Pane {
         TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
-
         createNewListOfTransitionsPopOver(transitionView, transitionsLinkingToResultingStateSet);
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
@@ -250,23 +250,32 @@ public class DiagramView extends Pane {
 
     public void deleteTransitionView(HashSet<TransitionModel> changedTransitionModelsSet) {
 
+        //TODO: READ THROUGH CODE UNDERSTAND WHAT IS GOING ON SEQUENTIALLY
+
+        StateView currentStateView = null;
+        HashSet<HashSet<Node>> nodesSetsToRemove = new HashSet<>();
+
         for (TransitionModel changedTransition : changedTransitionModelsSet) {
             String currentStateModelID = changedTransition.getCurrentStateModel().getStateId();
-            String resultingStateModelID = changedTransition.getCurrentStateModel().getStateId();
+            String resultingStateModelID = changedTransition.getResultingStateModel().getStateId();
 
-            StateView currentStateView = stateMap.get(changedTransition.getCurrentStateModel().getStateId());
-            HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+            currentStateView = stateMap.get(currentStateModelID);
 
-            //Check if it is a reflexive transition
-            if (changedTransition.getCurrentStateModel().getStateId().equals(changedTransition.getResultingStateModel().getStateId())) {
+            //Check type of transition
+            if (currentStateModelID.equals(resultingStateModelID)) {
+                //Update transition if it is reflexive transition
                 currentStateView.removeReflexiveTransition(changedTransition);
             } else {
                 //Find bi-directional transition view
+                HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
                 for (HashSet<Node> nextHashSet : linkedTransitionViews) {
                     for (Node node : nextHashSet) {
                         if (node instanceof TransitionView) {
                             TransitionView transitionViewToUpdate = (TransitionView) node;
                             if (transitionViewToUpdate.getSource().getStateId().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateId().equals(resultingStateModelID)) {
+//                                if (changedTransition.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet().isEmpty()) {
+//                                    nodesSetsToRemove.add(nextHashSet);
+//                                }
                                 createNewListOfTransitionsPopOver(transitionViewToUpdate, changedTransition.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet());
                             }
                         }
@@ -274,30 +283,30 @@ public class DiagramView extends Pane {
                 }
             }
         }
-    }
 
-    private int getNumberOfTransitionViewsAttachedToStateView(StateView currentStateView) {
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
-        int numberOfTransitionViews = 0;
-        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
-            for (Node node : nextHashSet) {
-                if (node instanceof TransitionView) {
-                    ++numberOfTransitionViews;
+        if (currentStateView != null && !(nodesSetsToRemove.isEmpty())) {
+            Iterator<HashSet<Node>> iter = linkedTransitionViewsMap.get(currentStateView).iterator();
+            while (iter.hasNext()) {
+                HashSet<Node> nextHashSet = iter.next();
+                for (HashSet<Node> nodeSetToRemove : nodesSetsToRemove) {
+                    if (nextHashSet == nodeSetToRemove) {
+                        for (Node node : nodeSetToRemove) {
+                            this.getChildren().remove(node);
+                        }
+                        iter.remove();
+                    }
                 }
             }
         }
-        return numberOfTransitionViews;
     }
 
 
-    private void createNewListOfTransitionsPopOver(TransitionView
-                                                           transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
+    private void createNewListOfTransitionsPopOver(TransitionView transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
         VBox newVBox = new VBox();
         PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
 
         for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
-            Label newLabel = new Label(transitionModel.toString());
-            newVBox.getChildren().add(newLabel);
+            newVBox.getChildren().add(new Label(transitionModel.toString()));
         }
         transitionViewToCheck.setOnMouseEntered(mouseEvent -> {
             newListOfTransitionsPopOver.show(transitionViewToCheck);
