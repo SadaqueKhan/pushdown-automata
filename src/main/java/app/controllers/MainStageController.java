@@ -43,13 +43,12 @@ public class MainStageController extends Application implements Serializable {
 
     public void triggerDiagramView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        diagramController.loadDiagramView();
+        diagramController.loadDiagramView(transitionTableController);
     }
 
     public void triggerTransitionTableView() {
 
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-
 
         transitionTableController.loadTransitionTable(diagramController);
     }

@@ -1,6 +1,7 @@
 package app.views;
 
 import app.controllers.DiagramController;
+import app.models.StateModel;
 import app.models.TransitionModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -68,43 +69,37 @@ public class DiagramView extends Pane {
     }
 
 
-    public void addDirectionalTransitionView(String sourceID, String targetID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+    public void addDirectionalTransitionView(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         //Get state from map using state ID
-        StateView sourceCell = stateMap.get(sourceID);
-        StateView targetCell = stateMap.get(targetID);
+        StateView currentStateView = stateMap.get(currentStateID);
+        StateView resultingStateView = stateMap.get(resultingStateID);
 
-        Line virtualCenterLine = getLine(sourceCell, targetCell);
+        //Check if transition arrow exists if it does just update label
+        for (Node node : linkedNodesToStateViewMap.get(currentStateView)) {
+            if (node instanceof TransitionView) {
+                TransitionView transitionViewToCheck = (TransitionView) node;
+                if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
+                    createNewlistOfTransitionsPopOver(transitionViewToCheck, transitionsLinkingToResultingStateSet);
+                    return;
+                }
+            }
+        }
+        //Transition does not exist create fresh transition
+        Line virtualCenterLine = getLine(currentStateView, resultingStateView);
         virtualCenterLine.setOpacity(0);
-        this.getChildren().remove(sourceCell);
-        this.getChildren().remove(targetCell);
+        this.getChildren().remove(currentStateView);
+        this.getChildren().remove(resultingStateView);
 
-        StackPane centerLineArrowAB = getArrowTip(true, virtualCenterLine, sourceCell, targetCell);
+        StackPane centerLineArrowAB = getArrowTip(true, virtualCenterLine, currentStateView, resultingStateView);
         centerLineArrowAB.setOpacity(0);
-        StackPane centerLineArrowBA = getArrowTip(false, virtualCenterLine, sourceCell, targetCell);
+        StackPane centerLineArrowBA = getArrowTip(false, virtualCenterLine, currentStateView, resultingStateView);
         centerLineArrowBA.setOpacity(0);
 
-        Line directedLine = new Line();
-        directedLine.setStroke(Color.BLACK);
-        directedLine.setStrokeWidth(2);
+        TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
+        transitionView.setStroke(Color.BLACK);
+        transitionView.setStrokeWidth(2);
 
-        //Create popover to list applicable transitions for given transition
-        VBox vBox = new VBox();
-        for (TransitionModel transitionModel : transitionsLinkingToResultingStateSet) {
-            Label newLabel = new Label(transitionModel.toString());
-            vBox.getChildren().add(newLabel);
-        }
-
-        PopOver listOfTransitionsPopOver = new PopOver(vBox);
-
-        directedLine.setOnMouseEntered(mouseEvent -> {
-            listOfTransitionsPopOver.show(directedLine);
-        });
-
-        directedLine.setOnMouseExited(mouseEvent -> {
-            //Hide PopOver when mouse exits label
-            listOfTransitionsPopOver.hide();
-        });
-
+        createNewlistOfTransitionsPopOver(transitionView, transitionsLinkingToResultingStateSet);
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
@@ -113,16 +108,16 @@ public class DiagramView extends Pane {
             r.setPivotY(virtualCenterLine.getStartY());
             r.setAngle(centerLineArrowAB.getRotate());
             Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
-            directedLine.setStartX(point.getX());
-            directedLine.setStartY(point.getY());
+            transitionView.setStartX(point.getX());
+            transitionView.setStartY(point.getY());
 
             Rotate r2 = new Rotate();
             r2.setPivotX(virtualCenterLine.getEndX());
             r2.setPivotY(virtualCenterLine.getEndY());
             r2.setAngle(centerLineArrowBA.getRotate());
             Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
-            directedLine.setEndX(point2.getX());
-            directedLine.setEndY(point2.getY());
+            transitionView.setEndX(point2.getX());
+            transitionView.setEndY(point2.getY());
         };
         centerLineArrowAB.rotateProperty().addListener(listener);
         centerLineArrowBA.rotateProperty().addListener(listener);
@@ -131,16 +126,16 @@ public class DiagramView extends Pane {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
-        StackPane arrowTip = getArrowTip(true, directedLine, sourceCell, targetCell);
+        StackPane arrowTip = getArrowTip(true, transitionView, currentStateView, resultingStateView);
 
-        linkedNodesToStateViewMap.get(sourceCell).add(virtualCenterLine);
-        linkedNodesToStateViewMap.get(sourceCell).add(centerLineArrowAB);
-        linkedNodesToStateViewMap.get(sourceCell).add(centerLineArrowBA);
-        linkedNodesToStateViewMap.get(sourceCell).add(directedLine);
-        linkedNodesToStateViewMap.get(sourceCell).add(arrowTip);
+        linkedNodesToStateViewMap.get(currentStateView).add(virtualCenterLine);
+        linkedNodesToStateViewMap.get(currentStateView).add(centerLineArrowAB);
+        linkedNodesToStateViewMap.get(currentStateView).add(centerLineArrowBA);
+        linkedNodesToStateViewMap.get(currentStateView).add(transitionView);
+        linkedNodesToStateViewMap.get(currentStateView).add(arrowTip);
 
-        this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, directedLine, arrowTip);
-        this.getChildren().addAll(sourceCell, targetCell);
+        this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip);
+        this.getChildren().addAll(currentStateView, resultingStateView);
     }
 
     public void addReflexiveTransitionView(String sourceStateID, String targetStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
@@ -233,10 +228,55 @@ public class DiagramView extends Pane {
     }
 
 
-    public void deleteStateView(StateView stateView) {
+    public void deleteStateView(String stateID) {
+        StateView stateViewToRemove = stateMap.get(stateID);
+        for (Node node : linkedNodesToStateViewMap.get(stateViewToRemove)) {
+            this.getChildren().remove(node);
+        }
+        stateMap.remove(stateID);
+        this.getChildren().remove(stateViewToRemove);
+    }
+
+    public void deleteTransitionView(HashSet<StateModel> changedStateModelsSet) {
+        System.out.println("Helloworld1");
+        for (StateModel stateModel : changedStateModelsSet) {
+            StateView stateView = stateMap.get(stateModel.getStateId());
+            //If statemodel has no transitions delete the state view and all linked transition views, and check next state model changes
+            if (stateModel.getTransitionModelsAttachedToStateModelSet().isEmpty()) {
+                System.out.println("Helloworld2");
+                removeLinkedNodetoStateView(stateView);
+            } else {
+                for (Node node : linkedNodesToStateViewMap.get(stateView)) {
+                    if (node instanceof TransitionView) {
+                        TransitionView transitionViewToCheck = (TransitionView) node;
+                        createNewlistOfTransitionsPopOver(transitionViewToCheck, stateModel.getTransitionModelsAttachedToStateModelSet());
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeLinkedNodetoStateView(StateView stateView) {
         for (Node node : linkedNodesToStateViewMap.get(stateView)) {
             this.getChildren().remove(node);
         }
-        this.getChildren().remove(stateView);
+        linkedNodesToStateViewMap.remove(stateView);
+        this.getChildren().removeAll(stateView);
+    }
+
+    private void createNewlistOfTransitionsPopOver(TransitionView transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
+        VBox newVBox = new VBox();
+        PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
+        for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
+            Label newLabel = new Label(transitionModel.toString());
+            newVBox.getChildren().add(newLabel);
+        }
+        transitionViewToCheck.setOnMouseEntered(mouseEvent -> {
+            newListOfTransitionsPopOver.show(transitionViewToCheck);
+        });
+        transitionViewToCheck.setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            newListOfTransitionsPopOver.hide();
+        });
     }
 }

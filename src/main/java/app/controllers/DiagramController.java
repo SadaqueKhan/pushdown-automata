@@ -24,7 +24,7 @@ public class DiagramController {
     private final MainStageController mainStageController;
     private final MachineModel machineModel;
 
-    private final TransitionTableController transitionTableController;
+    private TransitionTableController transitionTableController;
 
     private final DiagramView diagramView;
 
@@ -46,7 +46,8 @@ public class DiagramController {
         this.diagramView = new DiagramView(this, mainStageView);
     }
 
-    public void loadDiagramView() {
+    public void loadDiagramView(TransitionTableController transitionTableController) {
+        this.transitionTableController = transitionTableController;
         diagramView.loadToMainStage();
     }
 
@@ -203,9 +204,9 @@ public class DiagramController {
         });
 
         deleteStateItem.setOnAction(e -> {
-            machineModel.removeStateModelFromStateModelSet(stateView.getStateId());
-            diagramView.deleteStateView(stateView);
-            transitionTableController.deleteStateEntry(stateView.getStateId());
+            machineModel.removeStateModelFromStateModelSet(stateModel.getStateId());
+            diagramView.deleteStateView(stateModel.getStateId());
+            transitionTableController.deleteStateEntry(stateModel.getStateId());
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);
@@ -225,13 +226,16 @@ public class DiagramController {
     }
 
 
-    public void addDirectionalTransitionToViewTransitionTableEventResponse(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+    public void addDirectionalTransitionToViewTransitionTableEventRequest(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         diagramView.addDirectionalTransitionView(currentStateID, resultingStateID, transitionsLinkingToResultingStateSet);
     }
 
 
-    public void addReflexiveTransitionToViewTransitionTableEventResponse(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
+    public void addReflexiveTransitionToViewTransitionTableEventRequest(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         diagramView.addReflexiveTransitionView(currentStateID, resultingStateID, transitionsLinkingToResultingStateSet);
     }
 
+    public void deleteTransitionTransitionTableEventRequest(HashSet<StateModel> changedStateModelsSet) {
+        diagramView.deleteTransitionView(changedStateModelsSet);
+    }
 }
