@@ -8,6 +8,7 @@ import app.views.TransitionTableView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -42,11 +43,11 @@ public class TransitionTableController {
 
         Random rnd = new Random();
 
-        double x1 = rnd.nextDouble() * 500;
-        double y1 = rnd.nextDouble() * 500;
+        double x1 = rnd.nextDouble() * 200;
+        double y1 = rnd.nextDouble() * 200;
 
-        double x2 = rnd.nextDouble() * 500;
-        double y2 = rnd.nextDouble() * 500;
+        double x2 = rnd.nextDouble() * 200;
+        double y2 = rnd.nextDouble() * 200;
 
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateTextField().getText();
@@ -162,5 +163,16 @@ public class TransitionTableController {
     public void deleteStateEntryTransitionTableRequest(String stateId, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
         transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
         transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+    }
+
+    public void updateCurrentStateComboxBox() {
+        for (StateModel stateModel : machineModel.getStateModelSet()) {
+            transitionTableView.getCurrentAvailableStatesSet().add(stateModel.getStateId());
+        }
+
+        if (transitionTableView.getAutoCompletionBinding() != null) {
+            transitionTableView.getAutoCompletionBinding().dispose();
+        }
+        transitionTableView.setAutoCompletionBinding(TextFields.bindAutoCompletion(transitionTableView.getCurrentStateComboBox().getEditor(), transitionTableView.getCurrentAvailableStatesSet()));
     }
 }

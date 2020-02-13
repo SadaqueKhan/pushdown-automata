@@ -1,11 +1,11 @@
 package app.listeners;
 
 import app.controllers.TransitionTableController;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
-public class TransitionTableListener implements EventHandler<ActionEvent> {
+public class TransitionTableListener implements EventHandler {
 
     private final TransitionTableController transitionTableController;
 
@@ -16,18 +16,24 @@ public class TransitionTableListener implements EventHandler<ActionEvent> {
     }
 
     @Override
-    public void handle(ActionEvent event) {
+    public void handle(Event event) {
 
-        Button isButton = (Button) event.getSource();
+        String eventType = event.getEventType().toString();
 
-        String tempIsButton = isButton.getText();
 
-        if (tempIsButton.equals("Submit")) {
-            transitionTableController.addTransitionEntry();
+        if (eventType.equals("ACTION")) {
+            Button isButton = (Button) event.getSource();
+
+            String tempIsButton = isButton.getText();
+
+            if (tempIsButton.equals("Submit")) {
+                transitionTableController.addTransitionEntry();
+                transitionTableController.updateCurrentStateComboxBox();
+            }
+            if (tempIsButton.equals("Delete")) {
+                transitionTableController.deleteTransitionEntries();
+            }
+
         }
-        if (tempIsButton.equals("Delete")) {
-            transitionTableController.deleteTransitionEntries();
-        }
-
     }
 }

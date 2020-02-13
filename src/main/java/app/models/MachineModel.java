@@ -66,6 +66,10 @@ public class MachineModel implements Serializable {
         return startStateModel;
     }
 
+    public HashSet<StateModel> getStateModelSet() {
+        return stateModelSet;
+    }
+
     public HashSet<TransitionModel> getTransitionModelSet() {
         return transitionModelSet;
     }

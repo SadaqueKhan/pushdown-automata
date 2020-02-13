@@ -89,7 +89,9 @@ public class TransitionModel {
             return false;
         if (getResultingStateModel() != null ? !getResultingStateModel().equals(that.getResultingStateModel()) : that.getResultingStateModel() != null)
             return false;
-        return getStackSymbolToPush() != null ? getStackSymbolToPush().equals(that.getStackSymbolToPush()) : that.getStackSymbolToPush() == null;
+        if (getStackSymbolToPush() != null ? !getStackSymbolToPush().equals(that.getStackSymbolToPush()) : that.getStackSymbolToPush() != null)
+            return false;
+        return getRelatedTransitionModels() != null ? getRelatedTransitionModels().equals(that.getRelatedTransitionModels()) : that.getRelatedTransitionModels() == null;
     }
 
     @Override
@@ -99,6 +101,7 @@ public class TransitionModel {
         result = 31 * result + (getStackSymbolToPop() != null ? getStackSymbolToPop().hashCode() : 0);
         result = 31 * result + (getResultingStateModel() != null ? getResultingStateModel().hashCode() : 0);
         result = 31 * result + (getStackSymbolToPush() != null ? getStackSymbolToPush().hashCode() : 0);
+        result = 31 * result + (getRelatedTransitionModels() != null ? getRelatedTransitionModels().hashCode() : 0);
         return result;
     }
 

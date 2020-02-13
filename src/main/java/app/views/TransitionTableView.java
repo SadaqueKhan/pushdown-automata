@@ -9,6 +9,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
+
+import java.util.HashSet;
 
 public class TransitionTableView extends BorderPane {
 
@@ -44,6 +48,11 @@ public class TransitionTableView extends BorderPane {
     private Button submitTransitionButton;
     private Button deleteTransitionButton;
     private VBox transitionTableContainer;
+
+    private ComboBox<String> currentStateComboBox;
+    private HashSet<String> currentAvailableStatesSet;
+    private AutoCompletionBinding<String> autoCompletionBinding;
+
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
 
@@ -119,6 +128,13 @@ public class TransitionTableView extends BorderPane {
         this.currentStateTextField = new TextField();
         currentStateTextField.setPrefWidth(50);
 
+
+        currentStateComboBox = new ComboBox<>();
+        currentStateComboBox.setEditable(true);
+        currentAvailableStatesSet = new HashSet<>();
+        autoCompletionBinding = TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentAvailableStatesSet);
+        TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentStateComboBox.getItems());
+
         this.inputSymbolTextField = new TextField();
         inputSymbolTextField.setPrefWidth(50);
 
@@ -144,7 +160,7 @@ public class TransitionTableView extends BorderPane {
         final HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 10, 10));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
+        hBox.getChildren().addAll(currentStateComboBox, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
 
         transitionTableContainer = new VBox();
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
@@ -190,4 +206,21 @@ public class TransitionTableView extends BorderPane {
     public TextField getStackSymbolToPushTextField() {
         return stackSymbolToPushTextField;
     }
+
+    public ComboBox<String> getCurrentStateComboBox() {
+        return currentStateComboBox;
+    }
+
+    public AutoCompletionBinding<String> getAutoCompletionBinding() {
+        return autoCompletionBinding;
+    }
+
+    public void setAutoCompletionBinding(AutoCompletionBinding<String> autoCompletionBinding) {
+        this.autoCompletionBinding = autoCompletionBinding;
+    }
+
+    public HashSet<String> getCurrentAvailableStatesSet() {
+        return currentAvailableStatesSet;
+    }
+
 }
