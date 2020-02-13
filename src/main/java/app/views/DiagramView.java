@@ -249,14 +249,9 @@ public class DiagramView extends Pane {
         HashSet<StateView> stateViewsWithTransitionRemovedList = new HashSet<>();
 
         for (TransitionModel changedTransition : changedTransitionModelsSet) {
-
-
             String currentStateModelID = changedTransition.getCurrentStateModel().getStateId();
             String resultingStateModelID = changedTransition.getResultingStateModel().getStateId();
             StateView currentStateView = stateMap.get(currentStateModelID);
-
-            System.out.println("Current: " + currentStateModelID);
-            System.out.println("Resulting: " + resultingStateModelID);
 
             //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {

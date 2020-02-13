@@ -115,11 +115,10 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
 
         //Update diagram view
-        HashSet<TransitionModel> transitionsLinkingToResultingStateSet = currentStateModel.getTransitionLinkedToStateX(resultingStateModel);
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
-            diagramController.addReflexiveTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
+            diagramController.addReflexiveTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.getRelatedTransitionModels());
         } else {
-            diagramController.addDirectionalTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), transitionsLinkingToResultingStateSet);
+            diagramController.addDirectionalTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.getRelatedTransitionModels());
         }
     }
 
