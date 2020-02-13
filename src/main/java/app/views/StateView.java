@@ -228,4 +228,8 @@ public class StateView extends StackPane {
         return stateId;
     }
 
+    @Override
+    public String toString() {
+        return "StateView";
+    }
 }

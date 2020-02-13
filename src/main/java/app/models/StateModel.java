@@ -9,8 +9,8 @@ public class StateModel {
     private boolean isStandardState = true;
     private boolean isStartState = false;
     private boolean isFinalState = false;
-    private HashSet<TransitionModel> exitingTransitionModelsSet = new HashSet<>();
-    private HashSet<TransitionModel> enteringTransitionModelsSet = new HashSet<>();
+    private HashSet<TransitionModel> exitingTransitionModelsSet = new HashSet<>(); // (this (current) -> Y)
+    private HashSet<TransitionModel> enteringTransitionModelsSet = new HashSet<>(); // (Y -> this (resulting))
 
     public StateModel(String stateID) {
         this.stateId = stateID;

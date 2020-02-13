@@ -1,5 +1,7 @@
 package app.models;
 
+import java.util.HashSet;
+
 public class TransitionModel {
 
     private StateModel currentStateModel;
@@ -8,6 +10,8 @@ public class TransitionModel {
 
     private StateModel resultingStateModel;
     private String stackSymbolToPush;
+
+    private HashSet<TransitionModel> relatedTransitionModels = new HashSet<>();
 
     public TransitionModel(
             StateModel currentStateModel,
@@ -64,6 +68,10 @@ public class TransitionModel {
 
     public void setStackSymbolToPush(String stackSymbolToPush) {
         this.stackSymbolToPush = stackSymbolToPush;
+    }
+
+    public HashSet<TransitionModel> getRelatedTransitionModels() {
+        return relatedTransitionModels;
     }
 
     @Override

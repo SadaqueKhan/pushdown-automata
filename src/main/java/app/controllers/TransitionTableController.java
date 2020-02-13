@@ -84,7 +84,7 @@ public class TransitionTableController {
         //Create transition model placeholder
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
-        //Check to see if the transition already exists
+        //Check to see if the transition already exists for the current state model
         for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
@@ -99,6 +99,14 @@ public class TransitionTableController {
         //Attach transition model to current state model
         currentStateModel.getExitingTransitionModelsSet().add(newTransitionModel);
         resultingStateModel.getEnteringTransitionModelsSet().add(newTransitionModel);
+
+        // Create a list of related transition within the transition model with itself included
+        newTransitionModel.getRelatedTransitionModels().add(newTransitionModel);
+        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
+            if (transitionModel.getResultingStateModel().equals(newTransitionModel.getResultingStateModel())) {
+                newTransitionModel.getRelatedTransitionModels().add(transitionModel);
+            }
+        }
 
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
@@ -126,10 +134,19 @@ public class TransitionTableController {
 //        HashSet<StateModel>
 
         //Update all affected state models
-        for (TransitionModel transitionModel : removeTransitionSet) {
-            transitionModel.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModel);
+        for (TransitionModel transitionModelToRemove : removeTransitionSet) {
+            //remove linking from current state to resulting state
+            transitionModelToRemove.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModelToRemove);
+            //remove linking from resulting state to current state
+            transitionModelToRemove.getResultingStateModel().getEnteringTransitionModelsSet().remove(transitionModelToRemove);
         }
 
+        // Update all affect transition models
+        for (TransitionModel transitionModelToRemove : removeTransitionSet) {
+            for (TransitionModel transitionModelToUpdate : transitionModelToRemove.getRelatedTransitionModels()) {
+                transitionModelToUpdate.getRelatedTransitionModels().remove(transitionModelToRemove);
+            }
+        }
 
         //Update machine model
         machineModel.getTransitionModelSet().removeAll(removeTransitionSet);
@@ -143,19 +160,8 @@ public class TransitionTableController {
 
     }
 
-    public void deleteStateEntry(String stateId) {
-        //Remove from machine model
-        machineModel.removeStateModelFromStateModelSet(stateId);
-
-        ObservableList<TransitionModel> allEntriesInPeopleRecordTable;
-        allEntriesInPeopleRecordTable = transitionTableView.getTransitionTable().getItems();
-
-        //See what this prints
-        for (TransitionModel transitionModel : allEntriesInPeopleRecordTable) {
-            if (transitionModel.getCurrentStateModel().getStateId().equals(stateId)) {
-                allEntriesInPeopleRecordTable.remove(transitionModel);
-            }
-
-        }
+    public void deleteStateEntryTransitionTableRequest(String stateId, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
+        transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
+        transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
     }
 }

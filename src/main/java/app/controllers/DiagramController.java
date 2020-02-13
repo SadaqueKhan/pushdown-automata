@@ -204,9 +204,25 @@ public class DiagramController {
         });
 
         deleteStateItem.setOnAction(e -> {
+            //Update models
+            //Remove from machine model
             machineModel.removeStateModelFromStateModelSet(stateModel.getStateId());
-            diagramView.deleteStateView(stateModel.getStateId());
-            transitionTableController.deleteStateEntry(stateModel.getStateId());
+            machineModel.getTransitionModelSet().removeAll(stateModel.getExitingTransitionModelsSet());
+            machineModel.getTransitionModelSet().removeAll(stateModel.getEnteringTransitionModelsSet());
+            //Update effected statemodels that have a transtionmodel pointing towards them from the state model to be deleted
+            for (TransitionModel transitionModel : stateModel.getExitingTransitionModelsSet()) {
+                transitionModel.getResultingStateModel().getEnteringTransitionModelsSet().remove(transitionModel);
+                transitionModel.getRelatedTransitionModels().clear();
+            }
+            //Update effected statemodels that have transitionmodel entering the state model to be deleted
+            for (TransitionModel transitionModel : stateModel.getEnteringTransitionModelsSet()) {
+                transitionModel.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModel);
+                transitionModel.getRelatedTransitionModels().clear();
+            }
+            //Notify transition table controller
+            transitionTableController.deleteStateEntryTransitionTableRequest(stateModel.getStateId(), stateModel.getExitingTransitionModelsSet(), stateModel.getEnteringTransitionModelsSet());
+            //Update view
+            diagramView.deleteStateView(stateModel.getStateId(), stateModel.getExitingTransitionModelsSet(), stateModel.getEnteringTransitionModelsSet());
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);
@@ -237,5 +253,9 @@ public class DiagramController {
 
     public void deleteTransitionTransitionTableEventRequest(HashSet<TransitionModel> changedTransitionModelsSet) {
         diagramView.deleteTransitionView(changedTransitionModelsSet);
+    }
+
+    public HashSet<TransitionModel> getRelatedTransitionsForTransitionView(TransitionModel changedTransition) {
+        return changedTransition.getRelatedTransitionModels();
     }
 }

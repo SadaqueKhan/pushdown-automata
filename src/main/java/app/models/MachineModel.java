@@ -30,6 +30,10 @@ public class MachineModel implements Serializable {
         transitionModelSet.add(newTransitionModel);
     }
 
+    public void removeTransitionModelFromTransitionModelSet(TransitionModel newTransitionModel) {
+        transitionModelSet.remove(newTransitionModel);
+    }
+
 
     public StateModel getStateModelFromStateModelSet(String stateId) {
         for (StateModel stateModel : stateModelSet) {
@@ -60,10 +64,6 @@ public class MachineModel implements Serializable {
 
     public StateModel getStartStateModel() {
         return startStateModel;
-    }
-
-    public void setStartStateModel(StateModel startStateModel) {
-        this.startStateModel = startStateModel;
     }
 
     public HashSet<TransitionModel> getTransitionModelSet() {

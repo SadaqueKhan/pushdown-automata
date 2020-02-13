@@ -1,7 +1,6 @@
 package app.views;
 
 import app.controllers.DiagramController;
-import app.models.StateModel;
 import app.models.TransitionModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -139,15 +138,7 @@ public class DiagramView extends Pane {
         setOfNode.add(centerLineArrowBA);
         setOfNode.add(transitionView);
         setOfNode.add(arrowTip);
-
         linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
-
-        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
-            if (nextHashSet.isEmpty()) {
-                System.out.println("No transtions");
-            }
-            System.out.println(linkedTransitionViews.size());
-        }
 
         this.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip);
         this.getChildren().addAll(currentStateView, resultingStateView);
@@ -237,22 +228,18 @@ public class DiagramView extends Pane {
         return line;
     }
 
-    @Override
-    public String toString() {
-        return "DiagramView";
-    }
-
-
-    public void deleteStateView(String stateID) {
+    public void deleteStateView(String stateID, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
+        //Retrieve stateview to be deleted
         StateView stateViewToRemove = stateMap.get(stateID);
+        //Retrieve and remove linked transitionviews to stateview
+        deleteTransitionView(exitingTransitionModelsSet);
+        deleteTransitionView(enteringTransitionModelsSet);
 
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(stateViewToRemove);
-
-        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
-            this.getChildren().removeAll(nextHashSet);
-        }
-
+        // Remove mapping of stateview in data structures
         stateMap.remove(stateID);
+        linkedTransitionViewsMap.remove(stateViewToRemove);
+
+        //Remove the stateview from the diagramview
         this.getChildren().remove(stateViewToRemove);
     }
 
@@ -262,10 +249,14 @@ public class DiagramView extends Pane {
         HashSet<StateView> stateViewsWithTransitionRemovedList = new HashSet<>();
 
         for (TransitionModel changedTransition : changedTransitionModelsSet) {
+
+
             String currentStateModelID = changedTransition.getCurrentStateModel().getStateId();
             String resultingStateModelID = changedTransition.getResultingStateModel().getStateId();
-
             StateView currentStateView = stateMap.get(currentStateModelID);
+
+            System.out.println("Current: " + currentStateModelID);
+            System.out.println("Resulting: " + resultingStateModelID);
 
             //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
@@ -279,11 +270,11 @@ public class DiagramView extends Pane {
                         if (node instanceof TransitionView) {
                             TransitionView transitionViewToUpdate = (TransitionView) node;
                             if (transitionViewToUpdate.getSource().getStateId().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateId().equals(resultingStateModelID)) {
-                                if (getRelatedTransitionsForTransitionView(changedTransition).isEmpty()) {
+                                if (diagramController.getRelatedTransitionsForTransitionView(changedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionRemovedList.add(currentStateView);
                                 }
-                                createNewListOfTransitionsPopOver(transitionViewToUpdate, getRelatedTransitionsForTransitionView(changedTransition));
+                                createNewListOfTransitionsPopOver(transitionViewToUpdate, diagramController.getRelatedTransitionsForTransitionView(changedTransition));
                             }
                         }
                     }
@@ -303,15 +294,12 @@ public class DiagramView extends Pane {
                             for (Node node : nextHashSet) {
                                 this.getChildren().remove(node);
                             }
-                            //Then remove that transitionview components
                             iter.remove();
                         }
                     }
                 }
             }
         }
-
-
     }
 
 
@@ -332,15 +320,8 @@ public class DiagramView extends Pane {
     }
 
 
-    public HashSet<TransitionModel> getRelatedTransitionsForTransitionView(TransitionModel changedTransition) {
-        HashSet<TransitionModel> toReturn = new HashSet<>();
-        StateModel currentStateModel = changedTransition.getCurrentStateModel();
-        StateModel resultingStateModel = changedTransition.getResultingStateModel();
-        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
-            if (transitionModel.getCurrentStateModel().equals(currentStateModel) && transitionModel.getResultingStateModel().equals(resultingStateModel)) {
-                toReturn.add(transitionModel);
-            }
-        }
-        return toReturn;
+    @Override
+    public String toString() {
+        return "DiagramView";
     }
 }
