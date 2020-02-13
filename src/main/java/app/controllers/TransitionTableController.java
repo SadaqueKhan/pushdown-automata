@@ -123,10 +123,13 @@ public class TransitionTableController {
         HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
         removeTransitionSet.addAll(selectedRows);
 
+//        HashSet<StateModel>
+
         //Update all affected state models
         for (TransitionModel transitionModel : removeTransitionSet) {
             transitionModel.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModel);
         }
+
 
         //Update machine model
         machineModel.getTransitionModelSet().removeAll(removeTransitionSet);
