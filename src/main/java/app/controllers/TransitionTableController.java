@@ -85,7 +85,7 @@ public class TransitionTableController {
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
         //Check to see if the transition already exists
-        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsPointingAwayFromStateModelSet()) {
+        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
                 Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -97,8 +97,8 @@ public class TransitionTableController {
             }
         }
         //Attach transition model to current state model
-        currentStateModel.getTransitionModelsPointingAwayFromStateModelSet().add(newTransitionModel);
-        resultingStateModel.getIsResultingStateModelsToSet().add(currentStateModel);
+        currentStateModel.getExitingTransitionModelsSet().add(newTransitionModel);
+        resultingStateModel.getEnteringTransitionModelsSet().add(newTransitionModel);
 
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
@@ -125,7 +125,7 @@ public class TransitionTableController {
 
         //Update all affected state models
         for (TransitionModel transitionModel : removeTransitionSet) {
-            transitionModel.getCurrentStateModel().getTransitionModelsPointingAwayFromStateModelSet().remove(transitionModel);
+            transitionModel.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModel);
         }
 
         //Update machine model

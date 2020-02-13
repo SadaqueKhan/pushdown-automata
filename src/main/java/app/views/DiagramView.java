@@ -322,7 +322,7 @@ public class DiagramView extends Pane {
         HashSet<TransitionModel> toReturn = new HashSet<>();
         StateModel currentStateModel = changedTransition.getCurrentStateModel();
         StateModel resultingStateModel = changedTransition.getResultingStateModel();
-        for (TransitionModel transitionModel : currentStateModel.getTransitionModelsPointingAwayFromStateModelSet()) {
+        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
             if (transitionModel.getCurrentStateModel().equals(currentStateModel) && transitionModel.getResultingStateModel().equals(resultingStateModel)) {
                 toReturn.add(transitionModel);
             }

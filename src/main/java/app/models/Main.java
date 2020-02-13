@@ -36,21 +36,21 @@ public class Main {
 
         //A transitions
         TransitionModel transitionModelA1 = new TransitionModel(stateModelA, "1", "", stateModelA, "X");
-        stateModelA.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModelA1);
+        stateModelA.getExitingTransitionModelsSet().add(transitionModelA1);
         TransitionModel transitionModelA2 = new TransitionModel(stateModelA, "2", "X", stateModelA, "X");
-        stateModelA.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModelA2);
+        stateModelA.getExitingTransitionModelsSet().add(transitionModelA2);
         TransitionModel transitionModelA3 = new TransitionModel(stateModelA, "3", "X", stateModelA, "X");
-        stateModelA.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModelA3);
+        stateModelA.getExitingTransitionModelsSet().add(transitionModelA3);
         TransitionModel transitionModelA4 = new TransitionModel(stateModelA, "1", "", stateModelB, "X");
-        stateModelA.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModelA4);
+        stateModelA.getExitingTransitionModelsSet().add(transitionModelA4);
 
         //B transitions
         TransitionModel transitionModel3 = new TransitionModel(stateModelB, "2", "X", stateModelC, "Y");
-        stateModelB.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModel3);
+        stateModelB.getExitingTransitionModelsSet().add(transitionModel3);
 
         //C transitions
         TransitionModel transitionModel4 = new TransitionModel(stateModelC, "3", "Y", stateModelA, "Y");
-        stateModelC.getTransitionModelsPointingAwayFromStateModelSet().add(transitionModel4);
+        stateModelC.getExitingTransitionModelsSet().add(transitionModel4);
 
 
         machineModel.addTransitionModelToTransitionModelSet(transitionModelA1);
@@ -82,7 +82,7 @@ public class Main {
         int numberOfSymbolsRead = 0;
 
 
-        for (TransitionModel startTransition : startStateModel.getTransitionModelsPointingAwayFromStateModelSet()) {
+        for (TransitionModel startTransition : startStateModel.getExitingTransitionModelsSet()) {
             //check if valid transition exists
 
 
@@ -129,7 +129,7 @@ public class Main {
         }
 
 
-        for (TransitionModel nextTransition : currentTransition.getResultingStateModel().getTransitionModelsPointingAwayFromStateModelSet()) {
+        for (TransitionModel nextTransition : currentTransition.getResultingStateModel().getExitingTransitionModelsSet()) {
             if ((nextTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) || nextTransition.getInputSymbol().equals("")) && nextTransition.getStackSymbolToPop().equals(stack.peek())) {
                 pathList.add(nextTransition);
                 updateStack(stack, nextTransition.getStackSymbolToPush());
