@@ -12,8 +12,6 @@ import javafx.scene.layout.VBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.util.HashSet;
-
 public class TransitionTableView extends BorderPane {
 
     private final MainStageView mainStageView;
@@ -36,22 +34,20 @@ public class TransitionTableView extends BorderPane {
 
 
     //Configuration Textfields GUI
-    private TextField currentStateTextField;
+    private ComboBox<String> currentStateComboBox;
+    private AutoCompletionBinding<String> autoCompletionBindingForCurrentStateComboBox;
     private TextField inputSymbolTextField;
     private TextField stackSymbolToPopTextField;
 
     //Action Textfields GUI
-    private TextField resultingStateTextField;
+    private ComboBox<String> resultingStateComboBox;
+    private AutoCompletionBinding<String> autoCompletionBindingForResultingStateComboBox;
     private TextField stackSymbolToPushTextField;
 
     //Submit transition button GUI
     private Button submitTransitionButton;
     private Button deleteTransitionButton;
     private VBox transitionTableContainer;
-
-    private ComboBox<String> currentStateComboBox;
-    private HashSet<String> currentAvailableStatesSet;
-    private AutoCompletionBinding<String> autoCompletionBinding;
 
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
@@ -128,10 +124,7 @@ public class TransitionTableView extends BorderPane {
         this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
         currentStateComboBox.setPrefWidth(75);
-
-        currentAvailableStatesSet = new HashSet<>();
-        autoCompletionBinding = TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentAvailableStatesSet);
-        TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentStateComboBox.getItems());
+        autoCompletionBindingForCurrentStateComboBox = TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentStateComboBox.getItems());
 
         this.inputSymbolTextField = new TextField();
         inputSymbolTextField.setPrefWidth(50);
@@ -143,8 +136,10 @@ public class TransitionTableView extends BorderPane {
         final Label arrowLabel = new Label("->");
 
 //Create input widgets for the user to enter a configuration
-        this.resultingStateTextField = new TextField();
-        resultingStateTextField.setPrefWidth(50);
+        this.resultingStateComboBox = new ComboBox<>();
+        resultingStateComboBox.setEditable(true);
+        resultingStateComboBox.setPrefWidth(75);
+        autoCompletionBindingForResultingStateComboBox = TextFields.bindAutoCompletion(resultingStateComboBox.getEditor(), resultingStateComboBox.getItems());
 
         this.stackSymbolToPushTextField = new TextField();
         stackSymbolToPushTextField.setPrefWidth(50);
@@ -158,7 +153,7 @@ public class TransitionTableView extends BorderPane {
         final HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 10, 10));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(currentStateComboBox, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
+        hBox.getChildren().addAll(currentStateComboBox, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateComboBox, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
 
         transitionTableContainer = new VBox();
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
@@ -185,20 +180,12 @@ public class TransitionTableView extends BorderPane {
         return transitionTable;
     }
 
-    public TextField getCurrentStateTextField() {
-        return currentStateTextField;
-    }
-
     public TextField getInputSymbolTextField() {
         return inputSymbolTextField;
     }
 
     public TextField getStackSymbolToPopTextField() {
         return stackSymbolToPopTextField;
-    }
-
-    public TextField getResultingStateTextField() {
-        return resultingStateTextField;
     }
 
     public TextField getStackSymbolToPushTextField() {
@@ -209,16 +196,23 @@ public class TransitionTableView extends BorderPane {
         return currentStateComboBox;
     }
 
-    public AutoCompletionBinding<String> getAutoCompletionBinding() {
-        return autoCompletionBinding;
+    public AutoCompletionBinding<String> getAutoCompletionBindingForCurrentStateComboBox() {
+        return autoCompletionBindingForCurrentStateComboBox;
     }
 
-    public void setAutoCompletionBinding(AutoCompletionBinding<String> autoCompletionBinding) {
-        this.autoCompletionBinding = autoCompletionBinding;
+    public void setAutoCompletionBindingForCurrentStateComboBox(AutoCompletionBinding<String> autoCompletionBindingForCurrentStateComboBox) {
+        this.autoCompletionBindingForCurrentStateComboBox = autoCompletionBindingForCurrentStateComboBox;
     }
 
-    public HashSet<String> getCurrentAvailableStatesSet() {
-        return currentAvailableStatesSet;
+    public ComboBox<String> getResultingStateComboBox() {
+        return resultingStateComboBox;
     }
 
+    public AutoCompletionBinding<String> getAutoCompletionBindingForResultingStateComboBox() {
+        return autoCompletionBindingForResultingStateComboBox;
+    }
+
+    public void setAutoCompletionBindingForResultingStateComboBox(AutoCompletionBinding<String> autoCompletionBindingForResultingStateComboBox) {
+        this.autoCompletionBindingForResultingStateComboBox = autoCompletionBindingForResultingStateComboBox;
+    }
 }

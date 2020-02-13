@@ -50,12 +50,12 @@ public class TransitionTableController {
         double y2 = rnd.nextDouble() * 200;
 
         //User input for a configuration
-        String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().G)
+        String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().getValue();
         String userEntryInputSymbol = transitionTableView.getInputSymbolTextField().getText();
         String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopTextField().getText();
 
         //User input for a action
-        String userEntryResultingStateId = transitionTableView.getResultingStateTextField().getText();
+        String userEntryResultingStateId = transitionTableView.getResultingStateComboBox().getValue();
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushTextField().getText();
 
         // Create placeholders for state models
@@ -124,14 +124,11 @@ public class TransitionTableController {
     }
 
     public void deleteTransitionEntries() {
-
         // Retrieve selected rows
         ObservableList<TransitionModel> selectedRows = transitionTableView.getTransitionTable().getSelectionModel().getSelectedItems();
 
         HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
         removeTransitionSet.addAll(selectedRows);
-
-//        HashSet<StateModel>
 
         //Update all affected state models
         for (TransitionModel transitionModelToRemove : removeTransitionSet) {
@@ -157,22 +154,33 @@ public class TransitionTableController {
 
         //Update diagram view
         diagramController.deleteTransitionTransitionTableEventRequest(removeTransitionSet);
-
     }
 
     public void deleteStateEntryTransitionTableRequest(String stateId, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
         transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
         transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+        updateCurrentStateComboxBox();
     }
 
     public void updateCurrentStateComboxBox() {
+        transitionTableView.getCurrentStateComboBox().getItems().clear();
         for (StateModel stateModel : machineModel.getStateModelSet()) {
-            transitionTableView.getCurrentAvailableStatesSet().add(stateModel.getStateId());
+            transitionTableView.getCurrentStateComboBox().getItems().add(stateModel.getStateId());
         }
+        if (transitionTableView.getAutoCompletionBindingForCurrentStateComboBox() != null) {
+            transitionTableView.getAutoCompletionBindingForCurrentStateComboBox().dispose();
+        }
+        transitionTableView.setAutoCompletionBindingForCurrentStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getCurrentStateComboBox().getEditor(), transitionTableView.getCurrentStateComboBox().getItems()));
+    }
 
-        if (transitionTableView.getAutoCompletionBinding() != null) {
-            transitionTableView.getAutoCompletionBinding().dispose();
+    public void updateResultingStateComboxBox() {
+        transitionTableView.getResultingStateComboBox().getItems().clear();
+        for (StateModel stateModel : machineModel.getStateModelSet()) {
+            transitionTableView.getResultingStateComboBox().getItems().add(stateModel.getStateId());
         }
-        transitionTableView.setAutoCompletionBinding(TextFields.bindAutoCompletion(transitionTableView.getCurrentStateComboBox().getEditor(), transitionTableView.getCurrentAvailableStatesSet()));
+        if (transitionTableView.getAutoCompletionBindingForCurrentStateComboBox() != null) {
+            transitionTableView.getAutoCompletionBindingForCurrentStateComboBox().dispose();
+        }
+        transitionTableView.setAutoCompletionBindingForCurrentStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getResultingStateComboBox().getEditor(), transitionTableView.getResultingStateComboBox().getItems()));
     }
 }

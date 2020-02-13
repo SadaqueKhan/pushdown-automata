@@ -20,7 +20,6 @@ public class TransitionTableListener implements EventHandler {
 
         String eventType = event.getEventType().toString();
 
-
         if (eventType.equals("ACTION")) {
             Button isButton = (Button) event.getSource();
 
@@ -29,6 +28,7 @@ public class TransitionTableListener implements EventHandler {
             if (tempIsButton.equals("Submit")) {
                 transitionTableController.addTransitionEntry();
                 transitionTableController.updateCurrentStateComboxBox();
+                transitionTableController.updateResultingStateComboxBox();
             }
             if (tempIsButton.equals("Delete")) {
                 transitionTableController.deleteTransitionEntries();
