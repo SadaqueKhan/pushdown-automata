@@ -27,8 +27,6 @@ public class TransitionTableListener implements EventHandler {
 
             if (tempIsButton.equals("Submit")) {
                 transitionTableController.addTransitionEntry();
-                transitionTableController.updateCurrentStateComboxBox();
-                transitionTableController.updateResultingStateComboxBox();
             }
             if (tempIsButton.equals("Delete")) {
                 transitionTableController.deleteTransitionEntries();

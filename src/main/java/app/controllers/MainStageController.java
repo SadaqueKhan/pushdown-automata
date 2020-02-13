@@ -40,7 +40,6 @@ public class MainStageController extends Application implements Serializable {
 
     }
 
-
     public void triggerDiagramView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
         diagramController.loadDiagramView(transitionTableController);
@@ -70,4 +69,7 @@ public class MainStageController extends Application implements Serializable {
         return diagramController;
     }
 
+    public void simulate(String text) {
+
+    }
 }

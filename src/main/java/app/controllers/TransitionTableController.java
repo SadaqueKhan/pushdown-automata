@@ -114,6 +114,8 @@ public class TransitionTableController {
 
         //Update table view
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
+        updateCurrentStateComboxBox();
+        updateResultingStateComboxBox();
 
         //Update diagram view
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
@@ -160,6 +162,7 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
         transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
         updateCurrentStateComboxBox();
+        updateResultingStateComboxBox();
     }
 
     public void updateCurrentStateComboxBox() {
@@ -178,9 +181,9 @@ public class TransitionTableController {
         for (StateModel stateModel : machineModel.getStateModelSet()) {
             transitionTableView.getResultingStateComboBox().getItems().add(stateModel.getStateId());
         }
-        if (transitionTableView.getAutoCompletionBindingForCurrentStateComboBox() != null) {
-            transitionTableView.getAutoCompletionBindingForCurrentStateComboBox().dispose();
+        if (transitionTableView.getAutoCompletionBindingForResultingStateComboBox() != null) {
+            transitionTableView.getAutoCompletionBindingForResultingStateComboBox().dispose();
         }
-        transitionTableView.setAutoCompletionBindingForCurrentStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getResultingStateComboBox().getEditor(), transitionTableView.getResultingStateComboBox().getItems()));
+        transitionTableView.setAutoCompletionBindingForResultingStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getResultingStateComboBox().getEditor(), transitionTableView.getResultingStateComboBox().getItems()));
     }
 }
