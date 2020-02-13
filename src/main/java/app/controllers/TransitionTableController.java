@@ -50,7 +50,7 @@ public class TransitionTableController {
         double y2 = rnd.nextDouble() * 200;
 
         //User input for a configuration
-        String userEntryCurrentStateId = transitionTableView.getCurrentStateTextField().getText();
+        String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().G)
         String userEntryInputSymbol = transitionTableView.getInputSymbolTextField().getText();
         String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopTextField().getText();
 

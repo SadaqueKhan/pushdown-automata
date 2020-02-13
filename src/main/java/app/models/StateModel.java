@@ -54,26 +54,10 @@ public class StateModel {
         isStandardState = false;
     }
 
-    public void attachTransitionModelToStateModel(TransitionModel newTransitionModel) {
-        exitingTransitionModelsSet.add(newTransitionModel);
-    }
-
     public HashSet<TransitionModel> getExitingTransitionModelsSet() {
         return exitingTransitionModelsSet;
     }
-
-
-    public HashSet<TransitionModel> getTransitionLinkedToStateX(StateModel resultingStateModel) {
-
-        HashSet<TransitionModel> linkedTransitions = new HashSet<>();
-        for (TransitionModel transitionModel : exitingTransitionModelsSet) {
-            if (resultingStateModel == transitionModel.getResultingStateModel()) {
-                linkedTransitions.add(transitionModel);
-            }
-        }
-        return linkedTransitions;
-    }
-
+    
     @Override
     public String toString() {
         return stateId;

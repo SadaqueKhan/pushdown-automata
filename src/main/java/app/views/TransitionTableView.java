@@ -125,12 +125,10 @@ public class TransitionTableView extends BorderPane {
         transitionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 //Create input widgets for the user to enter a configuration
-        this.currentStateTextField = new TextField();
-        currentStateTextField.setPrefWidth(50);
-
-
-        currentStateComboBox = new ComboBox<>();
+        this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
+        currentStateComboBox.setPrefWidth(75);
+
         currentAvailableStatesSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentAvailableStatesSet);
         TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentStateComboBox.getItems());
