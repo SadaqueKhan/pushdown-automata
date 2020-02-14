@@ -4,7 +4,9 @@ import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -32,10 +34,9 @@ public class MainStageView extends BorderPane {
     private SegmentedButton segmentedButton;
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
-    //Bottom content elements
-    private Accordion simulationsAccordianContainer;
     private ProgressBar progressBar;
-
+    //Bottom content elements
+    private TapeView tapeView;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -75,26 +76,8 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(containerForCenterNodes);
 
-        this.simulationsAccordianContainer = new Accordion();
-
-        TitledPane pane1 = new TitledPane("Boats", new Label("Show all boats available"));
-        TitledPane pane2 = new TitledPane("Cars", new Label("Show all cars available"));
-        TitledPane pane3 = new TitledPane("Planes", new Label("Show all planes available"));
-
-        TitledPane pane4 = new TitledPane("Boats", new Label("Show all boats available"));
-        TitledPane pane5 = new TitledPane("Cars", new Label("Show all cars available"));
-        TitledPane pane6 = new TitledPane("Planes", new Label("Show all planes available"));
-
-        simulationsAccordianContainer.getPanes().add(pane1);
-        simulationsAccordianContainer.getPanes().add(pane2);
-        simulationsAccordianContainer.getPanes().add(pane3);
-        simulationsAccordianContainer.getPanes().add(pane4);
-        simulationsAccordianContainer.getPanes().add(pane5);
-        simulationsAccordianContainer.getPanes().add(pane6);
-
-        simulationsAccordianContainer.setMinSize(200, 200);
-
-        this.setBottom(simulationsAccordianContainer);
+        this.tapeView = new TapeView();
+        this.setBottom(tapeView);
     }
 
     private void setUpUILayout() {
@@ -129,5 +112,9 @@ public class MainStageView extends BorderPane {
 
     public ProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    public TapeView getTapeView() {
+        return tapeView;
     }
 }

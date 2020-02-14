@@ -73,4 +73,8 @@ public class MainStageController extends Application implements Serializable {
     public void setSimulationProgressBar(boolean isSimulationInProgress) {
         mainStageView.getProgressBar().setVisible(isSimulationInProgress);
     }
+
+    public void setUpTapeView(String inputWord) {
+        mainStageView.getTapeView().setUpUIComponents(inputWord);
+    }
 }
