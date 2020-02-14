@@ -37,6 +37,7 @@ public class MainStageView extends BorderPane {
     private ProgressBar progressBar;
     //Bottom content elements
     private TapeView tapeView;
+    private VBox containerForBotoomNodes;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -71,13 +72,19 @@ public class MainStageView extends BorderPane {
         containerForCenterNodes.setSpacing(10);
         containerForCenterNodes.setAlignment(Pos.TOP_CENTER);
         containerForCenterNodes.setStyle(cssLayout);
-
         containerForCenterNodes.getChildren().add(segmentedButton);
 
         this.setCenter(containerForCenterNodes);
 
         this.tapeView = new TapeView();
-        this.setBottom(tapeView);
+
+        this.containerForBotoomNodes = new VBox();
+        containerForBotoomNodes.setPadding(new Insets(10, 50, 50, 50));
+        containerForBotoomNodes.setSpacing(10);
+        containerForBotoomNodes.setStyle(cssLayout);
+        containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeView);
+
+        this.setBottom(containerForBotoomNodes);
     }
 
     private void setUpUILayout() {

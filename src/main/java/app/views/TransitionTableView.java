@@ -4,6 +4,7 @@ import app.controllers.TransitionTableController;
 import app.listeners.TransitionTableListener;
 import app.models.TransitionModel;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -153,6 +154,7 @@ public class TransitionTableView extends BorderPane {
         final HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 10, 10, 10));
         hBox.setSpacing(10);
+        hBox.setAlignment(Pos.TOP_CENTER);
         hBox.getChildren().addAll(currentStateComboBox, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateComboBox, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
 
         transitionTableContainer = new VBox();
