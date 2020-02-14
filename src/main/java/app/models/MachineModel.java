@@ -1,17 +1,17 @@
 package app.models;
 
-import java.io.IOException;
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 
 @XmlRootElement
-public class MachineModel implements Serializable {
+public class MachineModel {
 
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
     private StateModel startStateModel;
 
-    public MachineModel() throws IOException {
+    public MachineModel() {
         this.stateModelSet = new HashSet<>();
         this.transitionModelSet = new HashSet<>();
         this.startStateModel = findStartStateModel();
@@ -63,14 +63,17 @@ public class MachineModel implements Serializable {
         return false;
     }
 
+
     public StateModel getStartStateModel() {
         return startStateModel;
     }
 
+    @XmlElement
     public HashSet<StateModel> getStateModelSet() {
         return stateModelSet;
     }
 
+    @XmlElement
     public HashSet<TransitionModel> getTransitionModelSet() {
         return transitionModelSet;
     }

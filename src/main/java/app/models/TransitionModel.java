@@ -13,6 +13,9 @@ public class TransitionModel {
 
     private HashSet<TransitionModel> relatedTransitionModels = new HashSet<>();
 
+    public TransitionModel() {
+    }
+
     public TransitionModel(
             StateModel currentStateModel,
             String inputSymbol,
@@ -21,6 +24,7 @@ public class TransitionModel {
             StateModel resultingStateModel,
             String stackSymbolToPush
     ) {
+        super();
         this.currentStateModel = currentStateModel;
         this.inputSymbol = inputSymbol;
         this.stackSymbolToPop = stackSymbolToPop;

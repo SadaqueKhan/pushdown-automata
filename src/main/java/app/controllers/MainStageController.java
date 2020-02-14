@@ -76,4 +76,8 @@ public class MainStageController extends Application implements Serializable {
     public void setUpTapeView(String inputWord) {
         mainStageView.getTapeView().setUpUIComponents(inputWord);
     }
+
+    public MachineModel getMachineModel() {
+        return machineModel;
+    }
 }

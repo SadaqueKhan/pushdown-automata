@@ -1,7 +1,11 @@
 package app.models;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 
+
+@XmlRootElement
 public class StateModel {
 
     private String stateId;
@@ -12,7 +16,11 @@ public class StateModel {
     private HashSet<TransitionModel> exitingTransitionModelsSet = new HashSet<>(); // (this (current) -> Y)
     private HashSet<TransitionModel> enteringTransitionModelsSet = new HashSet<>(); // (Y -> this (resulting))
 
+    public StateModel() {
+    }
+
     public StateModel(String stateID) {
+        super();
         this.stateId = stateID;
     }
 
@@ -21,11 +29,13 @@ public class StateModel {
         return enteringTransitionModelsSet;
     }
 
+    @XmlAttribute
     public String getStateId() {
         return stateId;
     }
 
     //Getters/Setters
+
     public boolean isStandardState() {
         return isStandardState;
     }
@@ -36,6 +46,7 @@ public class StateModel {
         isFinalState = false;
     }
 
+
     public boolean isStartState() {
         return isStartState;
     }
@@ -44,6 +55,7 @@ public class StateModel {
         isStartState = startState;
         isStandardState = false;
     }
+
 
     public boolean isFinalState() {
         return isFinalState;
@@ -54,10 +66,11 @@ public class StateModel {
         isStandardState = false;
     }
 
+
     public HashSet<TransitionModel> getExitingTransitionModelsSet() {
         return exitingTransitionModelsSet;
     }
-    
+
     @Override
     public String toString() {
         return stateId;

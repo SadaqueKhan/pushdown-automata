@@ -2,6 +2,8 @@ package app.views;
 
 import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
+import app.models.MachineModel;
+import app.models.StateModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,6 +14,11 @@ import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,7 +56,43 @@ public class MainStageView extends BorderPane {
         Menu menu = new Menu("Menu 1");
 
         MenuItem save = new MenuItem("Save");
+
+        save.setOnAction(e -> {
+            JAXBContext contextObj = null;
+            try {
+                contextObj = JAXBContext.newInstance(MachineModel.class);
+                Marshaller marshallerObj = contextObj.createMarshaller();
+                marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                marshallerObj.marshal(mainStageController.getMachineModel(), new FileOutputStream("machineModel.xml"));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
+
+
         MenuItem load = new MenuItem("Load");
+
+
+        load.setOnAction(e -> {
+
+            try {
+                File file = new File("machineModel.xml");
+                JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
+
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                MachineModel que = (MachineModel) jaxbUnmarshaller.unmarshal(file);
+
+                for (StateModel stateModel : que.getStateModelSet()) {
+                    System.out.println(stateModel.getStateId());
+                }
+
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+
+        });
+
+
         SeparatorMenuItem separator = new SeparatorMenuItem();
         MenuItem help = new MenuItem("Help");
         menu.getItems().addAll(save, load, separator, help);
@@ -69,7 +112,6 @@ public class MainStageView extends BorderPane {
         VBox containerForTopNodes = new VBox();
         containerForTopNodes.setFillWidth(true);
         containerForTopNodes.getChildren().addAll(menuBar, new Text("Input Word"), inputTextField, progressBar);
-
 
 
         this.setTop(containerForTopNodes);
