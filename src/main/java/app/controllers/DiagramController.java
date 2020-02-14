@@ -138,7 +138,7 @@ public class DiagramController {
             } else {
                 if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
                     Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                            "Only one initial state allowed per machine. " + machineModel.findStartStateModel() + " currently defined as initial state for machine.", ButtonType.OK);
+                            "Only one initial state allowed per machine. " + "State " + machineModel.findStartStateModel() + " is currently defined as the initial state for this machine.", ButtonType.OK);
                     invalidActionAlert.setHeaderText("Information");
                     invalidActionAlert.setTitle("Invalid Action");
                     invalidActionAlert.show();
