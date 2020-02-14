@@ -22,11 +22,12 @@ public class SimulationController {
         stage.setTitle("Simulation");
         stage.setScene(scene);
         stage.show();
+
+        mainStageController.setSimulationProgressBar(false);
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
-
         simulationView.renderSuccessfulSimulationsToView(simulationModel.getSuccessfulPathList());
     }
 

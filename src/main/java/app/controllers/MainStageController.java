@@ -61,8 +61,7 @@ public class MainStageController extends Application implements Serializable {
         }
         mainStageView.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStageView.getInputTextField(), mainStageView.getInputWordSet()));
     }
-
-
+    
     public TransitionTableController getTransitionTableController() {
         return transitionTableController;
     }
@@ -72,4 +71,7 @@ public class MainStageController extends Application implements Serializable {
     }
 
 
+    public void setSimulationProgressBar(boolean isSimulationInProgress) {
+        mainStageView.getProgressBar().setVisible(isSimulationInProgress);
+    }
 }

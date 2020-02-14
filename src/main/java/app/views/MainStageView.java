@@ -6,7 +6,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.controlsfx.control.SegmentedButton;
@@ -54,28 +53,19 @@ public class MainStageView extends BorderPane {
         inputTextField.setPromptText("Enter input word");
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
-
-        ProgressBar progressBar = new ProgressBar();
+        progressBar = new ProgressBar();
         progressBar.setMaxWidth(Double.MAX_VALUE);
-
-
+        progressBar.setVisible(false);
         VBox containerForTopNodes = new VBox();
         containerForTopNodes.setFillWidth(true);
         containerForTopNodes.getChildren().addAll(new Text("Input Word"), inputTextField, progressBar);
-
         this.setTop(containerForTopNodes);
 
         //Setup center GUI elements
         this.toggleDiagramButton = new ToggleButton("Diagram");
         this.toggleTransitionTableButton = new ToggleButton("Table");
-
-
         this.segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTransitionTableButton);
-
-        HBox hBox = new HBox(segmentedButton);
-
-
         toggleDiagramButton.setSelected(true);
 
         this.containerForCenterNodes = new VBox();
@@ -85,7 +75,6 @@ public class MainStageView extends BorderPane {
         containerForCenterNodes.setStyle(cssLayout);
 
         containerForCenterNodes.getChildren().add(segmentedButton);
-
 
         this.setCenter(containerForCenterNodes);
 
@@ -140,5 +129,9 @@ public class MainStageView extends BorderPane {
 
     public VBox getContainerForCenterNodes() {
         return containerForCenterNodes;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
     }
 }
