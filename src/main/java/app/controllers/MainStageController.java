@@ -18,7 +18,6 @@ public class MainStageController extends Application implements Serializable {
     private TransitionTableController transitionTableController;
     private DiagramController diagramController;
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -61,7 +60,7 @@ public class MainStageController extends Application implements Serializable {
         }
         mainStageView.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStageView.getInputTextField(), mainStageView.getInputWordSet()));
     }
-    
+
     public TransitionTableController getTransitionTableController() {
         return transitionTableController;
     }

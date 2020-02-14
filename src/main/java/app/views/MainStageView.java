@@ -38,16 +38,13 @@ public class MainStageView extends BorderPane {
 
 
     public MainStageView(MainStageController mainStageController) {
-
         this.mainStageController = mainStageController;
-
         setUpUIComponents();
         setUpUILayout();
         setUpUIListeners();
     }
 
     private void setUpUIComponents() {
-
         //Setup top GUI elements
         inputTextField = new TextField();
         inputTextField.setPromptText("Enter input word");
@@ -98,7 +95,6 @@ public class MainStageView extends BorderPane {
         simulationsAccordianContainer.setMinSize(200, 200);
 
         this.setBottom(simulationsAccordianContainer);
-
     }
 
     private void setUpUILayout() {

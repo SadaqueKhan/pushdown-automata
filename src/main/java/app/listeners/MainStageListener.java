@@ -38,7 +38,6 @@ public class MainStageListener implements EventHandler {
 
         if (eventType.equals("ACTION")) {
             ToggleButton isToggleButton = (ToggleButton) event.getSource();
-
             if (isToggleButton.getText().equals("Diagram")) {
                 mainStageController.triggerDiagramView();
             } else {

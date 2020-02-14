@@ -11,7 +11,7 @@ import javafx.scene.control.ButtonType;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.util.HashSet;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TransitionTableController {
 
@@ -40,15 +40,6 @@ public class TransitionTableController {
 
 
     public void addTransitionEntry() {
-
-        Random rnd = new Random();
-
-        double x1 = rnd.nextDouble() * 200;
-        double y1 = rnd.nextDouble() * 200;
-
-        double x2 = rnd.nextDouble() * 200;
-        double y2 = rnd.nextDouble() * 200;
-
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().getValue();
         String userEntryInputSymbol = transitionTableView.getInputSymbolTextField().getText();
@@ -68,20 +59,17 @@ public class TransitionTableController {
         } else {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(x1, y1, userEntryCurrentStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateId);
         }
-
-
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (machineModel.stateExistsInStateModelSet(userEntryResultingStateId)) {
             resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateId);
         } else {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(x2, y2, userEntryResultingStateId);
+            diagramController.addStateToViewTransitionTableInputEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateId);
         }
-
-
+        
         //Create transition model placeholder
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
