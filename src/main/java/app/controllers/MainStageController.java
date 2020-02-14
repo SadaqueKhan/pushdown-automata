@@ -36,7 +36,6 @@ public class MainStageController extends Application implements Serializable {
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
         primaryStage.show();
-
     }
 
     public void triggerDiagramView() {

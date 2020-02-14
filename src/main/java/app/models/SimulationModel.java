@@ -42,8 +42,7 @@ public class SimulationModel {
 
         for (TransitionModel startTransition : startStateModel.getExitingTransitionModelsSet()) {
             //check if valid transition exists
-
-
+            
             if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) && startTransition.getStackSymbolToPop().equals(stack.peek())) {
 
                 //Move to transition

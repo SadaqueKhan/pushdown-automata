@@ -76,6 +76,7 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(containerForCenterNodes);
 
+        //Setup bottom GUI elements
         this.tapeView = new TapeView();
 
         this.containerForBotoomNodes = new VBox();
