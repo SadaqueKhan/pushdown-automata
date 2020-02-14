@@ -46,10 +46,12 @@ public class MainStageController extends Application implements Serializable {
     }
 
     public void triggerTransitionTableView() {
-
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-
         transitionTableController.loadTransitionTable(diagramController);
+    }
+
+    public void triggerSimulationView(String inputWord) {
+        new SimulationController(this, machineModel, inputWord);
     }
 
     public void saveInputWord(String userInputWord) {
@@ -69,7 +71,5 @@ public class MainStageController extends Application implements Serializable {
         return diagramController;
     }
 
-    public void simulate(String text) {
 
-    }
 }
