@@ -1,7 +1,10 @@
 package app.models;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 
+@XmlRootElement
 public class TransitionModel {
 
     private StateModel currentStateModel;
@@ -34,6 +37,7 @@ public class TransitionModel {
 
     }
 
+    @XmlElement
     public StateModel getCurrentStateModel() {
         return currentStateModel;
     }
@@ -42,6 +46,7 @@ public class TransitionModel {
         this.currentStateModel = currentStateModel;
     }
 
+    @XmlElement
     public String getInputSymbol() {
         return inputSymbol;
     }
@@ -50,6 +55,7 @@ public class TransitionModel {
         this.inputSymbol = inputSymbol;
     }
 
+    @XmlElement
     public String getStackSymbolToPop() {
         return stackSymbolToPop;
     }
@@ -58,6 +64,7 @@ public class TransitionModel {
         this.stackSymbolToPop = stackSymbolToPop;
     }
 
+    @XmlElement
     public StateModel getResultingStateModel() {
         return resultingStateModel;
     }
@@ -66,6 +73,7 @@ public class TransitionModel {
         this.resultingStateModel = resultingStateModel;
     }
 
+    @XmlElement
     public String getStackSymbolToPush() {
         return stackSymbolToPush;
     }

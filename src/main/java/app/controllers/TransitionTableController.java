@@ -42,11 +42,13 @@ public class TransitionTableController {
     public void addTransitionEntry() {
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().getValue();
+        System.out.println("Helloworld" + userEntryCurrentStateId);
         String userEntryInputSymbol = transitionTableView.getInputSymbolTextField().getText();
         String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopTextField().getText();
 
         //User input for a action
         String userEntryResultingStateId = transitionTableView.getResultingStateComboBox().getValue();
+        System.out.println("Run" + userEntryResultingStateId);
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushTextField().getText();
 
         // Create placeholders for state models
@@ -69,7 +71,7 @@ public class TransitionTableController {
             machineModel.addStateModelToStateModelSet(resultingStateModel);
             diagramController.addStateToViewTransitionTableInputEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateId);
         }
-        
+
         //Create transition model placeholder
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 

@@ -34,6 +34,10 @@ public class StateModel {
         return stateId;
     }
 
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
+    }
+
     //Getters/Setters
 
     public boolean isStandardState() {
@@ -69,6 +73,32 @@ public class StateModel {
 
     public HashSet<TransitionModel> getExitingTransitionModelsSet() {
         return exitingTransitionModelsSet;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StateModel)) return false;
+
+        StateModel that = (StateModel) o;
+
+        if (isStandardState() != that.isStandardState()) return false;
+        if (isStartState() != that.isStartState()) return false;
+        if (isFinalState() != that.isFinalState()) return false;
+        if (getStateId() != null ? !getStateId().equals(that.getStateId()) : that.getStateId() != null) return false;
+        if (getExitingTransitionModelsSet() != null ? !getExitingTransitionModelsSet().equals(that.getExitingTransitionModelsSet()) : that.getExitingTransitionModelsSet() != null)
+            return false;
+        return getEnteringTransitionModelsSet() != null ? getEnteringTransitionModelsSet().equals(that.getEnteringTransitionModelsSet()) : that.getEnteringTransitionModelsSet() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getStateId() != null ? getStateId().hashCode() : 0;
+        result = 31 * result + (isStandardState() ? 1 : 0);
+        result = 31 * result + (isStartState() ? 1 : 0);
+        result = 31 * result + (isFinalState() ? 1 : 0);
+        return result;
     }
 
     @Override

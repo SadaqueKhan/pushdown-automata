@@ -4,6 +4,7 @@ import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import app.models.MachineModel;
 import app.models.StateModel;
+import app.models.TransitionModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -62,8 +63,8 @@ public class MainStageView extends BorderPane {
         save.setOnAction(e -> {
             try {
                 FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Save Machine");
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-                fileChooser.setTitle("Save Image");
 
                 File fileChoosen = fileChooser.showSaveDialog(mainStageController.getPrimaryStage());
 
@@ -81,21 +82,33 @@ public class MainStageView extends BorderPane {
 
 
         MenuItem load = new MenuItem("Load");
-//        FileChooser fileChooser = new FileChooser();
 
         load.setOnAction(e -> {
 
             try {
-                File file = new File("machineModel.xml");
-                JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Load Machine");
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
 
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                MachineModel que = (MachineModel) jaxbUnmarshaller.unmarshal(file);
 
-                for (StateModel stateModel : que.getStateModelSet()) {
-                    System.out.println(stateModel.getStateId());
+                File fileChoosen = fileChooser.showOpenDialog(mainStageController.getPrimaryStage());
+
+                if (fileChoosen != null) {
+
+                    JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
+
+                    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                    MachineModel que = (MachineModel) jaxbUnmarshaller.unmarshal(fileChoosen);
+
+                    for (TransitionModel transitionModel : que.getTransitionModelSet()) {
+                        System.out.println(transitionModel);
+                    }
+
+                    for (StateModel stateModel : que.getStateModelSet()) {
+                        System.out.println(stateModel.getStateId());
+                    }
+
                 }
-
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
