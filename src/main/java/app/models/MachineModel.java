@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 
+@XmlRootElement
 public class MachineModel implements Serializable {
 
     private HashSet<StateModel> stateModelSet;

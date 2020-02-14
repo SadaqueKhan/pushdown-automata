@@ -4,9 +4,7 @@ import app.controllers.MainStageController;
 import app.listeners.MainStageListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -47,6 +45,19 @@ public class MainStageView extends BorderPane {
     }
 
     private void setUpUIComponents() {
+
+        Menu menu = new Menu("Menu 1");
+
+        MenuItem save = new MenuItem("Save");
+        MenuItem load = new MenuItem("Load");
+        SeparatorMenuItem separator = new SeparatorMenuItem();
+        MenuItem help = new MenuItem("Help");
+        menu.getItems().addAll(save, load, separator, help);
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().add(menu);
+
+
         //Setup top GUI elements
         inputTextField = new TextField();
         inputTextField.setPromptText("Enter input word");
@@ -57,7 +68,10 @@ public class MainStageView extends BorderPane {
         progressBar.setVisible(false);
         VBox containerForTopNodes = new VBox();
         containerForTopNodes.setFillWidth(true);
-        containerForTopNodes.getChildren().addAll(new Text("Input Word"), inputTextField, progressBar);
+        containerForTopNodes.getChildren().addAll(menuBar, new Text("Input Word"), inputTextField, progressBar);
+
+
+
         this.setTop(containerForTopNodes);
 
         //Setup center GUI elements

@@ -42,7 +42,7 @@ public class SimulationModel {
 
         for (TransitionModel startTransition : startStateModel.getExitingTransitionModelsSet()) {
             //check if valid transition exists
-            
+
             if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) && startTransition.getStackSymbolToPop().equals(stack.peek())) {
 
                 //Move to transition
@@ -76,7 +76,6 @@ public class SimulationModel {
 
         if ((numberOfSymbolsRead == splitUserInputArrayList.size())) {
             if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), currentTransition.getResultingStateModel())) {
-
                 System.out.println(currentTransition.getResultingStateModel());
                 System.out.println(pathList);
                 return;
