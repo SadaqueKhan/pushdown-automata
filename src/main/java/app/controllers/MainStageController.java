@@ -18,6 +18,8 @@ public class MainStageController extends Application implements Serializable {
     private TransitionTableController transitionTableController;
     private DiagramController diagramController;
 
+    private Stage primaryStage;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -33,6 +35,7 @@ public class MainStageController extends Application implements Serializable {
 
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
 
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("Pushdown Automata");
         primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
         primaryStage.show();
@@ -77,7 +80,12 @@ public class MainStageController extends Application implements Serializable {
         mainStageView.getTapeView().setUpUIComponents(inputWord);
     }
 
+    //TODO: REMOVE THESE GETTERS
     public MachineModel getMachineModel() {
         return machineModel;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

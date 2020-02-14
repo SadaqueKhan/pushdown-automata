@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
@@ -55,23 +56,32 @@ public class MainStageView extends BorderPane {
 
         Menu menu = new Menu("Menu 1");
 
+
         MenuItem save = new MenuItem("Save");
 
         save.setOnAction(e -> {
-            JAXBContext contextObj = null;
             try {
-                contextObj = JAXBContext.newInstance(MachineModel.class);
-                Marshaller marshallerObj = contextObj.createMarshaller();
-                marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                marshallerObj.marshal(mainStageController.getMachineModel(), new FileOutputStream("machineModel.xml"));
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+                fileChooser.setTitle("Save Image");
+
+                File fileChoosen = fileChooser.showSaveDialog(mainStageController.getPrimaryStage());
+
+                if (fileChoosen != null) {
+                    JAXBContext contextObj = JAXBContext.newInstance(MachineModel.class);
+                    Marshaller marshallerObj = contextObj.createMarshaller();
+                    marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                    marshallerObj.marshal(mainStageController.getMachineModel(), new FileOutputStream(fileChoosen));
+                }
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+
         });
 
 
         MenuItem load = new MenuItem("Load");
-
+//        FileChooser fileChooser = new FileChooser();
 
         load.setOnAction(e -> {
 
