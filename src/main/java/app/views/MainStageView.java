@@ -35,6 +35,8 @@ public class MainStageView extends BorderPane {
     private Set<String> inputWordSet;
     //Bottom content elements
     private Accordion simulationsAccordianContainer;
+    private ProgressBar progressBar;
+
 
     public MainStageView(MainStageController mainStageController) {
 
@@ -52,8 +54,14 @@ public class MainStageView extends BorderPane {
         inputTextField.setPromptText("Enter input word");
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setMaxWidth(Double.MAX_VALUE);
+
+
         VBox containerForTopNodes = new VBox();
-        containerForTopNodes.getChildren().addAll(new Text("Input Word"), inputTextField);
+        containerForTopNodes.setFillWidth(true);
+        containerForTopNodes.getChildren().addAll(new Text("Input Word"), inputTextField, progressBar);
 
         this.setTop(containerForTopNodes);
 
