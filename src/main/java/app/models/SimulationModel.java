@@ -9,9 +9,8 @@ public class SimulationModel {
 
     private ArrayList<TransitionModel> pathList;
 
-    public SimulationModel(MachineModel machineModel, String inputWord) {
 
-        System.out.println("Helloworld" + inputWord);
+    public SimulationModel(MachineModel machineModel, String inputWord) {
 
         for (StateModel stateModel : machineModel.getStateModelSet()) {
             System.out.println("StateModel: " + stateModel.getStateId());
@@ -30,11 +29,11 @@ public class SimulationModel {
         pathList = new ArrayList<>();
 
         Stack<String> stack = new Stack<>();
-        stack.push("");
+        stack.push("\u03B5");
 
         //Split the input word into symbols
         List<String> splitUserInputArrayList = Arrays.asList(userInputWord.split(""));
-        StateModel startStateModel = machineModel.getStartStateModel();
+        StateModel startStateModel = machineModel.findStartStateModel();
 
 
         int numberOfSymbolsRead = 0;
@@ -42,17 +41,15 @@ public class SimulationModel {
 
         for (TransitionModel startTransition : startStateModel.getExitingTransitionModelsSet()) {
             //check if valid transition exists
-
             if (startTransition.getInputSymbol().equals(splitUserInputArrayList.get(numberOfSymbolsRead)) && startTransition.getStackSymbolToPop().equals(stack.peek())) {
-
                 //Move to transition
                 pathList.add(startTransition);
-                //Update number of symbols read
+                //Update number of symbols incrementHead
                 ++numberOfSymbolsRead;
                 //Update stack
                 updateStack(stack, startTransition.getStackSymbolToPush());
                 printAllPathsUtil(startTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
-            } else if (startTransition.getInputSymbol().equals("") && startTransition.getStackSymbolToPop().equals(stack.peek())) {
+            } else if (startTransition.getInputSymbol().equals("\u03B5") && startTransition.getStackSymbolToPop().equals(stack.peek())) {
                 //Move to transition
                 pathList.add(startTransition);
                 //Update stack
@@ -60,28 +57,25 @@ public class SimulationModel {
                 printAllPathsUtil(startTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
             }
 
-            pathList.clear();
-
             numberOfSymbolsRead = 0;
 
             stack.clear();
-            stack.add("");
+            stack.add("\u03B5");
         }
-
 
     }
 
 
-    private void printAllPathsUtil(TransitionModel currentTransition, ArrayList<TransitionModel> pathList, int numberOfSymbolsRead, List<String> splitUserInputArrayList, Stack<String> stack) {
+    private ArrayList<TransitionModel> printAllPathsUtil(TransitionModel currentTransition, ArrayList<TransitionModel> pathList, int numberOfSymbolsRead, List<String> splitUserInputArrayList, Stack<String> stack) {
 
         if ((numberOfSymbolsRead == splitUserInputArrayList.size())) {
             if (checkAcceptance(numberOfSymbolsRead, splitUserInputArrayList.size(), currentTransition.getResultingStateModel())) {
                 System.out.println(currentTransition.getResultingStateModel());
                 System.out.println(pathList);
-                return;
+                return pathList;
             }
             System.out.println("FAILED");
-            return;
+            return null;
         }
 
 
@@ -90,15 +84,17 @@ public class SimulationModel {
                 pathList.add(nextTransition);
                 updateStack(stack, nextTransition.getStackSymbolToPush());
                 ++numberOfSymbolsRead;
-                printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
+                Stack<String> newStack = (Stack<String>) stack.clone();
+                printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, newStack);
                 --numberOfSymbolsRead;
 
             } else if (nextTransition.getInputSymbol().equals("") && nextTransition.getStackSymbolToPop().equals(stack.peek())) {
                 pathList.add(nextTransition);
                 updateStack(stack, nextTransition.getStackSymbolToPush());
-                printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
+                ArrayList<TransitionModel> paths = printAllPathsUtil(nextTransition, pathList, numberOfSymbolsRead, splitUserInputArrayList, stack);
             }
         }
+        return pathList;
     }
 
 

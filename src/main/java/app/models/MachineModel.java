@@ -6,15 +6,19 @@ import java.util.HashSet;
 
 @XmlRootElement
 public class MachineModel {
+    private HashSet<String> inputAlphabetSet;
+    private HashSet<String> stackAlphabetSet;
 
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
-    private StateModel startStateModel;
 
     public MachineModel() {
+        this.inputAlphabetSet = new HashSet<>();
+        inputAlphabetSet.add("\u03B5");
+        this.stackAlphabetSet = new HashSet<>();
+        stackAlphabetSet.add("\u03B5");
         this.stateModelSet = new HashSet<>();
         this.transitionModelSet = new HashSet<>();
-        this.startStateModel = findStartStateModel();
     }
 
     public void addStateModelToStateModelSet(StateModel newStateModel) {
@@ -29,10 +33,6 @@ public class MachineModel {
 
     public void addTransitionModelToTransitionModelSet(TransitionModel newTransitionModel) {
         transitionModelSet.add(newTransitionModel);
-    }
-
-    public void removeTransitionModelFromTransitionModelSet(TransitionModel newTransitionModel) {
-        transitionModelSet.remove(newTransitionModel);
     }
 
 
@@ -64,8 +64,12 @@ public class MachineModel {
     }
 
 
-    public StateModel getStartStateModel() {
-        return startStateModel;
+    public HashSet<String> getInputAlphabetSet() {
+        return inputAlphabetSet;
+    }
+
+    public HashSet<String> getStackAlphabetSet() {
+        return stackAlphabetSet;
     }
 
     @XmlElement
@@ -77,6 +81,5 @@ public class MachineModel {
     public HashSet<TransitionModel> getTransitionModelSet() {
         return transitionModelSet;
     }
-
 
 }

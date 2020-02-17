@@ -25,7 +25,7 @@ public class StateView extends StackPane {
     private double currentStateXPosition;
     private double currentStateYPosition;
 
-    // State GUI Components
+    // ControlState GUI Components
     private Circle stateCircle;
     private Label stateIdText;
     private Line startStatePointLine1;
@@ -57,7 +57,7 @@ public class StateView extends StackPane {
         double paneSize = 2 * radius;
 
 //<<< CREATE STANDARD STATE UI COMPONENT >>>
-        //State GUI
+        //ControlState GUI
         this.stateCircle = new Circle();
 
 

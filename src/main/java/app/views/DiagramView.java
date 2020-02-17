@@ -277,7 +277,7 @@ public class DiagramView extends Pane {
             }
         }
         if (!(transitionViewNodesToRemoveSet.isEmpty())) {
-            // Get affect key i.e. State view to access map
+            // Get affect key i.e. ControlState view to access map
             for (StateView stateView : stateViewsWithTransitionRemovedList) {
                 // Retrieve all transitionview linked to stateview
                 Iterator<HashSet<Node>> iter = linkedTransitionViewsMap.get(stateView).iterator();

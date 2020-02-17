@@ -3,6 +3,9 @@ package app.views;
 import app.controllers.TransitionTableController;
 import app.listeners.TransitionTableListener;
 import app.models.TransitionModel;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,8 +13,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 public class TransitionTableView extends BorderPane {
 
@@ -33,23 +34,19 @@ public class TransitionTableView extends BorderPane {
     private TableColumn resultingStateCol;
     private TableColumn stackSymbolToPushCol;
 
-
     //Configuration Textfields GUI
     private ComboBox<String> currentStateComboBox;
-    private AutoCompletionBinding<String> autoCompletionBindingForCurrentStateComboBox;
-    private TextField inputSymbolTextField;
-    private TextField stackSymbolToPopTextField;
+    private ComboBox<String> inputSymbolComboBox;
+    private ComboBox<String> stackSymbolToPopComboBox;
 
     //Action Textfields GUI
     private ComboBox<String> resultingStateComboBox;
-    private AutoCompletionBinding<String> autoCompletionBindingForResultingStateComboBox;
-    private TextField stackSymbolToPushTextField;
+    private ComboBox<String> stackSymbolToPushComboBox;
 
     //Submit transition button GUI
     private Button submitTransitionButton;
     private Button deleteTransitionButton;
     private VBox transitionTableContainer;
-
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
 
@@ -118,20 +115,38 @@ public class TransitionTableView extends BorderPane {
         // Designate sorting procedure
         // TODO: Refine this current implementation is decent as it takes the letter and sorts it alphabetically
         transitionTable.getSortOrder().add(currentStateCol);
-
+        //Set how many rows the user can select
         transitionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
 
 //Create input widgets for the user to enter a configuration
         this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
-        currentStateComboBox.setPrefWidth(75);
-        autoCompletionBindingForCurrentStateComboBox = TextFields.bindAutoCompletion(currentStateComboBox.getEditor(), currentStateComboBox.getItems());
+        currentStateComboBox.setPrefWidth(55);
 
-        this.inputSymbolTextField = new TextField();
-        inputSymbolTextField.setPrefWidth(50);
+        currentStateComboBox.getEditor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue == null) {
+                    return;
+                }
+                if (!newValue.matches("^(?!\\s*$).+") || newValue.length() > 1) {
+                    currentStateComboBox.getEditor().setText(
+                            newValue.substring(0, 0));
+                }
+            }
+        });
 
-        this.stackSymbolToPopTextField = new TextField();
-        stackSymbolToPopTextField.setPrefWidth(50);
+
+        this.inputSymbolComboBox = new ComboBox<>();
+        inputSymbolComboBox.setEditable(true);
+        inputSymbolComboBox.setPrefWidth(55);
+        inputSymbolComboBox.getItems().add("\u03B5");
+
+        this.stackSymbolToPopComboBox = new ComboBox<>();
+        stackSymbolToPopComboBox.setEditable(true);
+        stackSymbolToPopComboBox.setPrefWidth(55);
+        stackSymbolToPopComboBox.getItems().add("\u03B5");
 
 // Create a arrow label to connect the configuration input widgets to action input widgets
         final Label arrowLabel = new Label("->");
@@ -139,14 +154,34 @@ public class TransitionTableView extends BorderPane {
 //Create input widgets for the user to enter a configuration
         this.resultingStateComboBox = new ComboBox<>();
         resultingStateComboBox.setEditable(true);
-        resultingStateComboBox.setPrefWidth(75);
-        autoCompletionBindingForResultingStateComboBox = TextFields.bindAutoCompletion(resultingStateComboBox.getEditor(), resultingStateComboBox.getItems());
+        resultingStateComboBox.setPrefWidth(55);
 
-        this.stackSymbolToPushTextField = new TextField();
-        stackSymbolToPushTextField.setPrefWidth(50);
+        this.stackSymbolToPushComboBox = new ComboBox<>();
+        stackSymbolToPushComboBox.setEditable(true);
+        stackSymbolToPushComboBox.setPrefWidth(55);
+        stackSymbolToPushComboBox.getItems().add("\u03B5");
 
-//Create submit button for the user to submit a transition
         this.submitTransitionButton = new Button("Submit");
+        BooleanBinding bb = new BooleanBinding() {
+            {
+                super.bind(currentStateComboBox.getEditor().textProperty(),
+                        inputSymbolComboBox.getEditor().textProperty(),
+                        stackSymbolToPopComboBox.getEditor().textProperty(),
+                        resultingStateComboBox.getEditor().textProperty(),
+                        stackSymbolToPushComboBox.getEditor().textProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                return (currentStateComboBox.getValue() == null ||
+                        inputSymbolComboBox.getValue() == null ||
+                        stackSymbolToPopComboBox.getValue() == null ||
+                        resultingStateComboBox.getValue() == null ||
+                        stackSymbolToPushComboBox.getValue() == null
+                );
+            }
+        };
+        submitTransitionButton.disableProperty().bind(bb);
 
         //Create submit button for the user to submit a transition
         this.deleteTransitionButton = new Button("Delete");
@@ -155,7 +190,7 @@ public class TransitionTableView extends BorderPane {
         hBox.setPadding(new Insets(10, 10, 10, 10));
         hBox.setSpacing(10);
         hBox.setAlignment(Pos.TOP_CENTER);
-        hBox.getChildren().addAll(currentStateComboBox, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateComboBox, stackSymbolToPushTextField, submitTransitionButton, deleteTransitionButton);
+        hBox.getChildren().addAll(currentStateComboBox, inputSymbolComboBox, stackSymbolToPopComboBox, arrowLabel, resultingStateComboBox, stackSymbolToPushComboBox, submitTransitionButton, deleteTransitionButton);
 
         transitionTableContainer = new VBox();
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
@@ -172,7 +207,6 @@ public class TransitionTableView extends BorderPane {
     private void setUpUIListeners() {
         //Create listener for this view
         TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableController);
-
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
         deleteTransitionButton.setOnAction(transitionTableListener);
@@ -182,39 +216,25 @@ public class TransitionTableView extends BorderPane {
         return transitionTable;
     }
 
-    public TextField getInputSymbolTextField() {
-        return inputSymbolTextField;
-    }
-
-    public TextField getStackSymbolToPopTextField() {
-        return stackSymbolToPopTextField;
-    }
-
-    public TextField getStackSymbolToPushTextField() {
-        return stackSymbolToPushTextField;
-    }
 
     public ComboBox<String> getCurrentStateComboBox() {
         return currentStateComboBox;
     }
 
-    public AutoCompletionBinding<String> getAutoCompletionBindingForCurrentStateComboBox() {
-        return autoCompletionBindingForCurrentStateComboBox;
+    public ComboBox<String> getInputSymbolComboBox() {
+        return inputSymbolComboBox;
     }
 
-    public void setAutoCompletionBindingForCurrentStateComboBox(AutoCompletionBinding<String> autoCompletionBindingForCurrentStateComboBox) {
-        this.autoCompletionBindingForCurrentStateComboBox = autoCompletionBindingForCurrentStateComboBox;
+    public ComboBox<String> getStackSymbolToPopComboBox() {
+        return stackSymbolToPopComboBox;
     }
 
     public ComboBox<String> getResultingStateComboBox() {
         return resultingStateComboBox;
     }
 
-    public AutoCompletionBinding<String> getAutoCompletionBindingForResultingStateComboBox() {
-        return autoCompletionBindingForResultingStateComboBox;
-    }
-
-    public void setAutoCompletionBindingForResultingStateComboBox(AutoCompletionBinding<String> autoCompletionBindingForResultingStateComboBox) {
-        this.autoCompletionBindingForResultingStateComboBox = autoCompletionBindingForResultingStateComboBox;
+    public ComboBox<String> getStackSymbolToPushComboBox() {
+        return stackSymbolToPushComboBox;
     }
 }
+

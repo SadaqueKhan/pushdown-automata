@@ -8,8 +8,8 @@ import app.views.TransitionTableView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.controlsfx.control.textfield.TextFields;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -42,14 +42,21 @@ public class TransitionTableController {
     public void addTransitionEntry() {
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().getValue();
-        System.out.println("Helloworld" + userEntryCurrentStateId);
-        String userEntryInputSymbol = transitionTableView.getInputSymbolTextField().getText();
-        String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopTextField().getText();
+        String userEntryInputSymbol = transitionTableView.getInputSymbolComboBox().getValue();
+        String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopComboBox().getValue();
 
         //User input for a action
         String userEntryResultingStateId = transitionTableView.getResultingStateComboBox().getValue();
-        System.out.println("Run" + userEntryResultingStateId);
-        String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushTextField().getText();
+        String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushComboBox().getValue();
+
+        //Update alphabets for machine
+        machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
+        machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
+        machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
+        //Update transtion table combobox
+        updateAvailableStateListForCombobox();
+        updateInputAlphabetForComboxBox();
+        updateStackAlphabetForComboxBox();
 
         // Create placeholders for state models
         StateModel currentStateModel;
@@ -87,8 +94,9 @@ public class TransitionTableController {
                 return;
             }
         }
-        //Attach transition model to current state model
+        //Create exiting transition model from current state model
         currentStateModel.getExitingTransitionModelsSet().add(newTransitionModel);
+        //Create entering transition model from resulting state model
         resultingStateModel.getEnteringTransitionModelsSet().add(newTransitionModel);
 
         // Create a list of related transition within the transition model with itself included
@@ -98,16 +106,16 @@ public class TransitionTableController {
                 newTransitionModel.getRelatedTransitionModels().add(transitionModel);
             }
         }
-
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
         //Update table view
         transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
-        updateCurrentStateComboxBox();
-        updateResultingStateComboxBox();
+        updateAvailableStateListForCombobox();
+        updateInputAlphabetForComboxBox();
+        updateStackAlphabetForComboxBox();
 
-        //Update diagram view
+        //Add transitionview onto diagram view
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
             diagramController.addReflexiveTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.getRelatedTransitionModels());
         } else {
@@ -151,29 +159,29 @@ public class TransitionTableController {
     public void deleteStateEntryTransitionTableRequest(String stateId, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
         transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
         transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
-        updateCurrentStateComboxBox();
-        updateResultingStateComboxBox();
+        updateAvailableStateListForCombobox();
     }
 
-    public void updateCurrentStateComboxBox() {
+    public void updateAvailableStateListForCombobox() {
+        ArrayList<String> availableStateList = new ArrayList<>();
+        for (StateModel stateModel : machineModel.getStateModelSet()) {
+            availableStateList.add(stateModel.getStateId());
+        }
         transitionTableView.getCurrentStateComboBox().getItems().clear();
-        for (StateModel stateModel : machineModel.getStateModelSet()) {
-            transitionTableView.getCurrentStateComboBox().getItems().add(stateModel.getStateId());
-        }
-        if (transitionTableView.getAutoCompletionBindingForCurrentStateComboBox() != null) {
-            transitionTableView.getAutoCompletionBindingForCurrentStateComboBox().dispose();
-        }
-        transitionTableView.setAutoCompletionBindingForCurrentStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getCurrentStateComboBox().getEditor(), transitionTableView.getCurrentStateComboBox().getItems()));
+        transitionTableView.getCurrentStateComboBox().getItems().addAll(availableStateList);
+        transitionTableView.getResultingStateComboBox().getItems().clear();
+        transitionTableView.getResultingStateComboBox().getItems().addAll(availableStateList);
     }
 
-    public void updateResultingStateComboxBox() {
-        transitionTableView.getResultingStateComboBox().getItems().clear();
-        for (StateModel stateModel : machineModel.getStateModelSet()) {
-            transitionTableView.getResultingStateComboBox().getItems().add(stateModel.getStateId());
-        }
-        if (transitionTableView.getAutoCompletionBindingForResultingStateComboBox() != null) {
-            transitionTableView.getAutoCompletionBindingForResultingStateComboBox().dispose();
-        }
-        transitionTableView.setAutoCompletionBindingForResultingStateComboBox(TextFields.bindAutoCompletion(transitionTableView.getResultingStateComboBox().getEditor(), transitionTableView.getResultingStateComboBox().getItems()));
+    public void updateInputAlphabetForComboxBox() {
+        transitionTableView.getInputSymbolComboBox().getItems().clear();
+        transitionTableView.getInputSymbolComboBox().getItems().addAll(machineModel.getInputAlphabetSet());
+    }
+
+    public void updateStackAlphabetForComboxBox() {
+        transitionTableView.getStackSymbolToPopComboBox().getItems().clear();
+        transitionTableView.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+        transitionTableView.getStackSymbolToPushComboBox().getItems().clear();
+        transitionTableView.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
     }
 }
