@@ -46,9 +46,6 @@ public class DiagramView extends Pane {
         setUpUIComponents();
     }
 
-    public void loadToMainStage() {
-        mainStageView.getContainerForCenterNodes().getChildren().add(this);
-    }
 
 
     private void setUpUIComponents() {
@@ -56,7 +53,6 @@ public class DiagramView extends Pane {
         linkedTransitionViewsMap = new HashMap<>();//
         this.setStyle(cssLayout);
         this.setMinSize(200, 500);
-        loadToMainStage();
     }
 
 

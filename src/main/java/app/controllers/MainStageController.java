@@ -39,7 +39,7 @@ public class MainStageController extends Application implements Serializable {
         this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
         this.diagramController = new DiagramController(mainStageView, this, machineModel);
 
-        mainStageView.getContainerForCenterNodes().getChildren().remove(1);
+        diagramController.loadDiagramView(transitionTableController);
 
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Pushdown Automata");
@@ -91,7 +91,6 @@ public class MainStageController extends Application implements Serializable {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Machine");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-
             File fileChosen = fileChooser.showSaveDialog(primaryStage);
 
             if (fileChosen != null) {
@@ -114,11 +113,23 @@ public class MainStageController extends Application implements Serializable {
             File fileChosen = fileChooser.showOpenDialog(primaryStage);
 
             if (fileChosen != null) {
-
                 JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
-
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
+                machineModel = machineModelLoaded;
+
+                this.mainStageView = new MainStageView(this);
+                this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
+                transitionTableController.loadTansitionsOntoTable();
+
+                this.diagramController = new DiagramController(mainStageView, this, machineModel);
+                diagramController.loadStatesOntoDiagram();
+                diagramController.loadTransitionsOntoDiagram();
+                diagramController.loadDiagramView(transitionTableController);
+
+                primaryStage.setTitle("Pushdown Automata");
+                primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
+                primaryStage.show();
             }
         } catch (Exception e2) {
             e2.printStackTrace();

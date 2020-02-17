@@ -35,7 +35,13 @@ public class TransitionTableController {
 
     public void loadTransitionTable(DiagramController diagramController) {
         this.diagramController = diagramController;
-        transitionTableView.loadToMainStage();
+        mainStageView.getContainerForCenterNodes().getChildren().add(transitionTableView.getTransitionTableContainer());
+    }
+
+    public void loadTansitionsOntoTable() {
+        for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
+            transitionTableView.getTransitionTable().getItems().add(transitionModelToLoad);
+        }
     }
 
 

@@ -39,17 +39,16 @@ public class MainStageListener implements EventHandler {
         }
 
         if (eventType.equals("ACTION")) {
-            ToggleButton isToggleButton = (ToggleButton) event.getSource();
-            MenuItem isMenuItem = (MenuItem) event.getSource();
-
-            if (isToggleButton != null) {
+            if (event.getSource() instanceof ToggleButton) {
+                ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Diagram")) {
                     mainStageController.triggerDiagramView();
                 } else {
                     mainStageController.triggerTransitionTableView();
                 }
 
-            } else if (isMenuItem != null) {
+            } else if (event.getSource() instanceof MenuItem) {
+                MenuItem isMenuItem = (MenuItem) event.getSource();
                 if (isMenuItem.getText().equals("Save")) {
                     mainStageController.saveMachine();
                 } else if (isMenuItem.getText().equals("Load")) {

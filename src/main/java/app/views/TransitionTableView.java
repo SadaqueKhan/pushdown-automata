@@ -58,10 +58,6 @@ public class TransitionTableView extends BorderPane {
         setUpUIListeners();
     }
 
-    public void loadToMainStage() {
-        mainStageView.getContainerForCenterNodes().getChildren().add(transitionTableContainer);
-    }
-
 
     private void setUpUIComponents() {
 
@@ -196,8 +192,6 @@ public class TransitionTableView extends BorderPane {
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
         transitionTableContainer.setSpacing(10);
         transitionTableContainer.getChildren().addAll(transitionTable, hBox);
-
-        loadToMainStage();
     }
 
 
@@ -216,6 +210,9 @@ public class TransitionTableView extends BorderPane {
         return transitionTable;
     }
 
+    public VBox getTransitionTableContainer() {
+        return transitionTableContainer;
+    }
 
     public ComboBox<String> getCurrentStateComboBox() {
         return currentStateComboBox;

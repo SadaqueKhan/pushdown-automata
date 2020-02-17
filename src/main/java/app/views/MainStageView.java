@@ -46,6 +46,7 @@ public class MainStageView extends BorderPane {
 
     private void setUpUIComponents() {
 
+        //Setup top GUI elements
         Menu fileMenu = new Menu("File");
         this.saveMenuItem = new MenuItem("Save");
         this.loadMenuItem = new MenuItem("Load");
@@ -56,8 +57,6 @@ public class MainStageView extends BorderPane {
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(fileMenu);
 
-
-        //Setup top GUI elements
         inputTextField = new TextField();
         inputTextField.setPromptText("Enter input word");
         inputWordSet = new HashSet<>();

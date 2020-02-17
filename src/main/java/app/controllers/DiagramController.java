@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DiagramController {
 
@@ -37,20 +38,42 @@ public class DiagramController {
 
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
-
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
         this.machineModel = machineModel;
-
         this.transitionTableController = mainStageController.getTransitionTableController();
         this.diagramView = new DiagramView(this, mainStageView);
     }
 
+
     public void loadDiagramView(TransitionTableController transitionTableController) {
         this.transitionTableController = transitionTableController;
-        diagramView.loadToMainStage();
+        this.mainStageView.getContainerForCenterNodes().getChildren().add(diagramView);
     }
 
+
+    public void loadStatesOntoDiagram() {
+        for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
+            diagramView.addStateView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), this, stateModelToLoad.getStateId());
+        }
+    }
+
+    public void loadTransitionsOntoDiagram() {
+        System.out.println(machineModel.getTransitionModelSet().size());
+        for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
+            String currentStateModelToLoadID = transitionModelToLoad.getCurrentStateModel().getStateId();
+            String resultingStateModelToLoadID = transitionModelToLoad.getCurrentStateModel().getStateId();
+
+            System.out.println(currentStateModelToLoadID + "->" + resultingStateModelToLoadID);
+            System.out.println(transitionModelToLoad.getRelatedTransitionModels());
+            //Add transitionview onto diagram view
+            if (currentStateModelToLoadID.equals(resultingStateModelToLoadID)) {
+                addReflexiveTransitionToViewTransitionTableEventRequest(currentStateModelToLoadID, resultingStateModelToLoadID, transitionModelToLoad.getRelatedTransitionModels());
+            } else {
+                addDirectionalTransitionToViewTransitionTableEventRequest(currentStateModelToLoadID, resultingStateModelToLoadID, transitionModelToLoad.getRelatedTransitionModels());
+            }
+        }
+    }
 
     //StateGUIEventResponses
     public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
@@ -60,7 +83,6 @@ public class DiagramController {
         layoutX = stateView.getLayoutX();
         layoutY = stateView.getLayoutY();
     }
-
 
     public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
         // Offset of drag
@@ -258,4 +280,5 @@ public class DiagramController {
     public HashSet<TransitionModel> getRelatedTransitionsForTransitionView(TransitionModel changedTransition) {
         return changedTransition.getRelatedTransitionModels();
     }
+
 }
