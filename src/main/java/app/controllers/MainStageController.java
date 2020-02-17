@@ -4,9 +4,15 @@ import app.models.MachineModel;
 import app.views.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 
 
@@ -80,12 +86,42 @@ public class MainStageController extends Application implements Serializable {
         mainStageView.getTapeView().setUpUIComponents(inputWord);
     }
 
-    //TODO: REMOVE THESE GETTERS
-    public MachineModel getMachineModel() {
-        return machineModel;
+    public void saveMachine() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Machine");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+
+            File fileChosen = fileChooser.showSaveDialog(primaryStage);
+
+            if (fileChosen != null) {
+                JAXBContext contextObj = JAXBContext.newInstance(MachineModel.class);
+                Marshaller marshallerObj = contextObj.createMarshaller();
+                marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                marshallerObj.marshal(machineModel, new FileOutputStream(fileChosen));
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public void loadMachine() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Load Machine");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+
+            File fileChosen = fileChooser.showOpenDialog(primaryStage);
+
+            if (fileChosen != null) {
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
+
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
+            }
+        } catch (Exception e2) {
+            e2.printStackTrace();
+        }
     }
 }

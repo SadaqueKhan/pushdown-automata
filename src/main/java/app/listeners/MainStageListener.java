@@ -4,6 +4,7 @@ package app.listeners;
 import app.controllers.MainStageController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
@@ -39,12 +40,22 @@ public class MainStageListener implements EventHandler {
 
         if (eventType.equals("ACTION")) {
             ToggleButton isToggleButton = (ToggleButton) event.getSource();
-            if (isToggleButton.getText().equals("Diagram")) {
-                mainStageController.triggerDiagramView();
-            } else {
-                mainStageController.triggerTransitionTableView();
-            }
+            MenuItem isMenuItem = (MenuItem) event.getSource();
 
+            if (isToggleButton != null) {
+                if (isToggleButton.getText().equals("Diagram")) {
+                    mainStageController.triggerDiagramView();
+                } else {
+                    mainStageController.triggerTransitionTableView();
+                }
+
+            } else if (isMenuItem != null) {
+                if (isMenuItem.getText().equals("Save")) {
+                    mainStageController.saveMachine();
+                } else if (isMenuItem.getText().equals("Load")) {
+                    mainStageController.loadMachine();
+                }
+            }
         }
     }
 }
