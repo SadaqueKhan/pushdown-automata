@@ -116,7 +116,7 @@ public class TransitionTableView extends BorderPane {
 //Create input widgets for the user to enter a configuration
         this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
-        currentStateComboBox.setPrefWidth(100);
+        currentStateComboBox.setPrefWidth(110);
 
         this.inputSymbolComboBox = new ComboBox<>();
         inputSymbolComboBox.setEditable(true);
@@ -136,7 +136,7 @@ public class TransitionTableView extends BorderPane {
 //Create input widgets for the user to enter a configuration
         this.resultingStateComboBox = new ComboBox<>();
         resultingStateComboBox.setEditable(true);
-        resultingStateComboBox.setPrefWidth(55);
+        resultingStateComboBox.setPrefWidth(110);
 
         this.stackSymbolToPushComboBox = new ComboBox<>();
         stackSymbolToPushComboBox.setEditable(true);
@@ -175,7 +175,6 @@ public class TransitionTableView extends BorderPane {
     }
 
     private void setUpComboBoxesListeners(ComboBox comboBox) {
-
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 return;
@@ -187,7 +186,6 @@ public class TransitionTableView extends BorderPane {
                 });
             }
         });
-
     }
 
     public TableView<TransitionModel> getTransitionTable() {

@@ -55,8 +55,8 @@ public class TransitionTableController {
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushComboBox().getValue();
 
         System.out.println(userEntryStackSymbolToPush);
-        if ((userEntryCurrentStateID == null) || (userEntryInputSymbol == null) || (userEntryStackSymbolToPop == null) ||
-                (userEntryResultingStateID == null) || (userEntryStackSymbolToPush == null)) {
+        if ((userEntryCurrentStateID == null || userEntryCurrentStateID.equals("")) || (userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
+                (userEntryResultingStateID == null || userEntryResultingStateID.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals(""))) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
                     "All fields must be filled out to create a transition.", ButtonType.OK);
             invalidActionAlert.setHeaderText("Information");
