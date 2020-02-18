@@ -32,9 +32,7 @@ public class MainStageController extends Application implements Serializable {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         this.machineModel = new MachineModel();
-
         this.mainStageView = new MainStageView(this);
         this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
         this.diagramController = new DiagramController(mainStageView, this, machineModel);
@@ -117,8 +115,8 @@ public class MainStageController extends Application implements Serializable {
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
                 machineModel = machineModelLoaded;
-
                 this.mainStageView = new MainStageView(this);
+
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
                 transitionTableController.loadTansitionsOntoTable();
 

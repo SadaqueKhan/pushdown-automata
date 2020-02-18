@@ -60,8 +60,7 @@ public class DiagramView extends Pane {
         this.getChildren().add(stateView);
         stateMap.put(stateID, stateView);
 
-        HashSet<HashSet<Node>> linkedTransitionViews = new HashSet<>();
-        linkedTransitionViewsMap.put(stateView, linkedTransitionViews);
+        linkedTransitionViewsMap.put(stateView, new HashSet<>());
     }
 
 
