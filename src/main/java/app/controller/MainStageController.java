@@ -156,7 +156,7 @@ public class MainStageController extends Application {
     }
 
     public void setAcceptanceCriteriaToEmptyStack() {
-        machineModel.setAcceptancebyEmptyStack(true);
+        machineModel.setAcceptanceByEmptyStack(true);
 
         mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(false);
         mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(true);

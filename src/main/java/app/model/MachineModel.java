@@ -12,8 +12,8 @@ public class MachineModel {
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
 
-    private boolean isAcceptancebyFinalState = false;
-    private boolean isAcceptancebyEmptyStack = false;
+    private boolean isAcceptanceByFinalState = false;
+    private boolean isAcceptanceByEmptyStack = false;
 
     public MachineModel() {
         this.inputAlphabetSet = new HashSet<>();
@@ -112,15 +112,15 @@ public class MachineModel {
         }
         return enteringTransitionFromStateModelToReturn;
     }
-    
-    public void setAcceptancebyFinalState(boolean acceptancebyFinalState) {
-        isAcceptancebyEmptyStack = false;
-        isAcceptancebyFinalState = acceptancebyFinalState;
+
+    public void setAcceptanceByFinalState(boolean acceptancebyFinalState) {
+        isAcceptanceByEmptyStack = false;
+        isAcceptanceByFinalState = acceptancebyFinalState;
     }
 
-    public void setAcceptancebyEmptyStack(boolean acceptancebyEmptyStack) {
-        isAcceptancebyFinalState = false;
-        isAcceptancebyEmptyStack = acceptancebyEmptyStack;
+    public void setAcceptanceByEmptyStack(boolean acceptancebyEmptyStack) {
+        isAcceptanceByFinalState = false;
+        isAcceptanceByEmptyStack = acceptancebyEmptyStack;
 
     }
 }
