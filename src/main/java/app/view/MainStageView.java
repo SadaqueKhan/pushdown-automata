@@ -36,6 +36,9 @@ public class MainStageView extends BorderPane {
     private MenuItem saveMenuItem;
     private MenuItem loadMenuItem;
     private MenuItem helpMenuItem;
+    private CheckMenuItem acceptanceByFinalStateMenuItem;
+    private CheckMenuItem acceptanceByEmptyStackMenuItem;
+    private Label inputTextLabel;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -47,6 +50,7 @@ public class MainStageView extends BorderPane {
     private void setUpUIComponents() {
 
         //Setup top GUI elements
+        MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
         this.saveMenuItem = new MenuItem("Save");
         this.loadMenuItem = new MenuItem("Load");
@@ -54,10 +58,17 @@ public class MainStageView extends BorderPane {
         this.helpMenuItem = new MenuItem("Help");
         fileMenu.getItems().addAll(saveMenuItem, loadMenuItem, separator, helpMenuItem);
 
-        MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(fileMenu);
 
-        inputTextField = new TextField();
+        Menu acceptanceMenu = new Menu("Acceptance");
+        this.acceptanceByFinalStateMenuItem = new CheckMenuItem("By Final State");
+        this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty Stack");
+        acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
+        acceptanceByFinalStateMenuItem.setSelected(true);
+        menuBar.getMenus().add(acceptanceMenu);
+
+        this.inputTextLabel = new Label("Input Word (acceptance by final state)");
+        this.inputTextField = new TextField();
         inputTextField.setPromptText("Enter input word");
         inputTextField.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getText().equals(" ")) {
@@ -72,7 +83,7 @@ public class MainStageView extends BorderPane {
         progressBar.setVisible(false);
         VBox containerForTopNodes = new VBox();
         containerForTopNodes.setFillWidth(true);
-        containerForTopNodes.getChildren().addAll(menuBar, new Text("Input Word"), inputTextField, progressBar);
+        containerForTopNodes.getChildren().addAll(menuBar, inputTextLabel, inputTextField, progressBar);
 
 
         this.setTop(containerForTopNodes);
@@ -116,7 +127,8 @@ public class MainStageView extends BorderPane {
         saveMenuItem.setOnAction(mainStageListener);
         loadMenuItem.setOnAction(mainStageListener);
         helpMenuItem.setOnAction(mainStageListener);
-
+        acceptanceByFinalStateMenuItem.setOnAction(mainStageListener);
+        acceptanceByEmptyStackMenuItem.setOnAction(mainStageListener);
     }
 
     public TextField getInputTextField() {
@@ -145,5 +157,17 @@ public class MainStageView extends BorderPane {
 
     public TapeView getTapeView() {
         return tapeView;
+    }
+
+    public CheckMenuItem getAcceptanceByFinalStateMenuItem() {
+        return acceptanceByFinalStateMenuItem;
+    }
+
+    public CheckMenuItem getAcceptanceByEmptyStackMenuItem() {
+        return acceptanceByEmptyStackMenuItem;
+    }
+
+    public Label getInputTextLabel() {
+        return inputTextLabel;
     }
 }

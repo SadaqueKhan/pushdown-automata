@@ -43,27 +43,35 @@ public class SimulationModel {
         if (isInAcceptingConfiguration()) {
             return 5;
         }
+
+        //Retrieve applicable configurations stored in the current configuration
         List<Configuration> applicableConfigurations = currentConfig.getConfigurations();
+
+
         if (currentConfig.getConfigurations() == null) {
+            //Search for applicable configurations stored in current configuration
             applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), inputTape.getAtHead(), stack.peak());
             currentConfig.setConfigurations(applicableConfigurations);
         }
 
         Configuration toExplore;
 
-        if (applicableConfigurations.size() == 0) {
+        if (applicableConfigurations.isEmpty()) {
             //flopped
             if (currentConfig.getPreviousConfiguration() == null) {
                 return -1;
             }
-
             return 8;
         }
 
+
         if (applicableConfigurations.size() == 1) {
+            //Explore deterministic path
             toExplore = applicableConfigurations.get(0);
         } else {
-            //non-detministic
+            //Explore non-deterministic path
+
+            //Check if the c
             toExplore = applicableConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
             if (currentConfig.getPreviousConfiguration() == null) {

@@ -12,6 +12,9 @@ public class MachineModel {
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
 
+    private boolean isAcceptancebyFinalState = false;
+    private boolean isAcceptancebyEmptyStack = false;
+
     public MachineModel() {
         this.inputAlphabetSet = new HashSet<>();
         inputAlphabetSet.add("\u03B5");
@@ -34,10 +37,6 @@ public class MachineModel {
         transitionModelSet.add(newTransitionModel);
     }
 
-    public void removeTransitionModelFromTransitionModelSet(TransitionModel transitionModelToRemove) {
-        transitionModelSet.remove(transitionModelToRemove);
-    }
-
     public void removeTransitionModelsFromTransitionModelSet(HashSet<TransitionModel> setOfTransitionsToRemove) {
         transitionModelSet.removeAll(setOfTransitionsToRemove);
     }
@@ -58,15 +57,6 @@ public class MachineModel {
             }
         }
         return null;
-    }
-
-    public boolean stateExistsInStateModelSet(String stateId) {
-        for (StateModel stateModel : stateModelSet) {
-            if (stateId.equals(stateModel.getStateId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -121,5 +111,16 @@ public class MachineModel {
             }
         }
         return enteringTransitionFromStateModelToReturn;
+    }
+    
+    public void setAcceptancebyFinalState(boolean acceptancebyFinalState) {
+        isAcceptancebyEmptyStack = false;
+        isAcceptancebyFinalState = acceptancebyFinalState;
+    }
+
+    public void setAcceptancebyEmptyStack(boolean acceptancebyEmptyStack) {
+        isAcceptancebyFinalState = false;
+        isAcceptancebyEmptyStack = acceptancebyEmptyStack;
+
     }
 }

@@ -118,6 +118,7 @@ public class MainStageController extends Application {
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
 
                 primaryStage.close();
+
                 this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
 
@@ -128,7 +129,6 @@ public class MainStageController extends Application {
                 diagramController.loadStatesOntoDiagram();
                 diagramController.loadTransitionsOntoDiagram();
                 diagramController.loadDiagramViewOntoStage(transitionTableController);
-
 
                 primaryStage.setTitle("Pushdown Automata");
                 primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
@@ -145,5 +145,21 @@ public class MainStageController extends Application {
         } catch (Exception e1) {
             e1.printStackTrace();
         }
+    }
+
+    public void setAcceptanceCriteriaToFinalState() {
+        machineModel.setAcceptancebyFinalState(true);
+
+        mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(true);
+        mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(false);
+        mainStageView.getInputTextLabel().setText("Input word (acceptance by final state)");
+    }
+
+    public void setAcceptanceCriteriaToEmptyStack() {
+        machineModel.setAcceptancebyEmptyStack(true);
+
+        mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(false);
+        mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(true);
+        mainStageView.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
 }

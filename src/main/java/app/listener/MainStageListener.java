@@ -55,6 +55,10 @@ public class MainStageListener implements EventHandler {
                     mainStageController.loadMachine();
                 } else if (isMenuItem.getText().equals("Help")) {
                     mainStageController.launchWiki();
+                } else if (isMenuItem.getText().equals("By Final State")) {
+                    mainStageController.setAcceptanceCriteriaToFinalState();
+                } else if (isMenuItem.getText().equals("By Empty Stack")) {
+                    mainStageController.setAcceptanceCriteriaToEmptyStack();
                 }
             }
         }
