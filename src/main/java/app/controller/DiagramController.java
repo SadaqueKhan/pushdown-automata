@@ -61,7 +61,7 @@ public class DiagramController {
     public void loadTransitionsOntoDiagram() {
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
             String currentStateModelToLoadID = transitionModelToLoad.getCurrentStateModel().getStateId();
-            String resultingStateModelToLoadID = transitionModelToLoad.getCurrentStateModel().getStateId();
+            String resultingStateModelToLoadID = transitionModelToLoad.getResultingStateModel().getStateId();
             //Add transitionview onto diagram view
             if (currentStateModelToLoadID.equals(resultingStateModelToLoadID)) {
                 addReflexiveTransitionToView(currentStateModelToLoadID, resultingStateModelToLoadID, transitionModelToLoad);
