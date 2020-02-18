@@ -8,9 +8,7 @@ public class SimulationModel {
 
     private ArrayList<TransitionModel> pathList;
 
-
-    static final String EMPTY = "\u03B5";
-
+    private final String EMPTY = "\u03B5";
 
     private InputTape inputTape;
     private Stack stack;
@@ -71,7 +69,7 @@ public class SimulationModel {
         } else {
             //Explore non-deterministic path
 
-            //Check if the c
+            //Find configuration to explore that hasn't been explored yet, if all paths have been explored then set applicable configuration to null
             toExplore = applicableConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
             if (currentConfig.getPreviousConfiguration() == null) {
@@ -135,7 +133,12 @@ public class SimulationModel {
 
 
     public boolean isInAcceptingConfiguration() {
-        return inputTape.isEmpty() && currentConfig.getCurrentStateModel().isFinalState();
+        if (inputTape.isEmpty() && machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
+            return true;
+        } else if (inputTape.isEmpty() && machineModel.isAcceptanceByEmptyStack()) {
+            return true;
+        }
+        return false;
     }
 
 

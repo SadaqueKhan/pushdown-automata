@@ -36,7 +36,7 @@ public class InputTape {
     }
 
     public boolean isEmpty() {
-        return inputTape.size() <= head;
+        return inputTape.size() == head;
     }
 
 

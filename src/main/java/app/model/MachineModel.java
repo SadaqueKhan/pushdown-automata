@@ -113,14 +113,19 @@ public class MachineModel {
         return enteringTransitionFromStateModelToReturn;
     }
 
+    public boolean isAcceptanceByFinalState() {
+        return isAcceptanceByFinalState;
+    }
+
     public void setAcceptanceByFinalState(boolean acceptancebyFinalState) {
-        isAcceptanceByEmptyStack = false;
         isAcceptanceByFinalState = acceptancebyFinalState;
     }
 
-    public void setAcceptanceByEmptyStack(boolean acceptancebyEmptyStack) {
-        isAcceptanceByFinalState = false;
-        isAcceptanceByEmptyStack = acceptancebyEmptyStack;
+    public boolean isAcceptanceByEmptyStack() {
+        return isAcceptanceByEmptyStack;
+    }
 
+    public void setAcceptanceByEmptyStack(boolean acceptancebyEmptyStack) {
+        isAcceptanceByEmptyStack = acceptancebyEmptyStack;
     }
 }

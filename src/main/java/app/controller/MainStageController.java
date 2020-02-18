@@ -148,7 +148,8 @@ public class MainStageController extends Application {
     }
 
     public void setAcceptanceCriteriaToFinalState() {
-        machineModel.setAcceptancebyFinalState(true);
+        machineModel.setAcceptanceByFinalState(true);
+        machineModel.setAcceptanceByEmptyStack(false);
 
         mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(true);
         mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(false);
@@ -156,6 +157,7 @@ public class MainStageController extends Application {
     }
 
     public void setAcceptanceCriteriaToEmptyStack() {
+        machineModel.setAcceptanceByFinalState(false);
         machineModel.setAcceptanceByEmptyStack(true);
 
         mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(false);
