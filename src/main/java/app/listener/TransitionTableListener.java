@@ -29,7 +29,7 @@ public class TransitionTableListener implements EventHandler {
                 transitionTableController.addTransitionEntry();
             }
             if (tempIsButton.equals("Delete")) {
-                transitionTableController.deleteTransitionEntries();
+                transitionTableController.deleteTransitionModelEntriesFromTransitionTable();
             }
 
         }

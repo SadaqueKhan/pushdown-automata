@@ -37,7 +37,7 @@ public class MainStageController extends Application implements Serializable {
         this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
         this.diagramController = new DiagramController(mainStageView, this, machineModel);
 
-        diagramController.loadDiagramView(transitionTableController);
+        diagramController.loadDiagramViewOntoStage(transitionTableController);
 
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Pushdown Automata");
@@ -47,12 +47,12 @@ public class MainStageController extends Application implements Serializable {
 
     public void triggerDiagramView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        diagramController.loadDiagramView(transitionTableController);
+        diagramController.loadDiagramViewOntoStage(transitionTableController);
     }
 
     public void triggerTransitionTableView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        transitionTableController.loadTransitionTable(diagramController);
+        transitionTableController.loadTransitionTableOntoStage(diagramController);
     }
 
     public void triggerSimulationView(String inputWord) {
@@ -118,12 +118,12 @@ public class MainStageController extends Application implements Serializable {
                 this.mainStageView = new MainStageView(this);
 
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
-                transitionTableController.loadTansitionsOntoTable();
+                transitionTableController.loadTansitionsOntoTransitionTable();
 
                 this.diagramController = new DiagramController(mainStageView, this, machineModel);
                 diagramController.loadStatesOntoDiagram();
                 diagramController.loadTransitionsOntoDiagram();
-                diagramController.loadDiagramView(transitionTableController);
+                diagramController.loadDiagramViewOntoStage(transitionTableController);
 
                 primaryStage.setTitle("Pushdown Automata");
                 primaryStage.setScene(new Scene(mainStageView, 1500, 1000));

@@ -3,9 +3,7 @@ package app.view;
 import app.controller.TransitionTableController;
 import app.listener.TransitionTableListener;
 import app.model.TransitionModel;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -118,31 +116,19 @@ public class TransitionTableView extends BorderPane {
 //Create input widgets for the user to enter a configuration
         this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
-        currentStateComboBox.setPrefWidth(55);
-
-        currentStateComboBox.getEditor().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue == null) {
-                    return;
-                }
-                if (!newValue.matches("^(?!\\s*$).+") || newValue.length() > 1) {
-                    currentStateComboBox.getEditor().setText(
-                            newValue.substring(0, 0));
-                }
-            }
-        });
-
+        currentStateComboBox.setPrefWidth(100);
 
         this.inputSymbolComboBox = new ComboBox<>();
         inputSymbolComboBox.setEditable(true);
         inputSymbolComboBox.setPrefWidth(55);
         inputSymbolComboBox.getItems().add("\u03B5");
+        setUpComboBoxesListeners(inputSymbolComboBox);
 
         this.stackSymbolToPopComboBox = new ComboBox<>();
         stackSymbolToPopComboBox.setEditable(true);
         stackSymbolToPopComboBox.setPrefWidth(55);
         stackSymbolToPopComboBox.getItems().add("\u03B5");
+        setUpComboBoxesListeners(stackSymbolToPopComboBox);
 
 // Create a arrow label to connect the configuration input widgets to action input widgets
         final Label arrowLabel = new Label("->");
@@ -156,28 +142,10 @@ public class TransitionTableView extends BorderPane {
         stackSymbolToPushComboBox.setEditable(true);
         stackSymbolToPushComboBox.setPrefWidth(55);
         stackSymbolToPushComboBox.getItems().add("\u03B5");
+        setUpComboBoxesListeners(stackSymbolToPushComboBox);
 
         this.submitTransitionButton = new Button("Submit");
-        BooleanBinding bb = new BooleanBinding() {
-            {
-                super.bind(currentStateComboBox.getEditor().textProperty(),
-                        inputSymbolComboBox.getEditor().textProperty(),
-                        stackSymbolToPopComboBox.getEditor().textProperty(),
-                        resultingStateComboBox.getEditor().textProperty(),
-                        stackSymbolToPushComboBox.getEditor().textProperty());
-            }
 
-            @Override
-            protected boolean computeValue() {
-                return (currentStateComboBox.getValue() == null ||
-                        inputSymbolComboBox.getValue() == null ||
-                        stackSymbolToPopComboBox.getValue() == null ||
-                        resultingStateComboBox.getValue() == null ||
-                        stackSymbolToPushComboBox.getValue() == null
-                );
-            }
-        };
-        submitTransitionButton.disableProperty().bind(bb);
 
         //Create submit button for the user to submit a transition
         this.deleteTransitionButton = new Button("Delete");
@@ -204,6 +172,22 @@ public class TransitionTableView extends BorderPane {
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
         deleteTransitionButton.setOnAction(transitionTableListener);
+    }
+
+    private void setUpComboBoxesListeners(ComboBox comboBox) {
+
+        comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            if (!newValue.matches("^\\w{1}$")) {
+                // Delay the modification of the combobox as you can't edit the combobox whilst listening to events
+                Platform.runLater(() -> {
+                    comboBox.getEditor().clear();
+                });
+            }
+        });
+
     }
 
     public TableView<TransitionModel> getTransitionTable() {

@@ -46,7 +46,7 @@ public class DiagramController {
     }
 
 
-    public void loadDiagramView(TransitionTableController transitionTableController) {
+    public void loadDiagramViewOntoStage(TransitionTableController transitionTableController) {
         this.transitionTableController = transitionTableController;
         this.mainStageView.getContainerForCenterNodes().getChildren().add(diagramView);
     }
@@ -252,7 +252,7 @@ public class DiagramController {
             machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
             machineModel.removeStateModelFromStateModelSet(stateModel);
             //Notify transition table controller
-            transitionTableController.deleteTransitionsLinkedToDeletedState(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            transitionTableController.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
             //Update view
             diagramView.deleteStateView(stateModel.getStateId(), exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
         });
