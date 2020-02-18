@@ -59,6 +59,12 @@ public class MainStageView extends BorderPane {
 
         inputTextField = new TextField();
         inputTextField.setPromptText("Enter input word");
+        inputTextField.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().equals(" ")) {
+                change.setText("");
+            }
+            return change;
+        }));
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
         progressBar = new ProgressBar();

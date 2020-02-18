@@ -31,6 +31,8 @@ public class MainStageListener implements EventHandler {
             TextField isInputTextField = (TextField) event.getSource();
             KeyEvent keyEvent = (KeyEvent) event;
             if (keyEvent.getCode() == KeyCode.ENTER) {
+
+                System.out.println(isInputTextField.getText());
                 mainStageController.saveInputWord(isInputTextField.getText());
                 mainStageController.setSimulationProgressBar(true);
                 mainStageController.setUpTapeView(isInputTextField.getText());
