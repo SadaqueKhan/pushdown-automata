@@ -53,8 +53,7 @@ public class TransitionTableController {
         //User input for a action
         String userEntryResultingStateID = transitionTableView.getResultingStateComboBox().getValue();
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushComboBox().getValue();
-
-        System.out.println(userEntryStackSymbolToPush);
+        
         if ((userEntryCurrentStateID == null || userEntryCurrentStateID.equals("")) || (userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
                 (userEntryResultingStateID == null || userEntryResultingStateID.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals(""))) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
