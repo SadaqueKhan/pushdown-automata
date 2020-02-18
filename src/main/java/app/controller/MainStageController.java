@@ -112,10 +112,13 @@ public class MainStageController extends Application {
             File fileChosen = fileChooser.showOpenDialog(primaryStage);
 
             if (fileChosen != null) {
+
                 JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
-                machineModel = machineModelLoaded;
+
+                primaryStage.close();
+                this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
 
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
@@ -125,6 +128,7 @@ public class MainStageController extends Application {
                 diagramController.loadStatesOntoDiagram();
                 diagramController.loadTransitionsOntoDiagram();
                 diagramController.loadDiagramViewOntoStage(transitionTableController);
+
 
                 primaryStage.setTitle("Pushdown Automata");
                 primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
