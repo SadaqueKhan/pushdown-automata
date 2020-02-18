@@ -11,9 +11,11 @@ import org.controlsfx.control.textfield.TextFields;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.net.URI;
 
 
 public class MainStageController extends Application implements Serializable {
@@ -131,6 +133,14 @@ public class MainStageController extends Application implements Serializable {
             }
         } catch (Exception e2) {
             e2.printStackTrace();
+        }
+    }
+
+    public void launchWiki() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata"));
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 }

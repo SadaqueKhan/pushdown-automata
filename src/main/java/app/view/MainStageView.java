@@ -35,7 +35,7 @@ public class MainStageView extends BorderPane {
     private VBox containerForBotoomNodes;
     private MenuItem saveMenuItem;
     private MenuItem loadMenuItem;
-
+    private MenuItem helpMenuItem;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -51,8 +51,8 @@ public class MainStageView extends BorderPane {
         this.saveMenuItem = new MenuItem("Save");
         this.loadMenuItem = new MenuItem("Load");
         SeparatorMenuItem separator = new SeparatorMenuItem();
-        MenuItem help = new MenuItem("Help");
-        fileMenu.getItems().addAll(saveMenuItem, loadMenuItem, separator, help);
+        this.helpMenuItem = new MenuItem("Help");
+        fileMenu.getItems().addAll(saveMenuItem, loadMenuItem, separator, helpMenuItem);
 
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().add(fileMenu);
@@ -115,6 +115,7 @@ public class MainStageView extends BorderPane {
         toggleTransitionTableButton.setOnAction(mainStageListener);
         saveMenuItem.setOnAction(mainStageListener);
         loadMenuItem.setOnAction(mainStageListener);
+        helpMenuItem.setOnAction(mainStageListener);
 
     }
 
