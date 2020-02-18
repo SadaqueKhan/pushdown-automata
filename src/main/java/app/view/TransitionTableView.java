@@ -179,12 +179,15 @@ public class TransitionTableView extends BorderPane {
             if (newValue == null) {
                 return;
             }
-            if (!newValue.matches("^\\w{1}$")) {
-                // Delay the modification of the combobox as you can't edit the combobox whilst listening to events
-                Platform.runLater(() -> {
-                    comboBox.getEditor().clear();
-                });
+
+            if ((newValue.matches("^\\w{1}$")) || newValue.equals("\u03B5")) {
+                return;
             }
+            Platform.runLater(() -> {
+                comboBox.getEditor().clear();
+            });
+
+
         });
     }
 

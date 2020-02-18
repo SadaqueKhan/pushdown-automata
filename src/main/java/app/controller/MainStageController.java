@@ -14,11 +14,10 @@ import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.Serializable;
 import java.net.URI;
 
 
-public class MainStageController extends Application implements Serializable {
+public class MainStageController extends Application {
 
     private MachineModel machineModel;
     private MainStageView mainStageView;

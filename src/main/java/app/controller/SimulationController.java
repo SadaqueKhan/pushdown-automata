@@ -28,5 +28,8 @@ public class SimulationController {
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
+
+        System.out.println(simulationModel.run());
+
     }
 }

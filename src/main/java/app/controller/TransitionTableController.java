@@ -53,7 +53,7 @@ public class TransitionTableController {
         //User input for a action
         String userEntryResultingStateID = transitionTableView.getResultingStateComboBox().getValue();
         String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushComboBox().getValue();
-        
+
         if ((userEntryCurrentStateID == null || userEntryCurrentStateID.equals("")) || (userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
                 (userEntryResultingStateID == null || userEntryResultingStateID.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals(""))) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -75,7 +75,6 @@ public class TransitionTableController {
 
         // Create placeholders for state models
         StateModel currentStateModel = machineModel.getStateModelFromStateModelSet(userEntryCurrentStateID);
-        StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
 
         // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (currentStateModel == null) {
@@ -83,6 +82,8 @@ public class TransitionTableController {
             machineModel.addStateModelToStateModelSet(currentStateModel);
             diagramController.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateID);
         }
+
+        StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
