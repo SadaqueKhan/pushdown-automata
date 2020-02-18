@@ -26,8 +26,7 @@ public class MachineModel {
 
     }
 
-    public void removeStateModelFromStateModelSet(String stateModelId) {
-        StateModel stateModelToRemove = getStateModelFromStateModelSet(stateModelId);
+    public void removeStateModelFromStateModelSet(StateModel stateModelToRemove) {
         stateModelSet.remove(stateModelToRemove);
     }
 
@@ -35,6 +34,13 @@ public class MachineModel {
         transitionModelSet.add(newTransitionModel);
     }
 
+    public void removeTransitionModelFromTransitionModelSet(TransitionModel transitionModelToRemove) {
+        transitionModelSet.remove(transitionModelToRemove);
+    }
+
+    public void removeTransitionModelsFromTransitionModelSet(HashSet<TransitionModel> setOfTransitionsToRemove) {
+        transitionModelSet.removeAll(setOfTransitionsToRemove);
+    }
 
     public StateModel getStateModelFromStateModelSet(String stateId) {
         for (StateModel stateModel : stateModelSet) {
@@ -82,4 +88,38 @@ public class MachineModel {
         return transitionModelSet;
     }
 
+
+    public HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
+        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
+        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
+        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
+        for (TransitionModel isRelatedTransitionModel : transitionModelSet) {
+            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
+            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
+            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
+                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
+            }
+        }
+        return relatedTransitionModelsToReturn;
+    }
+
+    public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isExitingTransitionModel : transitionModelSet) {
+            if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
+                exitingTransitionFromStateModelToReturn.add(isExitingTransitionModel);
+            }
+        }
+        return exitingTransitionFromStateModelToReturn;
+    }
+
+    public HashSet<TransitionModel> getEnteringTranstionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isExitingTransitionModel : transitionModelSet) {
+            if (isExitingTransitionModel.getResultingStateModel().equals(stateModel)) {
+                enteringTransitionFromStateModelToReturn.add(isExitingTransitionModel);
+            }
+        }
+        return enteringTransitionFromStateModelToReturn;
+    }
 }

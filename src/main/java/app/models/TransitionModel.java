@@ -2,7 +2,6 @@ package app.models;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.HashSet;
 
 @XmlRootElement
 public class TransitionModel {
@@ -14,7 +13,6 @@ public class TransitionModel {
     private StateModel resultingStateModel;
     private String stackSymbolToPush;
 
-    private HashSet<TransitionModel> relatedTransitionModels = new HashSet<>();
 
     public TransitionModel() {
     }
@@ -82,9 +80,6 @@ public class TransitionModel {
         this.stackSymbolToPush = stackSymbolToPush;
     }
 
-    public HashSet<TransitionModel> getRelatedTransitionModels() {
-        return relatedTransitionModels;
-    }
 
     @Override
     public boolean equals(Object o) {

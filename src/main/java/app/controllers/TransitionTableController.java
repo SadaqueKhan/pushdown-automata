@@ -44,7 +44,6 @@ public class TransitionTableController {
         }
     }
 
-
     public void addTransitionEntry() {
         //User input for a configuration
         String userEntryCurrentStateId = transitionTableView.getCurrentStateComboBox().getValue();
@@ -65,31 +64,27 @@ public class TransitionTableController {
         updateStackAlphabetForComboxBox();
 
         // Create placeholders for state models
-        StateModel currentStateModel;
-        StateModel resultingStateModel;
+        StateModel currentStateModel = machineModel.getStateModelFromStateModelSet(userEntryCurrentStateId);
+        StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateId);
 
         // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (machineModel.stateExistsInStateModelSet(userEntryCurrentStateId)) {
-            currentStateModel = machineModel.getStateModelFromStateModelSet(userEntryCurrentStateId);
-        } else {
+        if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateId);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateId);
+            diagramController.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateId);
         }
         // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
-        if (machineModel.stateExistsInStateModelSet(userEntryResultingStateId)) {
-            resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateId);
-        } else {
+        if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateId);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateToViewTransitionTableInputEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateId);
+            diagramController.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateId);
         }
 
         //Create transition model placeholder
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
         //Check to see if the transition already exists for the current state model
-        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
+        for (TransitionModel transitionModel : machineModel.getExitingTranstionsFromStateModel(currentStateModel)) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
                 Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -100,18 +95,7 @@ public class TransitionTableController {
                 return;
             }
         }
-        //Create exiting transition model from current state model
-        currentStateModel.getExitingTransitionModelsSet().add(newTransitionModel);
-        //Create entering transition model from resulting state model
-        resultingStateModel.getEnteringTransitionModelsSet().add(newTransitionModel);
 
-        // Create a list of related transition within the transition model with itself included
-        newTransitionModel.getRelatedTransitionModels().add(newTransitionModel);
-        for (TransitionModel transitionModel : currentStateModel.getExitingTransitionModelsSet()) {
-            if (transitionModel.getResultingStateModel().equals(newTransitionModel.getResultingStateModel())) {
-                newTransitionModel.getRelatedTransitionModels().add(transitionModel);
-            }
-        }
         //Add transition model to machinemodel
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
@@ -123,9 +107,9 @@ public class TransitionTableController {
 
         //Add transitionview onto diagram view
         if (userEntryCurrentStateId.equals(userEntryResultingStateId)) {
-            diagramController.addReflexiveTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.getRelatedTransitionModels());
+            diagramController.addReflexiveTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
         } else {
-            diagramController.addDirectionalTransitionToViewTransitionTableEventRequest(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel.getRelatedTransitionModels());
+            diagramController.addDirectionalTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
         }
     }
 
@@ -136,33 +120,17 @@ public class TransitionTableController {
         HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
         removeTransitionSet.addAll(selectedRows);
 
-        //Update all affected state models
-        for (TransitionModel transitionModelToRemove : removeTransitionSet) {
-            //remove linking from current state to resulting state
-            transitionModelToRemove.getCurrentStateModel().getExitingTransitionModelsSet().remove(transitionModelToRemove);
-            //remove linking from resulting state to current state
-            transitionModelToRemove.getResultingStateModel().getEnteringTransitionModelsSet().remove(transitionModelToRemove);
-        }
-
-        // Update all affect transition models
-        for (TransitionModel transitionModelToRemove : removeTransitionSet) {
-            for (TransitionModel transitionModelToUpdate : transitionModelToRemove.getRelatedTransitionModels()) {
-                transitionModelToUpdate.getRelatedTransitionModels().remove(transitionModelToRemove);
-            }
-        }
-
         //Update machine model
         machineModel.getTransitionModelSet().removeAll(removeTransitionSet);
 
         //Update transition table view
         transitionTableView.getTransitionTable().getItems().removeAll(removeTransitionSet);
 
-
         //Update diagram view
-        diagramController.deleteTransitionTransitionTableEventRequest(removeTransitionSet);
+        diagramController.deleteMultipleTransitions(removeTransitionSet);
     }
 
-    public void deleteStateEntryTransitionTableRequest(String stateId, HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
+    public void deleteTransitionsLinkedToDeletedState(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
         transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
         transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
         updateAvailableStateListForCombobox();

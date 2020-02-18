@@ -85,6 +85,7 @@ public class DiagramView extends Pane {
             }
         }
 
+        System.out.println("loaded");
         //Transition does not exist create fresh transition
         Line virtualCenterLine = getLine(currentStateView, resultingStateView);
         virtualCenterLine.setOpacity(0);
@@ -260,12 +261,12 @@ public class DiagramView extends Pane {
                     for (Node node : nextHashSet) {
                         if (node instanceof TransitionView) {
                             TransitionView transitionViewToUpdate = (TransitionView) node;
-                            if (transitionViewToUpdate.getSource().getStateId().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateId().equals(resultingStateModelID)) {
-                                if (diagramController.getRelatedTransitionsForTransitionView(changedTransition).isEmpty()) {
+                            if (transitionViewToUpdate.getSource().getStateID().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateID().equals(resultingStateModelID)) {
+                                if (diagramController.getRelatedTransitions(changedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionRemovedList.add(currentStateView);
                                 }
-                                createNewListOfTransitionsPopOver(transitionViewToUpdate, diagramController.getRelatedTransitionsForTransitionView(changedTransition));
+                                createNewListOfTransitionsPopOver(transitionViewToUpdate, diagramController.getRelatedTransitions(changedTransition));
                             }
                         }
                     }

@@ -224,7 +224,7 @@ public class StateView extends StackPane {
         this.setOnMouseDragged(diagramListener);
     }
 
-    public String getStateId() {
+    public String getStateID() {
         return stateId;
     }
 
