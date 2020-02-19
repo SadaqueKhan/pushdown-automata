@@ -167,6 +167,7 @@ public class SimulationModel {
                 ++numOfSuccessPath;
                 successConfigurations.put(numOfSuccessPath, currentConfig);
                 previous();
+
                 //Check if children have all be explored of root
                 Configuration toExplore = currentConfig.getChildrenConfigurations().stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
