@@ -1,6 +1,8 @@
 package app.controller;
 
-import app.model.*;
+import app.model.Configuration;
+import app.model.MachineModel;
+import app.model.SimulationModel;
 import app.view.SimulationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -31,14 +33,6 @@ public class SimulationController {
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
 
-        for (StateModel stateModel : machineModel.getStateModelSet()) {
-            System.out.println(stateModel);
-        }
-
-        for (TransitionModel transitionModel : machineModel.getTransitionModelSet()) {
-            System.out.println(transitionModel);
-        }
-
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
         int flag = simulationModel.run();
@@ -48,11 +42,6 @@ public class SimulationController {
             createMapping(simulationModel);
         }
 
-        if (flag == 300) {
-            createMapping(simulationModel);
-        }
-
-
     }
 
     private void createMapping(SimulationModel simulationModel) {
@@ -61,14 +50,20 @@ public class SimulationController {
         for (Map.Entry<Integer, Configuration> entry : simulationModel.getSuccessConfigurations().entrySet()) {
 
             ArrayList<Configuration> successPath = new ArrayList<>();
+            ArrayList<Configuration> reverse = new ArrayList<>();
             Configuration checkHasParent = entry.getValue().getParentConfiguration();
+
+            successPath.add(entry.getValue());
 
             while (checkHasParent != null) {
                 successPath.add(checkHasParent);
                 checkHasParent = checkHasParent.getParentConfiguration();
             }
-            successPath.add(entry.getValue());
-            successConfigurations.put(entry.getKey(), successPath);
+
+            for (int i = successPath.size() - 1; i >= 0; i--) {
+                reverse.add(successPath.get(i));
+            }
+            successConfigurations.put(entry.getKey(), reverse);
         }
 
 
@@ -78,6 +73,7 @@ public class SimulationController {
 
             for (Configuration configuration : entry.getValue()) {
                 System.out.print(" " + configuration.getCurrentStateModel());
+
 
             }
             System.out.println();

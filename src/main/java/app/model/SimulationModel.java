@@ -71,8 +71,13 @@ public class SimulationModel {
 
         //Parent has a single child, then a check if path is deterministic
         if (applicableConfigurations.size() == 1) {
+
             //Explore deterministic path
             toExplore = applicableConfigurations.get(0);
+
+            if (toExplore.isVisited()) {
+                return 8;
+            }
         } else {
             //Explore non-deterministic path
 
@@ -119,14 +124,14 @@ public class SimulationModel {
     //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModel) {
 
-        InputTape inputTape = new InputTape();
-        inputTape.setHead(inputTape.getHead());
+
+        int currentHead = inputTape.getHead();
 
         Stack currentStack = new Stack();
         currentStack.setContent(stack.getContent());
 
         if (!(transitionModel.getInputSymbol().equals(EMPTY))) {
-            inputTape.readSymbol();
+            ++currentHead;
         }
         if (!(transitionModel.getStackSymbolToPop().equals(EMPTY))) {
             currentStack.pop();
@@ -135,7 +140,7 @@ public class SimulationModel {
             currentStack.push(transitionModel.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), inputTape.getHead(), currentStack.getContent());
+        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), currentHead, currentStack.getContent());
         return newConfig;
     }
 
@@ -174,7 +179,7 @@ public class SimulationModel {
                 Configuration toExplore = currentConfig.getChildrenConfigurations().stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
                 if (currentConfig.getParentConfiguration() == null && toExplore == null) {
-                    return 300;
+                    return 200;
                 }
             }
         }

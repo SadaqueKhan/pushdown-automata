@@ -4,28 +4,28 @@ import java.util.ArrayList;
 
 public class Stack {
 
-    private int top;
     private ArrayList<String> stack;
 
     public Stack() {
-        top = -1;
         stack = new ArrayList<>();
     }
 
     public void push(String toPush) {
         stack.add(toPush);
-        ++top;
     }
 
     public void pop() {
-        if (top != -1) {
-            stack.remove(top);
-            --top;
+        if (!(stack.isEmpty())) {
+            stack.remove(stack.size() - 1);
         }
     }
 
     public String peak() {
-        return top == -1 ? "\u03B5" : stack.get(top);
+        if (!(stack.isEmpty())) {
+            return stack.get(stack.size() - 1);
+        }
+
+        return "\u03B5";
     }
 
     public boolean isEmpty() {
