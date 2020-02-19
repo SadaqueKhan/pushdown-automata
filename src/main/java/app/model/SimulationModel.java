@@ -46,7 +46,12 @@ public class SimulationModel {
             return 100;
         }
 
+        // If at a child and all input tape is read but no acceptance
         if (inputTape.isEmpty()) {
+            return 8;
+        }
+        // If at a child and stack is empty but no acceptance found and not before reading an input symbol
+        if (stack.isEmpty() && inputTape.getHead() != 0) {
             return 8;
         }
 
@@ -123,8 +128,6 @@ public class SimulationModel {
 
     //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModel) {
-
-
         int currentHead = inputTape.getHead();
 
         Stack currentStack = new Stack();
