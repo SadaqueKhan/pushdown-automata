@@ -5,24 +5,24 @@ import java.util.List;
 
 public class Configuration {
 
-    private Configuration previousConfiguration;
+    private Configuration parentConfiguration;
     private StateModel currentStateModel;
     private int headPosition;
     private ArrayList<String> stackContent;
     private boolean isVisited;
-    private List<Configuration> configurations;
+    private List<Configuration> childrenConfigurations;
 
 
-    public Configuration(Configuration previousConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
-        this.previousConfiguration = previousConfiguration;
+    public Configuration(Configuration parentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
+        this.parentConfiguration = parentConfiguration;
         this.currentStateModel = currentStateModel;
         this.headPosition = headPosition;
         this.stackContent = stackContent;
         this.isVisited = false;
     }
 
-    public Configuration getPreviousConfiguration() {
-        return previousConfiguration;
+    public Configuration getParentConfiguration() {
+        return parentConfiguration;
     }
 
     public StateModel getCurrentStateModel() {
@@ -45,11 +45,11 @@ public class Configuration {
         isVisited = true;
     }
 
-    public List<Configuration> getConfigurations() {
-        return configurations;
+    public List<Configuration> getChildrenConfigurations() {
+        return childrenConfigurations;
     }
 
-    public void setConfigurations(List<Configuration> configurations) {
-        this.configurations = configurations;
+    public void setChildrenConfigurations(List<Configuration> childrenConfigurations) {
+        this.childrenConfigurations = childrenConfigurations;
     }
 }

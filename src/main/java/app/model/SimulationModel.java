@@ -1,19 +1,21 @@
 package app.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SimulationModel {
-
-    private ArrayList<TransitionModel> pathList;
-
     private final String EMPTY = "\u03B5";
 
     private InputTape inputTape;
     private Stack stack;
     private Configuration currentConfig;
     private ArrayList<Configuration> configurations;
+
+    HashMap<Integer, Configuration> successConfigurations = new HashMap<Integer, Configuration>();
+
+    private int numOfSuccessPath = 0;
 
     private MachineModel machineModel;
 
@@ -32,37 +34,38 @@ public class SimulationModel {
     public void loadInput(String input) {
         configurations = new ArrayList<>();
         inputTape.loadInput(input);
-        currentConfig = new Configuration(null, machineModel.findStartStateModel(), 0, new ArrayList<String>());
+        Stack stack = new Stack();
+        currentConfig = new Configuration(null, machineModel.findStartStateModel(), 0, stack.getContent());
         configurations.add(currentConfig);
         currentConfig.markAsVisited();
     }
 
     public int next() {
+        //checking for acceptance
         if (isInAcceptingConfiguration()) {
-            return 5;
+            return 100;
         }
 
         //Retrieve applicable configurations stored in the current configuration
-        List<Configuration> applicableConfigurations = currentConfig.getConfigurations();
+        List<Configuration> applicableConfigurations = currentConfig.getChildrenConfigurations();
 
 
-        if (currentConfig.getConfigurations() == null) {
-            //Search for applicable configurations stored for current configuration
+        if (currentConfig.getChildrenConfigurations() == null) {
+            //Search for possible children configurations to move to (the transitions have already been applied to this list)
             applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), inputTape.getAtHead(), stack.peak());
-            currentConfig.setConfigurations(applicableConfigurations);
+            currentConfig.setChildrenConfigurations(applicableConfigurations);
         }
 
         Configuration toExplore;
 
+        // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
-            //flopped
-            if (currentConfig.getPreviousConfiguration() == null) {
-                return -1;
-            }
-            return 8;
+            //no more paths to search for this child i.e. failed
+            return 8; // Go back to parent
         }
 
 
+        //Parent has a single child, then a check if path is deterministic
         if (applicableConfigurations.size() == 1) {
             //Explore deterministic path
             toExplore = applicableConfigurations.get(0);
@@ -72,15 +75,13 @@ public class SimulationModel {
             //Find configuration to explore that hasn't been explored yet, if all paths have been explored then set applicable configuration to null
             toExplore = applicableConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
-            if (currentConfig.getPreviousConfiguration() == null) {
-                return -1;
-            }
-
+            // All children are visited
             if (toExplore == null) {
-                return 8;
+                return 8; // Go back to parent
             }
         }
 
+        // Move to next configuration
         loadConfiguration(toExplore);
         return 1;
     }
@@ -88,19 +89,17 @@ public class SimulationModel {
     private void loadConfiguration(Configuration toExplore) {
         currentConfig = toExplore;
         configurations.add(currentConfig);
-        currentConfig.markAsVisited();
+        currentConfig.markAsVisited(); // Mark the currently explored config as explored
         inputTape.setHead(toExplore.getHeadPosition());
         stack.setContent(toExplore.getStackContent());
     }
 
     public void previous() {
-        Configuration previous = currentConfig.getPreviousConfiguration();
+        Configuration previous = currentConfig.getParentConfiguration();
         stack.setContent(previous.getStackContent());
         inputTape.setHead(previous.getHeadPosition());
-
         currentConfig = previous;
     }
-
 
 
     public List<Configuration> configurationApplicable(StateModel stateModel, String inputSymbol, String stackSymbol) {
@@ -113,22 +112,24 @@ public class SimulationModel {
                 .collect(Collectors.toList());
     }
 
+    //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModel) {
 
         int currentHead = inputTape.getHead();
-        ArrayList<String> currentStack = new ArrayList<>(stack.getContent());
+        Stack currentStack = new Stack();
+        currentStack.setContent(stack.getContent());
 
         if (!(transitionModel.getInputSymbol().equals(EMPTY))) {
             ++currentHead;
         }
         if (!(transitionModel.getStackSymbolToPop().equals(EMPTY))) {
-            currentStack.remove(currentStack.size() - 1);
+            currentStack.pop();
         }
         if (!(transitionModel.getStackSymbolToPush().equals(EMPTY))) {
-            currentStack.add(transitionModel.getStackSymbolToPush());
+            currentStack.push(transitionModel.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), currentHead, currentStack);
+        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), currentHead, currentStack.getContent());
         return newConfig;
     }
 
@@ -145,10 +146,19 @@ public class SimulationModel {
 
     public int run() {
         while (true) {
-            int result = next();
+            int result = next(); // if one is returned more children exist
 
-            if (result == 5 || result == -1) {
-                return result;
+            if (result == 100) {
+                ++numOfSuccessPath;
+                successConfigurations.put(numOfSuccessPath, currentConfig);
+                previous();
+                //Check if children have all be explored of root
+                Configuration toExplore = currentConfig.getChildrenConfigurations().stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
+
+                if (currentConfig.getParentConfiguration() == null && toExplore == null) {
+                    return 200;
+                }
+
             }
 
             if (result == 8) {
@@ -158,8 +168,8 @@ public class SimulationModel {
 
     }
 
-    public ArrayList<TransitionModel> getPathList() {
-        return pathList;
+    public HashMap<Integer, Configuration> getSuccessConfigurations() {
+        return successConfigurations;
     }
 }
 

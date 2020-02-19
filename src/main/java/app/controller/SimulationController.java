@@ -1,10 +1,13 @@
 package app.controller;
 
-import app.model.MachineModel;
-import app.model.SimulationModel;
+import app.model.*;
 import app.view.SimulationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulationController {
     private final MainStageController mainStageController;
@@ -27,19 +30,46 @@ public class SimulationController {
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
+
+        for (StateModel stateModel : machineModel.getStateModelSet()) {
+            System.out.println(stateModel);
+        }
+
+        for (TransitionModel transitionModel : machineModel.getTransitionModelSet()) {
+            System.out.println(transitionModel);
+        }
+
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
         int flag = simulationModel.run();
 
-//        if (flag == 5) {
-//            ArrayList<String> successfulPathList = new ArrayList<>();
-//            for (simulationModel.getPathList())
-//                simulationView.renderSuccessfulSimulationsToView(simulationModel.getPathList())
-//        }
+        HashMap<Integer, ArrayList<Configuration>> successConfigurations = new HashMap<>();
 
-        /**
-         *
-         */
+        for (Map.Entry<Integer, Configuration> entry : simulationModel.getSuccessConfigurations().entrySet()) {
+
+            ArrayList<Configuration> successPath = new ArrayList<>();
+            Configuration checkHasParent = entry.getValue().getParentConfiguration();
+
+            while (checkHasParent != null) {
+                successPath.add(checkHasParent);
+                checkHasParent = checkHasParent.getParentConfiguration();
+            }
+            successPath.add(entry.getValue());
+            successConfigurations.put(entry.getKey(), successPath);
+        }
+
+
+        for (Map.Entry<Integer, ArrayList<Configuration>> entry : successConfigurations.entrySet()) {
+
+            System.out.println("Success Path: " + entry.getKey());
+
+            for (Configuration configuration : entry.getValue()) {
+                System.out.print(" " + configuration.getCurrentStateModel());
+
+            }
+            System.out.println();
+        }
+
 
     }
 }
