@@ -29,7 +29,13 @@ public class SimulationController {
     private void generateSimulation(MachineModel machineModel, String inputWord) {
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
-        System.out.println(simulationModel.run());
+        int flag = simulationModel.run();
+
+//        if (flag == 5) {
+//            ArrayList<String> successfulPathList = new ArrayList<>();
+//            for (simulationModel.getPathList())
+//                simulationView.renderSuccessfulSimulationsToView(simulationModel.getPathList())
+//        }
 
         /**
          *

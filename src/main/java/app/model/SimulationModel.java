@@ -47,7 +47,7 @@ public class SimulationModel {
 
 
         if (currentConfig.getConfigurations() == null) {
-            //Search for applicable configurations stored in current configuration
+            //Search for applicable configurations stored for current configuration
             applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), inputTape.getAtHead(), stack.peak());
             currentConfig.setConfigurations(applicableConfigurations);
         }
@@ -100,6 +100,7 @@ public class SimulationModel {
 
         currentConfig = previous;
     }
+
 
 
     public List<Configuration> configurationApplicable(StateModel stateModel, String inputSymbol, String stackSymbol) {
@@ -157,6 +158,9 @@ public class SimulationModel {
 
     }
 
+    public ArrayList<TransitionModel> getPathList() {
+        return pathList;
+    }
 }
 
 

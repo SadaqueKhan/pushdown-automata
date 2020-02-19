@@ -12,7 +12,7 @@ public class MachineModel {
     private HashSet<StateModel> stateModelSet;
     private HashSet<TransitionModel> transitionModelSet;
 
-    private boolean isAcceptanceByFinalState = false;
+    private boolean isAcceptanceByFinalState = true;
     private boolean isAcceptanceByEmptyStack = false;
 
     public MachineModel() {
