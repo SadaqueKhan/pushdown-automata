@@ -43,6 +43,19 @@ public class SimulationController {
 
         int flag = simulationModel.run();
 
+
+        if (flag == 200) {
+            createMapping(simulationModel);
+        }
+
+        if (flag == 300) {
+            createMapping(simulationModel);
+        }
+
+
+    }
+
+    private void createMapping(SimulationModel simulationModel) {
         HashMap<Integer, ArrayList<Configuration>> successConfigurations = new HashMap<>();
 
         for (Map.Entry<Integer, Configuration> entry : simulationModel.getSuccessConfigurations().entrySet()) {
@@ -69,7 +82,5 @@ public class SimulationController {
             }
             System.out.println();
         }
-
-
     }
 }

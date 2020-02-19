@@ -46,6 +46,10 @@ public class SimulationModel {
             return 100;
         }
 
+        if (inputTape.isEmpty()) {
+            return 8;
+        }
+
         //Retrieve applicable configurations stored in the current configuration
         List<Configuration> applicableConfigurations = currentConfig.getChildrenConfigurations();
 
@@ -115,12 +119,14 @@ public class SimulationModel {
     //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModel) {
 
-        int currentHead = inputTape.getHead();
+        InputTape inputTape = new InputTape();
+        inputTape.setHead(inputTape.getHead());
+
         Stack currentStack = new Stack();
         currentStack.setContent(stack.getContent());
 
         if (!(transitionModel.getInputSymbol().equals(EMPTY))) {
-            ++currentHead;
+            inputTape.readSymbol();
         }
         if (!(transitionModel.getStackSymbolToPop().equals(EMPTY))) {
             currentStack.pop();
@@ -129,20 +135,21 @@ public class SimulationModel {
             currentStack.push(transitionModel.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), currentHead, currentStack.getContent());
+        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), inputTape.getHead(), currentStack.getContent());
         return newConfig;
     }
 
 
     public boolean isInAcceptingConfiguration() {
-        if (inputTape.isEmpty() && machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
-            return true;
-        } else if (inputTape.isEmpty() && machineModel.isAcceptanceByEmptyStack()) {
-            return true;
+        if (inputTape.isEmpty()) {
+            if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
+                return true;
+            } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
+                return true;
+            }
         }
         return false;
     }
-
 
     public int run() {
         while (true) {
@@ -163,6 +170,12 @@ public class SimulationModel {
 
             if (result == 8) {
                 previous();
+                //Check if children have all be explored of root
+                Configuration toExplore = currentConfig.getChildrenConfigurations().stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
+
+                if (currentConfig.getParentConfiguration() == null && toExplore == null) {
+                    return 300;
+                }
             }
         }
 

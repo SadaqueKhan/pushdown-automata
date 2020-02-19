@@ -18,7 +18,7 @@ public class InputTape {
         return inputTape.get(head);
     }
 
-    public void incrementHead() {
+    public void readSymbol() {
         ++head;
     }
 
