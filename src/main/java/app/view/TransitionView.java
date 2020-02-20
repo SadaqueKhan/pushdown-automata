@@ -19,6 +19,7 @@ public class TransitionView extends Line {
         this.setStrokeWidth(2);
     }
 
+
     public StateView getSource() {
         return source;
     }

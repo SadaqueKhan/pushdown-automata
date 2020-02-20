@@ -5,20 +5,24 @@ import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.model.TransitionModel;
 import app.view.SimulationView;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class SimulationController {
     private final MainStageController mainStageController;
+    private final MachineModel machineModel;
     private final SimulationView simulationView;
 
     public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord) {
         this.mainStageController = mainStageController;
+        this.machineModel = machineModel;
         this.simulationView = new SimulationView(this);
         generateSimulation(machineModel, inputWord);
 
@@ -98,9 +102,14 @@ public class SimulationController {
     }
 
     public void highlightDiagram(ListView<TransitionModel> listView) {
-        for (TransitionModel transitionModel : listView.getSelectionModel().getSelectedItems()) {
-            System.out.println(transitionModel);
-        }
+        if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
+            DiagramController diagramController = mainStageController.getDiagramController();
+            ObservableList<TransitionModel> selectedTransitionsToHighlightList = listView.getSelectionModel().getSelectedItems();
+            HashSet<TransitionModel> transitionViewsToUnhighlight = machineModel.getTransitionModelSet();
+            transitionViewsToUnhighlight.removeAll(selectedTransitionsToHighlightList);
 
+            diagramController.removeHighlightTransitionView(transitionViewsToUnhighlight);
+            diagramController.highlightTransitionView(selectedTransitionsToHighlightList);
+        }
     }
 }

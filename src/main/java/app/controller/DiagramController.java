@@ -6,17 +6,23 @@ import app.model.TransitionModel;
 import app.view.DiagramView;
 import app.view.MainStageView;
 import app.view.StateView;
+import app.view.TransitionView;
+import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DiagramController {
@@ -266,4 +272,97 @@ public class DiagramController {
 
     }
 
+
+    public void highlightTransitionView(ObservableList<TransitionModel> selectedTransitionsToHighlightList) {
+
+        Map<String, StateView> stateMap = diagramView.getStateMap();
+
+        for (TransitionModel selectedTransitionModel : selectedTransitionsToHighlightList) {
+            String currentStateModelID = selectedTransitionModel.getCurrentStateModel().getStateId();
+            String resultingStateModelID = selectedTransitionModel.getResultingStateModel().getStateId();
+
+            StateView currentStateView = stateMap.get(currentStateModelID);
+            StateView resultingStateView = stateMap.get(resultingStateModelID);
+
+            //Check type of transition
+            if (currentStateModelID.equals(resultingStateModelID)) {
+                //Update transition if it is reflexive transition
+                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
+                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
+            } else {
+                HashSet<Node> transitionViewToHighlightSet = retrieveTransitionView(currentStateView, resultingStateView);
+
+                for (Node node : transitionViewToHighlightSet) {
+                    if (node instanceof TransitionView) {
+                        TransitionView transitionView = (TransitionView) node;
+                        transitionView.setStroke(Color.LAWNGREEN);
+                    }
+                    if (node instanceof StackPane) {
+                        StackPane arrowTipStackPane = (StackPane) node;
+                        arrowTipStackPane.setStyle("-fx-background-color:lawngreen;-fx-border-width:2px;-fx-border-color:lawngreen;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeHighlightTransitionView(HashSet<TransitionModel> selectedTransitionsToRemoveHighlightSet) {
+        Map<String, StateView> stateMap = diagramView.getStateMap();
+
+        for (TransitionModel selectedTransitionModelToUnhighlight : selectedTransitionsToRemoveHighlightSet) {
+            String currentStateModelID = selectedTransitionModelToUnhighlight.getCurrentStateModel().getStateId();
+            String resultingStateModelID = selectedTransitionModelToUnhighlight.getResultingStateModel().getStateId();
+
+            StateView currentStateView = stateMap.get(currentStateModelID);
+            StateView resultingStateView = stateMap.get(resultingStateModelID);
+
+            //Check type of transition
+            if (currentStateModelID.equals(resultingStateModelID)) {
+                //Update transition if it is reflexive transition
+                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
+                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
+            } else {
+                HashSet<Node> transitionViewToUnhighlightSet = retrieveTransitionView(currentStateView, resultingStateView);
+
+                for (Node node : transitionViewToUnhighlightSet) {
+                    if (node instanceof TransitionView) {
+                        TransitionView transitionView = (TransitionView) node;
+                        transitionView.setStroke(Color.BLACK);
+                    }
+                    if (node instanceof StackPane) {
+                        StackPane arrowTipStackPane = (StackPane) node;
+                        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+
+                    }
+                }
+            }
+        }
+    }
+
+    private HashSet<Node> retrieveTransitionView(StateView currentStateView, StateView resultingStateView) {
+
+        HashSet<HashSet<Node>> linkedTransitionViews = diagramView.getLinkedTransitionViewsMap().get(currentStateView);
+        HashSet<Node> exitingTransitionViewForAStateViewSet = new HashSet<>();
+
+        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
+            for (Node node : nextHashSet) {
+                if (node instanceof TransitionView) {
+                    TransitionView transitionViewToUpdate = (TransitionView) node;
+                    if (transitionViewToUpdate.getTarget().getStateID().equals(resultingStateView.getStateID())) {
+                        exitingTransitionViewForAStateViewSet.add(transitionViewToUpdate);
+                    }
+                } else if (node instanceof StackPane) {
+                    StackPane arrowTipStackPaneToUpdate = (StackPane) node;
+                    if (arrowTipStackPaneToUpdate.getId() == null) {
+                        continue;
+                    }
+                    if (arrowTipStackPaneToUpdate.getId().equals(resultingStateView.getStateID())) {
+                        exitingTransitionViewForAStateViewSet.add(arrowTipStackPaneToUpdate);
+                    }
+                }
+            }
+        }
+        return exitingTransitionViewForAStateViewSet;
+    }
+    
 }

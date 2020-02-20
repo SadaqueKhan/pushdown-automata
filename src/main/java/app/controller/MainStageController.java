@@ -176,4 +176,6 @@ public class MainStageController extends Application {
         mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(true);
         mainStageView.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
+
+
 }

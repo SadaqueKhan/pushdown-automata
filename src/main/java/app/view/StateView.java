@@ -62,7 +62,7 @@ public class StateView extends StackPane {
 
 
         stateCircle.setRadius(radius);
-        stateCircle.setStyle("-fx-fill:" + "orange" + ";-fx-stroke-width:2px;-fx-stroke:black;");
+        stateCircle.setStyle("-fx-fill:orange;-fx-stroke-width:2px;-fx-stroke:black;");
 
         stateIdText = new Label(stateId);
         stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
@@ -231,6 +231,15 @@ public class StateView extends StackPane {
 
     @Override
     public String toString() {
-        return "StateView";
+        return "StateView: " + stateId;
+    }
+
+
+    public Arc getReflexiveArrowShaftArc() {
+        return reflexiveArrowShaftArc;
+    }
+
+    public Polygon getReflexiveArrowTipPolygon() {
+        return reflexiveArrowTipPolygon;
     }
 }

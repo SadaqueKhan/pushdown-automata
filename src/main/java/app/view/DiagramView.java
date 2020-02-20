@@ -59,7 +59,6 @@ public class DiagramView extends Pane {
         StateView stateView = new StateView(x, y, diagramController, stateID);
         this.getChildren().add(stateView);
         stateMap.put(stateID, stateView);
-
         linkedTransitionViewsMap.put(stateView, new HashSet<>());
     }
 
@@ -124,7 +123,9 @@ public class DiagramView extends Pane {
         virtualCenterLine.endXProperty().addListener(listener);
         virtualCenterLine.endYProperty().addListener(listener);
 
+
         StackPane arrowTip = getArrowTip(true, transitionView, currentStateView, resultingStateView);
+        arrowTip.setId(resultingStateID);
 
         HashSet<Node> setOfNode = new HashSet<>();
         setOfNode.add(virtualCenterLine);
@@ -145,17 +146,17 @@ public class DiagramView extends Pane {
 
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
-        StackPane arrow = new StackPane();
-        arrow.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");//
-        arrow.setPrefSize(size, size);
-        arrow.setMaxSize(size, size);
-        arrow.setMinSize(size, size);
+        StackPane arrowTipStackPane = new StackPane();
+        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+        arrowTipStackPane.setPrefSize(size, size);
+        arrowTipStackPane.setMaxSize(size, size);
+        arrowTipStackPane.setMinSize(size, size);
 
         // Determining the arrow visibility unless there is enough space between dots.
         DoubleBinding xDiff = line.endXProperty().subtract(line.startXProperty());
         DoubleBinding yDiff = line.endYProperty().subtract(line.startYProperty());
         BooleanBinding visible = (xDiff.lessThanOrEqualTo(size).and(xDiff.greaterThanOrEqualTo(-size)).and(yDiff.greaterThanOrEqualTo(-size)).and(yDiff.lessThanOrEqualTo(size))).not();
-        arrow.visibleProperty().bind(visible);
+        arrowTipStackPane.visibleProperty().bind(visible);
 
         // Determining the x point on the line which is at a certain distance.
         DoubleBinding tX = Bindings.createDoubleBinding(() -> {
@@ -165,10 +166,10 @@ public class DiagramView extends Pane {
             double dt;
             if (toLineEnd) {
                 // When determining the point towards end, the required distance is total length minus (radius + arrow half width)
-                dt = lineLength - (endDot.getWidth() / 2) - (arrow.getWidth() / 2);
+                dt = lineLength - (endDot.getWidth() / 2) - (arrowTipStackPane.getWidth() / 2);
             } else {
                 // When determining the point towards start, the required distance is just (radius + arrow half width)
-                dt = (startDot.getWidth() / 2) + (arrow.getWidth() / 2);
+                dt = (startDot.getWidth() / 2) + (arrowTipStackPane.getWidth() / 2);
             }
 
             double t = dt / lineLength;
@@ -183,17 +184,17 @@ public class DiagramView extends Pane {
             double lineLength = Math.sqrt(xDiffSqu + yDiffSqu);
             double dt;
             if (toLineEnd) {
-                dt = lineLength - (endDot.getHeight() / 2) - (arrow.getHeight() / 2);
+                dt = lineLength - (endDot.getHeight() / 2) - (arrowTipStackPane.getHeight() / 2);
             } else {
-                dt = (startDot.getHeight() / 2) + (arrow.getHeight() / 2);
+                dt = (startDot.getHeight() / 2) + (arrowTipStackPane.getHeight() / 2);
             }
             double t = dt / lineLength;
             double dy = ((1 - t) * line.getStartY()) + (t * line.getEndY());
             return dy;
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
 
-        arrow.layoutXProperty().bind(tX.subtract(arrow.widthProperty().divide(2)));
-        arrow.layoutYProperty().bind(tY.subtract(arrow.heightProperty().divide(2)));
+        arrowTipStackPane.layoutXProperty().bind(tX.subtract(arrowTipStackPane.widthProperty().divide(2)));
+        arrowTipStackPane.layoutYProperty().bind(tY.subtract(arrowTipStackPane.heightProperty().divide(2)));
 
         DoubleBinding endArrowAngle = Bindings.createDoubleBinding(() -> {
             double stX = toLineEnd ? line.getStartX() : line.getEndX();
@@ -206,9 +207,9 @@ public class DiagramView extends Pane {
             }
             return angle;
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
-        arrow.rotateProperty().bind(endArrowAngle);
+        arrowTipStackPane.rotateProperty().bind(endArrowAngle);
 
-        return arrow;
+        return arrowTipStackPane;
     }
 
     private Line getLine(StackPane startDot, StackPane endDot) {
@@ -308,6 +309,14 @@ public class DiagramView extends Pane {
         });
     }
 
+
+    public Map<String, StateView> getStateMap() {
+        return stateMap;
+    }
+
+    public Map<StateView, HashSet<HashSet<Node>>> getLinkedTransitionViewsMap() {
+        return linkedTransitionViewsMap;
+    }
 
     @Override
     public String toString() {
