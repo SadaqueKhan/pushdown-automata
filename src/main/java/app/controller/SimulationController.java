@@ -36,12 +36,20 @@ public class SimulationController {
 
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
-        int flag = simulationModel.run();
+        HashMap<Integer, ArrayList<TransitionModel>> transitionsTakenToReachASuccessConfigurationMap = new HashMap<>();
 
-        if (flag == 200) {
-            simulationView.renderSuccessfulSimulationsToView(createTransitionMapping(simulationModel));
+        if (machineModel.isAcceptanceByFinalState() && machineModel.findFinalStateModel() == null) {
+            simulationView.renderSuccessfulSimulationsToView(transitionsTakenToReachASuccessConfigurationMap);
+        } else {
+            int flag = simulationModel.run();
+
+            if (flag == 200) {
+                transitionsTakenToReachASuccessConfigurationMap = createTransitionMapping(simulationModel);
+                simulationView.renderSuccessfulSimulationsToView(transitionsTakenToReachASuccessConfigurationMap);
+            }
+
+
         }
-
     }
 
     private HashMap<Integer, ArrayList<TransitionModel>> createTransitionMapping(SimulationModel simulationModel) {

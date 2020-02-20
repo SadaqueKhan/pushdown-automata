@@ -28,8 +28,6 @@ public class TransitionTableController {
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
 
-        this.diagramController = mainStageController.getDiagramController();
-
         this.transitionTableView = new TransitionTableView(mainStageView, this);
     }
 

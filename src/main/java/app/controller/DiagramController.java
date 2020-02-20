@@ -41,7 +41,6 @@ public class DiagramController {
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
         this.machineModel = machineModel;
-        this.transitionTableController = mainStageController.getTransitionTableController();
         this.diagramView = new DiagramView(this, mainStageView);
     }
 
@@ -247,7 +246,7 @@ public class DiagramController {
         deleteStateItem.setOnAction(e -> {
             //Update machine model
             HashSet<TransitionModel> exitingTranstionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModel);
-            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTranstionsFromStateModel(stateModel);
+            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModel);
             machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
             machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
             machineModel.removeStateModelFromStateModelSet(stateModel);

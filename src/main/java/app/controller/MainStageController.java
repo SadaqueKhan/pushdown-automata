@@ -4,6 +4,8 @@ import app.model.MachineModel;
 import app.view.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
@@ -57,7 +59,17 @@ public class MainStageController extends Application {
     }
 
     public void triggerSimulationView(String inputWord) {
-        new SimulationController(this, machineModel, inputWord);
+        if (machineModel.findStartStateModel() == null) {
+            Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                    "No start state defined for machine simulation can not be executed.", ButtonType.OK);
+            invalidActionAlert.setHeaderText("Information");
+            invalidActionAlert.setTitle("Invalid Action");
+            invalidActionAlert.show();
+        } else {
+            setSimulationProgressBar(true);
+            setUpTapeView(inputWord);
+            new SimulationController(this, machineModel, inputWord);
+        }
     }
 
     public void saveInputWord(String userInputWord) {

@@ -60,6 +60,16 @@ public class MachineModel {
     }
 
 
+    public StateModel findFinalStateModel() {
+        for (StateModel isFinalStateModel : stateModelSet) {
+            if (isFinalStateModel.isFinalState()) {
+                return isFinalStateModel;
+            }
+        }
+        return null;
+    }
+
+
     public HashSet<String> getInputAlphabetSet() {
         return inputAlphabetSet;
     }
@@ -103,7 +113,7 @@ public class MachineModel {
         return exitingTransitionFromStateModelToReturn;
     }
 
-    public HashSet<TransitionModel> getEnteringTranstionsFromStateModel(StateModel stateModel) {
+    public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
         for (TransitionModel isExitingTransitionModel : transitionModelSet) {
             if (isExitingTransitionModel.getResultingStateModel().equals(stateModel)) {

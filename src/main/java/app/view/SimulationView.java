@@ -62,5 +62,7 @@ public class SimulationView extends BorderPane {
 
             simulationsAccordianContainer.getPanes().add(titledPane);
         }
+
+        this.inputTextField.setText("No successful paths found.");
     }
 }
