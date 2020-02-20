@@ -284,9 +284,7 @@ public class DiagramController {
             StateView currentStateView = stateMap.get(currentStateModelID);
             StateView resultingStateView = stateMap.get(resultingStateModelID);
 
-            //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
-                //Update transition if it is reflexive transition
                 currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
                 currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
             } else {
@@ -316,9 +314,7 @@ public class DiagramController {
             StateView currentStateView = stateMap.get(currentStateModelID);
             StateView resultingStateView = stateMap.get(resultingStateModelID);
 
-            //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
-                //Update transition if it is reflexive transition
                 currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
                 currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
             } else {
@@ -364,5 +360,5 @@ public class DiagramController {
         }
         return exitingTransitionViewForAStateViewSet;
     }
-    
+
 }
