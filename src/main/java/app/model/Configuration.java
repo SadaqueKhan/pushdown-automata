@@ -6,6 +6,7 @@ import java.util.List;
 public class Configuration {
 
     private Configuration parentConfiguration;
+    private TransitionModel transitionModelTakenToReachCurrentConfiguration;
     private StateModel currentStateModel;
     private int headPosition;
     private ArrayList<String> stackContent;
@@ -13,16 +14,22 @@ public class Configuration {
     private List<Configuration> childrenConfigurations;
 
 
-    public Configuration(Configuration parentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
+    public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
         this.parentConfiguration = parentConfiguration;
+        this.transitionModelTakenToReachCurrentConfiguration = transitionModelTakenToReachCurrentConfiguration;
         this.currentStateModel = currentStateModel;
         this.headPosition = headPosition;
         this.stackContent = stackContent;
         this.isVisited = false;
     }
 
+
     public Configuration getParentConfiguration() {
         return parentConfiguration;
+    }
+
+    public TransitionModel getTransitionModelTakenToReachCurrentConfiguration() {
+        return transitionModelTakenToReachCurrentConfiguration;
     }
 
     public StateModel getCurrentStateModel() {
@@ -41,13 +48,15 @@ public class Configuration {
         return isVisited;
     }
 
+    public List<Configuration> getChildrenConfigurations() {
+        return childrenConfigurations;
+    }
+
+    //Setters
     public void markAsVisited() {
         isVisited = true;
     }
 
-    public List<Configuration> getChildrenConfigurations() {
-        return childrenConfigurations;
-    }
 
     public void setChildrenConfigurations(List<Configuration> childrenConfigurations) {
         this.childrenConfigurations = childrenConfigurations;

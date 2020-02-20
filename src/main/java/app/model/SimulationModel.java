@@ -35,7 +35,7 @@ public class SimulationModel {
         configurations = new ArrayList<>();
         inputTape.loadInput(input);
         Stack stack = new Stack();
-        currentConfig = new Configuration(null, machineModel.findStartStateModel(), 0, stack.getContent());
+        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), 0, stack.getContent());
         configurations.add(currentConfig);
         currentConfig.markAsVisited();
     }
@@ -127,23 +127,23 @@ public class SimulationModel {
     }
 
     //Apply action given a transition and return the resulting configuration
-    private Configuration generateConfig(TransitionModel transitionModel) {
+    private Configuration generateConfig(TransitionModel transitionModelToNextConfiguration) {
         int currentHead = inputTape.getHead();
 
         Stack currentStack = new Stack();
         currentStack.setContent(stack.getContent());
 
-        if (!(transitionModel.getInputSymbol().equals(EMPTY))) {
+        if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
             ++currentHead;
         }
-        if (!(transitionModel.getStackSymbolToPop().equals(EMPTY))) {
+        if (!(transitionModelToNextConfiguration.getStackSymbolToPop().equals(EMPTY))) {
             currentStack.pop();
         }
-        if (!(transitionModel.getStackSymbolToPush().equals(EMPTY))) {
-            currentStack.push(transitionModel.getStackSymbolToPush());
+        if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
+            currentStack.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModel.getResultingStateModel(), currentHead, currentStack.getContent());
+        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentHead, currentStack.getContent());
         return newConfig;
     }
 

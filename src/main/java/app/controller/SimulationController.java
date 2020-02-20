@@ -3,6 +3,7 @@ package app.controller;
 import app.model.Configuration;
 import app.model.MachineModel;
 import app.model.SimulationModel;
+import app.model.TransitionModel;
 import app.view.SimulationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -37,46 +38,53 @@ public class SimulationController {
 
         int flag = simulationModel.run();
 
-
         if (flag == 200) {
-            createMapping(simulationModel);
+            simulationView.renderSuccessfulSimulationsToView(createTransitionMapping(simulationModel));
         }
 
     }
 
-    private void createMapping(SimulationModel simulationModel) {
+    private HashMap<Integer, ArrayList<TransitionModel>> createTransitionMapping(SimulationModel simulationModel) {
         HashMap<Integer, ArrayList<Configuration>> successConfigurations = new HashMap<>();
+
 
         for (Map.Entry<Integer, Configuration> entry : simulationModel.getSuccessConfigurations().entrySet()) {
 
-            ArrayList<Configuration> successPath = new ArrayList<>();
+            ArrayList<Configuration> successPathViaState = new ArrayList<>();
             ArrayList<Configuration> reverse = new ArrayList<>();
+
+            successPathViaState.add(entry.getValue()); // Success state
+
             Configuration checkHasParent = entry.getValue().getParentConfiguration();
-
-            successPath.add(entry.getValue());
-
             while (checkHasParent != null) {
-                successPath.add(checkHasParent);
+                successPathViaState.add(checkHasParent);
                 checkHasParent = checkHasParent.getParentConfiguration();
             }
 
-            for (int i = successPath.size() - 1; i >= 0; i--) {
-                reverse.add(successPath.get(i));
+            for (int i = successPathViaState.size() - 1; i >= 0; i--) {
+                reverse.add(successPathViaState.get(i));
             }
             successConfigurations.put(entry.getKey(), reverse);
         }
 
 
+        HashMap<Integer, ArrayList<TransitionModel>> transitionsTakenToReachASuccessConfigurationMap = new HashMap<>();
+
         for (Map.Entry<Integer, ArrayList<Configuration>> entry : successConfigurations.entrySet()) {
 
-            System.out.println("Success Path: " + entry.getKey());
+            ArrayList<TransitionModel> transitionModelsTakenToReachASuccessConfigurationList = new ArrayList<>();
 
             for (Configuration configuration : entry.getValue()) {
-                System.out.print(" " + configuration.getCurrentStateModel());
-
-
+                TransitionModel transitionModelTakenToReachSuccessConfiguration = configuration.getTransitionModelTakenToReachCurrentConfiguration();
+                if (transitionModelTakenToReachSuccessConfiguration == null) {
+                    continue;
+                }
+                transitionModelsTakenToReachASuccessConfigurationList.add(transitionModelTakenToReachSuccessConfiguration);
             }
-            System.out.println();
+
+            transitionsTakenToReachASuccessConfigurationMap.put(entry.getKey(), transitionModelsTakenToReachASuccessConfigurationList);
         }
+
+        return transitionsTakenToReachASuccessConfigurationMap;
     }
 }

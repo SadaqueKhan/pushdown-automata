@@ -1,6 +1,7 @@
 package app.view;
 
 import app.controller.SimulationController;
+import app.model.TransitionModel;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
@@ -10,6 +11,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulationView extends BorderPane {
 
@@ -31,7 +34,7 @@ public class SimulationView extends BorderPane {
 
     private void setUpUIComponents() {
         //UI components at the top of the scene
-        this.inputTextField = new Text("Successful paths: ");
+        this.inputTextField = new Text("Successful paths ");
         this.setTop(inputTextField);
 
         //UI components in the center of the scene
@@ -46,17 +49,18 @@ public class SimulationView extends BorderPane {
     private void setUpUIListeners() {
     }
 
-    public void renderSuccessfulSimulationsToView(ArrayList<String> successfulPathList) {
+    public void renderSuccessfulSimulationsToView(HashMap<Integer, ArrayList<TransitionModel>> transitionMapping) {
+        for (Map.Entry<Integer, ArrayList<TransitionModel>> entry : transitionMapping.entrySet()) {
+            ListView<TransitionModel> listView = new ListView<>();
+            listView.getItems().addAll(entry.getValue());
+            HBox hbox = new HBox(listView);
+            HBox.setHgrow(listView, Priority.ALWAYS);
 
-        ListView<String> listView = new ListView<>();
-        listView.getItems().addAll(successfulPathList);
-        HBox hbox = new HBox(listView);
-        HBox.setHgrow(listView, Priority.ALWAYS);
+            TitledPane titledPane = new TitledPane();
+            titledPane.setText(entry.getKey().toString());
+            titledPane.setContent(hbox);
 
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Simulation1");
-        titledPane.setContent(hbox);
-
-        simulationsAccordianContainer.getPanes().add(titledPane);
+            simulationsAccordianContainer.getPanes().add(titledPane);
+        }
     }
 }
