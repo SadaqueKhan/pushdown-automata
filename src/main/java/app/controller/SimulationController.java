@@ -6,6 +6,7 @@ import app.model.SimulationModel;
 import app.model.TransitionModel;
 import app.view.SimulationView;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -94,5 +95,12 @@ public class SimulationController {
         }
 
         return transitionsTakenToReachASuccessConfigurationMap;
+    }
+
+    public void highlightDiagram(ListView<TransitionModel> listView) {
+        for (TransitionModel transitionModel : listView.getSelectionModel().getSelectedItems()) {
+            System.out.println(transitionModel);
+        }
+
     }
 }

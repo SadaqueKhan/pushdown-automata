@@ -222,6 +222,7 @@ public class StateView extends StackPane {
         //Link listener to events
         this.setOnMousePressed(diagramListener);
         this.setOnMouseDragged(diagramListener);
+        this.setOnMouseReleased(diagramListener);
     }
 
     public String getStateID() {

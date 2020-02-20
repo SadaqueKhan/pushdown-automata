@@ -27,14 +27,14 @@ public class MainStageController extends Application {
     private TransitionTableController transitionTableController;
     private DiagramController diagramController;
 
-    private Stage primaryStage;
+    private Stage primaryWindow;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryWindow) throws Exception {
         this.machineModel = new MachineModel();
         this.mainStageView = new MainStageView(this);
         this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
@@ -42,10 +42,10 @@ public class MainStageController extends Application {
 
         diagramController.loadDiagramViewOntoStage(transitionTableController);
 
-        this.primaryStage = primaryStage;
-        primaryStage.setTitle("Pushdown Automata");
-        primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
-        primaryStage.show();
+        this.primaryWindow = primaryWindow;
+        this.primaryWindow.setTitle("Pushdown Automata");
+        this.primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+        this.primaryWindow.show();
     }
 
     public void triggerDiagramView() {
@@ -102,7 +102,7 @@ public class MainStageController extends Application {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Machine");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-            File fileChosen = fileChooser.showSaveDialog(primaryStage);
+            File fileChosen = fileChooser.showSaveDialog(primaryWindow);
 
             if (fileChosen != null) {
                 JAXBContext contextObj = JAXBContext.newInstance(MachineModel.class);
@@ -121,7 +121,7 @@ public class MainStageController extends Application {
             fileChooser.setTitle("Load Machine");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
 
-            File fileChosen = fileChooser.showOpenDialog(primaryStage);
+            File fileChosen = fileChooser.showOpenDialog(primaryWindow);
 
             if (fileChosen != null) {
 
@@ -129,7 +129,7 @@ public class MainStageController extends Application {
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
 
-                primaryStage.close();
+                primaryWindow.close();
 
                 this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
@@ -142,9 +142,9 @@ public class MainStageController extends Application {
                 diagramController.loadTransitionsOntoDiagram();
                 diagramController.loadDiagramViewOntoStage(transitionTableController);
 
-                primaryStage.setTitle("Pushdown Automata");
-                primaryStage.setScene(new Scene(mainStageView, 1500, 1000));
-                primaryStage.show();
+                primaryWindow.setTitle("Pushdown Automata");
+                primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+                primaryWindow.show();
             }
         } catch (Exception e2) {
             e2.printStackTrace();

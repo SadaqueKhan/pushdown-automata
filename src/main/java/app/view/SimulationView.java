@@ -1,13 +1,13 @@
 package app.view;
 
 import app.controller.SimulationController;
+import app.listener.SimulationListener;
 import app.model.TransitionModel;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ public class SimulationView extends BorderPane {
         this.simulationController = simulationController;
         setUpUIComponents();
         setUpUILayout();
-        setUpUIListeners();
+
     }
 
     private void setUpUIComponents() {
         //UI components at the top of the scene
-        this.inputTextField = new Text("Successful paths ");
+        this.inputTextField = new Text();
         this.setTop(inputTextField);
 
         //UI components in the center of the scene
@@ -43,26 +43,31 @@ public class SimulationView extends BorderPane {
         this.setCenter(simulationsAccordianContainer);
     }
 
+    public void renderSuccessfulSimulationsToView(HashMap<Integer, ArrayList<TransitionModel>> transitionsTakenList) {
+
+        if (transitionsTakenList.isEmpty()) {
+            this.inputTextField.setText("No successful paths found.");
+        } else {
+            this.inputTextField.setText("Successful paths");
+            for (Map.Entry<Integer, ArrayList<TransitionModel>> entry : transitionsTakenList.entrySet()) {
+                ListView<TransitionModel> transitionsTakenlistView = new ListView<>();
+                transitionsTakenlistView.getItems().addAll(entry.getValue());
+                transitionsTakenlistView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                transitionsTakenlistView.setOnMouseReleased(new SimulationListener(simulationController));
+
+                TitledPane titledPane = new TitledPane();
+                titledPane.setText(entry.getKey().toString());
+                titledPane.setContent(transitionsTakenlistView);
+
+
+                simulationsAccordianContainer.getPanes().add(titledPane);
+            }
+        }
+    }
+
+
     private void setUpUILayout() {
     }
 
-    private void setUpUIListeners() {
-    }
 
-    public void renderSuccessfulSimulationsToView(HashMap<Integer, ArrayList<TransitionModel>> transitionMapping) {
-        for (Map.Entry<Integer, ArrayList<TransitionModel>> entry : transitionMapping.entrySet()) {
-            ListView<TransitionModel> listView = new ListView<>();
-            listView.getItems().addAll(entry.getValue());
-            HBox hbox = new HBox(listView);
-            HBox.setHgrow(listView, Priority.ALWAYS);
-
-            TitledPane titledPane = new TitledPane();
-            titledPane.setText(entry.getKey().toString());
-            titledPane.setContent(hbox);
-
-            simulationsAccordianContainer.getPanes().add(titledPane);
-        }
-
-        this.inputTextField.setText("No successful paths found.");
-    }
 }
