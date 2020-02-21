@@ -84,8 +84,13 @@ public class SimulationController {
     }
 
 
-    public void highlightSelectedConfigurationOntoDiagramView(TransitionModel transitionModelToHighlight) {
+    public void updateDiagramViewForSelectedConfiguration(Configuration selectedConfiguration) {
+        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         DiagramController diagramController = mainStageController.getDiagramController();
         diagramController.highlightTransitionView(transitionModelToHighlight);
+    }
+
+    public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
+
     }
 }

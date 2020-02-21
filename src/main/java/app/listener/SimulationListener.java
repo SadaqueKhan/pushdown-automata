@@ -2,7 +2,6 @@ package app.listener;
 
 import app.controller.SimulationController;
 import app.model.Configuration;
-import app.model.TransitionModel;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -23,8 +22,8 @@ public class SimulationListener implements EventHandler {
             if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
                 ObservableList<Configuration> selectedTransitionsToHighlightList = listView.getSelectionModel().getSelectedItems();
                 Configuration configuration = selectedTransitionsToHighlightList.get(0);
-                TransitionModel transitionModel = configuration.getTransitionModelTakenToReachCurrentConfiguration();
-                simulationController.highlightSelectedConfigurationOntoDiagramView(transitionModel);
+                simulationController.updateDiagramViewForSelectedConfiguration(configuration);
+                simulationController.updateTapeViewForSelectedConfiguration(configuration);
             }
 
         }
