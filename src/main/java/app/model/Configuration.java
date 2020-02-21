@@ -77,7 +77,7 @@ public class Configuration {
         String parentStateModelString = "";
         String transitionModelTakenToReachCurrentConfigurationString = "";
         String currentStateModelString = "";
-        if (parentConfiguration.getCurrentStateModel() != null) {
+        if (parentConfiguration != null) {
             parentStateModelString = parentConfiguration.getCurrentStateModel().getStateId();
         }
         if (transitionModelTakenToReachCurrentConfiguration != null) {

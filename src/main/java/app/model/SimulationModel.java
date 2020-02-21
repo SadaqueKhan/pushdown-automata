@@ -33,6 +33,7 @@ public class SimulationModel {
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath = new ArrayList<>();
+        configurationPath.add(currentConfig);
     }
 
     public int next() {
@@ -152,6 +153,7 @@ public class SimulationModel {
 
             if (result == 100) {
                 currentConfig.setSuccessConfig(true);
+                continue;
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
