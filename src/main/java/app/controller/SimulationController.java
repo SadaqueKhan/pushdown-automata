@@ -3,6 +3,7 @@ package app.controller;
 import app.model.Configuration;
 import app.model.MachineModel;
 import app.model.SimulationModel;
+import app.model.TransitionModel;
 import app.view.SimulationView;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
@@ -16,6 +17,7 @@ public class SimulationController {
     private final MainStageController mainStageController;
     private final MachineModel machineModel;
     private final SimulationView simulationView;
+    private ArrayList<Configuration> simulationPath;
 
     public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord) {
         this.mainStageController = mainStageController;
@@ -35,28 +37,22 @@ public class SimulationController {
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
-
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
-
         if (machineModel.isAcceptanceByFinalState() && machineModel.findFinalStateModel() == null) {
-
         } else {
             int flag = simulationModel.run();
-
             if (flag == 200) {
-                loadConfigurationsOntoSimulationView(simulationModel);
+                this.simulationPath = simulationModel.getConfigurationPath();
+                loadConfigurationsOntoSimulationView();
+
             }
         }
     }
 
-    private void loadConfigurationsOntoSimulationView(SimulationModel simulationModel) {
+    private void loadConfigurationsOntoSimulationView() {
         ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
-
-        ArrayList<Configuration> configurationPath = simulationModel.getConfigurationPath();
-
-        simulationListView.getItems().addAll(configurationPath);
-
+        simulationListView.getItems().addAll(simulationPath);
         simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
             @Override
             public ListCell<Configuration> call(ListView<Configuration> param) {
@@ -88,4 +84,8 @@ public class SimulationController {
     }
 
 
+    public void highlightSelectedConfigurationOntoDiagramView(TransitionModel transitionModelToHighlight) {
+        DiagramController diagramController = mainStageController.getDiagramController();
+        diagramController.highlightTransitionView(transitionModelToHighlight);
+    }
 }

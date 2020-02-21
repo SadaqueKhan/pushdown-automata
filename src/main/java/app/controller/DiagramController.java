@@ -7,7 +7,6 @@ import app.view.DiagramView;
 import app.view.MainStageView;
 import app.view.StateView;
 import app.view.TransitionView;
-import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -41,6 +40,7 @@ public class DiagramController {
 
     private double sceneX;
     private double sceneY;
+    private TransitionModel transitionModeIsHighlighted;
 
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
@@ -273,79 +273,75 @@ public class DiagramController {
     }
 
 
-    public void highlightTransitionView(ObservableList<TransitionModel> selectedTransitionsToHighlightList) {
+    public void highlightTransitionView(TransitionModel transitionModelToHightlight) {
+        if (transitionModeIsHighlighted != null) {
+            removeHighlightedTransitionView(transitionModeIsHighlighted);
+        }
+        transitionModeIsHighlighted = transitionModelToHightlight;
 
-        Map<String, StateView> stateMap = diagramView.getStateMap();
+        if (transitionModelToHightlight.getCurrentStateModel().equals(transitionModelToHightlight.getResultingStateModel())) {
+            Map<String, StateView> stateMap = diagramView.getStateMap();
+            StateView currentStateView = stateMap.get(transitionModelToHightlight.getCurrentStateModel().getStateId());
+            currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
+            currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
+        } else {
+            HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHightlight);
 
-        for (TransitionModel selectedTransitionModel : selectedTransitionsToHighlightList) {
-            String currentStateModelID = selectedTransitionModel.getCurrentStateModel().getStateId();
-            String resultingStateModelID = selectedTransitionModel.getResultingStateModel().getStateId();
-
-            StateView currentStateView = stateMap.get(currentStateModelID);
-            StateView resultingStateView = stateMap.get(resultingStateModelID);
-
-            if (currentStateModelID.equals(resultingStateModelID)) {
-                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
-                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
-            } else {
-                HashSet<Node> transitionViewToHighlightSet = retrieveTransitionView(currentStateView, resultingStateView);
-
-                for (Node node : transitionViewToHighlightSet) {
-                    if (node instanceof TransitionView) {
-                        TransitionView transitionView = (TransitionView) node;
-                        transitionView.setStroke(Color.LAWNGREEN);
-                    }
-                    if (node instanceof StackPane) {
-                        StackPane arrowTipStackPane = (StackPane) node;
-                        arrowTipStackPane.setStyle("-fx-background-color:lawngreen;-fx-border-width:2px;-fx-border-color:lawngreen;-fx-shape: \"M0,-4L4,0L0,4Z\"");
-                    }
+            for (Node node : transitionViewHighlightedSet) {
+                if (node instanceof TransitionView) {
+                    TransitionView transitionView = (TransitionView) node;
+                    transitionView.setStroke(Color.LAWNGREEN);
+                }
+                if (node instanceof StackPane) {
+                    StackPane arrowTipStackPane = (StackPane) node;
+                    arrowTipStackPane.setStyle("-fx-background-color:lawngreen;-fx-border-width:2px;-fx-border-color:lawngreen;-fx-shape: \"M0,-4L4,0L0,4Z\"");
                 }
             }
         }
     }
 
-    public void removeHighlightTransitionView(HashSet<TransitionModel> selectedTransitionsToRemoveHighlightSet) {
-        Map<String, StateView> stateMap = diagramView.getStateMap();
 
-        for (TransitionModel selectedTransitionModelToUnhighlight : selectedTransitionsToRemoveHighlightSet) {
-            String currentStateModelID = selectedTransitionModelToUnhighlight.getCurrentStateModel().getStateId();
-            String resultingStateModelID = selectedTransitionModelToUnhighlight.getResultingStateModel().getStateId();
+    public void removeHighlightedTransitionView(TransitionModel transitionModelToRemoveHightlight) {
+        if (transitionModelToRemoveHightlight.getCurrentStateModel().equals(transitionModelToRemoveHightlight.getResultingStateModel())) {
+            Map<String, StateView> stateMap = diagramView.getStateMap();
+            StateView currentStateView = stateMap.get(transitionModelToRemoveHightlight.getCurrentStateModel().getStateId());
+            currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
+            currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
+        } else {
+            HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToRemoveHightlight);
 
-            StateView currentStateView = stateMap.get(currentStateModelID);
-            StateView resultingStateView = stateMap.get(resultingStateModelID);
-
-            if (currentStateModelID.equals(resultingStateModelID)) {
-                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
-                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
-            } else {
-                HashSet<Node> transitionViewToUnhighlightSet = retrieveTransitionView(currentStateView, resultingStateView);
-
-                for (Node node : transitionViewToUnhighlightSet) {
-                    if (node instanceof TransitionView) {
-                        TransitionView transitionView = (TransitionView) node;
-                        transitionView.setStroke(Color.BLACK);
-                    }
-                    if (node instanceof StackPane) {
-                        StackPane arrowTipStackPane = (StackPane) node;
-                        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
-
-                    }
+            for (Node node : transitionViewHighlightedSet) {
+                if (node instanceof TransitionView) {
+                    TransitionView transitionView = (TransitionView) node;
+                    transitionView.setStroke(Color.BLACK);
+                }
+                if (node instanceof StackPane) {
+                    StackPane arrowTipStackPane = (StackPane) node;
+                    arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
                 }
             }
         }
     }
 
-    private HashSet<Node> retrieveTransitionView(StateView currentStateView, StateView resultingStateView) {
+    private HashSet<Node> retrieveDirectionalTransitionView(TransitionModel transitionModel) {
+
+        Map<String, StateView> stateMap = diagramView.getStateMap();
+
+        String currentStateModelID = transitionModel.getCurrentStateModel().getStateId();
+        String resultingStateModelID = transitionModel.getResultingStateModel().getStateId();
+
+        StateView currentStateView = stateMap.get(currentStateModelID);
+        StateView resultingStateView = stateMap.get(resultingStateModelID);
 
         HashSet<HashSet<Node>> linkedTransitionViews = diagramView.getLinkedTransitionViewsMap().get(currentStateView);
-        HashSet<Node> exitingTransitionViewForAStateViewSet = new HashSet<>();
+        HashSet<Node> TransitionViewSet = new HashSet<>();
 
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToUpdate = (TransitionView) node;
                     if (transitionViewToUpdate.getTarget().getStateID().equals(resultingStateView.getStateID())) {
-                        exitingTransitionViewForAStateViewSet.add(transitionViewToUpdate);
+                        TransitionViewSet.add(transitionViewToUpdate);
                     }
                 } else if (node instanceof StackPane) {
                     StackPane arrowTipStackPaneToUpdate = (StackPane) node;
@@ -353,12 +349,12 @@ public class DiagramController {
                         continue;
                     }
                     if (arrowTipStackPaneToUpdate.getId().equals(resultingStateView.getStateID())) {
-                        exitingTransitionViewForAStateViewSet.add(arrowTipStackPaneToUpdate);
+                        TransitionViewSet.add(arrowTipStackPaneToUpdate);
                     }
                 }
             }
         }
-        return exitingTransitionViewForAStateViewSet;
+        return TransitionViewSet;
     }
 
 }
