@@ -5,8 +5,10 @@ import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.view.SimulationView;
 import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.util.ArrayList;
 
@@ -53,7 +55,36 @@ public class SimulationController {
 
         ArrayList<Configuration> configurationPath = simulationModel.getConfigurationPath();
 
+        System.out.println("check");
+        for (Configuration configuration : configurationPath) {
+            System.out.println("which");
+            System.out.println(configuration);
+        }
+
         simulationListView.getItems().addAll(configurationPath);
+
+
+        simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
+            @Override
+            public ListCell<Configuration> call(ListView<Configuration> param) {
+                return new ListCell<Configuration>() {
+                    @Override
+                    protected void updateItem(Configuration item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle(null);
+                        } else {
+                            setText(item.toString());
+                            if (item.isSuccessConfig()) {
+                                setStyle("-fx-control-inner-background: " + "derive(palegreen, 50%)" + ";");
+                            }
+                        }
+                    }
+                };
+            }
+        });
     }
 
 
