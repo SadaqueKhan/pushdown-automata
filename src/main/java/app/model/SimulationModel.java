@@ -143,6 +143,7 @@ public class SimulationModel {
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 return true;
             }
+            currentConfig.setFailConfig(true);
         }
         return false;
     }

@@ -14,6 +14,7 @@ public class Configuration {
     private List<Configuration> childrenConfigurations;
 
     private boolean isSuccessConfig = false;
+    private boolean isFailConfig = false;
 
 
     public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
@@ -72,6 +73,14 @@ public class Configuration {
         isSuccessConfig = successConfig;
     }
 
+    public boolean isFailConfig() {
+        return isFailConfig;
+    }
+
+    public void setFailConfig(boolean failConfig) {
+        isFailConfig = failConfig;
+    }
+
     @Override
     public String toString() {
         String parentStateModelString = "";
@@ -87,7 +96,7 @@ public class Configuration {
             currentStateModelString = currentStateModel.getStateId();
         }
         return parentStateModelString + " => " + " { " + transitionModelTakenToReachCurrentConfigurationString + " } "
-                + " => " + currentStateModelString + " [Success: " + isSuccessConfig + "]";
+                + " => " + currentStateModelString;
     }
 }
 

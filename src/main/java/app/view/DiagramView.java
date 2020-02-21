@@ -147,7 +147,7 @@ public class DiagramView extends Pane {
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
         StackPane arrowTipStackPane = new StackPane();
-        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\";");
         arrowTipStackPane.setPrefSize(size, size);
         arrowTipStackPane.setMaxSize(size, size);
         arrowTipStackPane.setMinSize(size, size);
