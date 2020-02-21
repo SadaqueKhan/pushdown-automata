@@ -3,17 +3,12 @@ package app.controller;
 import app.model.Configuration;
 import app.model.MachineModel;
 import app.model.SimulationModel;
-import app.model.TransitionModel;
 import app.view.SimulationView;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
 public class SimulationController {
     private final MainStageController mainStageController;
@@ -41,75 +36,25 @@ public class SimulationController {
 
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
-        HashMap<Integer, ArrayList<TransitionModel>> transitionsTakenToReachASuccessConfigurationMap = new HashMap<>();
 
         if (machineModel.isAcceptanceByFinalState() && machineModel.findFinalStateModel() == null) {
-            simulationView.renderSuccessfulSimulationsToView(transitionsTakenToReachASuccessConfigurationMap);
+
         } else {
             int flag = simulationModel.run();
 
             if (flag == 200) {
-                transitionsTakenToReachASuccessConfigurationMap = createTransitionMapping(simulationModel);
-                simulationView.renderSuccessfulSimulationsToView(transitionsTakenToReachASuccessConfigurationMap);
+                loadConfigurationsOntoSimulationView(simulationModel);
             }
-
-
         }
     }
 
-    private HashMap<Integer, ArrayList<TransitionModel>> createTransitionMapping(SimulationModel simulationModel) {
-        HashMap<Integer, ArrayList<Configuration>> successConfigurations = new HashMap<>();
+    private void loadConfigurationsOntoSimulationView(SimulationModel simulationModel) {
+        ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
 
+        ArrayList<Configuration> configurationPath = simulationModel.getConfigurationPath();
 
-        for (Map.Entry<Integer, Configuration> entry : simulationModel.getSuccessConfigurations().entrySet()) {
-
-            ArrayList<Configuration> successPathViaState = new ArrayList<>();
-            ArrayList<Configuration> reverse = new ArrayList<>();
-
-            successPathViaState.add(entry.getValue()); // Success state
-
-            Configuration checkHasParent = entry.getValue().getParentConfiguration();
-            while (checkHasParent != null) {
-                successPathViaState.add(checkHasParent);
-                checkHasParent = checkHasParent.getParentConfiguration();
-            }
-
-            for (int i = successPathViaState.size() - 1; i >= 0; i--) {
-                reverse.add(successPathViaState.get(i));
-            }
-            successConfigurations.put(entry.getKey(), reverse);
-        }
-
-
-        HashMap<Integer, ArrayList<TransitionModel>> transitionsTakenToReachASuccessConfigurationMap = new HashMap<>();
-
-        for (Map.Entry<Integer, ArrayList<Configuration>> entry : successConfigurations.entrySet()) {
-
-            ArrayList<TransitionModel> transitionModelsTakenToReachASuccessConfigurationList = new ArrayList<>();
-
-            for (Configuration configuration : entry.getValue()) {
-                TransitionModel transitionModelTakenToReachSuccessConfiguration = configuration.getTransitionModelTakenToReachCurrentConfiguration();
-                if (transitionModelTakenToReachSuccessConfiguration == null) {
-                    continue;
-                }
-                transitionModelsTakenToReachASuccessConfigurationList.add(transitionModelTakenToReachSuccessConfiguration);
-            }
-
-            transitionsTakenToReachASuccessConfigurationMap.put(entry.getKey(), transitionModelsTakenToReachASuccessConfigurationList);
-        }
-
-        return transitionsTakenToReachASuccessConfigurationMap;
+        simulationListView.getItems().addAll(configurationPath);
     }
 
-    public void highlightDiagram(ListView<TransitionModel> listView) {
-        if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
-            DiagramController diagramController = mainStageController.getDiagramController();
-            ObservableList<TransitionModel> selectedTransitionsToHighlightList = listView.getSelectionModel().getSelectedItems();
-            HashSet<TransitionModel> transitionViewsToUnhighlight = machineModel.getTransitionModelSet();
-            transitionViewsToUnhighlight.removeAll(selectedTransitionsToHighlightList);
 
-            diagramController.removeHighlightTransitionView(transitionViewsToUnhighlight);
-            diagramController.highlightTransitionView(selectedTransitionsToHighlightList);
-        }
-    }
 }

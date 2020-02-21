@@ -13,6 +13,8 @@ public class Configuration {
     private boolean isVisited;
     private List<Configuration> childrenConfigurations;
 
+    private boolean isSuccessConfig = false;
+
 
     public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
         this.parentConfiguration = parentConfiguration;
@@ -61,4 +63,32 @@ public class Configuration {
     public void setChildrenConfigurations(List<Configuration> childrenConfigurations) {
         this.childrenConfigurations = childrenConfigurations;
     }
+
+    public boolean isSuccessConfig() {
+        return isSuccessConfig;
+    }
+
+    public void setSuccessConfig(boolean successConfig) {
+        isSuccessConfig = successConfig;
+    }
+
+    @Override
+    public String toString() {
+        String parentStateModelString = "";
+        String transitionModelTakenToReachCurrentConfigurationString = "";
+        String currentStateModelString = "";
+        if (parentConfiguration.getCurrentStateModel() != null) {
+            parentStateModelString = parentConfiguration.getCurrentStateModel().getStateId();
+        }
+        if (transitionModelTakenToReachCurrentConfiguration != null) {
+            transitionModelTakenToReachCurrentConfigurationString = transitionModelTakenToReachCurrentConfiguration.toString();
+        }
+        if (currentStateModel != null) {
+            currentStateModelString = currentStateModel.getStateId();
+        }
+        return parentStateModelString + " => " + " { " + transitionModelTakenToReachCurrentConfigurationString + " } "
+                + " => " + currentStateModelString + " [Success: " + isSuccessConfig + "]";
+    }
 }
+
+

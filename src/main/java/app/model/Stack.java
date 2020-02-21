@@ -21,11 +21,10 @@ public class Stack {
     }
 
     public String peak() {
-        if (!(stack.isEmpty())) {
-            return stack.get(stack.size() - 1);
+        if (stack.isEmpty()) {
+            return "\u03B5";
         }
-
-        return "\u03B5";
+        return stack.get(stack.size() - 1);
     }
 
     public boolean isEmpty() {

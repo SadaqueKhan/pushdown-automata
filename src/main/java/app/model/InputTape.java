@@ -15,6 +15,9 @@ public class InputTape {
     }
 
     public String getAtHead() {
+        if (isEmpty()) {
+            return "\u03B5";
+        }
         return inputTape.get(head);
     }
 

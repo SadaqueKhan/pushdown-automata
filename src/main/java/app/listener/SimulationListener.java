@@ -18,7 +18,7 @@ public class SimulationListener implements EventHandler {
     public void handle(Event event) {
         if (event.getSource() instanceof ListView) {
             ListView<TransitionModel> listView = (ListView) event.getSource();
-            simulationController.highlightDiagram(listView);
+//            simulationController.highlightDiagram(listView);
         }
     }
 }
