@@ -15,6 +15,7 @@ public class Configuration {
 
     private boolean isSuccessConfig = false;
     private boolean isFailConfig = false;
+    private boolean isStuckConfig = false;
 
 
     public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
@@ -79,6 +80,14 @@ public class Configuration {
 
     public void setFailConfig(boolean failConfig) {
         isFailConfig = failConfig;
+    }
+
+    public boolean isStuckConfig() {
+        return isStuckConfig;
+    }
+
+    public void setStuckConfig(boolean stuckConfig) {
+        isStuckConfig = stuckConfig;
     }
 
     @Override

@@ -76,6 +76,10 @@ public class SimulationController {
                             if (item.isFailConfig()) {
                                 setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
                             }
+
+                            if (item.isStuckConfig()) {
+                                setStyle("-fx-control-inner-background: " + "derive(#ffa22e, 50%);");
+                            }
                         }
                     }
                 };
