@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -184,9 +185,16 @@ public class MainStageController extends Application {
         tapeViewHBoxContainer.getChildren().clear();
 
         for (String inputSymbol : inputWord.split("")) {
-            //Drawing a Rectangle
+            Polygon headPointer = new Polygon(4, 0, 8, 8, 0, 8);
+            headPointer.setFill(Color.BLACK);
+            headPointer.setStroke(Color.BLACK);
+            headPointer.setStrokeWidth(10);
+            headPointer.setRotate(65);
+            headPointer.setTranslateX(5);
+            headPointer.setTranslateY(-50);
+            headPointer.setVisible(false);
+
             Rectangle rectangle = new Rectangle();
-            //Setting the properties of the rectangle
             rectangle.setX(10);
             rectangle.setY(0);
             rectangle.setWidth(100);
@@ -195,7 +203,7 @@ public class MainStageController extends Application {
             rectangle.setStroke(Color.BLACK);
 
             StackPane stackPane = new StackPane();
-            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol));
+            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol), headPointer);
 
             tapeViewHBoxContainer.getChildren().add(stackPane);
         }
@@ -204,7 +212,7 @@ public class MainStageController extends Application {
 
     public void updateTapeView(int headPosition) {
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
-        StackPane stackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition);
+        StackPane stackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
         stackPane.getChildren().get(2).setVisible(true);
     }
 
@@ -218,8 +226,8 @@ public class MainStageController extends Application {
             //Setting the properties of the rectangle
             rectangle.setX(10);
             rectangle.setY(0);
-            rectangle.setWidth(100);
-            rectangle.setHeight(100);
+            rectangle.setWidth(50);
+            rectangle.setHeight(50);
             rectangle.setFill(Color.WHITE);
             rectangle.setStroke(Color.BLACK);
 
