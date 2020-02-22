@@ -83,6 +83,28 @@ public class DiagramController {
         diagramView.addStateView(x, y, this, userEntryCurrentStateId);
     }
 
+    public void addStateToViewMouseEventResponse(double x, double y) {
+
+        StateModel newStateModel = null;
+        if (machineModel.getStateModelSet().isEmpty()) {
+            newStateModel = new StateModel();
+        } else {
+            boolean stateModelExists = true;
+            outerloop:
+            while (stateModelExists) {
+                newStateModel = new StateModel();
+                for (StateModel stateModel : machineModel.getStateModelSet()) {
+                    if (stateModel.equals(newStateModel)) {
+                        continue outerloop;
+                    }
+                }
+                stateModelExists = false;
+            }
+        }
+        machineModel.addStateModelToStateModelSet(newStateModel);
+        diagramView.addStateView(x, y, this, newStateModel.getStateId());
+        transitionTableController.updateAvailableStateListForCombobox();
+    }
 
     public void addDirectionalTransitionToView(String currentStateID, String resultingStateID, TransitionModel newTransitionModel) {
         diagramView.addDirectionalTransitionView(currentStateID, resultingStateID, getRelatedTransitions(newTransitionModel));

@@ -1,6 +1,7 @@
 package app.view;
 
 import app.controller.DiagramController;
+import app.listener.DiagramListener;
 import app.model.TransitionModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -43,17 +44,24 @@ public class DiagramView extends Pane {
         this.mainStageView = mainStageView;
         // Reference to diagram controller
         this.diagramController = diagramController;
+        this.stateMap = new HashMap<>();
+        this.linkedTransitionViewsMap = new HashMap<>();
+        
         setUpUIComponents();
+        setUpUIListeners();
     }
 
 
     private void setUpUIComponents() {
-        stateMap = new HashMap<>();
-        linkedTransitionViewsMap = new HashMap<>();//
         this.setStyle(cssLayout);
         this.setMinSize(200, 500);
     }
 
+    private void setUpUIListeners() {
+        //Create listener for this view
+        DiagramListener diagramListener = new DiagramListener(diagramController);
+        this.setOnMousePressed(diagramListener);
+    }
 
     public void addStateView(double x, double y, DiagramController diagramController, String stateID) {
         StateView stateView = new StateView(x, y, diagramController, stateID);

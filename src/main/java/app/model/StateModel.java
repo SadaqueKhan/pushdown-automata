@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class StateModel {
 
+    private static int num = 0;
     private String stateId;
 
     private boolean isStandardState = true;
@@ -14,6 +15,7 @@ public class StateModel {
     private boolean isFinalState = false;
 
     public StateModel() {
+        this.stateId = "Q" + (num++);
     }
 
     public StateModel(String stateID) {
