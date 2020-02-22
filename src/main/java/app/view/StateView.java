@@ -159,10 +159,10 @@ public class StateView extends StackPane {
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, reflexiveArrowShaftArc, reflexiveArrowTipPolygon);
     }
 
-    public void toggleStandardStateUIComponent(boolean isStandardStateVisible) {
-        startStatePointLine1.setVisible(isStandardStateVisible);
-        startStatePointLine2.setVisible(isStandardStateVisible);
-        finalStateArc.setVisible(isStandardStateVisible);
+    public void toggleStandardStateUIComponent() {
+        startStatePointLine1.setVisible(false);
+        startStatePointLine2.setVisible(false);
+        finalStateArc.setVisible(false);
     }
 
 

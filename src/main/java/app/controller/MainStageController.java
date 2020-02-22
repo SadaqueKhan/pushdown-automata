@@ -1,7 +1,6 @@
 package app.controller;
 
 import app.model.MachineModel;
-import app.model.StateModel;
 import app.view.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -134,14 +133,7 @@ public class MainStageController extends Application {
 
                 this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
-
-                for (StateModel stateModel : machineModelLoaded.getStateModelSet()) {
-                    System.out.println(stateModel.getStateId());
-                    System.out.println(stateModel.isStandardState());
-                    System.out.println(stateModel.isStartState());
-                    System.out.println(stateModel.isFinalState());
-                }
-
+                
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
                 transitionTableController.loadTansitionsOntoTransitionTable();
 

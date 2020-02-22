@@ -64,9 +64,6 @@ public class DiagramController {
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             diagramView.addStateView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), this, stateModelToLoad.getStateId());
             StateView stateViewToLoad = stateMap.get(stateModelToLoad.getStateId());
-            if (stateModelToLoad.isStandardState()) {
-                stateViewToLoad.toggleStandardStateUIComponent(stateModelToLoad.isStandardState());
-            }
             if (stateModelToLoad.isStartState()) {
                 stateViewToLoad.toggleStartStateUIComponent(stateModelToLoad.isStartState());
             }
@@ -200,13 +197,9 @@ public class DiagramController {
         MenuItem deleteStateItem = new MenuItem("Delete");
 
         toggleStandardStateItem.setOnAction(e -> {
-            if (stateModelSelected.isStandardState()) {
-                stateModelSelected.setStandardState(false);
-                stateView.toggleStandardStateUIComponent(stateModelSelected.isStandardState());
-            } else {
-                stateModelSelected.setStandardState(true);
-                stateView.toggleStandardStateUIComponent(stateModelSelected.isStandardState());
-            }
+            stateModelSelected.setStartState(false);
+            stateModelSelected.setFinalState(false);
+            stateView.toggleStandardStateUIComponent();
         });
 
         toggleStartStateItem.setOnAction(e -> {
@@ -226,8 +219,6 @@ public class DiagramController {
                 }
             }
         });
-
-        //TODO need to remove this listeners logic
         toggleFinalStateItem.setOnAction(e -> {
             if (stateModelSelected.isFinalState()) {
                 stateModelSelected.setFinalState(false);
@@ -244,18 +235,18 @@ public class DiagramController {
 //Create input widgets for the user to enter a configuration
             TextField currentStateTextField = new TextField();
             currentStateTextField.setText(stateModelSelected.getStateId());
-            currentStateTextField.setPrefWidth(55);
+            currentStateTextField.setPrefWidth(65);
             // currentStateTextField.setEditable(false);
             currentStateTextField.setDisable(true);
 
             ComboBox<String> inputSymbolComboBox = new ComboBox<>();
-            inputSymbolComboBox.setPrefWidth(55);
+            inputSymbolComboBox.setPrefWidth(65);
             inputSymbolComboBox.setEditable(true);
             inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
             setUpComboBoxesListeners(inputSymbolComboBox);
 
             ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
-            stackSymbolToPopComboBox.setPrefWidth(55);
+            stackSymbolToPopComboBox.setPrefWidth(65);
             stackSymbolToPopComboBox.setEditable(true);
             stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
             setUpComboBoxesListeners(stackSymbolToPopComboBox);
@@ -274,7 +265,7 @@ public class DiagramController {
             resultingStateComboBox.getItems().addAll(availableStateList);
 
             ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
-            stackSymbolToPushComboBox.setPrefWidth(55);
+            stackSymbolToPushComboBox.setPrefWidth(65);
             stackSymbolToPushComboBox.setEditable(true);
             stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
             setUpComboBoxesListeners(stackSymbolToPushComboBox);
@@ -290,7 +281,7 @@ public class DiagramController {
             final VBox vBox = new VBox(hBox, submitTransitionButton);
             vBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(vBox, 400, 150);
+            Scene scene = new Scene(vBox, 450, 150);
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setTitle("Create Transition");
