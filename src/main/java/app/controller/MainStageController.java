@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.model.MachineModel;
+import app.model.StateModel;
 import app.view.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -134,6 +135,13 @@ public class MainStageController extends Application {
                 this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
 
+                for (StateModel stateModel : machineModelLoaded.getStateModelSet()) {
+                    System.out.println(stateModel.getStateId());
+                    System.out.println(stateModel.isStandardState());
+                    System.out.println(stateModel.isStartState());
+                    System.out.println(stateModel.isFinalState());
+                }
+
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
                 transitionTableController.loadTansitionsOntoTransitionTable();
 
@@ -162,7 +170,6 @@ public class MainStageController extends Application {
     public void setAcceptanceCriteriaToFinalState() {
         machineModel.setAcceptanceByFinalState(true);
         machineModel.setAcceptanceByEmptyStack(false);
-
         mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(true);
         mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(false);
         mainStageView.getInputTextLabel().setText("Input word (acceptance by final state)");
@@ -171,7 +178,6 @@ public class MainStageController extends Application {
     public void setAcceptanceCriteriaToEmptyStack() {
         machineModel.setAcceptanceByFinalState(false);
         machineModel.setAcceptanceByEmptyStack(true);
-
         mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(false);
         mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(true);
         mainStageView.getInputTextLabel().setText("Input word (acceptance by empty stack)");

@@ -60,8 +60,19 @@ public class DiagramController {
 
 
     public void loadStatesOntoDiagram() {
+        Map<String, StateView> stateMap = diagramView.getStateMap();
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             diagramView.addStateView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), this, stateModelToLoad.getStateId());
+            StateView stateViewToLoad = stateMap.get(stateModelToLoad.getStateId());
+            if (stateModelToLoad.isStandardState()) {
+                stateViewToLoad.toggleStandardStateUIComponent(stateModelToLoad.isStandardState());
+            }
+            if (stateModelToLoad.isStartState()) {
+                stateViewToLoad.toggleStartStateUIComponent(stateModelToLoad.isStartState());
+            }
+            if (stateModelToLoad.isFinalState()) {
+                stateViewToLoad.toggleFinalStateUIComponent(stateModelToLoad.isFinalState());
+            }
         }
     }
 
@@ -78,13 +89,11 @@ public class DiagramController {
         }
     }
 
-
-    public void addStateToView(double x, double y, String userEntryCurrentStateId) {
+    public void addStateToViewTransitionTableEventResponse(double x, double y, String userEntryCurrentStateId) {
         diagramView.addStateView(x, y, this, userEntryCurrentStateId);
     }
 
     public void addStateToViewMouseEventResponse(double x, double y) {
-
         StateModel newStateModel = null;
         if (machineModel.getStateModelSet().isEmpty()) {
             newStateModel = new StateModel();
@@ -197,7 +206,6 @@ public class DiagramController {
             } else {
                 stateModelSelected.setStandardState(true);
                 stateView.toggleStandardStateUIComponent(stateModelSelected.isStandardState());
-
             }
         });
 
@@ -319,7 +327,7 @@ public class DiagramController {
                 if (resultingStateModel == null) {
                     resultingStateModel = new StateModel(userEntryResultingState);
                     machineModel.addStateModelToStateModelSet(resultingStateModel);
-                    this.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingState);
+                    this.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingState);
                 }
 
                 //Create transition model placeholder

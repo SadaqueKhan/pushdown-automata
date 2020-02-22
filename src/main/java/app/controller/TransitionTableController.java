@@ -78,7 +78,7 @@ public class TransitionTableController {
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateID);
+            diagramController.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateID);
         }
 
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
@@ -86,7 +86,7 @@ public class TransitionTableController {
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateID);
+            diagramController.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateID);
         }
 
         //Create transition model placeholder
