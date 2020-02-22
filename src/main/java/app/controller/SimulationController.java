@@ -52,6 +52,7 @@ public class SimulationController {
 
     private void loadConfigurationsOntoSimulationView() {
         ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
+
         simulationListView.getItems().addAll(simulationPath);
         simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
             @Override

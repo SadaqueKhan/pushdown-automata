@@ -18,6 +18,10 @@ public class Configuration {
     private boolean isStuckConfig = false;
 
 
+    private int step;
+    private int branchId;
+
+
     public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
         this.parentConfiguration = parentConfiguration;
         this.transitionModelTakenToReachCurrentConfiguration = transitionModelTakenToReachCurrentConfiguration;
@@ -25,6 +29,8 @@ public class Configuration {
         this.headPosition = headPosition;
         this.stackContent = stackContent;
         this.isVisited = false;
+        this.step = parentConfiguration == null ? 0 : parentConfiguration.getStep() + 1;
+        this.branchId = -1;
     }
 
 
@@ -64,6 +70,13 @@ public class Configuration {
 
     public void setChildrenConfigurations(List<Configuration> childrenConfigurations) {
         this.childrenConfigurations = childrenConfigurations;
+
+        if (this.childrenConfigurations.size() > 1) {
+            int branchId = 1;
+            for (Configuration configuration : childrenConfigurations) {
+                configuration.setBranchId(branchId++);
+            }
+        }
     }
 
     public boolean isSuccessConfig() {
@@ -97,15 +110,37 @@ public class Configuration {
         String currentStateModelString = "";
         if (parentConfiguration != null) {
             parentStateModelString = parentConfiguration.getCurrentStateModel().getStateId();
+        } else {
+            return "Start at: " + currentStateModel.getStateId();
         }
+
         if (transitionModelTakenToReachCurrentConfiguration != null) {
             transitionModelTakenToReachCurrentConfigurationString = transitionModelTakenToReachCurrentConfiguration.toString();
         }
         if (currentStateModel != null) {
             currentStateModelString = currentStateModel.getStateId();
         }
-        return parentStateModelString + " => " + " { " + transitionModelTakenToReachCurrentConfigurationString + " } "
+
+        String additionalInfo = generateAdditionalInfo();
+
+        return additionalInfo + parentStateModelString + " => " + " { " + transitionModelTakenToReachCurrentConfigurationString + " } "
                 + " => " + currentStateModelString;
+    }
+
+    private String generateAdditionalInfo() {
+        String instruction = "step " + step + ":";
+        instruction += branchId != -1 ? "branch " + branchId + ":" : "";
+        instruction += " ";
+        return instruction;
+    }
+
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
     }
 }
 

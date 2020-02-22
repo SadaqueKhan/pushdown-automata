@@ -42,7 +42,7 @@ public class DiagramController {
 
     private double sceneX;
     private double sceneY;
-    private TransitionModel transitionModeIsHighlighted;
+    private TransitionModel transitionModelHighlighted;
 
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
@@ -397,14 +397,18 @@ public class DiagramController {
 
     public void highlightTransitionView(TransitionModel transitionModelToHightlight) {
 
-        if (transitionModeIsHighlighted != null) {
-            removeHighlightedTransitionView(transitionModeIsHighlighted);
+        if (transitionModelHighlighted != null) {
+            removeHighlightedTransitionView(transitionModelHighlighted);
         }
-        transitionModeIsHighlighted = transitionModelToHightlight;
+        transitionModelHighlighted = transitionModelToHightlight;
+
+        Map<String, StateView> stateMap = diagramView.getStateMap();
+        StateView currentStateView = stateMap.get(transitionModelToHightlight.getCurrentStateModel().getStateId());
+        StateView resultingStateView = stateMap.get(transitionModelToHightlight.getResultingStateModel().getStateId());
+        currentStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+        resultingStateView.getStateCircle().setStroke(Color.LAWNGREEN);
 
         if (transitionModelToHightlight.getCurrentStateModel().equals(transitionModelToHightlight.getResultingStateModel())) {
-            Map<String, StateView> stateMap = diagramView.getStateMap();
-            StateView currentStateView = stateMap.get(transitionModelToHightlight.getCurrentStateModel().getStateId());
             currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
             currentStateView.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
             currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
@@ -426,9 +430,16 @@ public class DiagramController {
 
 
     public void removeHighlightedTransitionView(TransitionModel transitionModelToRemoveHightlight) {
+        Map<String, StateView> stateMap = diagramView.getStateMap();
+        StateView currentStateView = stateMap.get(transitionModelToRemoveHightlight.getCurrentStateModel().getStateId());
+        StateView resultingStateView = stateMap.get(transitionModelToRemoveHightlight.getResultingStateModel().getStateId());
+        currentStateView.getStateCircle().setStroke(Color.BLACK);
+
+        //TODO: Figure out why you have to null check for this
+        if (resultingStateView != null) {
+            resultingStateView.getStateCircle().setStroke(Color.BLACK);
+        }
         if (transitionModelToRemoveHightlight.getCurrentStateModel().equals(transitionModelToRemoveHightlight.getResultingStateModel())) {
-            Map<String, StateView> stateMap = diagramView.getStateMap();
-            StateView currentStateView = stateMap.get(transitionModelToRemoveHightlight.getCurrentStateModel().getStateId());
             currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
             currentStateView.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
             currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);

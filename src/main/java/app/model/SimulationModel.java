@@ -56,8 +56,8 @@ public class SimulationModel {
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
             //no more paths to search for this child
-            if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
-                currentConfig.setStuckConfig(true);
+            if (!(currentConfig.isSuccessConfig())) {
+                currentConfig.setFailConfig(true);
             }
             return 8; // Go back to parent
         }
@@ -86,6 +86,7 @@ public class SimulationModel {
         }
 
         // Move to next configuration
+
         loadConfiguration(toExplore);
         return 1;
     }
@@ -147,13 +148,13 @@ public class SimulationModel {
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 return true;
             }
-            currentConfig.setFailConfig(true);
         }
         return false;
     }
 
     public int run() {
-        while (true) {
+        while (currentConfig.getStep() < 40) {
+
             int result = next(); // if one is returned more children exist
 
             if (result == 100) {
@@ -163,11 +164,21 @@ public class SimulationModel {
             if (result == 8) {
                 //Check if children have all be explored of root
                 previous();
+
+
                 if (currentConfig == null) {
                     return 200;
                 }
+                long childrenVisited = currentConfig.getChildrenConfigurations().stream().filter(configuration -> !configuration.isVisited()).count();
+                if (childrenVisited == 0) {
+                    currentConfig.setFailConfig(true);
+                }
+                configurationPath.add(currentConfig);
             }
         }
+
+        // mean infinite loop
+        return 300;
     }
 
     public ArrayList<Configuration> getConfigurationPath() {

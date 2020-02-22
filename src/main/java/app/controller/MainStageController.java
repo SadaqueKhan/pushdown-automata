@@ -36,6 +36,7 @@ public class MainStageController extends Application {
     private DiagramController diagramController;
 
     private Stage primaryWindow;
+    private StackPane headPointerStackPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -211,9 +212,16 @@ public class MainStageController extends Application {
 
 
     public void updateTapeView(int headPosition) {
+        if (headPointerStackPane != null) {
+            removeHeadPointerStackPane(headPointerStackPane);
+        }
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
-        StackPane stackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
-        stackPane.getChildren().get(2).setVisible(true);
+        this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
+        headPointerStackPane.getChildren().get(2).setVisible(true);
+    }
+
+    public void removeHeadPointerStackPane(StackPane headPointerStackPane) {
+        headPointerStackPane.getChildren().get(2).setVisible(false);
     }
 
     public void updateStackView(ArrayList<String> stackContent) {

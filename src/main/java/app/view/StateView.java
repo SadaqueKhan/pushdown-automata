@@ -242,4 +242,8 @@ public class StateView extends StackPane {
     public Polygon getReflexiveArrowTipPolygon() {
         return reflexiveArrowTipPolygon;
     }
+
+    public Circle getStateCircle() {
+        return stateCircle;
+    }
 }
