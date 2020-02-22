@@ -253,6 +253,7 @@ public class DiagramController {
 
 // Create a arrow label to connect the configuration input widgets to action input widgets
             final Label arrowLabel = new Label("->");
+            arrowLabel.setPrefWidth(40);
 
 //Create input widgets for the user to enter a configuration
             ComboBox<String> resultingStateComboBox = new ComboBox<>();
@@ -404,6 +405,7 @@ public class DiagramController {
             Map<String, StateView> stateMap = diagramView.getStateMap();
             StateView currentStateView = stateMap.get(transitionModelToHightlight.getCurrentStateModel().getStateId());
             currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
+            currentStateView.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
             currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
         } else {
             HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHightlight);
@@ -427,6 +429,7 @@ public class DiagramController {
             Map<String, StateView> stateMap = diagramView.getStateMap();
             StateView currentStateView = stateMap.get(transitionModelToRemoveHightlight.getCurrentStateModel().getStateId());
             currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
+            currentStateView.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
             currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
         } else {
             HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToRemoveHightlight);

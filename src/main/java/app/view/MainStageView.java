@@ -39,6 +39,8 @@ public class MainStageView extends BorderPane {
     private CheckMenuItem acceptanceByFinalStateMenuItem;
     private CheckMenuItem acceptanceByEmptyStackMenuItem;
     private Label inputTextLabel;
+    private StackView stackView;
+    private VBox containerForRightNodes;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -96,20 +98,30 @@ public class MainStageView extends BorderPane {
         toggleDiagramButton.setSelected(true);
 
         this.containerForCenterNodes = new VBox();
-        containerForCenterNodes.setPadding(new Insets(10, 50, 50, 50));
-        containerForCenterNodes.setSpacing(10);
+        containerForCenterNodes.setPadding(new Insets(10, 10, 10, 10));
+        containerForCenterNodes.setSpacing(5);
         containerForCenterNodes.setAlignment(Pos.TOP_CENTER);
         containerForCenterNodes.setStyle(cssLayout);
         containerForCenterNodes.getChildren().add(segmentedButton);
 
         this.setCenter(containerForCenterNodes);
 
+        this.stackView = new StackView();
+
+        this.containerForRightNodes = new VBox();
+        containerForRightNodes.setPadding(new Insets(10, 10, 10, 10));
+        containerForRightNodes.setSpacing(5);
+        containerForRightNodes.setStyle(cssLayout);
+        containerForRightNodes.getChildren().addAll(new Text("Stack"), stackView);
+
+        this.setRight(containerForRightNodes);
+
         //Setup bottom GUI elements
         this.tapeView = new TapeView();
 
         this.containerForBotoomNodes = new VBox();
-        containerForBotoomNodes.setPadding(new Insets(10, 50, 50, 50));
-        containerForBotoomNodes.setSpacing(10);
+        containerForBotoomNodes.setPadding(new Insets(10, 10, 10, 10));
+        containerForBotoomNodes.setSpacing(5);
         containerForBotoomNodes.setStyle(cssLayout);
         containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeView);
 

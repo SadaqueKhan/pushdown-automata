@@ -94,7 +94,7 @@ public class MainStageController extends Application {
     }
 
     public void setUpTapeView(String inputWord) {
-        mainStageView.getTapeView().setUpUIComponents(inputWord);
+        // mainStageView.getTapeView().setUpUIComponents(inputWord);
     }
 
     public void saveMachine() {
@@ -133,7 +133,7 @@ public class MainStageController extends Application {
 
                 this.machineModel = machineModelLoaded;
                 this.mainStageView = new MainStageView(this);
-                
+
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
                 transitionTableController.loadTansitionsOntoTransitionTable();
 
