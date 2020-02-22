@@ -9,14 +9,14 @@ import javafx.scene.text.Text;
 
 public class TapeView extends ScrollPane {
 
-    private HBox hBox;
+    private HBox tapeViewHBoxContainer;
 
     public TapeView() {
         setUpUIComponents();
     }
 
     private void setUpUIComponents() {
-        hBox = new HBox();
+        tapeViewHBoxContainer = new HBox();
 
         for (int i = 0; i < 10; i++) {
             //Drawing a Rectangle
@@ -32,7 +32,7 @@ public class TapeView extends ScrollPane {
             StackPane stackPane = new StackPane();
             stackPane.getChildren().addAll(rectangle, new Text("..."));
 
-            hBox.getChildren().add(stackPane);
+            tapeViewHBoxContainer.getChildren().add(stackPane);
         }
 
         this.pannableProperty().set(true);
@@ -40,7 +40,11 @@ public class TapeView extends ScrollPane {
         this.fitToHeightProperty().set(true);
         this.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        this.setContent(hBox);
+        this.setContent(tapeViewHBoxContainer);
 
+    }
+
+    public HBox getTapeViewHBoxContainer() {
+        return tapeViewHBoxContainer;
     }
 }
