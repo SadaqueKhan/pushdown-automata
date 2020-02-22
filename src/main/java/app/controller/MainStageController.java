@@ -1,11 +1,17 @@
 package app.controller;
 
+import app.model.Configuration;
 import app.model.MachineModel;
 import app.view.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
@@ -17,6 +23,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 
 
 public class MainStageController extends Application {
@@ -172,4 +179,30 @@ public class MainStageController extends Application {
     }
 
 
+    public void renderNewTapeView(Configuration configuration) {
+
+    }
+
+    public void renderNewStackView(ArrayList<String> stackContent) {
+        VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
+        stackViewVBoxContainer.getChildren().clear();
+
+        for (String inputSymbol : stackContent) {
+            //Drawing a Rectangle
+            Rectangle rectangle = new Rectangle();
+            //Setting the properties of the rectangle
+            rectangle.setX(10);
+            rectangle.setY(0);
+            rectangle.setWidth(100);
+            rectangle.setHeight(100);
+            rectangle.setFill(Color.WHITE);
+            rectangle.setStroke(Color.BLACK);
+
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol));
+
+            stackViewVBoxContainer.getChildren().add(stackPane);
+        }
+
+    }
 }

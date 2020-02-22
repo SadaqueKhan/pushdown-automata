@@ -10,20 +10,14 @@ import javafx.scene.text.Text;
 
 public class StackView extends ScrollPane {
 
-    private VBox vBox;
+    private VBox stackViewVBoxContainer;
 
     public StackView() {
-
         setUpUIComponents();
-        setUpUIListeners();
-    }
-
-    private void setUpUIListeners() {
     }
 
     private void setUpUIComponents() {
-        vBox = new VBox();
-
+        stackViewVBoxContainer = new VBox();
         for (int i = 0; i < 1; i++) {
             //Drawing a Rectangle
             Rectangle rectangle = new Rectangle();
@@ -38,13 +32,17 @@ public class StackView extends ScrollPane {
             StackPane stackPane = new StackPane();
             stackPane.getChildren().addAll(rectangle, new Text("..."));
 
-            vBox.getChildren().add(stackPane);
+            stackViewVBoxContainer.getChildren().add(stackPane);
         }
         this.pannableProperty().set(true);
         this.fitToWidthProperty().set(true);
         this.fitToHeightProperty().set(true);
         this.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        this.setContent(vBox);
+        this.setContent(stackViewVBoxContainer);
+    }
+
+    public VBox getStackViewVBoxContainer() {
+        return stackViewVBoxContainer;
     }
 }

@@ -171,6 +171,10 @@ public class MainStageView extends BorderPane {
         return tapeView;
     }
 
+    public StackView getStackView() {
+        return stackView;
+    }
+
     public CheckMenuItem getAcceptanceByFinalStateMenuItem() {
         return acceptanceByFinalStateMenuItem;
     }

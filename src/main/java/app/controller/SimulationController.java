@@ -92,9 +92,10 @@ public class SimulationController {
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
-
+        mainStageController.renderNewTapeView(selectedConfiguration);
     }
 
-    public void updateStackViewForSelectedConfiguration(Configuration configuration) {
+    public void updateStackViewForSelectedConfiguration(Configuration selectedConfiguration) {
+        mainStageController.renderNewStackView(selectedConfiguration.getStackContent());
     }
 }
