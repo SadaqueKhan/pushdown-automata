@@ -29,7 +29,7 @@ public class SimulationModel {
     public void loadInput(String input) {
         inputTape.loadInput(input);
         Stack stack = new Stack();
-        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), 0, stack.getContent());
+        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputTape.printCurrentState(), 0, stack.getContent());
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath = new ArrayList<>();
@@ -136,7 +136,7 @@ public class SimulationModel {
             currentStack.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentHead, currentStack.getContent());
+        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), inputTape.printCurrentState(), currentHead, currentStack.getContent());
         return newConfig;
     }
 
@@ -165,15 +165,12 @@ public class SimulationModel {
                 //Check if children have all be explored of root
                 previous();
 
-
+                configurationPath.add(currentConfig);
                 if (currentConfig == null) {
                     return 200;
                 }
-                long childrenVisited = currentConfig.getChildrenConfigurations().stream().filter(configuration -> !configuration.isVisited()).count();
-                if (childrenVisited == 0) {
-                    currentConfig.setFailConfig(true);
-                }
-                configurationPath.add(currentConfig);
+
+
             }
         }
 

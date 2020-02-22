@@ -36,7 +36,8 @@ public class Stack {
     }
 
     public void setContent(ArrayList<String> stack) {
-        this.stack = stack;
+        this.stack.clear();
+        this.stack.addAll(stack);
     }
 
 

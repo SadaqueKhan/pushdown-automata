@@ -50,6 +50,7 @@ public class SimulationController {
         }
     }
 
+
     private void loadConfigurationsOntoSimulationView() {
         ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
 
@@ -65,18 +66,33 @@ public class SimulationController {
                             setText(null);
                             setStyle(null);
                         } else {
-                            setText(item.toString());
+
+                            int index = getIndex();
+                            String itemToPrint = item.toString();
+
+                            setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
+
+                            if (simulationPath.lastIndexOf(item) == index) {
+                                setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
+                                itemToPrint += " (No More Paths!)";
+                            } else if (simulationPath.indexOf(item) < index && index < simulationPath.lastIndexOf(item)) {
+                                setStyle("-fx-control-inner-background: " + "derive(#aedaff, 70%);");
+                                itemToPrint += " (New Path!)";
+                            }
+
+                            if (item.getParentConfiguration() == null) {
+                                setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
+                                itemToPrint = item.toString() + " (At the root!)";
+                            }
+
+
                             if (item.isSuccessConfig()) {
                                 setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");
+                                itemToPrint = item.toString() + "  (Success!)";
                             }
 
-                            if (item.isFailConfig()) {
-                                setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
-                            }
 
-                            if (item.isStuckConfig()) {
-                                setStyle("-fx-control-inner-background: " + "derive(#ffa22e, 50%);");
-                            }
+                            setText(itemToPrint);
                         }
                     }
                 };

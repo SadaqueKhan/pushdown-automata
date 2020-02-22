@@ -9,6 +9,7 @@ public class Configuration {
     private TransitionModel transitionModelTakenToReachCurrentConfiguration;
     private StateModel currentStateModel;
     private int headPosition;
+    private String inputTapeState;
     private ArrayList<String> stackContent;
     private boolean isVisited;
     private List<Configuration> childrenConfigurations;
@@ -22,7 +23,7 @@ public class Configuration {
     private int branchId;
 
 
-    public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, int headPosition, ArrayList<String> stackContent) {
+    public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, String inputTapeState, int headPosition, ArrayList<String> stackContent) {
         this.parentConfiguration = parentConfiguration;
         this.transitionModelTakenToReachCurrentConfiguration = transitionModelTakenToReachCurrentConfiguration;
         this.currentStateModel = currentStateModel;
@@ -30,7 +31,8 @@ public class Configuration {
         this.stackContent = stackContent;
         this.isVisited = false;
         this.step = parentConfiguration == null ? 0 : parentConfiguration.getStep() + 1;
-        this.branchId = -1;
+        this.branchId = 1;
+        this.inputTapeState = inputTapeState;
     }
 
 
@@ -108,10 +110,19 @@ public class Configuration {
         String parentStateModelString = "";
         String transitionModelTakenToReachCurrentConfigurationString = "";
         String currentStateModelString = "";
+
+        ArrayList<String> stackContent = this.stackContent;
+        String stackState = "";
+        stackState += stackContent.isEmpty() ? "\u03B5" : "";
+        for (String stackSymbol : stackContent) {
+            stackState += stackSymbol;
+        }
+
+        String configuration = "( " + currentStateModel.toString() + ", " + inputTapeState + ", " + stackState + " )";
         if (parentConfiguration != null) {
             parentStateModelString = parentConfiguration.getCurrentStateModel().getStateId();
         } else {
-            return "Start at: " + currentStateModel.getStateId();
+            return "At " + currentStateModel.getStateId();
         }
 
         if (transitionModelTakenToReachCurrentConfiguration != null) {
@@ -121,17 +132,9 @@ public class Configuration {
             currentStateModelString = currentStateModel.getStateId();
         }
 
-        String additionalInfo = generateAdditionalInfo();
+        String additionalInfo = "depth " + step + ":branch " + branchId + ": ";
 
-        return additionalInfo + parentStateModelString + " => " + " { " + transitionModelTakenToReachCurrentConfigurationString + " } "
-                + " => " + currentStateModelString;
-    }
-
-    private String generateAdditionalInfo() {
-        String instruction = "step " + step + ":";
-        instruction += branchId != -1 ? "branch " + branchId + ":" : "";
-        instruction += " ";
-        return instruction;
+        return additionalInfo + configuration;
     }
 
 

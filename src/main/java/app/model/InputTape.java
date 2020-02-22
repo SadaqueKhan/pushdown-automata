@@ -42,5 +42,18 @@ public class InputTape {
         return inputTape.size() == head;
     }
 
+    public String printCurrentState() {
+        if (isEmpty()) {
+            return "\u03B5";
+        }
+
+        String toReturn = "";
+
+        for (int i = head; i < inputTape.size(); i++) {
+            toReturn += inputTape.get(i);
+        }
+
+        return toReturn;
+    }
 
 }
