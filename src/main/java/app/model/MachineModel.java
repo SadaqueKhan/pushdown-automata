@@ -69,15 +69,6 @@ public class MachineModel {
         return null;
     }
 
-
-    public HashSet<String> getInputAlphabetSet() {
-        return inputAlphabetSet;
-    }
-
-    public HashSet<String> getStackAlphabetSet() {
-        return stackAlphabetSet;
-    }
-
     @XmlElement
     public HashSet<StateModel> getStateModelSet() {
         return stateModelSet;
@@ -87,6 +78,18 @@ public class MachineModel {
     public HashSet<TransitionModel> getTransitionModelSet() {
         return transitionModelSet;
     }
+
+
+
+    public HashSet<String> getInputAlphabetSet() {
+        return inputAlphabetSet;
+    }
+
+    public HashSet<String> getStackAlphabetSet() {
+        return stackAlphabetSet;
+    }
+
+
 
 
     public HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {

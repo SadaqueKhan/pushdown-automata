@@ -7,6 +7,7 @@ import app.view.DiagramView;
 import app.view.MainStageView;
 import app.view.StateView;
 import app.view.TransitionView;
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -156,7 +158,7 @@ public class DiagramController {
 
     public void stateViewContextMenuPopUp(StateView stateView) {
 
-        StateModel stateModel = machineModel.getStateModelFromStateModelSet(stateView.getStateID());
+        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateView.getStateID());
 
         //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
@@ -167,20 +169,20 @@ public class DiagramController {
         MenuItem deleteStateItem = new MenuItem("Delete");
 
         toggleStandardStateItem.setOnAction(e -> {
-            if (stateModel.isStandardState()) {
-                stateModel.setStandardState(false);
-                stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+            if (stateModelSelected.isStandardState()) {
+                stateModelSelected.setStandardState(false);
+                stateView.toggleStandardStateUIComponent(stateModelSelected.isStandardState());
             } else {
-                stateModel.setStandardState(true);
-                stateView.toggleStandardStateUIComponent(stateModel.isStandardState());
+                stateModelSelected.setStandardState(true);
+                stateView.toggleStandardStateUIComponent(stateModelSelected.isStandardState());
 
             }
         });
 
         toggleStartStateItem.setOnAction(e -> {
-            if (stateModel.isStartState()) {
-                stateModel.setStartState(false);
-                stateView.toggleStartStateUIComponent(stateModel.isStartState());
+            if (stateModelSelected.isStartState()) {
+                stateModelSelected.setStartState(false);
+                stateView.toggleStartStateUIComponent(stateModelSelected.isStartState());
             } else {
                 if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
                     Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -189,20 +191,20 @@ public class DiagramController {
                     invalidActionAlert.setTitle("Invalid Action");
                     invalidActionAlert.show();
                 } else {
-                    stateModel.setStartState(true);
-                    stateView.toggleStartStateUIComponent(stateModel.isStartState());
+                    stateModelSelected.setStartState(true);
+                    stateView.toggleStartStateUIComponent(stateModelSelected.isStartState());
                 }
             }
         });
 
         //TODO need to remove this listeners logic
         toggleFinalStateItem.setOnAction(e -> {
-            if (stateModel.isFinalState()) {
-                stateModel.setFinalState(false);
-                stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
+            if (stateModelSelected.isFinalState()) {
+                stateModelSelected.setFinalState(false);
+                stateView.toggleFinalStateUIComponent(stateModelSelected.isFinalState());
             } else {
-                stateModel.setFinalState(true);
-                stateView.toggleFinalStateUIComponent(stateModel.isFinalState());
+                stateModelSelected.setFinalState(true);
+                stateView.toggleFinalStateUIComponent(stateModelSelected.isFinalState());
             }
         });
 
@@ -211,55 +213,138 @@ public class DiagramController {
         createTransitionItem.setOnAction(e -> {
 //Create input widgets for the user to enter a configuration
             TextField currentStateTextField = new TextField();
-            currentStateTextField.setPrefWidth(50);
+            currentStateTextField.setText(stateModelSelected.getStateId());
+            currentStateTextField.setPrefWidth(55);
+            // currentStateTextField.setEditable(false);
+            currentStateTextField.setDisable(true);
 
-            TextField inputSymbolTextField = new TextField();
-            inputSymbolTextField.setPrefWidth(50);
+            ComboBox<String> inputSymbolComboBox = new ComboBox<>();
+            inputSymbolComboBox.setPrefWidth(55);
+            inputSymbolComboBox.setEditable(true);
+            inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
+            setUpComboBoxesListeners(inputSymbolComboBox);
 
-            TextField stackSymbolToPopTextField = new TextField();
-            stackSymbolToPopTextField.setPrefWidth(50);
+            ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
+            stackSymbolToPopComboBox.setPrefWidth(55);
+            stackSymbolToPopComboBox.setEditable(true);
+            stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
+            setUpComboBoxesListeners(stackSymbolToPopComboBox);
 
 // Create a arrow label to connect the configuration input widgets to action input widgets
             final Label arrowLabel = new Label("->");
 
 //Create input widgets for the user to enter a configuration
-            TextField resultingStateTextField = new TextField();
-            resultingStateTextField.setPrefWidth(50);
+            ComboBox<String> resultingStateComboBox = new ComboBox<>();
+            resultingStateComboBox.setPrefWidth(110);
+            resultingStateComboBox.setEditable(true);
+            ArrayList<String> availableStateList = new ArrayList<>();
+            for (StateModel availableStateModel : machineModel.getStateModelSet()) {
+                availableStateList.add(availableStateModel.getStateId());
+            }
+            resultingStateComboBox.getItems().addAll(availableStateList);
 
-            TextField stackSymbolToPushTextField = new TextField();
-            stackSymbolToPushTextField.setPrefWidth(50);
+            ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
+            stackSymbolToPushComboBox.setPrefWidth(55);
+            stackSymbolToPushComboBox.setEditable(true);
+            stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
+            setUpComboBoxesListeners(stackSymbolToPushComboBox);
 
 //Create submit button for the user to submit a transition
             Button submitTransitionButton = new Button("Submit");
 
-
             final HBox hBox = new HBox();
             hBox.setPadding(new Insets(10, 10, 10, 10));
             hBox.setSpacing(10);
-            hBox.getChildren().addAll(currentStateTextField, inputSymbolTextField, stackSymbolToPopTextField, arrowLabel, resultingStateTextField, stackSymbolToPushTextField);
+            hBox.getChildren().addAll(currentStateTextField, inputSymbolComboBox, stackSymbolToPopComboBox, arrowLabel, resultingStateComboBox, stackSymbolToPushComboBox);
 
             final VBox vBox = new VBox(hBox, submitTransitionButton);
             vBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(vBox, 350, 150);
+            Scene scene = new Scene(vBox, 400, 150);
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setTitle("Create Transition");
             stage.setScene(scene);
             stage.show();
+
+            submitTransitionButton.setOnAction(e1 -> {
+                //User input for a configuration
+                String userEntryCurrentState = currentStateTextField.getText();
+                String userEntryInputSymbol = inputSymbolComboBox.getValue();
+                String userEntryStackSymbolToPop = stackSymbolToPopComboBox.getValue();
+
+                //User input for a action
+                String userEntryResultingState = resultingStateComboBox.getValue();
+                String userEntryStackSymbolToPush = stackSymbolToPushComboBox.getValue();
+
+                if (((userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
+                        (userEntryResultingState == null || userEntryResultingState.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals("")))) {
+                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                            "All fields must be filled out to create a transition.", ButtonType.OK);
+                    invalidActionAlert.setHeaderText("Information");
+                    invalidActionAlert.setTitle("Invalid Action");
+                    invalidActionAlert.show();
+                    return;
+                }
+
+                //Update alphabets for machine
+                machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
+                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
+                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
+
+                StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingState);
+
+                if (resultingStateModel == null) {
+                    resultingStateModel = new StateModel(userEntryResultingState);
+                    machineModel.addStateModelToStateModelSet(resultingStateModel);
+                    this.addStateToView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingState);
+                }
+
+                //Create transition model placeholder
+                TransitionModel newTransitionModel = new TransitionModel(stateModelSelected, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
+
+                //Check to see if the transition already exists for the current state model
+                for (TransitionModel transitionModel : machineModel.getExitingTranstionsFromStateModel(stateModelSelected)) {
+                    if (transitionModel.equals(newTransitionModel)) {
+                        // if transition exists alert the user and don't do anything further
+                        Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                                "Transition '" + newTransitionModel + "' already exists.", ButtonType.OK);
+                        invalidActionAlert.setHeaderText("Information");
+                        invalidActionAlert.setTitle("Invalid Action");
+                        invalidActionAlert.show();
+                        return;
+                    }
+                }
+
+                //Add transition model to machinemodel
+                machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
+
+                //Update table view
+                transitionTableController.addTransitionModelEntryToTransitionTable(newTransitionModel);
+
+                //Add transitionview onto diagram view
+                if (userEntryCurrentState.equals(userEntryResultingState)) {
+                    this.addReflexiveTransitionToView(stateModelSelected.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
+                } else {
+                    this.addDirectionalTransitionToView(stateModelSelected.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
+                }
+                stage.close();
+            });
+
+
         });
 
         deleteStateItem.setOnAction(e -> {
             //Update machine model
-            HashSet<TransitionModel> exitingTranstionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModel);
-            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModel);
+            HashSet<TransitionModel> exitingTranstionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModelSelected);
+            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModelSelected);
             machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
             machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
-            machineModel.removeStateModelFromStateModelSet(stateModel);
+            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
             //Notify transition table controller
             transitionTableController.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
             //Update view
-            diagramView.deleteStateView(stateModel.getStateId(), exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            diagramView.deleteStateView(stateModelSelected.getStateId(), exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);
@@ -270,6 +355,21 @@ public class DiagramController {
 
         contextMenu.show(stateView, Side.RIGHT, 5, 5);
 
+    }
+
+    private void setUpComboBoxesListeners(ComboBox comboBox) {
+        comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
+            if ((newValue.matches("^\\w{1}$")) || newValue.equals("\u03B5")) {
+                return;
+            }
+            Platform.runLater(() -> {
+                comboBox.getEditor().clear();
+            });
+        });
     }
 
 

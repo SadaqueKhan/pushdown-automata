@@ -42,7 +42,7 @@ public class TransitionTableController {
         }
     }
 
-    public void addTransitionEntry() {
+    public void addUserTransitionModelEntryToTransitionTable() {
         //User input for a configuration
         String userEntryCurrentStateID = transitionTableView.getCurrentStateComboBox().getValue();
         String userEntryInputSymbol = transitionTableView.getInputSymbolComboBox().getValue();
@@ -120,6 +120,15 @@ public class TransitionTableController {
         } else {
             diagramController.addDirectionalTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
         }
+    }
+
+
+    public void addTransitionModelEntryToTransitionTable(TransitionModel transitionModelToBeAdded) {
+        //Update table view
+        transitionTableView.getTransitionTable().getItems().add(transitionModelToBeAdded);
+        updateAvailableStateListForCombobox();
+        updateInputAlphabetForComboxBox();
+        updateStackAlphabetForComboxBox();
     }
 
     public void deleteTransitionModelEntriesFromTransitionTable() {

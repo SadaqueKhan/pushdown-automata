@@ -26,7 +26,7 @@ public class TransitionTableListener implements EventHandler {
             String tempIsButton = isButton.getText();
 
             if (tempIsButton.equals("Submit")) {
-                transitionTableController.addTransitionEntry();
+                transitionTableController.addUserTransitionModelEntryToTransitionTable();
             }
             if (tempIsButton.equals("Delete")) {
                 transitionTableController.deleteTransitionModelEntriesFromTransitionTable();

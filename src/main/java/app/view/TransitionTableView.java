@@ -186,8 +186,6 @@ public class TransitionTableView extends BorderPane {
             Platform.runLater(() -> {
                 comboBox.getEditor().clear();
             });
-
-
         });
     }
 
