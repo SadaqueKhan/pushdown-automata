@@ -6,11 +6,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
@@ -72,7 +67,6 @@ public class MainStageController extends Application {
             invalidActionAlert.show();
         } else {
             setSimulationProgressBar(true);
-            setUpTapeView(inputWord);
             new SimulationController(this, machineModel, inputWord);
         }
     }
@@ -98,29 +92,6 @@ public class MainStageController extends Application {
         mainStageView.getProgressBar().setVisible(isSimulationInProgress);
     }
 
-    public void setUpTapeView(String inputWord) {
-        HBox tapeViewHBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
-        tapeViewHBoxContainer.getChildren().clear();
-
-        for (String inputSymbol : inputWord.split("")) {
-            //Drawing a Rectangle
-            Rectangle rectangle = new Rectangle();
-            //Setting the properties of the rectangle
-            rectangle.setX(10);
-            rectangle.setY(0);
-            rectangle.setWidth(100);
-            rectangle.setHeight(100);
-            rectangle.setFill(Color.WHITE);
-            rectangle.setStroke(Color.BLACK);
-
-            StackPane stackPane = new StackPane();
-            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol));
-
-            tapeViewHBoxContainer.getChildren().add(stackPane);
-        }
-
-        // mainStageView.getTapeView().setUpUIComponents(inputWord);
-    }
 
     public void saveMachine() {
         try {

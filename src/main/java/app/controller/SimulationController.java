@@ -88,9 +88,13 @@ public class SimulationController {
         TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         DiagramController diagramController = mainStageController.getDiagramController();
         diagramController.highlightTransitionView(transitionModelToHighlight);
+
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
 
+    }
+
+    public void updateStackViewForSelectedConfiguration(Configuration configuration) {
     }
 }

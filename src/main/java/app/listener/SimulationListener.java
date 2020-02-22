@@ -20,12 +20,14 @@ public class SimulationListener implements EventHandler {
         if (event.getSource() instanceof ListView) {
             ListView<Configuration> listView = (ListView) event.getSource();
             if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
-                ObservableList<Configuration> selectedTransitionsToHighlightList = listView.getSelectionModel().getSelectedItems();
-                Configuration configuration = selectedTransitionsToHighlightList.get(0);
-                simulationController.updateDiagramViewForSelectedConfiguration(configuration);
-                simulationController.updateTapeViewForSelectedConfiguration(configuration);
+                ObservableList<Configuration> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
+                Configuration selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                if (selectedConfiguration.getCurrentStateModel() != null) {
+                    simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                    simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                    simulationController.updateStackViewForSelectedConfiguration(selectedConfiguration);
+                }
             }
-
         }
     }
 }
