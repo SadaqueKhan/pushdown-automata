@@ -95,6 +95,7 @@ public class SimulationModel {
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
         inputTape.setHead(toExplore.getHeadPosition());
         stack.setContent(toExplore.getStackContent());
+        configurationPath.add(currentConfig);
     }
 
     public void previous() {
@@ -157,7 +158,6 @@ public class SimulationModel {
 
             if (result == 100) {
                 currentConfig.setSuccessConfig(true);
-                continue;
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
@@ -166,10 +166,7 @@ public class SimulationModel {
                 if (currentConfig == null) {
                     return 200;
                 }
-                continue;
             }
-
-            configurationPath.add(currentConfig);
         }
     }
 
