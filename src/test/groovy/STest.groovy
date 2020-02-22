@@ -10,6 +10,6 @@ class STest extends Specification {
         int result = left + right
 
         then:
-        result == 3
+        result == 4
     }
 }
