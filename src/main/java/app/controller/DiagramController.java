@@ -397,7 +397,6 @@ public class DiagramController {
 
     public void highlightTransitionView(TransitionModel transitionModelToHightlight) {
 
-        System.out.println(transitionModelToHightlight);
         if (transitionModeIsHighlighted != null) {
             removeHighlightedTransitionView(transitionModeIsHighlighted);
         }

@@ -92,10 +92,11 @@ public class SimulationController {
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
-        mainStageController.renderNewTapeView(selectedConfiguration);
+
+        mainStageController.updateTapeView(selectedConfiguration.getHeadPosition());
     }
 
     public void updateStackViewForSelectedConfiguration(Configuration selectedConfiguration) {
-        mainStageController.renderNewStackView(selectedConfiguration.getStackContent());
+        mainStageController.updateStackView(selectedConfiguration.getStackContent());
     }
 }

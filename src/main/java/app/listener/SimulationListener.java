@@ -8,7 +8,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 
 public class SimulationListener implements EventHandler {
-
     private final SimulationController simulationController;
 
     public SimulationListener(SimulationController simulationController) {
@@ -22,7 +21,7 @@ public class SimulationListener implements EventHandler {
             if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
                 ObservableList<Configuration> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
                 Configuration selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
-                if (selectedConfiguration.getCurrentStateModel() != null) {
+                if (selectedConfiguration.getParentConfiguration() != null) {
                     simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
                     simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);
                     simulationController.updateStackViewForSelectedConfiguration(selectedConfiguration);

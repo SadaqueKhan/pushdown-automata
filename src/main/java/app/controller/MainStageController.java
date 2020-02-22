@@ -1,12 +1,12 @@
 package app.controller;
 
-import app.model.Configuration;
 import app.model.MachineModel;
 import app.view.MainStageView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -74,6 +74,7 @@ public class MainStageController extends Application {
             invalidActionAlert.show();
         } else {
             setSimulationProgressBar(true);
+            setUpTapeView(inputWord);
             new SimulationController(this, machineModel, inputWord);
         }
     }
@@ -178,12 +179,36 @@ public class MainStageController extends Application {
         mainStageView.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
 
+    public void setUpTapeView(String inputWord) {
+        HBox tapeViewHBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
+        tapeViewHBoxContainer.getChildren().clear();
 
-    public void renderNewTapeView(Configuration configuration) {
+        for (String inputSymbol : inputWord.split("")) {
+            //Drawing a Rectangle
+            Rectangle rectangle = new Rectangle();
+            //Setting the properties of the rectangle
+            rectangle.setX(10);
+            rectangle.setY(0);
+            rectangle.setWidth(100);
+            rectangle.setHeight(100);
+            rectangle.setFill(Color.WHITE);
+            rectangle.setStroke(Color.BLACK);
 
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol));
+
+            tapeViewHBoxContainer.getChildren().add(stackPane);
+        }
     }
 
-    public void renderNewStackView(ArrayList<String> stackContent) {
+
+    public void updateTapeView(int headPosition) {
+        HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
+        StackPane stackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition);
+        stackPane.getChildren().get(2).setVisible(true);
+    }
+
+    public void updateStackView(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
 
