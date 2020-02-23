@@ -404,6 +404,8 @@ public class DiagramController {
             startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
             if (transitionModelHighlighted != null) {
                 removeHighlightedTransitionView(transitionModelHighlighted);
+                //TODO: FIX THIS LOGIC CURRENT IMP IS QUICK FIX
+                startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
             }
         } else {
             if (startStateView != null) {
