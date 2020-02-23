@@ -5,6 +5,7 @@ import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.model.TransitionModel;
 import app.view.SimulationView;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -55,7 +56,7 @@ public class SimulationController {
         ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
 
         simulationListView.getItems().addAll(simulationPath);
-        simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
+        Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
             @Override
             public ListCell<Configuration> call(ListView<Configuration> param) {
                 return new ListCell<Configuration>() {
@@ -97,23 +98,32 @@ public class SimulationController {
                     }
                 };
             }
-        });
+        }));
     }
 
 
     public void updateDiagramViewForSelectedConfiguration(Configuration selectedConfiguration) {
         TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         DiagramController diagramController = mainStageController.getDiagramController();
-        diagramController.highlightTransitionView(transitionModelToHighlight);
-
+        diagramController.highlightTransitionTakenInDiagram(transitionModelToHighlight);
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
-
+        System.out.println(selectedConfiguration.getHeadPosition());
+        System.out.println(selectedConfiguration.getParentConfiguration().getCurrentStateModel());
+        System.out.println(selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration());
+        System.out.println(selectedConfiguration.getParentConfiguration().getCurrentStateModel());
         mainStageController.updateTapeView(selectedConfiguration.getHeadPosition());
     }
 
     public void updateStackViewForSelectedConfiguration(Configuration selectedConfiguration) {
         mainStageController.updateStackView(selectedConfiguration.getStackContent());
+    }
+
+    public void updateTransitionTableViewForSelectedConfiguration(Configuration selectedConfiguration) {
+        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
+        TransitionTableController transitionTableController = mainStageController.getTransitionTableController();
+        transitionTableController.highlightTransitionTakenInTransitionTable(transitionModelToHighlight);
+
     }
 }

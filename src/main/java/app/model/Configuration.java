@@ -108,9 +108,7 @@ public class Configuration {
     @Override
     public String toString() {
         String parentStateModelString = "";
-        String transitionModelTakenToReachCurrentConfigurationString = "";
-        String currentStateModelString = "";
-
+        
         ArrayList<String> stackContent = this.stackContent;
         String stackState = "";
         stackState += stackContent.isEmpty() ? "\u03B5" : "";
@@ -123,13 +121,6 @@ public class Configuration {
             parentStateModelString = parentConfiguration.getCurrentStateModel().getStateId();
         } else {
             return "At " + currentStateModel.getStateId();
-        }
-
-        if (transitionModelTakenToReachCurrentConfiguration != null) {
-            transitionModelTakenToReachCurrentConfigurationString = transitionModelTakenToReachCurrentConfiguration.toString();
-        }
-        if (currentStateModel != null) {
-            currentStateModelString = currentStateModel.getStateId();
         }
 
         String additionalInfo = "depth " + step + ":branch " + branchId + ": ";

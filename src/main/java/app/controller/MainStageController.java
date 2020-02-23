@@ -216,8 +216,14 @@ public class MainStageController extends Application {
             removeHeadPointerStackPane(headPointerStackPane);
         }
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
-        this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
-        headPointerStackPane.getChildren().get(2).setVisible(true);
+
+        System.out.println("HeadPosition variable value: " + headPosition);
+        if (!(headPosition == 0)) {
+            //pointer not currently on tape
+            this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition);
+            headPointerStackPane.getChildren().get(2).setVisible(true);
+        }
+
     }
 
     public void removeHeadPointerStackPane(StackPane headPointerStackPane) {
@@ -228,7 +234,7 @@ public class MainStageController extends Application {
         VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
 
-        for (String inputSymbol : stackContent) {
+        for (int i = stackContent.size(); i-- > 0; ) {
             //Drawing a Rectangle
             Rectangle rectangle = new Rectangle();
             //Setting the properties of the rectangle
@@ -240,9 +246,12 @@ public class MainStageController extends Application {
             rectangle.setStroke(Color.BLACK);
 
             StackPane stackPane = new StackPane();
-            stackPane.getChildren().addAll(rectangle, new Text(inputSymbol));
+            stackPane.getChildren().addAll(rectangle, new Text(stackContent.get(i)));
 
             stackViewVBoxContainer.getChildren().add(stackPane);
+        }
+        for (String inputSymbol : stackContent) {
+
         }
 
     }

@@ -122,7 +122,6 @@ public class SimulationModel {
     //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModelToNextConfiguration) {
         int currentHead = inputTape.getHead();
-
         Stack currentStack = new Stack();
         currentStack.setContent(stack.getContent());
 
@@ -165,12 +164,10 @@ public class SimulationModel {
                 //Check if children have all be explored of root
                 previous();
 
-                configurationPath.add(currentConfig);
                 if (currentConfig == null) {
                     return 200;
                 }
-
-
+                configurationPath.add(currentConfig);
             }
         }
 

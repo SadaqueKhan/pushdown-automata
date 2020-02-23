@@ -395,7 +395,11 @@ public class DiagramController {
     }
 
 
-    public void highlightTransitionView(TransitionModel transitionModelToHightlight) {
+    public void highlightTransitionTakenInDiagram(TransitionModel transitionModelToHightlight) {
+
+        if (transitionModelToHightlight == null) {
+            return;
+        }
 
         if (transitionModelHighlighted != null) {
             removeHighlightedTransitionView(transitionModelHighlighted);

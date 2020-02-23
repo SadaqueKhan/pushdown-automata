@@ -8,6 +8,8 @@ import app.view.TransitionTableView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -175,5 +177,25 @@ public class TransitionTableController {
         transitionTableView.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
         transitionTableView.getStackSymbolToPushComboBox().getItems().clear();
         transitionTableView.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+    }
+
+    public void highlightTransitionTakenInTransitionTable(TransitionModel transitionModelToHighlight) {
+        TableView tableView = transitionTableView.getTransitionTable();
+
+        tableView.setRowFactory(row -> new TableRow<TransitionModel>() {
+            @Override
+            public void updateItem(TransitionModel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if (item == transitionModelToHighlight) {
+                        setStyle("-fx-background-color: yellow");
+                    }
+
+                }
+            }
+        });
     }
 }

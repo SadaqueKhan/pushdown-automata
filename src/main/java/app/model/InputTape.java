@@ -47,13 +47,13 @@ public class InputTape {
             return "\u03B5";
         }
 
-        String toReturn = "";
+        StringBuilder toReturn = new StringBuilder();
 
         for (int i = head; i < inputTape.size(); i++) {
-            toReturn += inputTape.get(i);
+            toReturn.append(inputTape.get(i));
         }
 
-        return toReturn;
+        return toReturn.toString();
     }
 
 }
