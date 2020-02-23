@@ -233,8 +233,7 @@ public class MainStageController extends Application {
     public void updateStackView(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
-
-        for (int i = stackContent.size(); i-- > 0; ) {
+        if (stackContent.isEmpty()) {
             //Drawing a Rectangle
             Rectangle rectangle = new Rectangle();
             //Setting the properties of the rectangle
@@ -246,13 +245,25 @@ public class MainStageController extends Application {
             rectangle.setStroke(Color.BLACK);
 
             StackPane stackPane = new StackPane();
-            stackPane.getChildren().addAll(rectangle, new Text(stackContent.get(i)));
-
+            stackPane.getChildren().addAll(rectangle, new Text("..."));
             stackViewVBoxContainer.getChildren().add(stackPane);
-        }
-        for (String inputSymbol : stackContent) {
+        } else {
+            for (int i = stackContent.size(); i-- > 0; ) {
+                //Drawing a Rectangle
+                Rectangle rectangle = new Rectangle();
+                //Setting the properties of the rectangle
+                rectangle.setX(10);
+                rectangle.setY(0);
+                rectangle.setWidth(50);
+                rectangle.setHeight(50);
+                rectangle.setFill(Color.WHITE);
+                rectangle.setStroke(Color.BLACK);
 
-        }
+                StackPane stackPane = new StackPane();
+                stackPane.getChildren().addAll(rectangle, new Text(stackContent.get(i)));
 
+                stackViewVBoxContainer.getChildren().add(stackPane);
+            }
+        }
     }
 }
