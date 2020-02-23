@@ -109,10 +109,6 @@ public class SimulationController {
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
-        System.out.println("Current headposition: " + selectedConfiguration.getHeadPosition());
-        System.out.println("Previous state: " + selectedConfiguration.getParentConfiguration().getCurrentStateModel());
-        System.out.println("Transition taken: " + selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration());
-        System.out.println("Current take: " + selectedConfiguration.getParentConfiguration().getCurrentStateModel());
         mainStageController.updateTapeView(selectedConfiguration.getHeadPosition());
     }
 

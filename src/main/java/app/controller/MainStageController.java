@@ -217,8 +217,6 @@ public class MainStageController extends Application {
         }
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
 
-        System.out.println("HeadPosition variable value: " + headPosition);
-
         if (headPosition == 0) {
             //pointer not currently on tape
         } else {

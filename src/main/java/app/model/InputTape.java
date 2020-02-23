@@ -47,6 +47,9 @@ public class InputTape {
             return "\u03B5";
         }
 
+        if (currentHead == inputTape.size()) {
+            return "\u03B5";
+        }
         StringBuilder toReturn = new StringBuilder();
 
         for (int i = currentHead; i < inputTape.size(); ++i) {
