@@ -86,7 +86,6 @@ public class SimulationModel {
         }
 
         // Move to next configuration
-
         loadConfiguration(toExplore);
         return 1;
     }
