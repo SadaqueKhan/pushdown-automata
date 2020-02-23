@@ -406,7 +406,9 @@ public class DiagramController {
                 removeHighlightedTransitionView(transitionModelHighlighted);
             }
         } else {
-            startStateView.getStateCircle().setStroke(Color.BLACK);
+            if (startStateView != null) {
+                startStateView.getStateCircle().setStroke(Color.BLACK);
+            }
             if (transitionModelHighlighted != null) {
                 removeHighlightedTransitionView(transitionModelHighlighted);
             }
