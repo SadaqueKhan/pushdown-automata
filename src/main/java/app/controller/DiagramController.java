@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.model.Configuration;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
@@ -43,7 +44,7 @@ public class DiagramController {
     private double sceneX;
     private double sceneY;
     private TransitionModel transitionModelHighlighted;
-
+    private StateView startStateView;
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.mainStageController = mainStageController;
@@ -395,38 +396,43 @@ public class DiagramController {
     }
 
 
-    public void highlightTransitionTakenInDiagram(TransitionModel transitionModelToHightlight) {
-
-        if (transitionModelToHightlight == null) {
-            return;
-        }
-
-        if (transitionModelHighlighted != null) {
-            removeHighlightedTransitionView(transitionModelHighlighted);
-        }
-        transitionModelHighlighted = transitionModelToHightlight;
-
+    public void highlightTransitionTakenInDiagram(Configuration selectedConfiguration) {
+        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         Map<String, StateView> stateMap = diagramView.getStateMap();
-        StateView currentStateView = stateMap.get(transitionModelToHightlight.getCurrentStateModel().getStateId());
-        StateView resultingStateView = stateMap.get(transitionModelToHightlight.getResultingStateModel().getStateId());
-        currentStateView.getStateCircle().setStroke(Color.LAWNGREEN);
-        resultingStateView.getStateCircle().setStroke(Color.LAWNGREEN);
-
-        if (transitionModelToHightlight.getCurrentStateModel().equals(transitionModelToHightlight.getResultingStateModel())) {
-            currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
-            currentStateView.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
-            currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
+        if (transitionModelToHighlight == null) {
+            this.startStateView = stateMap.get(selectedConfiguration.getCurrentStateModel().getStateId());
+            startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+            if (transitionModelHighlighted != null) {
+                removeHighlightedTransitionView(transitionModelHighlighted);
+            }
         } else {
-            HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHightlight);
+            startStateView.getStateCircle().setStroke(Color.BLACK);
+            if (transitionModelHighlighted != null) {
+                removeHighlightedTransitionView(transitionModelHighlighted);
+            }
+            transitionModelHighlighted = transitionModelToHighlight;
 
-            for (Node node : transitionViewHighlightedSet) {
-                if (node instanceof TransitionView) {
-                    TransitionView transitionView = (TransitionView) node;
-                    transitionView.setStroke(Color.LAWNGREEN);
-                }
-                if (node instanceof StackPane) {
-                    StackPane arrowTipStackPane = (StackPane) node;
-                    arrowTipStackPane.setStyle("-fx-background-color:lawngreen;-fx-border-width:2px;-fx-border-color:lawngreen;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+            StateView currentStateView = stateMap.get(transitionModelToHighlight.getCurrentStateModel().getStateId());
+            StateView resultingStateView = stateMap.get(transitionModelToHighlight.getResultingStateModel().getStateId());
+            currentStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+            resultingStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+
+            if (transitionModelToHighlight.getCurrentStateModel().equals(transitionModelToHighlight.getResultingStateModel())) {
+                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
+                currentStateView.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
+                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
+            } else {
+                HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHighlight);
+
+                for (Node node : transitionViewHighlightedSet) {
+                    if (node instanceof TransitionView) {
+                        TransitionView transitionView = (TransitionView) node;
+                        transitionView.setStroke(Color.LAWNGREEN);
+                    }
+                    if (node instanceof StackPane) {
+                        StackPane arrowTipStackPane = (StackPane) node;
+                        arrowTipStackPane.setStyle("-fx-background-color:lawngreen;-fx-border-width:2px;-fx-border-color:lawngreen;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+                    }
                 }
             }
         }

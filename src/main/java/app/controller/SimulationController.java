@@ -3,7 +3,6 @@ package app.controller;
 import app.model.Configuration;
 import app.model.MachineModel;
 import app.model.SimulationModel;
-import app.model.TransitionModel;
 import app.view.SimulationView;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -103,9 +102,8 @@ public class SimulationController {
 
 
     public void updateDiagramViewForSelectedConfiguration(Configuration selectedConfiguration) {
-        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         DiagramController diagramController = mainStageController.getDiagramController();
-        diagramController.highlightTransitionTakenInDiagram(transitionModelToHighlight);
+        diagramController.highlightTransitionTakenInDiagram(selectedConfiguration);
     }
 
     public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
@@ -117,9 +115,8 @@ public class SimulationController {
     }
 
     public void updateTransitionTableViewForSelectedConfiguration(Configuration selectedConfiguration) {
-        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
-        TransitionTableController transitionTableController = mainStageController.getTransitionTableController();
-        transitionTableController.highlightTransitionTakenInTransitionTable(transitionModelToHighlight);
-
+//        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
+//        TransitionTableController transitionTableController = mainStageController.getTransitionTableController();
+//        transitionTableController.highlightTransitionTakenInTransitionTable(transitionModelToHighlight);
     }
 }
