@@ -42,14 +42,14 @@ public class InputTape {
         return inputTape.size() == head;
     }
 
-    public String printCurrentState() {
+    public String printCurrentState(int currentHead) {
         if (isEmpty()) {
             return "\u03B5";
         }
 
         StringBuilder toReturn = new StringBuilder();
 
-        for (int i = head; i < inputTape.size(); i++) {
+        for (int i = currentHead; i < inputTape.size(); ++i) {
             toReturn.append(inputTape.get(i));
         }
 

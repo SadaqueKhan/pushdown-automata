@@ -29,7 +29,7 @@ public class SimulationModel {
     public void loadInput(String input) {
         inputTape.loadInput(input);
         Stack stack = new Stack();
-        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputTape.printCurrentState(), 0, stack.getContent());
+        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputTape.printCurrentState(inputTape.getHead()), 0, stack.getContent());
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath = new ArrayList<>();
@@ -134,7 +134,7 @@ public class SimulationModel {
             currentStack.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), inputTape.printCurrentState(), currentHead, currentStack.getContent());
+        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), inputTape.printCurrentState(currentHead), currentHead, currentStack.getContent());
         return newConfig;
     }
 
