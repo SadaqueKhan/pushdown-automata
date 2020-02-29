@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 public class SimulationModel {
     private final String EMPTY = "\u03B5";
-
-
     private MachineModel machineModel;
     private InputTapeModel inputTapeModel;
     private StackModel stackModel;
@@ -21,6 +19,7 @@ public class SimulationModel {
         this.inputTapeModel = new InputTapeModel();
         this.stackModel = new StackModel();
         this.inputWord = inputWord;
+        configurationPath = new ArrayList<>();
 
         loadMachine(machineModel);
         loadInput(inputWord);
@@ -35,7 +34,6 @@ public class SimulationModel {
         currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), inputWord, 0, stackModel.getContent());
         currentConfig.markAsVisited();
         //Add currentConfig to the path
-        configurationPath = new ArrayList<>();
         configurationPath.add(currentConfig);
     }
 
