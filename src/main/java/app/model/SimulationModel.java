@@ -7,16 +7,20 @@ import java.util.stream.Collectors;
 public class SimulationModel {
     private final String EMPTY = "\u03B5";
 
+
     private MachineModel machineModel;
     private InputTape inputTape;
     private Stack stack;
+    private final String inputWord;
+
     private Configuration currentConfig;
 
     private ArrayList<Configuration> configurationPath;
 
     public SimulationModel(MachineModel machineModel, String inputWord) {
-        inputTape = new InputTape();
-        stack = new Stack();
+        this.inputTape = new InputTape();
+        this.stack = new Stack();
+        this.inputWord = inputWord;
 
         loadMachine(machineModel);
         loadInput(inputWord);
@@ -28,8 +32,7 @@ public class SimulationModel {
 
     public void loadInput(String input) {
         inputTape.loadInput(input);
-        Stack stack = new Stack();
-        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputTape.printCurrentState(inputTape.getHead()), 0, stack.getContent());
+        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputWord, 0, stack.getContent());
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath = new ArrayList<>();
@@ -120,12 +123,16 @@ public class SimulationModel {
 
     //Apply action given a transition and return the resulting configuration
     private Configuration generateConfig(TransitionModel transitionModelToNextConfiguration) {
-        int currentHead = inputTape.getHead();
+
+        InputTape currentInputTape = new InputTape();
+        currentInputTape.loadInput(inputWord);
+        currentInputTape.setHead(inputTape.getHead());
+
         Stack currentStack = new Stack();
         currentStack.setContent(stack.getContent());
 
         if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
-            ++currentHead;
+            currentInputTape.readSymbol();
         }
         if (!(transitionModelToNextConfiguration.getStackSymbolToPop().equals(EMPTY))) {
             currentStack.pop();
@@ -134,7 +141,16 @@ public class SimulationModel {
             currentStack.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), inputTape.printCurrentState(currentHead), currentHead, currentStack.getContent());
+        StringBuilder currentTapeString = new StringBuilder();
+        if (currentInputTape.getHead() == currentInputTape.tapeSize()) {
+            currentTapeString.append("\u03B5");
+        } else {
+            for (int i = currentInputTape.getHead(); i < currentInputTape.tapeSize(); i++) {
+                currentTapeString.append(currentInputTape.getInputTape().get(i));
+            }
+        }
+
+        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeString.toString(), currentInputTape.getHead(), currentStack.getContent());
         return newConfig;
     }
 

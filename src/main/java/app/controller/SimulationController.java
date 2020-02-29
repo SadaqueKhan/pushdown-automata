@@ -39,14 +39,11 @@ public class SimulationController {
     private void generateSimulation(MachineModel machineModel, String inputWord) {
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
-        if (machineModel.isAcceptanceByFinalState() && machineModel.findFinalStateModel() == null) {
-        } else {
-            int flag = simulationModel.run();
-            if (flag == 200) {
-                this.simulationPath = simulationModel.getConfigurationPath();
-                loadConfigurationsOntoSimulationView();
+        int flag = simulationModel.run();
+        if (flag == 200) {
+            this.simulationPath = simulationModel.getConfigurationPath();
+            loadConfigurationsOntoSimulationView();
 
-            }
         }
     }
 

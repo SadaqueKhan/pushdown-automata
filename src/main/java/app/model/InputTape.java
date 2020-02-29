@@ -42,21 +42,12 @@ public class InputTape {
         return inputTape.size() == head;
     }
 
-    public String printCurrentState(int currentHead) {
-        if (isEmpty()) {
-            return "\u03B5";
-        }
+    public int tapeSize() {
+        return inputTape.size();
+    }
 
-        if (currentHead == inputTape.size()) {
-            return "\u03B5";
-        }
-        StringBuilder toReturn = new StringBuilder();
-
-        for (int i = currentHead; i < inputTape.size(); ++i) {
-            toReturn.append(inputTape.get(i));
-        }
-
-        return toReturn.toString();
+    public List<String> getInputTape() {
+        return inputTape;
     }
 
 }
