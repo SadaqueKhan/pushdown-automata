@@ -2,11 +2,11 @@ package app.model;
 
 import java.util.ArrayList;
 
-public class Stack {
+public class StackModel {
 
     private ArrayList<String> stack;
 
-    public Stack() {
+    public StackModel() {
         stack = new ArrayList<>();
     }
 

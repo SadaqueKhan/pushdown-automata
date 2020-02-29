@@ -83,7 +83,7 @@ public class TransitionTableView extends BorderPane {
         inputSymbolCol.setMinWidth(250);
         inputSymbolCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("inputSymbol"));
 
-        this.stackSymbolToPopCol = new TableColumn("Stack symbol to pop");
+        this.stackSymbolToPopCol = new TableColumn("StackModel symbol to pop");
         stackSymbolToPopCol.setMinWidth(250);
         stackSymbolToPopCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("stackSymbolToPop"));
 
@@ -97,7 +97,7 @@ public class TransitionTableView extends BorderPane {
         resultingStateCol.setMinWidth(250);
         resultingStateCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("resultingStateModel"));
 
-        this.stackSymbolToPushCol = new TableColumn("Stack symbol to push");
+        this.stackSymbolToPushCol = new TableColumn("StackModel symbol to push");
         stackSymbolToPushCol.setMinWidth(250);
 
         stackSymbolToPushCol.setCellValueFactory(new PropertyValueFactory<TransitionModel, String>("stackSymbolToPush"));

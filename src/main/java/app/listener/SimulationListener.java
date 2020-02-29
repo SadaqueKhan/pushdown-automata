@@ -1,7 +1,7 @@
 package app.listener;
 
 import app.controller.SimulationController;
-import app.model.Configuration;
+import app.model.ConfigurationModel;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,10 +17,10 @@ public class SimulationListener implements EventHandler {
     @Override
     public void handle(Event event) {
         if (event.getSource() instanceof ListView) {
-            ListView<Configuration> listView = (ListView) event.getSource();
+            ListView<ConfigurationModel> listView = (ListView) event.getSource();
             if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
-                ObservableList<Configuration> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
-                Configuration selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
+                ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
                 simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
                 simulationController.updateTransitionTableViewForSelectedConfiguration(selectedConfiguration);
                 simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);

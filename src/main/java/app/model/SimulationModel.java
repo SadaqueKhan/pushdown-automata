@@ -9,17 +9,17 @@ public class SimulationModel {
 
 
     private MachineModel machineModel;
-    private InputTape inputTape;
-    private Stack stack;
+    private InputTapeModel inputTapeModel;
+    private StackModel stackModel;
     private final String inputWord;
 
-    private Configuration currentConfig;
+    private ConfigurationModel currentConfig;
 
-    private ArrayList<Configuration> configurationPath;
+    private ArrayList<ConfigurationModel> configurationPath;
 
     public SimulationModel(MachineModel machineModel, String inputWord) {
-        this.inputTape = new InputTape();
-        this.stack = new Stack();
+        this.inputTapeModel = new InputTapeModel();
+        this.stackModel = new StackModel();
         this.inputWord = inputWord;
 
         loadMachine(machineModel);
@@ -31,8 +31,8 @@ public class SimulationModel {
     }
 
     public void loadInput(String input) {
-        inputTape.loadInput(input);
-        currentConfig = new Configuration(null, null, machineModel.findStartStateModel(), inputWord, 0, stack.getContent());
+        inputTapeModel.loadInput(input);
+        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), inputWord, 0, stackModel.getContent());
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath = new ArrayList<>();
@@ -46,15 +46,15 @@ public class SimulationModel {
         }
 
         //Retrieve applicable configurations stored in the current configuration
-        List<Configuration> applicableConfigurations = currentConfig.getChildrenConfigurations();
+        List<ConfigurationModel> applicableConfigurations = currentConfig.getChildrenConfigurations();
 
         if (currentConfig.getChildrenConfigurations() == null) {
             //Search for possible children configurations to move to (the transitions have already been applied to this list)
-            applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), inputTape.getAtHead(), stack.peak());
+            applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), inputTapeModel.getAtHead(), stackModel.peak());
             currentConfig.setChildrenConfigurations(applicableConfigurations);
         }
 
-        Configuration toExplore;
+        ConfigurationModel toExplore;
 
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
@@ -90,25 +90,25 @@ public class SimulationModel {
         return 1;
     }
 
-    private void loadConfiguration(Configuration toExplore) {
+    private void loadConfiguration(ConfigurationModel toExplore) {
         currentConfig = toExplore;
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
-        inputTape.setHead(toExplore.getHeadPosition());
-        stack.setContent(toExplore.getStackContent());
+        inputTapeModel.setHead(toExplore.getHeadPosition());
+        stackModel.setContent(toExplore.getStackContent());
         configurationPath.add(currentConfig);
     }
 
     public void previous() {
-        Configuration previous = currentConfig.getParentConfiguration();
+        ConfigurationModel previous = currentConfig.getParentConfiguration();
         if (previous != null) {
-            stack.setContent(previous.getStackContent());
-            inputTape.setHead(previous.getHeadPosition());
+            stackModel.setContent(previous.getStackContent());
+            inputTapeModel.setHead(previous.getHeadPosition());
         }
         currentConfig = previous;
     }
 
 
-    public List<Configuration> configurationApplicable(StateModel stateModel, String inputSymbol, String stackSymbol) {
+    public List<ConfigurationModel> configurationApplicable(StateModel stateModel, String inputSymbol, String stackSymbol) {
         return machineModel.getTransitionModelSet()
                 .stream()
                 .filter(transitionModel -> transitionModel.getCurrentStateModel().equals(stateModel))
@@ -119,41 +119,41 @@ public class SimulationModel {
     }
 
     //Apply action given a transition and return the resulting configuration
-    private Configuration generateConfig(TransitionModel transitionModelToNextConfiguration) {
+    private ConfigurationModel generateConfig(TransitionModel transitionModelToNextConfiguration) {
 
-        InputTape currentInputTape = new InputTape();
-        currentInputTape.loadInput(inputWord);
-        currentInputTape.setHead(inputTape.getHead());
+        InputTapeModel currentInputTapeModel = new InputTapeModel();
+        currentInputTapeModel.loadInput(inputWord);
+        currentInputTapeModel.setHead(inputTapeModel.getHead());
 
-        Stack currentStack = new Stack();
-        currentStack.setContent(stack.getContent());
+        StackModel currentStackModel = new StackModel();
+        currentStackModel.setContent(stackModel.getContent());
 
         if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
-            currentInputTape.readSymbol();
+            currentInputTapeModel.readSymbol();
         }
         if (!(transitionModelToNextConfiguration.getStackSymbolToPop().equals(EMPTY))) {
-            currentStack.pop();
+            currentStackModel.pop();
         }
         if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
-            currentStack.push(transitionModelToNextConfiguration.getStackSymbolToPush());
+            currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
         StringBuilder currentTapeString = new StringBuilder();
-        if (currentInputTape.getHead() == currentInputTape.tapeSize()) {
+        if (currentInputTapeModel.getHead() == currentInputTapeModel.tapeSize()) {
             currentTapeString.append("\u03B5");
         } else {
-            for (int i = currentInputTape.getHead(); i < currentInputTape.tapeSize(); i++) {
-                currentTapeString.append(currentInputTape.getInputTape().get(i));
+            for (int i = currentInputTapeModel.getHead(); i < currentInputTapeModel.tapeSize(); i++) {
+                currentTapeString.append(currentInputTapeModel.getInputTape().get(i));
             }
         }
 
-        Configuration newConfig = new Configuration(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeString.toString(), currentInputTape.getHead(), currentStack.getContent());
+        ConfigurationModel newConfig = new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeString.toString(), currentInputTapeModel.getHead(), currentStackModel.getContent());
         return newConfig;
     }
 
 
     public boolean isInAcceptingConfiguration() {
-        if (inputTape.isEmpty()) {
+        if (inputTapeModel.isEmpty()) {
             if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
                 return true;
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
@@ -187,7 +187,7 @@ public class SimulationModel {
         return 300;
     }
 
-    public ArrayList<Configuration> getConfigurationPath() {
+    public ArrayList<ConfigurationModel> getConfigurationPath() {
         return configurationPath;
     }
 }

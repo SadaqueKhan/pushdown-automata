@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.model.Configuration;
+import app.model.ConfigurationModel;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
@@ -396,7 +396,7 @@ public class DiagramController {
     }
 
 
-    public void highlightTransitionTakenInDiagram(Configuration selectedConfiguration) {
+    public void highlightTransitionTakenInDiagram(ConfigurationModel selectedConfiguration) {
         TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         Map<String, StateView> stateMap = diagramView.getStateMap();
         if (transitionModelToHighlight == null) {

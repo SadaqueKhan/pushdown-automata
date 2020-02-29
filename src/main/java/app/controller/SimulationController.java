@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.model.Configuration;
+import app.model.ConfigurationModel;
 import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.view.SimulationView;
@@ -17,7 +17,7 @@ public class SimulationController {
     private final MainStageController mainStageController;
     private final MachineModel machineModel;
     private final SimulationView simulationView;
-    private ArrayList<Configuration> simulationPath;
+    private ArrayList<ConfigurationModel> simulationPath;
 
     public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord) {
         this.mainStageController = mainStageController;
@@ -49,15 +49,15 @@ public class SimulationController {
 
 
     private void loadConfigurationsOntoSimulationView() {
-        ListView<Configuration> simulationListView = simulationView.getTransitionsTakenlistView();
+        ListView<ConfigurationModel> simulationListView = simulationView.getTransitionsTakenlistView();
 
         simulationListView.getItems().addAll(simulationPath);
-        Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
+        Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
             @Override
-            public ListCell<Configuration> call(ListView<Configuration> param) {
-                return new ListCell<Configuration>() {
+            public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
+                return new ListCell<ConfigurationModel>() {
                     @Override
-                    protected void updateItem(Configuration item, boolean empty) {
+                    protected void updateItem(ConfigurationModel item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item == null || empty) {
                             setText(null);
@@ -88,7 +88,6 @@ public class SimulationController {
                                 itemToPrint = item.toString() + "  (Success!)";
                             }
 
-
                             setText(itemToPrint);
                         }
                     }
@@ -98,20 +97,20 @@ public class SimulationController {
     }
 
 
-    public void updateDiagramViewForSelectedConfiguration(Configuration selectedConfiguration) {
+    public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         DiagramController diagramController = mainStageController.getDiagramController();
         diagramController.highlightTransitionTakenInDiagram(selectedConfiguration);
     }
 
-    public void updateTapeViewForSelectedConfiguration(Configuration selectedConfiguration) {
+    public void updateTapeViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStageController.updateTapeView(selectedConfiguration.getHeadPosition());
     }
 
-    public void updateStackViewForSelectedConfiguration(Configuration selectedConfiguration) {
+    public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStageController.updateStackView(selectedConfiguration.getStackContent());
     }
 
-    public void updateTransitionTableViewForSelectedConfiguration(Configuration selectedConfiguration) {
+    public void updateTransitionTableViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
 //        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
 //        TransitionTableController transitionTableController = mainStageController.getTransitionTableController();
 //        transitionTableController.highlightTransitionTakenInTransitionTable(transitionModelToHighlight);

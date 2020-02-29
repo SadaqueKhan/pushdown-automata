@@ -2,7 +2,7 @@ package app.view;
 
 import app.controller.SimulationController;
 import app.listener.SimulationListener;
-import app.model.Configuration;
+import app.model.ConfigurationModel;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -16,7 +16,7 @@ public class SimulationView extends BorderPane {
     private Text inputTextField;
 
     //UI components in the center of the scene
-    private ListView<Configuration> transitionsTakenlistView;
+    private ListView<ConfigurationModel> transitionsTakenlistView;
 
 
     public SimulationView(SimulationController simulationController) {
@@ -43,7 +43,7 @@ public class SimulationView extends BorderPane {
     }
 
 
-    public ListView<Configuration> getTransitionsTakenlistView() {
+    public ListView<ConfigurationModel> getTransitionsTakenlistView() {
         return transitionsTakenlistView;
     }
 }

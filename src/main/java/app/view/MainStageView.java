@@ -64,7 +64,7 @@ public class MainStageView extends BorderPane {
 
         Menu acceptanceMenu = new Menu("Acceptance");
         this.acceptanceByFinalStateMenuItem = new CheckMenuItem("By Final State");
-        this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty Stack");
+        this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty StackModel");
         acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
         acceptanceByFinalStateMenuItem.setSelected(true);
         menuBar.getMenus().add(acceptanceMenu);
@@ -112,7 +112,7 @@ public class MainStageView extends BorderPane {
         containerForRightNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForRightNodes.setSpacing(5);
         containerForRightNodes.setStyle(cssLayout);
-        containerForRightNodes.getChildren().addAll(new Text("Stack"), stackView);
+        containerForRightNodes.getChildren().addAll(new Text("StackModel"), stackView);
 
         this.setRight(containerForRightNodes);
 

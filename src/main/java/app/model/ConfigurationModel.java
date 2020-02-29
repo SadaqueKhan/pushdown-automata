@@ -3,20 +3,20 @@ package app.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Configuration {
-    private Configuration parentConfiguration;
+public class ConfigurationModel {
+    private ConfigurationModel parentConfiguration;
     private TransitionModel transitionModelTakenToReachCurrentConfiguration;
     private StateModel currentStateModel;
     private int headPosition;
     private String inputTapeState;
     private ArrayList<String> stackContent;
     private boolean isVisited;
-    private List<Configuration> childrenConfigurations;
+    private List<ConfigurationModel> childrenConfigurations;
     private boolean isSuccessConfig = false;
     private int step;
     private int branchId;
 
-    public Configuration(Configuration parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, String inputTapeState, int headPosition, ArrayList<String> stackContent) {
+    public ConfigurationModel(ConfigurationModel parentConfiguration, TransitionModel transitionModelTakenToReachCurrentConfiguration, StateModel currentStateModel, String inputTapeState, int headPosition, ArrayList<String> stackContent) {
         this.parentConfiguration = parentConfiguration;
         this.transitionModelTakenToReachCurrentConfiguration = transitionModelTakenToReachCurrentConfiguration;
         this.currentStateModel = currentStateModel;
@@ -29,7 +29,7 @@ public class Configuration {
     }
 
 
-    public Configuration getParentConfiguration() {
+    public ConfigurationModel getParentConfiguration() {
         return parentConfiguration;
     }
 
@@ -53,7 +53,7 @@ public class Configuration {
         return isVisited;
     }
 
-    public List<Configuration> getChildrenConfigurations() {
+    public List<ConfigurationModel> getChildrenConfigurations() {
         return childrenConfigurations;
     }
 
@@ -61,12 +61,12 @@ public class Configuration {
         isVisited = true;
     }
 
-    public void setChildrenConfigurations(List<Configuration> childrenConfigurations) {
+    public void setChildrenConfigurations(List<ConfigurationModel> childrenConfigurations) {
         this.childrenConfigurations = childrenConfigurations;
 
         if (this.childrenConfigurations.size() > 1) {
             int branchId = 1;
-            for (Configuration configuration : childrenConfigurations) {
+            for (ConfigurationModel configuration : childrenConfigurations) {
                 configuration.setBranchId(branchId++);
             }
         }
