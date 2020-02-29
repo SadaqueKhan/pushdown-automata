@@ -89,9 +89,6 @@ public class MainStageController extends Application {
         mainStageView.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStageView.getInputTextField(), mainStageView.getInputWordSet()));
     }
 
-    public TransitionTableController getTransitionTableController() {
-        return transitionTableController;
-    }
 
     public DiagramController getDiagramController() {
         return diagramController;
@@ -217,9 +214,7 @@ public class MainStageController extends Application {
         }
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
 
-        if (headPosition == 0) {
-            //pointer not currently on tape
-        } else {
+        if (!(headPosition == 0)) {
             this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
             headPointerStackPane.getChildren().get(2).setVisible(true);
         }
