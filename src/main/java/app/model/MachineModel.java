@@ -60,14 +60,6 @@ public class MachineModel {
     }
 
 
-    public StateModel findFinalStateModel() {
-        for (StateModel isFinalStateModel : stateModelSet) {
-            if (isFinalStateModel.isFinalState()) {
-                return isFinalStateModel;
-            }
-        }
-        return null;
-    }
 
     @XmlElement
     public HashSet<StateModel> getStateModelSet() {

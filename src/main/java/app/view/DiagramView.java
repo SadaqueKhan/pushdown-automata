@@ -63,13 +63,6 @@ public class DiagramView extends Pane {
         this.setOnMousePressed(diagramListener);
     }
 
-    public void addStateView(double x, double y, DiagramController diagramController, String stateID) {
-        StateView stateView = new StateView(x, y, diagramController, stateID);
-        this.getChildren().add(stateView);
-        stateMap.put(stateID, stateView);
-        linkedTransitionViewsMap.put(stateView, new HashSet<>());
-    }
-
 
     public void addDirectionalTransitionView(String currentStateID, String resultingStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
         //Get state from map using state ID

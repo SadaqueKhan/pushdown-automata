@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -45,11 +46,17 @@ public class DiagramController {
     private TransitionModel transitionModelHighlighted;
     private StateView startStateView;
 
+    private Map<StateModel, StateView> stateMap;
+    private Map<StateView, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
+
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
         this.machineModel = machineModel;
         this.diagramView = new DiagramView(this, mainStageView);
+
+        this.stateMap = new HashMap<>();
+        this.linkedTransitionViewsMap = new HashMap<>();
     }
 
 
@@ -60,10 +67,9 @@ public class DiagramController {
 
 
     public void loadStatesOntoDiagram() {
-        Map<String, StateView> stateMap = diagramView.getStateMap();
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
-            diagramView.addStateView(stateModelToLoad.getxCoordinateOnDiagram(), stateModelToLoad.getyCoordinateOnDiagram(), this, stateModelToLoad.getStateId());
-            StateView stateViewToLoad = stateMap.get(stateModelToLoad.getStateId());
+            addStateViewOntoDiagramView(stateModelToLoad);
+            StateView stateViewToLoad = stateMap.get(stateModelToLoad);
             if (stateModelToLoad.isStartState()) {
                 stateViewToLoad.toggleStartStateUIComponent(stateModelToLoad.isStartState());
             }
@@ -86,9 +92,15 @@ public class DiagramController {
         }
     }
 
-    public void addStateToViewTransitionTableEventResponse(StateModel newStateModel) {
-        diagramView.addStateView(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram(), this, newStateModel.getStateId());
+    public void addStateViewOntoDiagramView(StateModel newStateModel) {
+        //Create stateview UI
+        StateView stateView = new StateView(newStateModel.getStateId(), this);
+        stateView.relocate(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram());
+        diagramView.getChildren().add(stateView);
+        stateMap.put(newStateModel, stateView);
+        linkedTransitionViewsMap.put(stateView, new HashSet<>());
     }
+
 
     public void addStateToViewMouseEventResponse(double x, double y) {
         StateModel newStateModel = null;
@@ -108,7 +120,7 @@ public class DiagramController {
             }
         }
         machineModel.addStateModelToStateModelSet(newStateModel);
-        diagramView.addStateView(x, y, this, newStateModel.getStateId());
+        addStateViewOntoDiagramView(newStateModel);
         transitionTableController.updateAvailableStateListForCombobox();
     }
 
@@ -324,7 +336,8 @@ public class DiagramController {
                 if (resultingStateModel == null) {
                     resultingStateModel = new StateModel(userEntryResultingState);
                     machineModel.addStateModelToStateModelSet(resultingStateModel);
-                    this.addStateToViewTransitionTableEventResponse(resultingStateModel);
+                    this.addStateViewOntoDiagramView(resultingStateModel);
+                    transitionTableController.updateAvailableStateListForCombobox();
                 }
 
                 //Create transition model placeholder

@@ -80,7 +80,7 @@ public class TransitionTableController {
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateToViewTransitionTableEventResponse(currentStateModel);
+            diagramController.addStateViewOntoDiagramView(currentStateModel);
         }
 
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
@@ -88,7 +88,7 @@ public class TransitionTableController {
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateToViewTransitionTableEventResponse(resultingStateModel);
+            diagramController.addStateViewOntoDiagramView(resultingStateModel);
         }
 
         //Create transition model placeholder

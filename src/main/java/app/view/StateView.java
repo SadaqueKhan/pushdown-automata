@@ -37,9 +37,7 @@ public class StateView extends StackPane {
     private Polygon reflexiveArrowTipPolygon;
     private VBox listOfTransitionsVBox;
 
-    public StateView(double currentStateXPosition, double currentStateYPosition, DiagramController diagramController, String stateId) {
-        this.currentStateXPosition = currentStateXPosition;
-        this.currentStateYPosition = currentStateYPosition;
+    public StateView(String stateId, DiagramController diagramController) {
 
         this.stateId = stateId;
 
@@ -153,8 +151,6 @@ public class StateView extends StackPane {
 
         reflexiveArrowShaftArc.setVisible(false);
         reflexiveArrowTipPolygon.setVisible(false);
-
-        this.relocate(currentStateXPosition, currentStateYPosition);
 
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, reflexiveArrowShaftArc, reflexiveArrowTipPolygon);
     }
