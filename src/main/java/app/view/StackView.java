@@ -38,7 +38,6 @@ public class StackView extends ScrollPane {
         this.fitToWidthProperty().set(true);
         this.fitToHeightProperty().set(true);
         this.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        this.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.setContent(stackViewVBoxContainer);
     }
 
