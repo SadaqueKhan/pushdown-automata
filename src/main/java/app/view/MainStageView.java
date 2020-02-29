@@ -76,8 +76,12 @@ public class MainStageView extends BorderPane {
             if (change.getText().equals(" ")) {
                 change.setText("");
             }
+            if (change.getText().equals("\u03B5")) {
+                change.setText("");
+            }
             return change;
         }));
+        
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
         progressBar = new ProgressBar();
