@@ -36,7 +36,7 @@ public class DiagramListener implements EventHandler<MouseEvent> {
                     //Add the state to diagram
                     double X = event.getX(); // remove pane's coordinate system here
                     double Y = event.getY(); // remove pane's coordinate system here
-                    diagramController.addStateToViewMouseEventResponse(X, Y);
+                    diagramController.addStateViewOntoDiagramViewDynamicRender(X, Y);
                 }
             }
         }

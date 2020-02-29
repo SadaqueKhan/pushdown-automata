@@ -118,9 +118,9 @@ public class TransitionTableController {
 
         //Add transitionview onto diagram view
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
-            diagramController.addReflexiveTransitionToView(newTransitionModel);
+            diagramController.addReflexiveTransitionToDiagramView(newTransitionModel);
         } else {
-            diagramController.addDirectionalTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
+            diagramController.addDirectionalTransitionToView(newTransitionModel);
         }
     }
 
@@ -147,12 +147,12 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().removeAll(removeTransitionSet);
 
         //Update diagram view
-        diagramController.deleteMultipleTransitions(removeTransitionSet);
+        diagramController.deleteTransitionView(removeTransitionSet);
     }
 
-    public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
-        transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
-        transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+    public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(StateModel stateModelToDelete) {
+        transitionTableView.getTransitionTable().getItems().removeAll(machineModel.getExitingTranstionsFromStateModel(stateModelToDelete));
+        transitionTableView.getTransitionTable().getItems().removeAll(machineModel.getEnteringTransitionsFromStateModel(stateModelToDelete));
         updateAvailableStateListForCombobox();
     }
 
