@@ -59,9 +59,6 @@ public class SimulationModel {
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
             //no more paths to search for this child
-            if (!(currentConfig.isSuccessConfig())) {
-                currentConfig.setFailConfig(true);
-            }
             return 8; // Go back to parent
         }
 
