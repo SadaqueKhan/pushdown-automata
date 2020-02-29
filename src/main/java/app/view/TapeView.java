@@ -33,11 +33,10 @@ public class TapeView extends ScrollPane {
             stackPane.getChildren().addAll(rectangle, new Text("..."));
             tapeViewHBoxContainer.getChildren().add(stackPane);
         }
-
+        
         this.pannableProperty().set(true);
         this.fitToWidthProperty().set(true);
         this.fitToHeightProperty().set(true);
-        this.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.setContent(tapeViewHBoxContainer);
 
