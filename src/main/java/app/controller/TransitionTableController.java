@@ -8,12 +8,9 @@ import app.view.TransitionTableView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class TransitionTableController {
 
@@ -38,10 +35,13 @@ public class TransitionTableController {
         mainStageView.getContainerForCenterNodes().getChildren().add(transitionTableView.getTransitionTableContainer());
     }
 
-    public void loadTansitionsOntoTransitionTable() {
+    public void loadTransitionTableView() {
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
             transitionTableView.getTransitionTable().getItems().add(transitionModelToLoad);
         }
+        updateAvailableStateListForCombobox();
+        updateInputAlphabetForComboxBox();
+        updateStackAlphabetForComboxBox();
     }
 
     public void addUserTransitionModelEntryToTransitionTable() {
@@ -80,7 +80,7 @@ public class TransitionTableController {
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryCurrentStateID);
+            diagramController.addStateToViewTransitionTableEventResponse(currentStateModel);
         }
 
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
@@ -88,7 +88,7 @@ public class TransitionTableController {
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingStateID);
+            diagramController.addStateToViewTransitionTableEventResponse(resultingStateModel);
         }
 
         //Create transition model placeholder
@@ -177,25 +177,5 @@ public class TransitionTableController {
         transitionTableView.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
         transitionTableView.getStackSymbolToPushComboBox().getItems().clear();
         transitionTableView.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
-    }
-
-    public void highlightTransitionTakenInTransitionTable(TransitionModel transitionModelToHighlight) {
-        TableView tableView = transitionTableView.getTransitionTable();
-
-        tableView.setRowFactory(row -> new TableRow<TransitionModel>() {
-            @Override
-            public void updateItem(TransitionModel item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (item == null || empty) {
-                    setStyle("");
-                } else {
-                    if (item == transitionModelToHighlight) {
-                        setStyle("-fx-background-color: yellow");
-                    }
-
-                }
-            }
-        });
     }
 }

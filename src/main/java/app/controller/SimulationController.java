@@ -47,7 +47,6 @@ public class SimulationController {
         }
     }
 
-
     private void loadConfigurationsOntoSimulationView() {
         ListView<ConfigurationModel> simulationListView = simulationView.getTransitionsTakenlistView();
 
@@ -108,11 +107,5 @@ public class SimulationController {
 
     public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStageController.updateStackView(selectedConfiguration.getStackContent());
-    }
-
-    public void updateTransitionTableViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-//        TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
-//        TransitionTableController transitionTableController = mainStageController.getTransitionTableController();
-//        transitionTableController.highlightTransitionTakenInTransitionTable(transitionModelToHighlight);
     }
 }

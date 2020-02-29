@@ -13,12 +13,19 @@ public class StateModel {
     private boolean isStartState = false;
     private boolean isFinalState = false;
 
+    private double xCoordinateOnDiagram = 0.0;
+    private double yCoordinateOnDiagram = 0.0;
+
     public StateModel() {
+    }
+
+    public StateModel(double xCoordinateOnDiagram, double yCoordinateOnDiagram) {
         this.stateId = "Q" + (num++);
+        this.xCoordinateOnDiagram = xCoordinateOnDiagram;
+        this.yCoordinateOnDiagram = yCoordinateOnDiagram;
     }
 
     public StateModel(String stateID) {
-        super();
         this.stateId = stateID;
     }
 
@@ -29,6 +36,24 @@ public class StateModel {
 
     public void setStateId(String stateId) {
         this.stateId = stateId;
+    }
+
+    @XmlAttribute
+    public double getxCoordinateOnDiagram() {
+        return xCoordinateOnDiagram;
+    }
+
+    public void setxCoordinateOnDiagram(double xCoordinateOnDiagram) {
+        this.xCoordinateOnDiagram = xCoordinateOnDiagram;
+    }
+
+    @XmlAttribute
+    public double getyCoordinateOnDiagram() {
+        return yCoordinateOnDiagram;
+    }
+
+    public void setyCoordinateOnDiagram(double yCoordinateOnDiagram) {
+        this.yCoordinateOnDiagram = yCoordinateOnDiagram;
     }
 
     public boolean isStartState() {

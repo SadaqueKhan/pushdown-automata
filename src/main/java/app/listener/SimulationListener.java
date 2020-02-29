@@ -22,7 +22,6 @@ public class SimulationListener implements EventHandler {
                 ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
                 ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
                 simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                simulationController.updateTransitionTableViewForSelectedConfiguration(selectedConfiguration);
                 simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);
                 simulationController.updateStackViewForSelectedConfiguration(selectedConfiguration);
             }

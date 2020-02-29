@@ -141,7 +141,7 @@ public class MainStageController extends Application {
                 this.mainStageView = new MainStageView(this);
 
                 this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
-                transitionTableController.loadTansitionsOntoTransitionTable();
+                transitionTableController.loadTransitionTableView();
 
                 this.diagramController = new DiagramController(mainStageView, this, machineModel);
                 diagramController.loadStatesOntoDiagram();
@@ -234,9 +234,7 @@ public class MainStageController extends Application {
         VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
         if (stackContent.isEmpty()) {
-            //Drawing a Rectangle
             Rectangle rectangle = new Rectangle();
-            //Setting the properties of the rectangle
             rectangle.setX(10);
             rectangle.setY(0);
             rectangle.setWidth(50);

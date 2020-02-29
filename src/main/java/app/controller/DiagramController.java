@@ -25,7 +25,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class DiagramController {
 
@@ -63,7 +62,7 @@ public class DiagramController {
     public void loadStatesOntoDiagram() {
         Map<String, StateView> stateMap = diagramView.getStateMap();
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
-            diagramView.addStateView(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), this, stateModelToLoad.getStateId());
+            diagramView.addStateView(stateModelToLoad.getxCoordinateOnDiagram(), stateModelToLoad.getyCoordinateOnDiagram(), this, stateModelToLoad.getStateId());
             StateView stateViewToLoad = stateMap.get(stateModelToLoad.getStateId());
             if (stateModelToLoad.isStartState()) {
                 stateViewToLoad.toggleStartStateUIComponent(stateModelToLoad.isStartState());
@@ -87,19 +86,19 @@ public class DiagramController {
         }
     }
 
-    public void addStateToViewTransitionTableEventResponse(double x, double y, String userEntryCurrentStateId) {
-        diagramView.addStateView(x, y, this, userEntryCurrentStateId);
+    public void addStateToViewTransitionTableEventResponse(StateModel newStateModel) {
+        diagramView.addStateView(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram(), this, newStateModel.getStateId());
     }
 
     public void addStateToViewMouseEventResponse(double x, double y) {
         StateModel newStateModel = null;
         if (machineModel.getStateModelSet().isEmpty()) {
-            newStateModel = new StateModel();
+            newStateModel = new StateModel(x, y);
         } else {
             boolean stateModelExists = true;
             outerloop:
             while (stateModelExists) {
-                newStateModel = new StateModel();
+                newStateModel = new StateModel(x, y);
                 for (StateModel stateModel : machineModel.getStateModelSet()) {
                     if (stateModel.equals(newStateModel)) {
                         continue outerloop;
@@ -134,7 +133,6 @@ public class DiagramController {
     public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
         sceneX = xPositionOfMouse;
         sceneY = yPositionOfMouse;
-
         layoutX = stateView.getLayoutX();
         layoutY = stateView.getLayoutY();
     }
@@ -156,6 +154,7 @@ public class DiagramController {
         if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
             // If the dragNode bounds is within the parent bounds, then you can set the offset value.
             stateView.setTranslateX(offsetX);
+
         } else if (currPaneLayoutX + offsetX < 0) {
             // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
             // which makes the final layout position to 0 in mouse released event.
@@ -178,6 +177,11 @@ public class DiagramController {
         // Updating the new layout positions
         stateView.setLayoutX(layoutX + stateView.getTranslateX());
         stateView.setLayoutY(layoutY + stateView.getTranslateY());
+
+        // Updating state model coordinates
+        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateView.getStateID());
+        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateView.getTranslateX());
+        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateView.getTranslateY());
 
         // Resetting the translate positions
         stateView.setTranslateX(0);
@@ -320,7 +324,7 @@ public class DiagramController {
                 if (resultingStateModel == null) {
                     resultingStateModel = new StateModel(userEntryResultingState);
                     machineModel.addStateModelToStateModelSet(resultingStateModel);
-                    this.addStateToViewTransitionTableEventResponse(ThreadLocalRandom.current().nextInt(0, 1275 + 1), ThreadLocalRandom.current().nextInt(0, 450 + 1), userEntryResultingState);
+                    this.addStateToViewTransitionTableEventResponse(resultingStateModel);
                 }
 
                 //Create transition model placeholder
