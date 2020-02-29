@@ -140,10 +140,6 @@ public class DiagramView extends Pane {
         this.getChildren().addAll(currentStateView, resultingStateView);
     }
 
-    public void addReflexiveTransitionView(String sourceStateID, String targetStateID, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
-        StateView sourceCell = stateMap.get(sourceStateID);
-        sourceCell.toggleReflexiveArrowUIComponent(true, transitionsLinkingToResultingStateSet);
-    }
 
     private StackPane getArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size

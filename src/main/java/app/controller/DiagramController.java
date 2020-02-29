@@ -21,6 +21,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +133,28 @@ public class DiagramController {
 
     public void addReflexiveTransitionToView(TransitionModel newTransitionModel) {
         StateView sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
-        sourceCell.toggleReflexiveArrowUIComponent(true, getRelatedTransitions(newTransitionModel));
+
+        //Create popover to list applicable transitions for given transition
+        VBox newListOfTransitionsVBox = new VBox();
+        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+            Label newLabel = new Label(transitionModel.toString());
+            newListOfTransitionsVBox.getChildren().add(newLabel);
+        }
+
+        PopOver newListOfTransitionsPopOver = new PopOver(newListOfTransitionsVBox);
+
+        sourceCell.getReflexiveArrowShaftArc().setOnMouseEntered(mouseEvent -> {
+            newListOfTransitionsPopOver.show(sourceCell.getReflexiveArrowShaftArc());
+        });
+
+        sourceCell.getReflexiveArrowShaftArc().setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            newListOfTransitionsPopOver.hide();
+        });
+
+        sourceCell.getReflexiveArrowShaftArc().setVisible(true);
+        sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
+        sourceCell.setListOfTransitionsVBox(newListOfTransitionsVBox);
     }
 
 

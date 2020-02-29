@@ -10,9 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
-import org.controlsfx.control.PopOver;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 public class StateView extends StackPane {
@@ -172,29 +170,7 @@ public class StateView extends StackPane {
         finalStateArc.setVisible(isFinalStateVisible);
     }
 
-    public void toggleReflexiveArrowUIComponent(boolean isReflexiveArrowVisible, HashSet<TransitionModel> transitionsLinkingToResultingStateSet) {
 
-        //Create popover to list applicable transitions for given transition
-        listOfTransitionsVBox = new VBox();
-        for (TransitionModel transitionModel : transitionsLinkingToResultingStateSet) {
-            Label newLabel = new Label(transitionModel.toString());
-            listOfTransitionsVBox.getChildren().add(newLabel);
-        }
-
-        PopOver listOfTransitionsPopOver = new PopOver(listOfTransitionsVBox);
-
-        reflexiveArrowShaftArc.setOnMouseEntered(mouseEvent -> {
-            listOfTransitionsPopOver.show(reflexiveArrowShaftArc);
-        });
-
-        reflexiveArrowShaftArc.setOnMouseExited(mouseEvent -> {
-            //Hide PopOver when mouse exits label
-            listOfTransitionsPopOver.hide();
-        });
-
-        reflexiveArrowShaftArc.setVisible(isReflexiveArrowVisible);
-        reflexiveArrowTipPolygon.setVisible(isReflexiveArrowVisible);
-    }
 
     public void removeReflexiveTransition(TransitionModel transitionModelToRemove) {
         Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
@@ -241,5 +217,85 @@ public class StateView extends StackPane {
 
     public Circle getStateCircle() {
         return stateCircle;
+    }
+
+    public DiagramController getDiagramController() {
+        return diagramController;
+    }
+
+    public String getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
+    }
+
+    public double getCurrentStateXPosition() {
+        return currentStateXPosition;
+    }
+
+    public void setCurrentStateXPosition(double currentStateXPosition) {
+        this.currentStateXPosition = currentStateXPosition;
+    }
+
+    public double getCurrentStateYPosition() {
+        return currentStateYPosition;
+    }
+
+    public void setCurrentStateYPosition(double currentStateYPosition) {
+        this.currentStateYPosition = currentStateYPosition;
+    }
+
+    public void setStateCircle(Circle stateCircle) {
+        this.stateCircle = stateCircle;
+    }
+
+    public Label getStateIdText() {
+        return stateIdText;
+    }
+
+    public void setStateIdText(Label stateIdText) {
+        this.stateIdText = stateIdText;
+    }
+
+    public Line getStartStatePointLine1() {
+        return startStatePointLine1;
+    }
+
+    public void setStartStatePointLine1(Line startStatePointLine1) {
+        this.startStatePointLine1 = startStatePointLine1;
+    }
+
+    public Line getStartStatePointLine2() {
+        return startStatePointLine2;
+    }
+
+    public void setStartStatePointLine2(Line startStatePointLine2) {
+        this.startStatePointLine2 = startStatePointLine2;
+    }
+
+    public Arc getFinalStateArc() {
+        return finalStateArc;
+    }
+
+    public void setFinalStateArc(Arc finalStateArc) {
+        this.finalStateArc = finalStateArc;
+    }
+
+    public void setReflexiveArrowShaftArc(Arc reflexiveArrowShaftArc) {
+        this.reflexiveArrowShaftArc = reflexiveArrowShaftArc;
+    }
+
+    public void setReflexiveArrowTipPolygon(Polygon reflexiveArrowTipPolygon) {
+        this.reflexiveArrowTipPolygon = reflexiveArrowTipPolygon;
+    }
+
+    public VBox getListOfTransitionsVBox() {
+        return listOfTransitionsVBox;
+    }
+
+    public void setListOfTransitionsVBox(VBox listOfTransitionsVBox) {
+        this.listOfTransitionsVBox = listOfTransitionsVBox;
     }
 }
