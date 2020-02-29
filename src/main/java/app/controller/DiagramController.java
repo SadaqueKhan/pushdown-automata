@@ -67,11 +67,12 @@ public class DiagramController {
 
 
     public void loadStatesOntoDiagram() {
+        StateView stateViewToLoad;
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             addStateViewOntoDiagramView(stateModelToLoad);
-            StateView stateViewToLoad = stateMap.get(stateModelToLoad);
+            stateViewToLoad = stateMap.get(stateModelToLoad);
             if (stateModelToLoad.isStartState()) {
-                stateViewToLoad.toggleStartStateUIComponent(stateModelToLoad.isStartState());
+                stateMap.get(stateModelToLoad).toggleStartStateUIComponent(stateModelToLoad.isStartState());
             }
             if (stateModelToLoad.isFinalState()) {
                 stateViewToLoad.toggleFinalStateUIComponent(stateModelToLoad.isFinalState());
@@ -85,7 +86,7 @@ public class DiagramController {
             String resultingStateModelToLoadID = transitionModelToLoad.getResultingStateModel().getStateId();
             //Add transitionview onto diagram view
             if (currentStateModelToLoadID.equals(resultingStateModelToLoadID)) {
-                addReflexiveTransitionToView(currentStateModelToLoadID, resultingStateModelToLoadID, transitionModelToLoad);
+                addReflexiveTransitionToView(transitionModelToLoad);
             } else {
                 addDirectionalTransitionToView(currentStateModelToLoadID, resultingStateModelToLoadID, transitionModelToLoad);
             }
@@ -129,8 +130,9 @@ public class DiagramController {
     }
 
 
-    public void addReflexiveTransitionToView(String currentStateID, String resultingStateID, TransitionModel newTransitionModel) {
-        diagramView.addReflexiveTransitionView(currentStateID, resultingStateID, getRelatedTransitions(newTransitionModel));
+    public void addReflexiveTransitionToView(TransitionModel newTransitionModel) {
+        StateView sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
+        sourceCell.toggleReflexiveArrowUIComponent(true, getRelatedTransitions(newTransitionModel));
     }
 
     public void deleteMultipleTransitions(HashSet<TransitionModel> deletedTransitionModelsSet) {
@@ -364,7 +366,7 @@ public class DiagramController {
 
                 //Add transitionview onto diagram view
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
-                    this.addReflexiveTransitionToView(stateModelSelected.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
+                    this.addReflexiveTransitionToView(newTransitionModel);
                 } else {
                     this.addDirectionalTransitionToView(stateModelSelected.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
                 }

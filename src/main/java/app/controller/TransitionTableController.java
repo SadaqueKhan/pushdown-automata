@@ -118,7 +118,7 @@ public class TransitionTableController {
 
         //Add transitionview onto diagram view
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
-            diagramController.addReflexiveTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
+            diagramController.addReflexiveTransitionToView(newTransitionModel);
         } else {
             diagramController.addDirectionalTransitionToView(currentStateModel.getStateId(), resultingStateModel.getStateId(), newTransitionModel);
         }
