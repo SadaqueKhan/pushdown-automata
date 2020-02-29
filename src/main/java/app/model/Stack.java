@@ -15,13 +15,13 @@ public class Stack {
     }
 
     public void pop() {
-        if (!(stack.isEmpty())) {
+        if (!(isEmpty())) {
             stack.remove(stack.size() - 1);
         }
     }
 
     public String peak() {
-        if (stack.isEmpty()) {
+        if (isEmpty()) {
             return "\u03B5";
         }
         return stack.get(stack.size() - 1);
