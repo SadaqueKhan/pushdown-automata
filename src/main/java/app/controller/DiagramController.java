@@ -135,6 +135,7 @@ public class DiagramController {
         sourceCell.toggleReflexiveArrowUIComponent(true, getRelatedTransitions(newTransitionModel));
     }
 
+
     public void deleteMultipleTransitions(HashSet<TransitionModel> deletedTransitionModelsSet) {
         diagramView.deleteTransitionView(deletedTransitionModelsSet);
     }
