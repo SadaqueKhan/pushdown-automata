@@ -103,7 +103,7 @@ public class ConfigurationModel {
 
         String additionalInfo = "depth " + step + ":branch " + branchId + ": ";
         String configuration = "( " + currentStateModel.toString() + ", " + inputTapeState + ", " + stackState + " )";
-        return additionalInfo + configuration;
+        return additionalInfo + this.getTransitionModelTakenToReachCurrentConfiguration() + " -> " + configuration;
     }
 }
 

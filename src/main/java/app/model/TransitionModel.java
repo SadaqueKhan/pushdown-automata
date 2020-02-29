@@ -111,6 +111,6 @@ public class TransitionModel {
 
     @Override
     public String toString() {
-        return "[" + currentStateModel + ", " + inputSymbol + ", " + stackSymbolToPop + "] " + "->" + " [" + resultingStateModel + ", " + stackSymbolToPush + "]";
+        return "{ " + "[" + currentStateModel + ", " + inputSymbol + ", " + stackSymbolToPop + "] " + "->" + " [" + resultingStateModel + ", " + stackSymbolToPush + "]" + " }";
     }
 }
