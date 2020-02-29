@@ -25,8 +25,7 @@ public class SimulationController {
         this.machineModel = machineModel;
         this.simulationView = new SimulationView(this);
         generateSimulation(machineModel, inputWord);
-
-
+        
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 500, 500);
         Stage stage = new Stage();
@@ -36,8 +35,6 @@ public class SimulationController {
         stage.setTitle("Simulation");
         stage.setScene(scene);
         stage.show();
-        
-        mainStageController.setSimulationProgressBar(false);
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {

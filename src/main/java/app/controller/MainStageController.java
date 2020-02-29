@@ -75,7 +75,6 @@ public class MainStageController extends Application {
             invalidActionAlert.setTitle("Invalid Action");
             invalidActionAlert.show();
         } else {
-            setSimulationProgressBar(true);
             setUpTapeView(inputWord);
             new SimulationController(this, machineModel, inputWord);
         }
@@ -92,11 +91,6 @@ public class MainStageController extends Application {
 
     public DiagramController getDiagramController() {
         return diagramController;
-    }
-
-
-    public void setSimulationProgressBar(boolean isSimulationInProgress) {
-        mainStageView.getProgressBar().setVisible(isSimulationInProgress);
     }
 
     public Stage getPrimaryWindow() {

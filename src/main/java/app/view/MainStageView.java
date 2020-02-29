@@ -30,7 +30,6 @@ public class MainStageView extends BorderPane {
     private SegmentedButton segmentedButton;
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
-    private ProgressBar progressBar;
     private TapeView tapeView;
     private VBox containerForBotoomNodes;
     private MenuItem saveMenuItem;
@@ -81,15 +80,12 @@ public class MainStageView extends BorderPane {
             }
             return change;
         }));
-        
+
         inputWordSet = new HashSet<>();
         autoCompletionBinding = TextFields.bindAutoCompletion(inputTextField, inputWordSet);
-        progressBar = new ProgressBar();
-        progressBar.setMaxWidth(Double.MAX_VALUE);
-        progressBar.setVisible(false);
         VBox containerForTopNodes = new VBox();
         containerForTopNodes.setFillWidth(true);
-        containerForTopNodes.getChildren().addAll(menuBar, inputTextLabel, inputTextField, progressBar);
+        containerForTopNodes.getChildren().addAll(menuBar, inputTextLabel, inputTextField);
 
 
         this.setTop(containerForTopNodes);
@@ -167,9 +163,6 @@ public class MainStageView extends BorderPane {
         return containerForCenterNodes;
     }
 
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
 
     public TapeView getTapeView() {
         return tapeView;
