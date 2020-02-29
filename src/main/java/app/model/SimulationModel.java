@@ -162,7 +162,7 @@ public class SimulationModel {
     }
 
     public int run() {
-        while (currentConfig.getStep() < 40) {
+        while (currentConfig.getStep() <= 50) {
 
             int result = next(); // if one is returned more children exist
 
