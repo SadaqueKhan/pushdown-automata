@@ -22,8 +22,7 @@ public class SimulationView extends BorderPane {
     public SimulationView(SimulationController simulationController) {
         this.simulationController = simulationController;
         setUpUIComponents();
-        setUpUILayout();
-
+        setUpUIListeners();
     }
 
     private void setUpUIComponents() {
@@ -37,13 +36,17 @@ public class SimulationView extends BorderPane {
     }
 
 
-    private void setUpUILayout() {
+    private void setUpUIListeners() {
         SimulationListener simulationListener = new SimulationListener(simulationController);
         transitionsTakenlistView.setOnMouseReleased(simulationListener);
     }
 
+    public Text getInputTextField() {
+        return inputTextField;
+    }
 
     public ListView<ConfigurationModel> getTransitionsTakenlistView() {
         return transitionsTakenlistView;
     }
+
 }

@@ -6,6 +6,8 @@ import app.model.SimulationModel;
 import app.view.SimulationView;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
@@ -25,7 +27,7 @@ public class SimulationController {
         this.machineModel = machineModel;
         this.simulationView = new SimulationView(this);
         generateSimulation(machineModel, inputWord);
-        
+
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 500, 500);
         Stage stage = new Stage();
@@ -41,10 +43,20 @@ public class SimulationController {
         SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
 
         int flag = simulationModel.run();
+
         if (flag == 200) {
             this.simulationPath = simulationModel.getConfigurationPath();
             loadConfigurationsOntoSimulationView();
+        }
 
+        if (flag == 300) {
+            this.simulationPath = simulationModel.getConfigurationPath();
+            loadConfigurationsOntoSimulationView();
+            Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                    "There exists a path that exceeds over 50 steps, suggesting there may exist a loop. Thus, the simulation has terminated up to this point.", ButtonType.OK);
+            invalidActionAlert.setHeaderText("Information");
+            invalidActionAlert.setTitle("Step count exceeded");
+            invalidActionAlert.show();
         }
     }
 
