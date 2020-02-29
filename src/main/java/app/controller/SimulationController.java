@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -25,14 +26,17 @@ public class SimulationController {
         this.simulationView = new SimulationView(this);
         generateSimulation(machineModel, inputWord);
 
+
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 500, 500);
         Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(mainStageController.getPrimaryWindow());
         stage.setResizable(false);
         stage.setTitle("Simulation");
         stage.setScene(scene);
         stage.show();
-
+        
         mainStageController.setSimulationProgressBar(false);
     }
 

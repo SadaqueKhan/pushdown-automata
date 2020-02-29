@@ -99,6 +99,9 @@ public class MainStageController extends Application {
         mainStageView.getProgressBar().setVisible(isSimulationInProgress);
     }
 
+    public Stage getPrimaryWindow() {
+        return primaryWindow;
+    }
 
     public void saveMachine() {
         try {
