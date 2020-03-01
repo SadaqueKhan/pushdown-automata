@@ -63,7 +63,7 @@ public class MainStageView extends BorderPane {
 
         Menu acceptanceMenu = new Menu("Acceptance");
         this.acceptanceByFinalStateMenuItem = new CheckMenuItem("By Final State");
-        this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty StackModel");
+        this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty Stack");
         acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
         acceptanceByFinalStateMenuItem.setSelected(true);
         menuBar.getMenus().add(acceptanceMenu);
