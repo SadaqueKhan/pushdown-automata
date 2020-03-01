@@ -14,6 +14,7 @@ public class SimulationModel {
     private ConfigurationModel currentConfig;
 
     private ArrayList<ConfigurationModel> configurationPath;
+    private ArrayList<ConfigurationModel> successConfigurationPath;
 
     public SimulationModel(MachineModel machineModel, String inputWord) {
         this.inputTapeModel = new InputTapeModel();

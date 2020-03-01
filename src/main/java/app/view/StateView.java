@@ -15,7 +15,7 @@ public class StateView extends StackPane {
     private final DiagramController diagramController;
 
     //Data fields for view
-    private String stateId;
+    private String stateID;
     private double currentStateXPosition;
     private double currentStateYPosition;
 
@@ -31,9 +31,9 @@ public class StateView extends StackPane {
     private Polygon reflexiveArrowTipPolygon;
     private VBox listOfTransitionsVBox;
 
-    public StateView(String stateId, DiagramController diagramController) {
+    public StateView(String stateID, DiagramController diagramController) {
 
-        this.stateId = stateId;
+        this.stateID = stateID;
 
         // Reference to the controller of this view
         this.diagramController = diagramController;
@@ -56,7 +56,7 @@ public class StateView extends StackPane {
         stateCircle.setRadius(radius);
         stateCircle.setStyle("-fx-fill:orange;-fx-stroke-width:2px;-fx-stroke:black;");
 
-        stateIdText = new Label(stateId);
+        stateIdText = new Label(stateID);
         stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
         this.setPrefSize(paneSize, paneSize);
         this.setMaxSize(paneSize, paneSize);
@@ -161,12 +161,12 @@ public class StateView extends StackPane {
     }
 
     public String getStateID() {
-        return stateId;
+        return stateID;
     }
 
     @Override
     public String toString() {
-        return "StateView: " + stateId;
+        return "StateView: " + stateID;
     }
 
 
@@ -186,13 +186,7 @@ public class StateView extends StackPane {
         return diagramController;
     }
 
-    public String getStateId() {
-        return stateId;
-    }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
-    }
 
     public double getCurrentStateXPosition() {
         return currentStateXPosition;
