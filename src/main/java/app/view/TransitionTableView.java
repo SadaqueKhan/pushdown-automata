@@ -53,7 +53,6 @@ public class TransitionTableView extends BorderPane {
         this.mainStageView = mainStageView;
 
         setUpUIComponents();
-        setUpUILayout();
         setUpUIListeners();
     }
 
@@ -106,7 +105,7 @@ public class TransitionTableView extends BorderPane {
         actionCol.getColumns().addAll(resultingStateCol, stackSymbolToPushCol);
 
         transitionTable.getColumns().addAll(configurationCol, actionCol);
-        
+
         //Set how many rows the user can select
         transitionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -179,9 +178,6 @@ public class TransitionTableView extends BorderPane {
         transitionTableContainer.getChildren().addAll(transitionTable, gridPane);
     }
 
-
-    private void setUpUILayout() {
-    }
 
     private void setUpUIListeners() {
         //Create listener for this view
