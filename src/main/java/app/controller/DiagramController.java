@@ -17,12 +17,14 @@ import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
@@ -515,6 +517,11 @@ public class DiagramController {
 
         //TODO need to remove this listeners logic
         createTransitionItem.setOnAction(e -> {
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setPadding(new Insets(10, 10, 0, 10));
+            gridPane.setAlignment(Pos.CENTER);
+
 //Create input widgets for the user to enter a configuration
             TextField currentStateTextField = new TextField();
             currentStateTextField.setText(stateModelSelected.getStateId());
@@ -522,21 +529,29 @@ public class DiagramController {
             // currentStateTextField.setEditable(false);
             currentStateTextField.setDisable(true);
 
+            gridPane.add(new Label("Current State"), 1, 1);
+            gridPane.add(currentStateTextField, 1, 2);
+
             ComboBox<String> inputSymbolComboBox = new ComboBox<>();
-            inputSymbolComboBox.setPrefWidth(65);
+            inputSymbolComboBox.setPrefWidth(110);
             inputSymbolComboBox.setEditable(true);
             inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
             setUpComboBoxesListeners(inputSymbolComboBox);
 
+            gridPane.add(new Label("Input Symbol"), 2, 1);
+            gridPane.add(inputSymbolComboBox, 2, 2);
+
             ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
-            stackSymbolToPopComboBox.setPrefWidth(65);
+            stackSymbolToPopComboBox.setPrefWidth(110);
             stackSymbolToPopComboBox.setEditable(true);
             stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
             setUpComboBoxesListeners(stackSymbolToPopComboBox);
 
+            gridPane.add(new Label("Stack Symbol to Pop"), 3, 1);
+            gridPane.add(stackSymbolToPopComboBox, 3, 2);
+
 // Create a arrow label to connect the configuration input widgets to action input widgets
-            final Label arrowLabel = new Label("->");
-            arrowLabel.setPrefWidth(40);
+            gridPane.add(new Label("->"), 4, 2);
 
 //Create input widgets for the user to enter a configuration
             ComboBox<String> resultingStateComboBox = new ComboBox<>();
@@ -548,25 +563,32 @@ public class DiagramController {
             }
             resultingStateComboBox.getItems().addAll(availableStateList);
 
+            gridPane.add(new Label("Resulting State"), 5, 1);
+            gridPane.add(resultingStateComboBox, 5, 2);
+
             ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
-            stackSymbolToPushComboBox.setPrefWidth(65);
+            stackSymbolToPushComboBox.setPrefWidth(110);
             stackSymbolToPushComboBox.setEditable(true);
             stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
             setUpComboBoxesListeners(stackSymbolToPushComboBox);
 
+            gridPane.add(new Label("Stack Symbol to Push"), 6, 1);
+            gridPane.add(stackSymbolToPushComboBox, 6, 2);
+
 //Create submit button for the user to submit a transition
             Button submitTransitionButton = new Button("Submit");
 
-            final HBox hBox = new HBox();
-            hBox.setPadding(new Insets(10, 10, 10, 10));
-            hBox.setSpacing(10);
-            hBox.getChildren().addAll(currentStateTextField, inputSymbolComboBox, stackSymbolToPopComboBox, arrowLabel, resultingStateComboBox, stackSymbolToPushComboBox);
+            HBox hBoxButtons = new HBox();
+            hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
+            hBoxButtons.setSpacing(10);
+            hBoxButtons.getChildren().add(submitTransitionButton);
+            gridPane.add(hBoxButtons, 7, 2);
 
-            final VBox vBox = new VBox(hBox, submitTransitionButton);
-            vBox.setAlignment(Pos.CENTER);
 
-            Scene scene = new Scene(vBox, 450, 150);
+            Scene scene = new Scene(gridPane, 800, 150);
             Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(mainStageController.getPrimaryWindow());
             stage.setResizable(false);
             stage.setTitle("Create Transition");
             stage.setScene(scene);

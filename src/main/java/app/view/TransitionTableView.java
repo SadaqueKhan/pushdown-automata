@@ -48,7 +48,6 @@ public class TransitionTableView extends BorderPane {
     private VBox transitionTableContainer;
 
     public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
-
         this.transitionTableController = transitionTableController;
         this.mainStageView = mainStageView;
 
