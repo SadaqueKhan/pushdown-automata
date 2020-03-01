@@ -59,12 +59,15 @@ public class MainStageController extends Application {
 
     public void triggerDiagramView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
+        mainStageView.getInputTextField().setDisable(false);
         diagramController.loadDiagramViewOntoStage(transitionTableController);
     }
 
     public void triggerTransitionTableView() {
         mainStageView.getContainerForCenterNodes().getChildren().remove(1);
+        mainStageView.getInputTextField().setDisable(true);
         transitionTableController.loadTransitionTableOntoStage(diagramController);
+
     }
 
     public void triggerSimulationView(String inputWord) {
