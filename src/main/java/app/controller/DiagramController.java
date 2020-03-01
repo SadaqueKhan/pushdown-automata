@@ -136,43 +136,19 @@ public class DiagramController {
         StateView currentStateView = stateMap.get(newTransitionModel.getCurrentStateModel());
         StateView resultingStateView = stateMap.get(newTransitionModel.getResultingStateModel());
 
-        HashSet<TransitionModel> relatedTransitions = machineModel.getRelatedTransitions(newTransitionModel);
         HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
-        HashSet<Node> transitionSetExist = null;
 
-
-        outerloop:
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToCheck = (TransitionView) node;
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
-                        transitionSetExist = nextHashSet;
-                        break outerloop;
+                        createNewListOfTransitionsPopOver(transitionViewToCheck, machineModel.getRelatedTransitions(newTransitionModel));
+                        return;
                     }
                 }
             }
         }
-
-        if (transitionSetExist != null) {
-            for (Node node : transitionSetExist) {
-                if (node instanceof VBox) {
-                    VBox listOfTransitionsStackPane = (VBox) node;
-
-                    if (listOfTransitionsStackPane.getId().equals("transitionList")) {
-                        listOfTransitionsStackPane.getChildren().clear();
-                        for (TransitionModel transitionModel : relatedTransitions) {
-                            listOfTransitionsStackPane.getChildren().add(new Label(transitionModel.toString()));
-                        }
-                    }
-                }
-
-            }
-
-            return;
-
-        }
-
 
         //Transition does not exist create fresh transition
         diagramView.getChildren().remove(currentStateView);
@@ -193,6 +169,7 @@ public class DiagramController {
         TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
+        createNewListOfTransitionsPopOver(transitionView, machineModel.getRelatedTransitions(newTransitionModel));
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
@@ -223,19 +200,15 @@ public class DiagramController {
         StackPane arrowTip = createArrowTip(true, transitionView, currentStateView, resultingStateView);
         arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
 
-        VBox weightAB = getWeight(transitionView, relatedTransitions);
-        weightAB.setId("transitionList");
-
         HashSet<Node> setOfNode = new HashSet<>();
         setOfNode.add(virtualCenterLine);
         setOfNode.add(centerLineArrowAB);
         setOfNode.add(centerLineArrowBA);
         setOfNode.add(transitionView);
         setOfNode.add(arrowTip);
-        setOfNode.add(weightAB);
         linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
 
-        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, weightAB);
+        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip);
         diagramView.getChildren().addAll(currentStateView, resultingStateView);
 
     }
@@ -310,52 +283,21 @@ public class DiagramController {
     }
 
 
-    private VBox getWeight(TransitionView transitionView, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
-
-        VBox newVBox = new VBox();
-        for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
-            newVBox.getChildren().add(new Label(transitionModel.toString()));
-        }
-
-        newVBox.setSpacing(5);
-        newVBox.setStyle("-fx-border-color: black;\n" +
-                "-fx-border-insets: 5;\n" +
-                "-fx-border-width: 3;\n" +
-                "-fx-border-style: solid;\n");
-
-        DoubleBinding wgtSqrHalfWidth = newVBox.widthProperty().divide(2);
-        DoubleBinding wgtSqrHalfHeight = newVBox.heightProperty().add(0);
-
-        DoubleBinding lineXHalfLength = transitionView.endXProperty().subtract(transitionView.startXProperty()).divide(2);
-        DoubleBinding lineYHalfLength = transitionView.endYProperty().subtract(transitionView.startYProperty()).divide(2);
-
-        newVBox.layoutXProperty().bind(transitionView.startXProperty().add(lineXHalfLength.subtract(wgtSqrHalfWidth)));
-        newVBox.layoutYProperty().bind(transitionView.startYProperty().add(lineYHalfLength.subtract(wgtSqrHalfHeight)));
-
-        newVBox.setTranslateX(transitionView.startXProperty().doubleValue());
-        newVBox.setTranslateY(transitionView.startYProperty().doubleValue());
-
-
-        return newVBox;
-    }
 
 
     private void createNewListOfTransitionsPopOver(TransitionView transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
         VBox newVBox = new VBox();
+        PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
+
         for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
             newVBox.getChildren().add(new Label(transitionModel.toString()));
         }
-        String popOverTitleString = transitionViewToCheck.getSource().getStateID() + " -> " + transitionViewToCheck.getTarget().getStateID();
-        PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
-
-        newListOfTransitionsPopOver.setTitle(popOverTitleString);
-        newListOfTransitionsPopOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-        newListOfTransitionsPopOver.setPrefWidth(100);
-        newListOfTransitionsPopOver.setDetachable(true);
-
-
         transitionViewToCheck.setOnMouseEntered(mouseEvent -> {
             newListOfTransitionsPopOver.show(transitionViewToCheck);
+        });
+        transitionViewToCheck.setOnMouseExited(mouseEvent -> {
+            //Hide PopOver when mouse exits label
+            newListOfTransitionsPopOver.hide();
         });
     }
 
