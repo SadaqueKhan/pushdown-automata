@@ -136,19 +136,41 @@ public class DiagramController {
         StateView currentStateView = stateMap.get(newTransitionModel.getCurrentStateModel());
         StateView resultingStateView = stateMap.get(newTransitionModel.getResultingStateModel());
 
+        HashSet<TransitionModel> relatedTransitions = machineModel.getRelatedTransitions(newTransitionModel);
         HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+        HashSet<Node> transitionSetExist = null;
 
+
+        outerloop:
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToCheck = (TransitionView) node;
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
-                        createNewListOfTransitionsPopOver(transitionViewToCheck, machineModel.getRelatedTransitions(newTransitionModel));
-                        return;
+                        transitionSetExist = nextHashSet;
+                        break outerloop;
                     }
                 }
             }
         }
+
+        if (transitionSetExist != null) {
+            for (Node node : transitionSetExist) {
+                if (node instanceof VBox) {
+                    VBox listOfTransitionsStackPane = (VBox) node;
+
+                    if (listOfTransitionsStackPane.getId().equals("transitionList")) {
+                        listOfTransitionsStackPane.getChildren().clear();
+                        for (TransitionModel transitionModel : relatedTransitions) {
+                            listOfTransitionsStackPane.getChildren().add(new Label(transitionModel.toString()));
+                        }
+                    }
+                }
+
+            }
+
+        }
+
 
         //Transition does not exist create fresh transition
         diagramView.getChildren().remove(currentStateView);
@@ -169,7 +191,6 @@ public class DiagramController {
         TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
-        createNewListOfTransitionsPopOver(transitionView, machineModel.getRelatedTransitions(newTransitionModel));
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
@@ -200,7 +221,8 @@ public class DiagramController {
         StackPane arrowTip = createArrowTip(true, transitionView, currentStateView, resultingStateView);
         arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
 
-        StackPane weightAB = getWeight(transitionView, machineModel.getRelatedTransitions(newTransitionModel));
+        VBox weightAB = getWeight(transitionView, relatedTransitions);
+        weightAB.setId("transitionList");
 
         HashSet<Node> setOfNode = new HashSet<>();
         setOfNode.add(virtualCenterLine);
@@ -208,6 +230,7 @@ public class DiagramController {
         setOfNode.add(centerLineArrowBA);
         setOfNode.add(transitionView);
         setOfNode.add(arrowTip);
+        setOfNode.add(weightAB);
         linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
 
         diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, weightAB);
@@ -285,25 +308,26 @@ public class DiagramController {
     }
 
 
-    private StackPane getWeight(TransitionView transitionView, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
-        double size = 20;
-        StackPane weight = new StackPane();
-    
+    private VBox getWeight(TransitionView transitionView, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
+
         VBox newVBox = new VBox();
         for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
             newVBox.getChildren().add(new Label(transitionModel.toString()));
         }
 
-        weight.getChildren().addAll(newVBox);
-
-        DoubleBinding wgtSqrHalfWidth = weight.widthProperty().divide(2);
-        DoubleBinding wgtSqrHalfHeight = weight.heightProperty().divide(2);
+        DoubleBinding wgtSqrHalfWidth = newVBox.widthProperty().divide(2);
+        DoubleBinding wgtSqrHalfHeight = newVBox.heightProperty().divide(2);
         DoubleBinding lineXHalfLength = transitionView.endXProperty().subtract(transitionView.startXProperty()).divide(2);
         DoubleBinding lineYHalfLength = transitionView.endYProperty().subtract(transitionView.startYProperty()).divide(2);
 
-        weight.layoutXProperty().bind(transitionView.startXProperty().add(lineXHalfLength.subtract(wgtSqrHalfWidth)));
-        weight.layoutYProperty().bind(transitionView.startYProperty().add(lineYHalfLength.subtract(wgtSqrHalfHeight)));
-        return weight;
+        newVBox.layoutXProperty().bind(transitionView.startXProperty().add(lineXHalfLength.subtract(wgtSqrHalfWidth)));
+        newVBox.layoutYProperty().bind(transitionView.startYProperty().add(lineYHalfLength.subtract(wgtSqrHalfHeight)));
+
+        newVBox.setTranslateX(transitionView.startXProperty().doubleValue());
+        newVBox.setTranslateY(transitionView.startYProperty().doubleValue());
+
+
+        return newVBox;
     }
 
 
