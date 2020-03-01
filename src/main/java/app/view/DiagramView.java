@@ -11,7 +11,7 @@ public class DiagramView extends Pane {
 
     private final DiagramController diagramController;
 
-    String cssLayout = "-fx-border-color: black;\n" +
+    private final String cssLayout = "-fx-border-color: black;\n" +
             "-fx-background-color: whitesmoke,\n" +
             "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
             "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)";
@@ -21,12 +21,9 @@ public class DiagramView extends Pane {
         this.mainStageView = mainStageView;
         // Reference to diagram controller
         this.diagramController = diagramController;
-
-
         setUpUIComponents();
         setUpUIListeners();
     }
-
 
     private void setUpUIComponents() {
         this.setStyle(cssLayout);
@@ -39,9 +36,4 @@ public class DiagramView extends Pane {
         this.setOnMousePressed(diagramListener);
     }
 
-
-    @Override
-    public String toString() {
-        return "DiagramView";
-    }
 }

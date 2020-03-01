@@ -149,23 +149,8 @@ public class StateView extends StackPane {
         this.getChildren().addAll(stateCircle, stateIdText, finalStateArc, startStatePointLine1, startStatePointLine2, reflexiveArrowShaftArc, reflexiveArrowTipPolygon);
     }
 
-    public void toggleStandardStateUIComponent() {
-        startStatePointLine1.setVisible(false);
-        startStatePointLine2.setVisible(false);
-        finalStateArc.setVisible(false);
-    }
 
 
-    public void toggleStartStateUIComponent(boolean isStartStateVisible) {
-        startStatePointLine1.setVisible(isStartStateVisible);
-        startStatePointLine2.setVisible(isStartStateVisible);
-    }
-
-
-    public void toggleFinalStateUIComponent(boolean isFinalStateVisible) {
-        finalStateArc.setVisible(isFinalStateVisible);
-    }
-    
     private void setUpUIListeners() {
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);

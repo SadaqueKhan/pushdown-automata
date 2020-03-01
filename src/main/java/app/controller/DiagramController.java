@@ -73,10 +73,11 @@ public class DiagramController {
             addStateViewOntoDiagramView(stateModelToLoad);
             stateViewToLoad = stateMap.get(stateModelToLoad);
             if (stateModelToLoad.isStartState()) {
-                stateMap.get(stateModelToLoad).toggleStartStateUIComponent(stateModelToLoad.isStartState());
+                stateViewToLoad.getStartStatePointLine1().setVisible(stateModelToLoad.isStartState());
+                stateViewToLoad.getStartStatePointLine2().setVisible(stateModelToLoad.isStartState());
             }
             if (stateModelToLoad.isFinalState()) {
-                stateViewToLoad.toggleFinalStateUIComponent(stateModelToLoad.isFinalState());
+                stateViewToLoad.getFinalStateArc().setVisible(stateModelToLoad.isFinalState());
             }
         }
     }
@@ -476,13 +477,17 @@ public class DiagramController {
         toggleStandardStateItem.setOnAction(e -> {
             stateModelSelected.setStartState(false);
             stateModelSelected.setFinalState(false);
-            stateView.toggleStandardStateUIComponent();
+
+            stateView.getStartStatePointLine1().setVisible(false);
+            stateView.getStartStatePointLine2().setVisible(false);
+            stateView.getFinalStateArc().setVisible(false);
         });
 
         toggleStartStateItem.setOnAction(e -> {
             if (stateModelSelected.isStartState()) {
                 stateModelSelected.setStartState(false);
-                stateView.toggleStartStateUIComponent(stateModelSelected.isStartState());
+                stateView.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                stateView.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
             } else {
                 if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
                     Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -492,17 +497,18 @@ public class DiagramController {
                     invalidActionAlert.show();
                 } else {
                     stateModelSelected.setStartState(true);
-                    stateView.toggleStartStateUIComponent(stateModelSelected.isStartState());
+                    stateView.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                    stateView.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
                 }
             }
         });
         toggleFinalStateItem.setOnAction(e -> {
             if (stateModelSelected.isFinalState()) {
                 stateModelSelected.setFinalState(false);
-                stateView.toggleFinalStateUIComponent(stateModelSelected.isFinalState());
+                stateView.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
             } else {
                 stateModelSelected.setFinalState(true);
-                stateView.toggleFinalStateUIComponent(stateModelSelected.isFinalState());
+                stateView.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
             }
         });
 
@@ -624,9 +630,9 @@ public class DiagramController {
 
                 //Add transitionview onto diagram view
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
-                    this.addReflexiveTransitionToDiagramView(newTransitionModel);
+                    addReflexiveTransitionToDiagramView(newTransitionModel);
                 } else {
-                    this.addDirectionalTransitionToView(newTransitionModel);
+                    addDirectionalTransitionToView(newTransitionModel);
                 }
                 stage.close();
             });
