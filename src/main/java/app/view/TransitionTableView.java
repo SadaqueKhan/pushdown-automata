@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -60,7 +61,7 @@ public class TransitionTableView extends BorderPane {
     private void setUpUIComponents() {
 
         //Create table
-        transitionTable = new TableView<TransitionModel>();
+        transitionTable = new TableView<>();
 
         //Set the table to be editable
         transitionTable.setEditable(true);
@@ -114,52 +115,71 @@ public class TransitionTableView extends BorderPane {
 
 
 //Create input widgets for the user to enter a configuration
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setAlignment(Pos.TOP_CENTER);
+
         this.currentStateComboBox = new ComboBox<>();
         currentStateComboBox.setEditable(true);
         currentStateComboBox.setPrefWidth(110);
 
+        gridPane.add(new Label("Current State"), 1, 1);
+        gridPane.add(currentStateComboBox, 1, 2);
+
         this.inputSymbolComboBox = new ComboBox<>();
         inputSymbolComboBox.setEditable(true);
-        inputSymbolComboBox.setPrefWidth(55);
+        inputSymbolComboBox.setPrefWidth(110);
         inputSymbolComboBox.getItems().add("\u03B5");
         setUpComboBoxesListeners(inputSymbolComboBox);
 
+        gridPane.add(new Label("Input Symbol"), 2, 1);
+        gridPane.add(inputSymbolComboBox, 2, 2);
+
         this.stackSymbolToPopComboBox = new ComboBox<>();
         stackSymbolToPopComboBox.setEditable(true);
-        stackSymbolToPopComboBox.setPrefWidth(55);
+        stackSymbolToPopComboBox.setPrefWidth(110);
         stackSymbolToPopComboBox.getItems().add("\u03B5");
         setUpComboBoxesListeners(stackSymbolToPopComboBox);
 
+        gridPane.add(new Label("Stack Symbol to Pop"), 3, 1);
+        gridPane.add(stackSymbolToPopComboBox, 3, 2);
+
 // Create a arrow label to connect the configuration input widgets to action input widgets
-        final Label arrowLabel = new Label("->");
+        gridPane.add(new Label("->"), 4, 2);
 
 //Create input widgets for the user to enter a configuration
         this.resultingStateComboBox = new ComboBox<>();
         resultingStateComboBox.setEditable(true);
         resultingStateComboBox.setPrefWidth(110);
 
+        gridPane.add(new Label("Resulting State"), 5, 1);
+        gridPane.add(resultingStateComboBox, 5, 2);
+
         this.stackSymbolToPushComboBox = new ComboBox<>();
         stackSymbolToPushComboBox.setEditable(true);
-        stackSymbolToPushComboBox.setPrefWidth(55);
+        stackSymbolToPushComboBox.setPrefWidth(110);
         stackSymbolToPushComboBox.getItems().add("\u03B5");
         setUpComboBoxesListeners(stackSymbolToPushComboBox);
 
-        this.submitTransitionButton = new Button("Submit");
+        gridPane.add(new Label("Stack Symbol to Push"), 6, 1);
+        gridPane.add(stackSymbolToPushComboBox, 6, 2);
 
+        this.submitTransitionButton = new Button("Submit");
 
         //Create submit button for the user to submit a transition
         this.deleteTransitionButton = new Button("Delete");
-
-        final HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10, 10, 10, 10));
-        hBox.setSpacing(10);
-        hBox.setAlignment(Pos.TOP_CENTER);
-        hBox.getChildren().addAll(currentStateComboBox, inputSymbolComboBox, stackSymbolToPopComboBox, arrowLabel, resultingStateComboBox, stackSymbolToPushComboBox, submitTransitionButton, deleteTransitionButton);
+        
+        HBox hBoxButtons = new HBox();
+        hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
+        hBoxButtons.setSpacing(10);
+        hBoxButtons.getChildren().addAll(submitTransitionButton, deleteTransitionButton);
+        gridPane.add(hBoxButtons, 7, 2);
 
         transitionTableContainer = new VBox();
         transitionTableContainer.setPadding(new Insets(10, 10, 10, 10));
         transitionTableContainer.setSpacing(10);
-        transitionTableContainer.getChildren().addAll(transitionTable, hBox);
+        transitionTableContainer.getChildren().addAll(transitionTable, gridPane);
     }
 
 
