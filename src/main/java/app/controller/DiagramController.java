@@ -319,19 +319,19 @@ public class DiagramController {
     }
 
 
-    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
+    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel> exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
         //Retrieve stateview to be deleted
-        StateView stateViewToDelete = stateMap.get(stateModelToDelete);
+        StateView stateViewToRemove = stateMap.get(stateModelToDelete);
         //Retrieve and remove linked transitionviews to stateview
-        deleteTransitionView(machineModel.getExitingTranstionsFromStateModel(stateModelToDelete));
-        deleteTransitionView(machineModel.getEnteringTransitionsFromStateModel(stateModelToDelete));
+        deleteTransitionView(exitingTransitionModelsSetToDelete);
+        deleteTransitionView(enteringTransitionModelsSetToDelete);
 
         // Remove mapping of stateview in data structures
         stateMap.remove(stateModelToDelete);
-        linkedTransitionViewsMap.remove(stateViewToDelete);
+        linkedTransitionViewsMap.remove(stateViewToRemove);
 
         //Remove the stateview from the diagramview
-        diagramView.getChildren().remove(stateViewToDelete);
+        diagramView.getChildren().remove(stateViewToRemove);
     }
 
 
@@ -347,11 +347,22 @@ public class DiagramController {
 
             //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
-                //Update transition if it is reflexive transition
-                currentStateView.removeReflexiveTransition(deletedTransition);
+                VBox listOfTransitionsVBox = currentStateView.getListOfTransitionsVBox();
+                Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
+                while (iter.hasNext()) {
+                    Label labelToRemove = (Label) iter.next();
+                    if (labelToRemove.getText().equals(deletedTransition.toString())) {
+                        iter.remove();
+                    }
+                }
+                if (listOfTransitionsVBox.getChildren().isEmpty()) {
+                    currentStateView.getReflexiveArrowShaftArc().setVisible(false);
+                    currentStateView.getReflexiveArrowTipPolygon().setVisible(false);
+                }
             } else {
                 //Find bi-directional transition view
                 HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+
                 for (HashSet<Node> nextHashSet : linkedTransitionViews) {
                     for (Node node : nextHashSet) {
                         if (node instanceof TransitionView) {
@@ -624,18 +635,19 @@ public class DiagramController {
         });
 
         deleteStateItem.setOnAction(e -> {
+            //Update machine model
+            HashSet<TransitionModel> exitingTranstionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModelSelected);
+            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModelSelected);
+            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
+            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
+            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
+
             //Notify transition table controller
-            transitionTableController.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
+            transitionTableController.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            //Update view
 
             //Update view
-            deleteStateViewOnDiagramView(stateModelSelected);
-
-            //Update machine model
-            HashSet<TransitionModel> exitingTransitionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModelSelected);
-            HashSet<TransitionModel> enteringTransitionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModelSelected);
-            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
-            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
-            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
+            deleteStateViewOnDiagramView(stateModelSelected, exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
         });
 
         contextMenu.getItems().add(toggleStandardStateItem);

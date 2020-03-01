@@ -60,7 +60,6 @@ public class MachineModel {
     }
 
 
-
     @XmlElement
     public HashSet<StateModel> getStateModelSet() {
         return stateModelSet;
@@ -72,7 +71,6 @@ public class MachineModel {
     }
 
 
-
     public HashSet<String> getInputAlphabetSet() {
         return inputAlphabetSet;
     }
@@ -80,8 +78,6 @@ public class MachineModel {
     public HashSet<String> getStackAlphabetSet() {
         return stackAlphabetSet;
     }
-
-
 
 
     public HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
@@ -110,9 +106,9 @@ public class MachineModel {
 
     public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
-        for (TransitionModel isExitingTransitionModel : transitionModelSet) {
-            if (isExitingTransitionModel.getResultingStateModel().equals(stateModel)) {
-                enteringTransitionFromStateModelToReturn.add(isExitingTransitionModel);
+        for (TransitionModel isEnteringTransitionModel : transitionModelSet) {
+            if (isEnteringTransitionModel.getResultingStateModel().equals(stateModel)) {
+                enteringTransitionFromStateModelToReturn.add(isEnteringTransitionModel);
             }
         }
         return enteringTransitionFromStateModelToReturn;

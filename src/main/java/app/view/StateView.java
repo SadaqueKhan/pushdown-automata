@@ -2,16 +2,12 @@ package app.view;
 
 import app.controller.DiagramController;
 import app.listener.DiagramListener;
-import app.model.TransitionModel;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
-
-import java.util.Iterator;
 
 public class StateView extends StackPane {
 
@@ -169,25 +165,7 @@ public class StateView extends StackPane {
     public void toggleFinalStateUIComponent(boolean isFinalStateVisible) {
         finalStateArc.setVisible(isFinalStateVisible);
     }
-
-
-
-    public void removeReflexiveTransition(TransitionModel transitionModelToRemove) {
-        Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
-
-        while (iter.hasNext()) {
-            Label labelToRemove = (Label) iter.next();
-            if (labelToRemove.getText().equals(transitionModelToRemove.toString())) {
-                iter.remove();
-            }
-        }
-        if (listOfTransitionsVBox.getChildren().isEmpty()) {
-            reflexiveArrowShaftArc.setVisible(false);
-            reflexiveArrowTipPolygon.setVisible(false);
-        }
-    }
-
-
+    
     private void setUpUIListeners() {
         //Create listener for this view
         DiagramListener diagramListener = new DiagramListener(diagramController);

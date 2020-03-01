@@ -150,12 +150,11 @@ public class TransitionTableController {
         diagramController.deleteTransitionView(removeTransitionSet);
     }
 
-    public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(StateModel stateModelToDelete) {
-        transitionTableView.getTransitionTable().getItems().removeAll(machineModel.getExitingTranstionsFromStateModel(stateModelToDelete));
-        transitionTableView.getTransitionTable().getItems().removeAll(machineModel.getEnteringTransitionsFromStateModel(stateModelToDelete));
+    public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
+        transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
+        transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
         updateAvailableStateListForCombobox();
     }
-
     public void updateAvailableStateListForCombobox() {
         ArrayList<String> availableStateList = new ArrayList<>();
         for (StateModel stateModel : machineModel.getStateModelSet()) {

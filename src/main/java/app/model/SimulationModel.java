@@ -162,7 +162,7 @@ public class SimulationModel {
     }
 
     public int run() {
-        while (currentConfig.getStep() <= 50) {
+        while (currentConfig.getStep() < 51) {
 
             int result = next(); // if one is returned more children exist
 
@@ -178,6 +178,11 @@ public class SimulationModel {
                     return 200;
                 }
                 configurationPath.add(currentConfig);
+            }
+
+            //TODO: Search
+            if (currentConfig.getStep() == 50) {
+                previous();
             }
         }
 
