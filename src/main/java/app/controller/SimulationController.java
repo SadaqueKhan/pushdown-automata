@@ -6,8 +6,6 @@ import app.model.SimulationModel;
 import app.view.SimulationView;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
@@ -29,7 +27,7 @@ public class SimulationController {
         generateSimulation(machineModel, inputWord);
 
         //Create a new scene to render simulation
-        Scene scene = new Scene(simulationView, 500, 500);
+        Scene scene = new Scene(simulationView, 750, 500);
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(mainStageController.getPrimaryWindow());
@@ -47,16 +45,7 @@ public class SimulationController {
         if (flag == 200) {
             this.simulationPath = simulationModel.getConfigurationPath();
             loadConfigurationsOntoSimulationView();
-        }
-
-        if (flag == 300) {
-            this.simulationPath = simulationModel.getConfigurationPath();
-            loadConfigurationsOntoSimulationView();
-            Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                    "There exists a path that exceeds over 50 steps, suggesting there may exist a loop. Thus, the simulation has terminated up to this point.", ButtonType.OK);
-            invalidActionAlert.setHeaderText("Information");
-            invalidActionAlert.setTitle("Step count exceeded");
-            invalidActionAlert.show();
+            simulationView.getSimulationStatsTextField().setText("Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths());
         }
     }
 
@@ -64,6 +53,7 @@ public class SimulationController {
         ListView<ConfigurationModel> simulationListView = simulationView.getTransitionsTakenlistView();
 
         simulationListView.getItems().addAll(simulationPath);
+
         Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
             @Override
             public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
@@ -91,9 +81,14 @@ public class SimulationController {
 
                             if (item.getParentConfiguration() == null) {
                                 setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
-                                itemToPrint = item.toString() + " (At the root!)";
+                                itemToPrint = item.toString() + " (At the start state!)";
                             }
 
+
+                            if (item.isInfiniteConfig()) {
+                                setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
+                                itemToPrint = item.toString() + "  (Possible infinite path!)";
+                            }
 
                             if (item.isSuccessConfig()) {
                                 setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");

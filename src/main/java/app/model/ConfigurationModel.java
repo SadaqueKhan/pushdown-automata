@@ -13,6 +13,7 @@ public class ConfigurationModel {
     private boolean isVisited;
     private List<ConfigurationModel> childrenConfigurations;
     private boolean isSuccessConfig = false;
+    private boolean isInfiniteConfig = false;
     private int step;
     private int branchId;
 
@@ -87,6 +88,15 @@ public class ConfigurationModel {
 
     public void setBranchId(int branchId) {
         this.branchId = branchId;
+    }
+
+
+    public boolean isInfiniteConfig() {
+        return isInfiniteConfig;
+    }
+
+    public void setInfiniteConfig(boolean infiniteConfig) {
+        isInfiniteConfig = infiniteConfig;
     }
 
     @Override

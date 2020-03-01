@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
@@ -51,6 +52,8 @@ public class DiagramController {
 
     private Map<StateModel, StateView> stateMap;
     private Map<StateView, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
+    private LinkedHashMap<TransitionView, PopOver> popOvers;
+
 
     public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
         this.mainStageController = mainStageController;
@@ -283,18 +286,27 @@ public class DiagramController {
     }
 
 
-
-
     private void createNewListOfTransitionsPopOver(TransitionView transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
         VBox newVBox = new VBox();
         PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
 
+        newListOfTransitionsPopOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+        newListOfTransitionsPopOver.setAnchorLocation(PopupWindow.AnchorLocation.CONTENT_BOTTOM_RIGHT);
+        newListOfTransitionsPopOver.setArrowIndent(5);
+        newListOfTransitionsPopOver.setAutoHide(false);
+        newListOfTransitionsPopOver.setAnimated(false);
+        newListOfTransitionsPopOver.setDetachable(false);
+        newListOfTransitionsPopOver.setDetached(false);
+
         for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
             newVBox.getChildren().add(new Label(transitionModel.toString()));
         }
+
         transitionViewToCheck.setOnMouseEntered(mouseEvent -> {
             newListOfTransitionsPopOver.show(transitionViewToCheck);
         });
+
+
         transitionViewToCheck.setOnMouseExited(mouseEvent -> {
             //Hide PopOver when mouse exits label
             newListOfTransitionsPopOver.hide();

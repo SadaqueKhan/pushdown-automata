@@ -12,6 +12,8 @@ public class SimulationModel {
     private final String inputWord;
 
     private ConfigurationModel currentConfig;
+    private int numOfPossibleInfinitePaths = 0;
+    private int numOfPossibleSuccessPaths = 0;
 
     private ArrayList<ConfigurationModel> configurationPath;
     private ArrayList<ConfigurationModel> successConfigurationPath;
@@ -165,9 +167,11 @@ public class SimulationModel {
     public int run() {
         while (currentConfig.getStep() < 51) {
 
+
             int result = next(); // if one is returned more children exist
 
             if (result == 100) {
+                ++numOfPossibleSuccessPaths;
                 currentConfig.setSuccessConfig(true);
             }
             //Returning 8 when no more children present to search for given parent
@@ -181,18 +185,28 @@ public class SimulationModel {
                 configurationPath.add(currentConfig);
             }
 
-            //TODO: Search
             if (currentConfig.getStep() == 50) {
+                currentConfig.setInfiniteConfig(true);
+                ++numOfPossibleInfinitePaths;
                 previous();
+                configurationPath.add(currentConfig);
             }
+
         }
 
-        // mean infinite loop
         return 300;
     }
 
     public ArrayList<ConfigurationModel> getConfigurationPath() {
         return configurationPath;
+    }
+
+    public int getNumOfPossibleInfinitePaths() {
+        return numOfPossibleInfinitePaths;
+    }
+
+    public int getNumOfPossibleSuccessPaths() {
+        return numOfPossibleSuccessPaths;
     }
 }
 
