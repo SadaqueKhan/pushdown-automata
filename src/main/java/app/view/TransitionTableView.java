@@ -106,10 +106,7 @@ public class TransitionTableView extends BorderPane {
         actionCol.getColumns().addAll(resultingStateCol, stackSymbolToPushCol);
 
         transitionTable.getColumns().addAll(configurationCol, actionCol);
-
-        // Designate sorting procedure
-        // TODO: Refine this current implementation is decent as it takes the letter and sorts it alphabetically
-        transitionTable.getSortOrder().add(currentStateCol);
+        
         //Set how many rows the user can select
         transitionTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -169,7 +166,7 @@ public class TransitionTableView extends BorderPane {
 
         //Create submit button for the user to submit a transition
         this.deleteTransitionButton = new Button("Delete");
-        
+
         HBox hBoxButtons = new HBox();
         hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
         hBoxButtons.setSpacing(10);
