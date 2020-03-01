@@ -169,6 +169,8 @@ public class DiagramController {
 
             }
 
+            return;
+
         }
 
 
@@ -315,8 +317,15 @@ public class DiagramController {
             newVBox.getChildren().add(new Label(transitionModel.toString()));
         }
 
+        newVBox.setSpacing(5);
+        newVBox.setStyle("-fx-border-color: black;\n" +
+                "-fx-border-insets: 5;\n" +
+                "-fx-border-width: 3;\n" +
+                "-fx-border-style: solid;\n");
+
         DoubleBinding wgtSqrHalfWidth = newVBox.widthProperty().divide(2);
-        DoubleBinding wgtSqrHalfHeight = newVBox.heightProperty().divide(2);
+        DoubleBinding wgtSqrHalfHeight = newVBox.heightProperty().add(0);
+
         DoubleBinding lineXHalfLength = transitionView.endXProperty().subtract(transitionView.startXProperty()).divide(2);
         DoubleBinding lineYHalfLength = transitionView.endYProperty().subtract(transitionView.startYProperty()).divide(2);
 
