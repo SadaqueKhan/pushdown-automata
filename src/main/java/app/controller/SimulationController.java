@@ -38,6 +38,10 @@ public class SimulationController {
         simulationStage.setTitle("Simulation");
         simulationStage.setScene(scene);
         simulationStage.show();
+        simulationStage.setOnCloseRequest(event -> {
+            DiagramController diagramController = mainStageController.getDiagramController();
+            diagramController.removeHighlightedTransitionView();
+        });
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {

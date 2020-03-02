@@ -726,7 +726,7 @@ public class DiagramController {
             this.startStateView = stateMap.get(selectedConfiguration.getCurrentStateModel());
             startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
             if (transitionModelHighlighted != null) {
-                removeHighlightedTransitionView(transitionModelHighlighted);
+                removeHighlightedTransitionView();
                 //TODO: FIX THIS LOGIC CURRENT IMP IS QUICK FIX
                 startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
             }
@@ -735,7 +735,7 @@ public class DiagramController {
                 startStateView.getStateCircle().setStroke(Color.BLACK);
             }
             if (transitionModelHighlighted != null) {
-                removeHighlightedTransitionView(transitionModelHighlighted);
+                removeHighlightedTransitionView();
             }
             transitionModelHighlighted = transitionModelToHighlight;
 
@@ -766,31 +766,33 @@ public class DiagramController {
     }
 
 
-    public void removeHighlightedTransitionView(TransitionModel transitionModelToRemoveHightlight) {
+    public void removeHighlightedTransitionView() {
 
-        StateView currentStateView = stateMap.get(transitionModelToRemoveHightlight.getCurrentStateModel());
-        StateView resultingStateView = stateMap.get(transitionModelToRemoveHightlight.getResultingStateModel());
-        currentStateView.getStateCircle().setStroke(Color.BLACK);
+        if (transitionModelHighlighted != null) {
+            StateView currentStateView = stateMap.get(transitionModelHighlighted.getCurrentStateModel());
+            StateView resultingStateView = stateMap.get(transitionModelHighlighted.getResultingStateModel());
+            currentStateView.getStateCircle().setStroke(Color.BLACK);
 
-        //TODO: Figure out why you have to null check for this
-        if (resultingStateView != null) {
-            resultingStateView.getStateCircle().setStroke(Color.BLACK);
-        }
-        if (transitionModelToRemoveHightlight.getCurrentStateModel().equals(transitionModelToRemoveHightlight.getResultingStateModel())) {
-            currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
-            currentStateView.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
-            currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
-        } else {
-            HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToRemoveHightlight);
+            //TODO: Figure out why you have to null check for this
+            if (resultingStateView != null) {
+                resultingStateView.getStateCircle().setStroke(Color.BLACK);
+            }
+            if (transitionModelHighlighted.getCurrentStateModel().equals(transitionModelHighlighted.getResultingStateModel())) {
+                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
+                currentStateView.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
+                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
+            } else {
+                HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelHighlighted);
 
-            for (Node node : transitionViewHighlightedSet) {
-                if (node instanceof TransitionView) {
-                    TransitionView transitionView = (TransitionView) node;
-                    transitionView.setStroke(Color.BLACK);
-                }
-                if (node instanceof StackPane) {
-                    StackPane arrowTipStackPane = (StackPane) node;
-                    arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+                for (Node node : transitionViewHighlightedSet) {
+                    if (node instanceof TransitionView) {
+                        TransitionView transitionView = (TransitionView) node;
+                        transitionView.setStroke(Color.BLACK);
+                    }
+                    if (node instanceof StackPane) {
+                        StackPane arrowTipStackPane = (StackPane) node;
+                        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\"");
+                    }
                 }
             }
         }
