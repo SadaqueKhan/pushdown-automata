@@ -142,7 +142,7 @@ public class SimulationController {
             }
 
             ArrayList<ConfigurationModel> successPathForward = new ArrayList<>();
-            for (int j = doubleClickConfiguration.getStep() - 1; j >= 0; j--) {
+            for (int j = doubleClickConfiguration.getStep(); j >= 0; j--) {
                 // whatever
                 successPathForward.add(successPathBackward.get(j));
             }
