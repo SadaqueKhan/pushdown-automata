@@ -144,8 +144,8 @@ public class SimulationController {
             }
 
             transitionsTakenlistView.setOnMouseReleased(event -> {
-                if (!(transitionsTakenlistView.getSelectionModel().getSelectedItems().isEmpty())) {
-                    ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = transitionsTakenlistView.getSelectionModel().getSelectedItems();
+                ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = transitionsTakenlistView.getSelectionModel().getSelectedItems();
+                if (!(selectedConfigurationsToHighlightList.isEmpty())) {
                     ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
                     updateDiagramViewForSelectedConfiguration(selectedConfiguration);
                     updateTapeViewForSelectedConfiguration(selectedConfiguration);
