@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class SimulationListener implements EventHandler {
     private final SimulationController simulationController;
@@ -16,14 +18,31 @@ public class SimulationListener implements EventHandler {
 
     @Override
     public void handle(Event event) {
-        if (event.getSource() instanceof ListView) {
-            ListView<ConfigurationModel> listView = (ListView) event.getSource();
-            if (!(listView.getSelectionModel().getSelectedItems().isEmpty())) {
+
+        String eventType = event.getEventType().toString();
+
+        if (eventType.equals("MOUSE_PRESSED") || eventType.equals("MOUSE_DRAGGED") || eventType.equals("MOUSE_RELEASED")) {
+            MouseEvent mouseEvent = (MouseEvent) event;
+
+            if (event.getSource() instanceof ListView) {
+                ListView<ConfigurationModel> listView = (ListView) event.getSource();
                 ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
-                ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
-                simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);
-                simulationController.updateStackViewForSelectedConfiguration(selectedConfiguration);
+                if (!(selectedConfigurationsToHighlightList.isEmpty())) {
+                    ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        if (mouseEvent.getClickCount() == 1) {
+                            simulationController.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                            simulationController.updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                            simulationController.updateStackViewForSelectedConfiguration(selectedConfiguration);
+                        }
+                        if (mouseEvent.getClickCount() == 2) {
+                            if (event.getSource() instanceof ListView) {
+                                simulationController.createSuccessSimulationStage(selectedConfiguration);
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.view.SimulationView;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -18,7 +19,9 @@ public class SimulationController {
     private final MainStageController mainStageController;
     private final MachineModel machineModel;
     private final SimulationView simulationView;
+    private final Stage simulationStage;
     private ArrayList<ConfigurationModel> simulationPath;
+    private SimulationModel simulationModel;
 
     public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord) {
         this.mainStageController = mainStageController;
@@ -28,24 +31,25 @@ public class SimulationController {
 
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 750, 500);
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(mainStageController.getPrimaryWindow());
-        stage.setResizable(false);
-        stage.setTitle("Simulation");
-        stage.setScene(scene);
-        stage.show();
+        simulationStage = new Stage();
+        simulationStage.initModality(Modality.WINDOW_MODAL);
+        simulationStage.initOwner(mainStageController.getPrimaryWindow());
+        simulationStage.setResizable(false);
+        simulationStage.setTitle("Simulation");
+        simulationStage.setScene(scene);
+        simulationStage.show();
     }
 
     private void generateSimulation(MachineModel machineModel, String inputWord) {
-        SimulationModel simulationModel = new SimulationModel(machineModel, inputWord);
+        simulationModel = new SimulationModel(machineModel, inputWord);
 
         int flag = simulationModel.run();
 
         if (flag == 200) {
             this.simulationPath = simulationModel.getConfigurationPath();
             loadConfigurationsOntoSimulationView();
-            simulationView.getSimulationStatsTextField().setText("Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths());
+            String simulationStatsString = "Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths();
+            simulationView.getSimulationStatsTextField().setText(simulationStatsString);
         }
     }
 
@@ -115,5 +119,54 @@ public class SimulationController {
 
     public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStageController.updateStackView(selectedConfiguration.getStackContent());
+    }
+
+
+    public void createSuccessSimulationStage(ConfigurationModel doubleClickConfiguration) {
+
+
+        if (doubleClickConfiguration.isSuccessConfig()) {
+            ListView<ConfigurationModel> transitionsTakenlistView = new ListView<>();
+            ArrayList<ConfigurationModel> successPathBackward = new ArrayList<>();
+            successPathBackward.add(doubleClickConfiguration);
+
+            ConfigurationModel previousConfig = doubleClickConfiguration;
+            for (int i = doubleClickConfiguration.getStep() - 1; i >= 0; i--) {
+                // whatever
+                previousConfig = previousConfig.getParentConfiguration();
+                successPathBackward.add(previousConfig);
+            }
+
+            ArrayList<ConfigurationModel> successPathForward = new ArrayList<>();
+            for (int j = doubleClickConfiguration.getStep() - 1; j >= 0; j--) {
+                // whatever
+                successPathForward.add(successPathBackward.get(j));
+            }
+
+            transitionsTakenlistView.setOnMouseReleased(event -> {
+                if (!(transitionsTakenlistView.getSelectionModel().getSelectedItems().isEmpty())) {
+                    ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = transitionsTakenlistView.getSelectionModel().getSelectedItems();
+                    ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                    updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                    updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                    updateStackViewForSelectedConfiguration(selectedConfiguration);
+                }
+            });
+
+
+            transitionsTakenlistView.getItems().addAll(successPathForward);
+            //Create a new scene to render simulation
+            Scene scene = new Scene(transitionsTakenlistView, 750, 500);
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(simulationStage);
+            stage.setResizable(false);
+            stage.setTitle("Success Simulation");
+            stage.setScene(scene);
+            stage.show();
+        }
+        //UI components in the center of the scene
+
+
     }
 }

@@ -23,6 +23,7 @@ public class SimulationModel {
         this.stackModel = new StackModel();
         this.inputWord = inputWord;
         configurationPath = new ArrayList<>();
+        successConfigurationPath = new ArrayList<>();
 
         loadMachine(machineModel);
         loadInput(inputWord);
@@ -173,6 +174,7 @@ public class SimulationModel {
             if (result == 100) {
                 ++numOfPossibleSuccessPaths;
                 currentConfig.setSuccessConfig(true);
+                successConfigurationPath.add(currentConfig);
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
