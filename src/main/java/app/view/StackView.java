@@ -24,8 +24,8 @@ public class StackView extends ScrollPane {
             //Setting the properties of the rectangle
             rectangle.setX(10);
             rectangle.setY(0);
-            rectangle.setWidth(50);
-            rectangle.setHeight(50);
+            rectangle.setWidth(70);
+            rectangle.setHeight(35);
             rectangle.setFill(Color.WHITE);
             rectangle.setStroke(Color.BLACK);
 

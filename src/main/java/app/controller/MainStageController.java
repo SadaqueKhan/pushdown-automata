@@ -231,8 +231,8 @@ public class MainStageController extends Application {
             Rectangle rectangle = new Rectangle();
             rectangle.setX(10);
             rectangle.setY(0);
-            rectangle.setWidth(50);
-            rectangle.setHeight(50);
+            rectangle.setWidth(70);
+            rectangle.setHeight(35);
             rectangle.setFill(Color.WHITE);
             rectangle.setStroke(Color.BLACK);
 
@@ -246,8 +246,8 @@ public class MainStageController extends Application {
                 //Setting the properties of the rectangle
                 rectangle.setX(10);
                 rectangle.setY(0);
-                rectangle.setWidth(50);
-                rectangle.setHeight(50);
+                rectangle.setWidth(70);
+                rectangle.setHeight(35);
                 rectangle.setFill(Color.WHITE);
                 rectangle.setStroke(Color.BLACK);
 
