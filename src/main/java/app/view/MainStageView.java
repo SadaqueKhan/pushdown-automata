@@ -112,7 +112,7 @@ public class MainStageView extends BorderPane {
         containerForRightNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForRightNodes.setSpacing(5);
         containerForRightNodes.setStyle(cssLayout);
-        containerForRightNodes.getChildren().addAll(new Text("StackModel"), stackView);
+        containerForRightNodes.getChildren().addAll(new Text("Stack"), stackView);
 
         this.setRight(containerForRightNodes);
 
