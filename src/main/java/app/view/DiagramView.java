@@ -12,7 +12,7 @@ public class DiagramView extends Pane {
     private final DiagramController diagramController;
 
     private final String cssLayout = "-fx-border-color: black;\n" +
-            "-fx-background-color: whitesmoke,\n" +
+            "-fx-background-color: #f8fffa,\n" +
             "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
             "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)";
 

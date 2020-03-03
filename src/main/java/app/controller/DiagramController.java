@@ -296,7 +296,7 @@ public class DiagramController {
 
         if (sourceCell.getListOfTransitionsVBox() == null) {
             VBox newListOfTransitionsVBox = new VBox();
-            newListOfTransitionsVBox.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
+            newListOfTransitionsVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
 
             newListOfTransitionsVBox.setOnMousePressed(mouseEvent -> {
                 sceneX = mouseEvent.getScreenX();

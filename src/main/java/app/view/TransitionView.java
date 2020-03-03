@@ -24,7 +24,7 @@ public class TransitionView extends Line {
 
     private void setUpUIComponents() {
         transitionListVBox = new VBox();
-        transitionListVBox.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
+        transitionListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
 
         transitionListVBox.setOnMousePressed(mouseEvent -> {
             sceneX = mouseEvent.getScreenX();
