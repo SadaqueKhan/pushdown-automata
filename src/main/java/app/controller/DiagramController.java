@@ -146,7 +146,9 @@ public class DiagramController {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToCheck = (TransitionView) node;
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
-                        createNewListOfTransitionsPopOver(transitionViewToCheck, machineModel.getRelatedTransitions(newTransitionModel));
+                        for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
+                            //  transitionViewToCheck.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                        }
                         return;
                     }
                 }
@@ -172,6 +174,73 @@ public class DiagramController {
         TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
+
+        VBox weight = new VBox();
+        weight.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
+
+
+        weight.relocate((transitionView.getEndX() - transitionView.getStartX()) / 2,
+                (transitionView.getEndY() - transitionView.getStartY()) / 2);
+
+        for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
+            weight.getChildren().add(new Label(transitionModel.toString()));
+        }
+
+        weight.setOnMousePressed(mouseEvent -> {
+            sceneX = mouseEvent.getScreenX();
+            sceneY = mouseEvent.getScreenY();
+            layoutX = weight.getLayoutX();
+            layoutY = weight.getLayoutY();
+        });
+
+        weight.setOnMouseDragged(mouseEvent -> {
+            // Offset of drag
+            double offsetX = mouseEvent.getScreenX() - sceneX;
+            double offsetY = mouseEvent.getScreenY() - sceneY;
+
+            // Taking parent bounds
+            Bounds parentBounds = weight.getParent().getLayoutBounds();
+
+            // Drag node bounds
+            double currPaneLayoutX = weight.getLayoutX();
+            double currPaneWidth = weight.getWidth();
+            double currPaneLayoutY = weight.getLayoutY();
+            double currPaneHeight = weight.getHeight();
+
+            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                weight.setTranslateX(offsetX);
+
+            } else if (currPaneLayoutX + offsetX < 0) {
+                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                // which makes the final layout position to 0 in mouse released event.
+                weight.setTranslateX(-currPaneLayoutX);
+            } else {
+                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                weight.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            }
+
+            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                weight.setTranslateY(offsetY);
+            } else if (currPaneLayoutY + offsetY < 0) {
+                weight.setTranslateY(-currPaneLayoutY);
+            } else {
+                weight.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            }
+        });
+
+
+        weight.setOnMouseReleased(event -> {
+            // Updating the new layout positions
+            weight.setLayoutX(layoutX + weight.getTranslateX());
+            weight.setLayoutY(layoutY + weight.getTranslateY());
+            
+            // Resetting the translate positions
+            weight.setTranslateX(0);
+            weight.setTranslateY(0);
+        });
+
+
         createNewListOfTransitionsPopOver(transitionView, machineModel.getRelatedTransitions(newTransitionModel));
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
@@ -211,7 +280,7 @@ public class DiagramController {
         setOfNode.add(arrowTip);
         linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
 
-        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip);
+        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, weight);
         diagramView.getChildren().addAll(currentStateView, resultingStateView);
 
     }
@@ -417,7 +486,6 @@ public class DiagramController {
             }
         }
     }
-
 
     //StateGUIEventResponses
     public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {

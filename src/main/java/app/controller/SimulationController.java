@@ -52,8 +52,14 @@ public class SimulationController {
         if (flag == 200) {
             this.simulationPath = simulationModel.getConfigurationPath();
             loadConfigurationsOntoSimulationView();
-            String simulationStatsString = "Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths();
+            String simulationStatsString;
+            if (simulationModel.isNFA()) {
+                simulationStatsString = "Type: " + "NFA" + " " + "Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths();
+            } else {
+                simulationStatsString = "Type: " + "DFA" + " " + "Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths();
+            }
             simulationView.getSimulationStatsTextField().setText(simulationStatsString);
+
         }
     }
 
@@ -128,49 +134,52 @@ public class SimulationController {
 
     public void createSuccessSimulationStage(ConfigurationModel doubleClickConfiguration) {
 
+        ListView<ConfigurationModel> transitionsTakenlistView = new ListView<>();
+        ArrayList<ConfigurationModel> successPathBackward = new ArrayList<>();
+        successPathBackward.add(doubleClickConfiguration);
 
-        if (doubleClickConfiguration.isSuccessConfig()) {
-            ListView<ConfigurationModel> transitionsTakenlistView = new ListView<>();
-            ArrayList<ConfigurationModel> successPathBackward = new ArrayList<>();
-            successPathBackward.add(doubleClickConfiguration);
-
-            ConfigurationModel previousConfig = doubleClickConfiguration;
-            for (int i = doubleClickConfiguration.getStep() - 1; i >= 0; i--) {
-                // whatever
-                previousConfig = previousConfig.getParentConfiguration();
-                successPathBackward.add(previousConfig);
-            }
-
-            ArrayList<ConfigurationModel> successPathForward = new ArrayList<>();
-            for (int j = doubleClickConfiguration.getStep(); j >= 0; j--) {
-                // whatever
-                successPathForward.add(successPathBackward.get(j));
-            }
-
-            transitionsTakenlistView.setOnMouseReleased(event -> {
-                ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = transitionsTakenlistView.getSelectionModel().getSelectedItems();
-                if (!(selectedConfigurationsToHighlightList.isEmpty())) {
-                    ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
-                    updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                    updateTapeViewForSelectedConfiguration(selectedConfiguration);
-                    updateStackViewForSelectedConfiguration(selectedConfiguration);
-                }
-            });
-
-
-            transitionsTakenlistView.getItems().addAll(successPathForward);
-            //Create a new scene to render simulation
-            Scene scene = new Scene(transitionsTakenlistView, 750, 500);
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(simulationStage);
-            stage.setResizable(false);
-            stage.setTitle("Success Simulation");
-            stage.setScene(scene);
-            stage.show();
+        ConfigurationModel previousConfig = doubleClickConfiguration;
+        for (int i = doubleClickConfiguration.getStep() - 1; i >= 0; i--) {
+            // whatever
+            previousConfig = previousConfig.getParentConfiguration();
+            successPathBackward.add(previousConfig);
         }
-        //UI components in the center of the scene
+
+        ArrayList<ConfigurationModel> successPathForward = new ArrayList<>();
+        for (int j = doubleClickConfiguration.getStep(); j >= 0; j--) {
+            // whatever
+            successPathForward.add(successPathBackward.get(j));
+        }
+
+        transitionsTakenlistView.setOnMouseReleased(event -> {
+            ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = transitionsTakenlistView.getSelectionModel().getSelectedItems();
+            if (!(selectedConfigurationsToHighlightList.isEmpty())) {
+                ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                updateStackViewForSelectedConfiguration(selectedConfiguration);
+            }
+        });
 
 
+        transitionsTakenlistView.getItems().addAll(successPathForward);
+
+        String windowTitle = "Path";
+        if (doubleClickConfiguration.isSuccessConfig()) {
+            windowTitle = "Success Path";
+        }
+
+        //Create a new scene to render simulation
+        Scene scene = new Scene(transitionsTakenlistView, 750, 500);
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(simulationStage);
+        stage.setResizable(false);
+        stage.setTitle(windowTitle);
+        stage.setScene(scene);
+        stage.show();
     }
+    //UI components in the center of the scene
+
+
 }

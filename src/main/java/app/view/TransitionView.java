@@ -8,6 +8,7 @@ public class TransitionView extends Line {
     private StateView source;
     private StateView target;
 
+
     public TransitionView(StateView source, StateView target) {
         this.source = source;
         this.target = target;
@@ -28,4 +29,6 @@ public class TransitionView extends Line {
     public StateView getTarget() {
         return target;
     }
+
+
 }

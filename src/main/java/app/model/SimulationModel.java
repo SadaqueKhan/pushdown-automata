@@ -18,6 +18,8 @@ public class SimulationModel {
     private ArrayList<ConfigurationModel> configurationPath;
     private ArrayList<ConfigurationModel> successConfigurationPath;
 
+    private boolean isNFA = false;
+
     public SimulationModel(MachineModel machineModel, String inputWord) {
         this.inputTapeModel = new InputTapeModel();
         this.stackModel = new StackModel();
@@ -77,6 +79,7 @@ public class SimulationModel {
             }
         } else {
             //Explore non-deterministic path
+            isNFA = true;
 
             //Find configuration to explore that hasn't been explored yet, if all paths have been explored then set applicable configuration to null
             toExplore = applicableConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
@@ -209,6 +212,10 @@ public class SimulationModel {
 
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
+    }
+
+    public boolean isNFA() {
+        return isNFA;
     }
 }
 
