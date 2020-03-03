@@ -30,7 +30,7 @@ public class SimulationController {
         generateSimulation(machineModel, inputWord);
 
         //Create a new scene to render simulation
-        Scene scene = new Scene(simulationView, 750, 500);
+        Scene scene = new Scene(simulationView, 5, 500);
         simulationStage = new Stage();
         simulationStage.initModality(Modality.WINDOW_MODAL);
         simulationStage.initOwner(mainStageController.getPrimaryWindow());
