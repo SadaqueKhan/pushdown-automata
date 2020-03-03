@@ -25,7 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 
@@ -147,7 +146,7 @@ public class DiagramController {
                     TransitionView transitionViewToCheck = (TransitionView) node;
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
                         for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
-                            //  transitionViewToCheck.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                            transitionViewToCheck.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
                         }
                         return;
                     }
@@ -175,73 +174,9 @@ public class DiagramController {
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
 
-        VBox weight = new VBox();
-        weight.setStyle("-fx-background-color:grey;-fx-border-width:1px;-fx-border-color:black;");
-
-
-        weight.relocate((transitionView.getEndX() - transitionView.getStartX()) / 2,
-                (transitionView.getEndY() - transitionView.getStartY()) / 2);
-
         for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
-            weight.getChildren().add(new Label(transitionModel.toString()));
+            transitionView.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
         }
-
-        weight.setOnMousePressed(mouseEvent -> {
-            sceneX = mouseEvent.getScreenX();
-            sceneY = mouseEvent.getScreenY();
-            layoutX = weight.getLayoutX();
-            layoutY = weight.getLayoutY();
-        });
-
-        weight.setOnMouseDragged(mouseEvent -> {
-            // Offset of drag
-            double offsetX = mouseEvent.getScreenX() - sceneX;
-            double offsetY = mouseEvent.getScreenY() - sceneY;
-
-            // Taking parent bounds
-            Bounds parentBounds = weight.getParent().getLayoutBounds();
-
-            // Drag node bounds
-            double currPaneLayoutX = weight.getLayoutX();
-            double currPaneWidth = weight.getWidth();
-            double currPaneLayoutY = weight.getLayoutY();
-            double currPaneHeight = weight.getHeight();
-
-            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
-                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                weight.setTranslateX(offsetX);
-
-            } else if (currPaneLayoutX + offsetX < 0) {
-                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
-                // which makes the final layout position to 0 in mouse released event.
-                weight.setTranslateX(-currPaneLayoutX);
-            } else {
-                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                weight.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
-            }
-
-            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                weight.setTranslateY(offsetY);
-            } else if (currPaneLayoutY + offsetY < 0) {
-                weight.setTranslateY(-currPaneLayoutY);
-            } else {
-                weight.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
-            }
-        });
-
-
-        weight.setOnMouseReleased(event -> {
-            // Updating the new layout positions
-            weight.setLayoutX(layoutX + weight.getTranslateX());
-            weight.setLayoutY(layoutY + weight.getTranslateY());
-            
-            // Resetting the translate positions
-            weight.setTranslateX(0);
-            weight.setTranslateY(0);
-        });
-
-
-        createNewListOfTransitionsPopOver(transitionView, machineModel.getRelatedTransitions(newTransitionModel));
 
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
@@ -280,7 +215,7 @@ public class DiagramController {
         setOfNode.add(arrowTip);
         linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
 
-        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, weight);
+        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, transitionView.getTransitionListVBox());
         diagramView.getChildren().addAll(currentStateView, resultingStateView);
 
     }
@@ -355,34 +290,6 @@ public class DiagramController {
     }
 
 
-    private void createNewListOfTransitionsPopOver(TransitionView transitionViewToCheck, HashSet<TransitionModel> newTransitionModelsAttachedToStateModelSet) {
-        VBox newVBox = new VBox();
-        PopOver newListOfTransitionsPopOver = new PopOver(newVBox);
-
-        newListOfTransitionsPopOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
-        newListOfTransitionsPopOver.setAnchorLocation(PopupWindow.AnchorLocation.CONTENT_BOTTOM_RIGHT);
-        newListOfTransitionsPopOver.setArrowIndent(5);
-        newListOfTransitionsPopOver.setAutoHide(false);
-        newListOfTransitionsPopOver.setAnimated(false);
-        newListOfTransitionsPopOver.setDetachable(false);
-        newListOfTransitionsPopOver.setDetached(false);
-
-        for (TransitionModel transitionModel : newTransitionModelsAttachedToStateModelSet) {
-            newVBox.getChildren().add(new Label(transitionModel.toString()));
-        }
-
-        transitionViewToCheck.setOnMouseEntered(mouseEvent -> {
-            newListOfTransitionsPopOver.show(transitionViewToCheck);
-        });
-
-
-        transitionViewToCheck.setOnMouseExited(mouseEvent -> {
-            //Hide PopOver when mouse exits label
-            newListOfTransitionsPopOver.hide();
-        });
-    }
-
-
     public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
         StateView sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
         VBox newListOfTransitionsVBox = new VBox();
@@ -391,14 +298,58 @@ public class DiagramController {
             newListOfTransitionsVBox.getChildren().add(newLabel);
         }
 
-        PopOver newListOfTransitionsPopOver = new PopOver(newListOfTransitionsVBox);
-        sourceCell.getReflexiveArrowShaftArc().setOnMouseEntered(mouseEvent -> {
-            newListOfTransitionsPopOver.show(sourceCell.getReflexiveArrowShaftArc());
+        newListOfTransitionsVBox.setOnMousePressed(mouseEvent -> {
+            sceneX = mouseEvent.getScreenX();
+            sceneY = mouseEvent.getScreenY();
+            layoutX = newListOfTransitionsVBox.getLayoutX();
+            layoutY = newListOfTransitionsVBox.getLayoutY();
         });
 
-        sourceCell.getReflexiveArrowShaftArc().setOnMouseExited(mouseEvent -> {
-            //Hide PopOver when mouse exits label
-            newListOfTransitionsPopOver.hide();
+        newListOfTransitionsVBox.setOnMouseDragged(mouseEvent -> {
+            // Offset of drag
+            double offsetX = mouseEvent.getScreenX() - sceneX;
+            double offsetY = mouseEvent.getScreenY() - sceneY;
+
+            // Taking parent bounds
+            Bounds parentBounds = newListOfTransitionsVBox.getParent().getLayoutBounds();
+
+            // Drag node bounds
+            double currPaneLayoutX = newListOfTransitionsVBox.getLayoutX();
+            double currPaneWidth = newListOfTransitionsVBox.getWidth();
+            double currPaneLayoutY = newListOfTransitionsVBox.getLayoutY();
+            double currPaneHeight = newListOfTransitionsVBox.getHeight();
+
+            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                newListOfTransitionsVBox.setTranslateX(offsetX);
+
+            } else if (currPaneLayoutX + offsetX < 0) {
+                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                // which makes the final layout position to 0 in mouse released event.
+                newListOfTransitionsVBox.setTranslateX(-currPaneLayoutX);
+            } else {
+                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                newListOfTransitionsVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            }
+
+            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                newListOfTransitionsVBox.setTranslateY(offsetY);
+            } else if (currPaneLayoutY + offsetY < 0) {
+                newListOfTransitionsVBox.setTranslateY(-currPaneLayoutY);
+            } else {
+                newListOfTransitionsVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            }
+        });
+
+
+        newListOfTransitionsVBox.setOnMouseReleased(event -> {
+            // Updating the new layout positions
+            newListOfTransitionsVBox.setLayoutX(layoutX + newListOfTransitionsVBox.getTranslateX());
+            newListOfTransitionsVBox.setLayoutY(layoutY + newListOfTransitionsVBox.getTranslateY());
+
+            // Resetting the translate positions
+            newListOfTransitionsVBox.setTranslateX(0);
+            newListOfTransitionsVBox.setTranslateY(0);
         });
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
@@ -459,7 +410,9 @@ public class DiagramController {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionToRemoveSet.add(currentStateView);
                                 }
-                                createNewListOfTransitionsPopOver(transitionViewToUpdate, machineModel.getRelatedTransitions(deletedTransition));
+                                for (TransitionModel transitionModel : machineModel.getRelatedTransitions(deletedTransition)) {
+                                    transitionViewToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                                }
                             }
                         }
                     }
