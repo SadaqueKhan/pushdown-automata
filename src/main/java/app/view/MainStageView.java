@@ -34,12 +34,12 @@ public class MainStageView extends BorderPane {
     private VBox containerForBotoomNodes;
     private MenuItem saveMenuItem;
     private MenuItem loadMenuItem;
-    private MenuItem helpMenuItem;
     private CheckMenuItem acceptanceByFinalStateMenuItem;
     private CheckMenuItem acceptanceByEmptyStackMenuItem;
     private Label inputTextLabel;
     private StackView stackView;
     private VBox containerForRightNodes;
+    private MenuItem helpGuidelItem;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -55,9 +55,7 @@ public class MainStageView extends BorderPane {
         Menu fileMenu = new Menu("File");
         this.saveMenuItem = new MenuItem("Save");
         this.loadMenuItem = new MenuItem("Load");
-        SeparatorMenuItem separator = new SeparatorMenuItem();
-        this.helpMenuItem = new MenuItem("Help");
-        fileMenu.getItems().addAll(saveMenuItem, loadMenuItem, separator, helpMenuItem);
+        fileMenu.getItems().addAll(saveMenuItem, loadMenuItem);
 
         menuBar.getMenus().add(fileMenu);
 
@@ -67,6 +65,12 @@ public class MainStageView extends BorderPane {
         acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
         acceptanceByFinalStateMenuItem.setSelected(true);
         menuBar.getMenus().add(acceptanceMenu);
+
+        Menu helpMenu = new Menu("Help");
+        this.helpGuidelItem = new MenuItem("Guide");
+        helpMenu.getItems().addAll(helpGuidelItem);
+
+        menuBar.getMenus().add(helpMenu);
 
         this.inputTextLabel = new Label("Input Word (acceptance by final state)");
         this.inputTextField = new TextField();
@@ -138,9 +142,9 @@ public class MainStageView extends BorderPane {
         toggleTransitionTableButton.setOnAction(mainStageListener);
         saveMenuItem.setOnAction(mainStageListener);
         loadMenuItem.setOnAction(mainStageListener);
-        helpMenuItem.setOnAction(mainStageListener);
         acceptanceByFinalStateMenuItem.setOnAction(mainStageListener);
         acceptanceByEmptyStackMenuItem.setOnAction(mainStageListener);
+        helpGuidelItem.setOnAction(mainStageListener);
     }
 
     public TextField getInputTextField() {

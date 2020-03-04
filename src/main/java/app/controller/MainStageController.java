@@ -155,7 +155,7 @@ public class MainStageController extends Application {
 
     public void launchWiki() {
         try {
-            Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata"));
+            Desktop.getDesktop().browse(new URI("https://docs.oracle.com/en/java/"));
         } catch (Exception e1) {
             e1.printStackTrace();
         }

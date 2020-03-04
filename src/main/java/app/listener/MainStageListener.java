@@ -37,6 +37,7 @@ public class MainStageListener implements EventHandler {
         }
 
         if (eventType.equals("ACTION")) {
+            System.out.println(event.getClass());
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Diagram")) {
@@ -51,12 +52,12 @@ public class MainStageListener implements EventHandler {
                     mainStageController.saveMachine();
                 } else if (isMenuItem.getText().equals("Load")) {
                     mainStageController.loadMachine();
-                } else if (isMenuItem.getText().equals("Help")) {
-                    mainStageController.launchWiki();
                 } else if (isMenuItem.getText().equals("By Final State")) {
                     mainStageController.setAcceptanceCriteriaToFinalState();
                 } else if (isMenuItem.getText().equals("By Empty StackModel")) {
                     mainStageController.setAcceptanceCriteriaToEmptyStack();
+                } else if (isMenuItem.getText().equals("Guide")) {
+                    mainStageController.launchWiki();
                 }
             }
         }
