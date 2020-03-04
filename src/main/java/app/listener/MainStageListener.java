@@ -37,7 +37,6 @@ public class MainStageListener implements EventHandler {
         }
 
         if (eventType.equals("ACTION")) {
-            System.out.println(event.getClass());
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Diagram")) {
