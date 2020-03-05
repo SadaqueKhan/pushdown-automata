@@ -1,6 +1,7 @@
 package app.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ConfigurationModel {
@@ -97,6 +98,29 @@ public class ConfigurationModel {
 
     public void setInfiniteConfig(boolean infiniteConfig) {
         isInfiniteConfig = infiniteConfig;
+    }
+
+
+    public ArrayList<ConfigurationModel> getPath() {
+
+        ArrayList<ConfigurationModel> pathList = new ArrayList<>();
+
+        if (parentConfiguration != null) {
+            ArrayList<ConfigurationModel> configurationToRoot = new ArrayList<>();
+            configurationToRoot.add(this);
+            configurationToRoot.add(parentConfiguration);
+            ConfigurationModel tempConfigurationModel = parentConfiguration.getParentConfiguration();
+            while (tempConfigurationModel != null) {
+                configurationToRoot.add(tempConfigurationModel);
+                tempConfigurationModel = tempConfigurationModel.getParentConfiguration();
+            }
+            Collections.reverse(configurationToRoot);
+            pathList.addAll(configurationToRoot);
+            return pathList;
+        }
+
+        pathList.add(this);
+        return pathList;
     }
 
     @Override

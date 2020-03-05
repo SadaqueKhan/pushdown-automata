@@ -27,7 +27,6 @@ public class MainStageView extends BorderPane {
             "-fx-border-style: solid;\n";
     private ToggleButton toggleDiagramButton;
     private ToggleButton toggleTransitionTableButton;
-    private SegmentedButton segmentedButton;
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
     private TapeView tapeView;
@@ -97,7 +96,7 @@ public class MainStageView extends BorderPane {
         //Setup center GUI elements
         this.toggleDiagramButton = new ToggleButton("Diagram");
         this.toggleTransitionTableButton = new ToggleButton("Table");
-        this.segmentedButton = new SegmentedButton();
+        SegmentedButton segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTransitionTableButton);
         toggleDiagramButton.setSelected(true);
 

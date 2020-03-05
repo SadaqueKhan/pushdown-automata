@@ -17,6 +17,7 @@ public class SimulationModel {
 
     private ArrayList<ConfigurationModel> configurationPath;
     private ArrayList<ConfigurationModel> successConfigurationPath;
+    private ArrayList<ConfigurationModel> leafConfigurationPath;
 
     private boolean isNFA = false;
 
@@ -26,6 +27,7 @@ public class SimulationModel {
         this.inputWord = inputWord;
         configurationPath = new ArrayList<>();
         successConfigurationPath = new ArrayList<>();
+        leafConfigurationPath = new ArrayList<>();
 
         loadMachine(machineModel);
         loadInput(inputWord);
@@ -63,6 +65,7 @@ public class SimulationModel {
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
             //no more paths to search for this child
+            leafConfigurationPath.add(currentConfig);
             return 8; // Go back to parent
         }
 
@@ -213,6 +216,12 @@ public class SimulationModel {
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
     }
+
+    public ArrayList<ConfigurationModel> getLeafConfigurationPath() {
+        return leafConfigurationPath;
+    }
+
+
 
     public boolean isNFA() {
         return isNFA;

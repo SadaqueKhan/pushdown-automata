@@ -7,8 +7,10 @@ import app.view.SimulationView;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -20,13 +22,13 @@ public class SimulationController {
     private final MachineModel machineModel;
     private final SimulationView simulationView;
     private final Stage simulationStage;
-    private ArrayList<ConfigurationModel> simulationPath;
     private SimulationModel simulationModel;
 
     public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord) {
         this.mainStageController = mainStageController;
         this.machineModel = machineModel;
         this.simulationView = new SimulationView(this);
+
         generateSimulation(machineModel, inputWord);
 
         //Create a new scene to render simulation
@@ -50,8 +52,7 @@ public class SimulationController {
         int flag = simulationModel.run();
 
         if (flag == 200) {
-            this.simulationPath = simulationModel.getConfigurationPath();
-            loadConfigurationsOntoSimulationView();
+            triggerAlgorithmView();
             String simulationStatsString;
             if (simulationModel.isNFA()) {
                 simulationStatsString = "Type: " + "NFA" + " " + "Success paths: " + simulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + simulationModel.getNumOfPossibleInfinitePaths();
@@ -63,10 +64,12 @@ public class SimulationController {
         }
     }
 
-    private void loadConfigurationsOntoSimulationView() {
-        ListView<ConfigurationModel> simulationListView = simulationView.getTransitionsTakenlistView();
+    public void triggerAlgorithmView() {
+        ListView<ConfigurationModel> simulationListView = simulationView.getAlgorithmlistView();
 
-        simulationListView.getItems().addAll(simulationPath);
+        // Get algorithm path list
+        ArrayList<ConfigurationModel> algorithmPathList = simulationModel.getConfigurationPath();
+        simulationListView.getItems().addAll(algorithmPathList);
 
         Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
             @Override
@@ -85,10 +88,10 @@ public class SimulationController {
 
                             setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
 
-                            if (simulationPath.lastIndexOf(item) == index) {
+                            if (algorithmPathList.lastIndexOf(item) == index) {
                                 setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
                                 itemToPrint += " (No More Paths!)";
-                            } else if (simulationPath.indexOf(item) < index && index < simulationPath.lastIndexOf(item)) {
+                            } else if (algorithmPathList.indexOf(item) < index && index < algorithmPathList.lastIndexOf(item)) {
                                 setStyle("-fx-control-inner-background: " + "derive(#aedaff, 70%);");
                                 itemToPrint += " (New Path!)";
                             }
@@ -115,6 +118,31 @@ public class SimulationController {
                 };
             }
         }));
+        simulationView.getContainerForCenterNodes().getChildren().remove(0);
+        simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getAlgorithmlistView());
+    }
+
+
+    public void triggerPathsView() {
+        //Get leaf configurations
+        ArrayList<ConfigurationModel> leafConfigurationPath = simulationModel.getLeafConfigurationPath();
+
+        //Get accordian
+        Accordion accordion = (Accordion) simulationView.getPathsVBox().getChildren().get(0);
+
+        int numPath = 0;
+
+
+        for (ConfigurationModel configurationModel : leafConfigurationPath) {
+            ListView<ConfigurationModel> newListView = new ListView<>();
+            newListView.getItems().addAll(configurationModel.getPath());
+            ++numPath;
+            accordion.getPanes().add(new TitledPane("Path " + numPath, newListView));
+        }
+
+        simulationView.getContainerForCenterNodes().getChildren().remove(0);
+        simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getPathsVBox());
+
     }
 
 
@@ -140,14 +168,12 @@ public class SimulationController {
 
         ConfigurationModel previousConfig = doubleClickConfiguration;
         for (int i = doubleClickConfiguration.getStep() - 1; i >= 0; i--) {
-            // whatever
             previousConfig = previousConfig.getParentConfiguration();
             successPathBackward.add(previousConfig);
         }
 
         ArrayList<ConfigurationModel> successPathForward = new ArrayList<>();
         for (int j = doubleClickConfiguration.getStep(); j >= 0; j--) {
-            // whatever
             successPathForward.add(successPathBackward.get(j));
         }
 
@@ -179,7 +205,4 @@ public class SimulationController {
         stage.setScene(scene);
         stage.show();
     }
-    //UI components in the center of the scene
-
-
 }

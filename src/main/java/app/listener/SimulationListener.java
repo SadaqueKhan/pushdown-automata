@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -20,6 +21,19 @@ public class SimulationListener implements EventHandler {
     public void handle(Event event) {
 
         String eventType = event.getEventType().toString();
+
+        if (eventType.equals("ACTION")) {
+            if (event.getSource() instanceof ToggleButton) {
+                ToggleButton isToggleButton = (ToggleButton) event.getSource();
+                if (isToggleButton.getText().equals("Algorithm")) {
+                    simulationController.triggerAlgorithmView();
+                } else {
+                    simulationController.triggerPathsView();
+                }
+
+            }
+
+        }
 
         if (eventType.equals("MOUSE_PRESSED") || eventType.equals("MOUSE_DRAGGED") || eventType.equals("MOUSE_RELEASED")) {
             MouseEvent mouseEvent = (MouseEvent) event;
