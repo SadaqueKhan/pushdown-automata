@@ -14,6 +14,8 @@ public class ConfigurationModel {
     private boolean isVisited;
     private List<ConfigurationModel> childrenConfigurations;
     private boolean isSuccessConfig = false;
+    private boolean isFailConfig = false;
+    private boolean isStuckConfig = false;
     private boolean isInfiniteConfig = false;
     private int step;
     private int branchId;
@@ -121,6 +123,22 @@ public class ConfigurationModel {
 
         pathList.add(this);
         return pathList;
+    }
+
+    public boolean isFailConfig() {
+        return isFailConfig;
+    }
+
+    public void setFailConfig(boolean failConfig) {
+        isFailConfig = failConfig;
+    }
+
+    public boolean isStuckConfig() {
+        return isStuckConfig;
+    }
+
+    public void setStuckConfig(boolean stuckConfig) {
+        isStuckConfig = stuckConfig;
     }
 
     @Override

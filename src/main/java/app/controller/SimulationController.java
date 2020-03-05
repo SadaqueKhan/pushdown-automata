@@ -134,9 +134,9 @@ public class SimulationController {
 
         int numPath = 0;
 
-        for (ConfigurationModel configurationModel : leafConfigurationPath) {
+        for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
             ListView<ConfigurationModel> newListView = new ListView<>();
-            newListView.getItems().addAll(configurationModel.getPath());
+            newListView.getItems().addAll(leafConfigurationModel.getPath());
 
             newListView.setOnMouseReleased(event -> {
                 ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
@@ -149,7 +149,23 @@ public class SimulationController {
             });
 
             ++numPath;
-            accordion.getPanes().add(new TitledPane("Path " + numPath, newListView));
+            System.out.println(leafConfigurationPath.size());
+            System.out.println(leafConfigurationModel.getCurrentStateModel());
+            System.out.println("Success: " + leafConfigurationModel.isSuccessConfig());
+            System.out.println("Stuck: " + leafConfigurationModel.isStuckConfig());
+            System.out.println("Fail: " + leafConfigurationModel.isFailConfig());
+            System.out.println("Infinite: " + leafConfigurationModel.isInfiniteConfig());
+            System.out.println("-----");
+
+            if (leafConfigurationModel.isSuccessConfig()) {
+                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
+            } else if (leafConfigurationModel.isStuckConfig()) {
+                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Stuck", newListView));
+            } else if (leafConfigurationModel.isFailConfig()) {
+                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Fail", newListView));
+            } else if (leafConfigurationModel.isInfiniteConfig()) {
+                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Infinite", newListView));
+            }
         }
 
         simulationView.getContainerForCenterNodes().getChildren().remove(0);

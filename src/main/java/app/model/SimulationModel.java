@@ -16,7 +16,6 @@ public class SimulationModel {
     private int numOfPossibleSuccessPaths = 0;
 
     private ArrayList<ConfigurationModel> configurationPath;
-    private ArrayList<ConfigurationModel> successConfigurationPath;
     private ArrayList<ConfigurationModel> leafConfigurationPath;
 
     private boolean isNFA = false;
@@ -26,7 +25,6 @@ public class SimulationModel {
         this.stackModel = new StackModel();
         this.inputWord = inputWord;
         configurationPath = new ArrayList<>();
-        successConfigurationPath = new ArrayList<>();
         leafConfigurationPath = new ArrayList<>();
 
         loadMachine(machineModel);
@@ -64,6 +62,9 @@ public class SimulationModel {
 
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
+            if (!(currentConfig.isFailConfig() || currentConfig.isSuccessConfig())) {
+                currentConfig.setStuckConfig(true);
+            }
             //no more paths to search for this child
             leafConfigurationPath.add(currentConfig);
             return 8; // Go back to parent
@@ -167,6 +168,7 @@ public class SimulationModel {
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 return true;
             }
+            currentConfig.setFailConfig(true);
         }
         return false;
     }
@@ -180,7 +182,6 @@ public class SimulationModel {
             if (result == 100) {
                 ++numOfPossibleSuccessPaths;
                 currentConfig.setSuccessConfig(true);
-                successConfigurationPath.add(currentConfig);
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
@@ -220,7 +221,6 @@ public class SimulationModel {
     public ArrayList<ConfigurationModel> getLeafConfigurationPath() {
         return leafConfigurationPath;
     }
-
 
 
     public boolean isNFA() {
