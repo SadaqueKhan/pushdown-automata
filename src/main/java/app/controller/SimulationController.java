@@ -149,14 +149,7 @@ public class SimulationController {
             });
 
             ++numPath;
-            System.out.println(leafConfigurationPath.size());
-            System.out.println(leafConfigurationModel.getCurrentStateModel());
-            System.out.println("Success: " + leafConfigurationModel.isSuccessConfig());
-            System.out.println("Stuck: " + leafConfigurationModel.isStuckConfig());
-            System.out.println("Fail: " + leafConfigurationModel.isFailConfig());
-            System.out.println("Infinite: " + leafConfigurationModel.isInfiniteConfig());
-            System.out.println("-----");
-
+            
             if (leafConfigurationModel.isSuccessConfig()) {
                 accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
             } else if (leafConfigurationModel.isStuckConfig()) {
