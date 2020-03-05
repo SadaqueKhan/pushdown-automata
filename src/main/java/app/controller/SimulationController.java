@@ -66,6 +66,7 @@ public class SimulationController {
 
     public void triggerAlgorithmView() {
         ListView<ConfigurationModel> simulationListView = simulationView.getAlgorithmlistView();
+        simulationListView.getItems().clear();
 
         // Get algorithm path list
         ArrayList<ConfigurationModel> algorithmPathList = simulationModel.getConfigurationPath();
@@ -129,20 +130,30 @@ public class SimulationController {
 
         //Get accordian
         Accordion accordion = (Accordion) simulationView.getPathsVBox().getChildren().get(0);
+        accordion.getPanes().clear();
 
         int numPath = 0;
-
 
         for (ConfigurationModel configurationModel : leafConfigurationPath) {
             ListView<ConfigurationModel> newListView = new ListView<>();
             newListView.getItems().addAll(configurationModel.getPath());
+
+            newListView.setOnMouseReleased(event -> {
+                ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
+                if (!(selectedConfigurationsToHighlightList.isEmpty())) {
+                    ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                    updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                    updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                    updateStackViewForSelectedConfiguration(selectedConfiguration);
+                }
+            });
+
             ++numPath;
             accordion.getPanes().add(new TitledPane("Path " + numPath, newListView));
         }
 
         simulationView.getContainerForCenterNodes().getChildren().remove(0);
         simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getPathsVBox());
-
     }
 
 

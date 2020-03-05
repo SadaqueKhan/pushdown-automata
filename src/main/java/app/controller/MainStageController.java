@@ -54,6 +54,7 @@ public class MainStageController extends Application {
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
         this.primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+        this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
     }
 
@@ -146,6 +147,7 @@ public class MainStageController extends Application {
 
                 primaryWindow.setTitle("Pushdown Automata");
                 primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+                primaryWindow.setResizable(false);
                 primaryWindow.show();
             }
         } catch (Exception e2) {
