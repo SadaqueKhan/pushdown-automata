@@ -13,6 +13,9 @@ public class TransitionModel {
     private StateModel resultingStateModel;
     private String stackSymbolToPush;
 
+    private double xCoordinateOnDiagram = 0.0;
+    private double yCoordinateOnDiagram = 0.0;
+
 
     public TransitionModel() {
     }
@@ -80,6 +83,22 @@ public class TransitionModel {
         this.stackSymbolToPush = stackSymbolToPush;
     }
 
+
+    public double getxCoordinateOnDiagram() {
+        return xCoordinateOnDiagram;
+    }
+
+    public void setxCoordinateOnDiagram(double xCoordinateOnDiagram) {
+        this.xCoordinateOnDiagram = xCoordinateOnDiagram;
+    }
+
+    public double getyCoordinateOnDiagram() {
+        return yCoordinateOnDiagram;
+    }
+
+    public void setyCoordinateOnDiagram(double yCoordinateOnDiagram) {
+        this.yCoordinateOnDiagram = yCoordinateOnDiagram;
+    }
 
     @Override
     public boolean equals(Object o) {

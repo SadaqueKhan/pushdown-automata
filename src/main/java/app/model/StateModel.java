@@ -17,12 +17,7 @@ public class StateModel {
     private double yCoordinateOnDiagram = 0.0;
 
     public StateModel() {
-    }
-
-    public StateModel(double xCoordinateOnDiagram, double yCoordinateOnDiagram) {
         this.stateId = "Q" + (num++);
-        this.xCoordinateOnDiagram = xCoordinateOnDiagram;
-        this.yCoordinateOnDiagram = yCoordinateOnDiagram;
     }
 
     public StateModel(String stateID) {
