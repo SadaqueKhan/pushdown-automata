@@ -197,6 +197,7 @@ public class SimulationModel {
             if (currentConfig.getStep() == 50) {
                 currentConfig.setInfiniteConfig(true);
                 ++numOfPossibleInfinitePaths;
+                leafConfigurationPath.add(currentConfig);
                 previous();
                 configurationPath.add(currentConfig);
             }

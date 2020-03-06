@@ -11,7 +11,6 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -34,8 +33,6 @@ public class SimulationController {
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 550, 500);
         simulationStage = new Stage();
-        simulationStage.initModality(Modality.WINDOW_MODAL);
-        simulationStage.initOwner(mainStageController.getPrimaryWindow());
         simulationStage.setResizable(false);
         simulationStage.setTitle("Simulation");
         simulationStage.setScene(scene);
@@ -218,8 +215,6 @@ public class SimulationController {
         //Create a new scene to render simulation
         Scene scene = new Scene(transitionsTakenlistView, 750, 500);
         Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(simulationStage);
         stage.setResizable(false);
         stage.setTitle(windowTitle);
         stage.setScene(scene);

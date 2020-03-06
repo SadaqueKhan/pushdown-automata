@@ -147,10 +147,12 @@ public class DiagramController {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToCheck = (TransitionView) node;
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
-                        transitionViewToCheck.getTransitionListVBox().getChildren().clear();
+                        VBox newTransitionListVBox = transitionViewToCheck.getTransitionListVBox();
+                        newTransitionListVBox.getChildren().clear();
                         for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
-                            transitionViewToCheck.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
                         }
+                        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
                         return;
                     }
                 }
@@ -242,7 +244,7 @@ public class DiagramController {
         }
 
         newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
-        
+
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
             Rotate r = new Rotate();
