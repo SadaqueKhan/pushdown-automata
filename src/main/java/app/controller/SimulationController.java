@@ -92,6 +92,12 @@ public class SimulationController {
 
                             setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
 
+                            if (item.isInfiniteConfig()) {
+                                setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
+                                itemToPrint = item.toString() + "  (Possible infinite path!)";
+                            }
+
+
                             if (algorithmPathList.lastIndexOf(item) == index) {
                                 setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
                                 itemToPrint += " (No More Paths!)";
@@ -105,11 +111,6 @@ public class SimulationController {
                                 itemToPrint = item.toString() + " (At the start state!)";
                             }
 
-
-                            if (item.isInfiniteConfig()) {
-                                setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
-                                itemToPrint = item.toString() + "  (Possible infinite path!)";
-                            }
 
                             if (item.isSuccessConfig()) {
                                 setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");
