@@ -64,9 +64,9 @@ public class SimulationModel {
         if (applicableConfigurations.isEmpty()) {
             if (!(currentConfig.isFailConfig() || currentConfig.isSuccessConfig())) {
                 currentConfig.setStuckConfig(true);
+                leafConfigurationPath.add(currentConfig);
             }
             //no more paths to search for this child
-            leafConfigurationPath.add(currentConfig);
             return 8; // Go back to parent
         }
 
@@ -169,6 +169,7 @@ public class SimulationModel {
                 return true;
             }
             currentConfig.setFailConfig(true);
+            leafConfigurationPath.add(currentConfig);
         }
         return false;
     }
@@ -182,6 +183,7 @@ public class SimulationModel {
             if (result == 100) {
                 ++numOfPossibleSuccessPaths;
                 currentConfig.setSuccessConfig(true);
+                leafConfigurationPath.add(currentConfig);
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
