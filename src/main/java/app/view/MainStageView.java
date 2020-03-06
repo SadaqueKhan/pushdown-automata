@@ -129,6 +129,7 @@ public class MainStageView extends BorderPane {
         containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeView);
 
         this.setBottom(containerForBotoomNodes);
+
     }
 
     private void setUpUILayout() {

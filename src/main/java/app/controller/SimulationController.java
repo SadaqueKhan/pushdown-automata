@@ -30,6 +30,8 @@ public class SimulationController {
 
         generateSimulation(machineModel, inputWord);
 
+        mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(true);
+        mainStageController.getMainStageView().getInputTextField().setDisable(true);
         //Create a new scene to render simulation
         Scene scene = new Scene(simulationView, 550, 500);
         simulationStage = new Stage();
@@ -40,6 +42,10 @@ public class SimulationController {
         simulationStage.setOnCloseRequest(event -> {
             DiagramController diagramController = mainStageController.getDiagramController();
             diagramController.removeHighlightedTransitionView();
+            mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(false);
+            mainStageController.getMainStageView().getInputTextField().setDisable(false);
+            mainStageController.updateStackView(new ArrayList<>());
+            mainStageController.updateTapeView(0);
         });
     }
 

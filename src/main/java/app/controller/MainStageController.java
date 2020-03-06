@@ -211,7 +211,7 @@ public class MainStageController extends Application {
 
     public void updateTapeView(int headPosition) {
         if (headPointerStackPane != null) {
-            removeHeadPointerStackPane(headPointerStackPane);
+            headPointerStackPane.getChildren().get(2).setVisible(false);
         }
         HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
 
@@ -222,9 +222,6 @@ public class MainStageController extends Application {
 
     }
 
-    public void removeHeadPointerStackPane(StackPane headPointerStackPane) {
-        headPointerStackPane.getChildren().get(2).setVisible(false);
-    }
 
     public void updateStackView(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
@@ -259,5 +256,9 @@ public class MainStageController extends Application {
                 stackViewVBoxContainer.getChildren().add(stackPane);
             }
         }
+    }
+
+    public MainStageView getMainStageView() {
+        return mainStageView;
     }
 }
