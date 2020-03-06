@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,7 +29,7 @@ public class SimulationView extends BorderPane {
     private ToggleButton togglePathButton;
     private VBox containerForCenterNodes;
     private VBox pathsVBox;
-
+    private ScrollPane pathsScrollPane;
 
     public SimulationView(SimulationController simulationController) {
         this.simulationController = simulationController;
@@ -71,6 +72,10 @@ public class SimulationView extends BorderPane {
         Accordion pathAccordian = new Accordion();
         pathsVBox = new VBox(pathAccordian);
 
+        pathsScrollPane = new ScrollPane();
+        pathsScrollPane.setContent(pathsVBox);
+        pathsScrollPane.setFitToWidth(true);
+
         setCenter(containerForCenterNodes);
     }
 
@@ -95,5 +100,9 @@ public class SimulationView extends BorderPane {
 
     public VBox getContainerForCenterNodes() {
         return containerForCenterNodes;
+    }
+
+    public ScrollPane getPathsScrollPane() {
+        return pathsScrollPane;
     }
 }

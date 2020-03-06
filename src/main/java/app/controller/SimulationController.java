@@ -165,7 +165,7 @@ public class SimulationController {
         }
 
         simulationView.getContainerForCenterNodes().getChildren().remove(0);
-        simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getPathsVBox());
+        simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getPathsScrollPane());
     }
 
 
