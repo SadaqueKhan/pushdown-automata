@@ -53,7 +53,7 @@
                     </includes>
                 </configuration>
             </plugin>
-
+            <!-- Create JAR plugin (run with mvn clean compile assembly:single)-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>

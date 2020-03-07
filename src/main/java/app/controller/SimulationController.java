@@ -153,7 +153,7 @@ public class SimulationController {
             });
 
             ++numPath;
-            
+
             if (leafConfigurationModel.isSuccessConfig()) {
                 accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
             } else if (leafConfigurationModel.isStuckConfig()) {
