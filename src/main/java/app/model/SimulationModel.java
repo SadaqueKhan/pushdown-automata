@@ -129,7 +129,6 @@ public class SimulationModel {
 
     //Apply action given a transition and return the resulting configuration
     private ConfigurationModel generateConfig(TransitionModel transitionModelToNextConfiguration) {
-
         TapeModel currentTapeModel = new TapeModel();
         currentTapeModel.loadInput(inputWord);
         currentTapeModel.setHead(tapeModel.getHead());
@@ -146,10 +145,8 @@ public class SimulationModel {
         if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
             currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
-
-
-        ConfigurationModel newConfig = new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
-        return newConfig;
+        
+        return new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
     }
 
 
