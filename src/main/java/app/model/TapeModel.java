@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InputTapeModel {
+public class TapeModel {
 
     private List<String> inputTape;
     private int head;
 
-    public InputTapeModel() {
+    public TapeModel() {
         inputTape = new ArrayList<>();
         head = 0;
     }

@@ -43,9 +43,9 @@ public class DiagramController {
     // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
     private double layoutX;
     private double layoutY;
-
     private double sceneX;
     private double sceneY;
+
     private TransitionModel transitionModelHighlighted;
     private StateView startStateView;
 
@@ -180,6 +180,7 @@ public class DiagramController {
         transitionView.setStrokeWidth(2);
 
         VBox newTransitionListVBox = transitionView.getTransitionListVBox();
+        
         newTransitionListVBox.setOnMousePressed(mouseEvent -> {
             sceneX = mouseEvent.getScreenX();
             sceneY = mouseEvent.getScreenY();
