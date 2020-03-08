@@ -69,97 +69,102 @@ public class SimulationController {
 
     public void triggerAlgorithmView() {
         ListView<ConfigurationModel> simulationListView = simulationView.getAlgorithmlistView();
-        simulationListView.getItems().clear();
 
-        // Get algorithm path list
-        ArrayList<ConfigurationModel> algorithmPathList = simulationModel.getConfigurationPath();
-        simulationListView.getItems().addAll(algorithmPathList);
+        if (simulationListView.getItems().isEmpty()) {
+            // Get algorithm path list
+            ArrayList<ConfigurationModel> algorithmPathList = simulationModel.getConfigurationPath();
+            simulationListView.getItems().addAll(algorithmPathList);
 
-        Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
-            @Override
-            public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
-                return new ListCell<ConfigurationModel>() {
-                    @Override
-                    protected void updateItem(ConfigurationModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setText(null);
-                            setStyle(null);
-                        } else {
+            Platform.runLater(() -> simulationListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
+                @Override
+                public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
+                    return new ListCell<ConfigurationModel>() {
+                        @Override
+                        protected void updateItem(ConfigurationModel item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (item == null || empty) {
+                                setText(null);
+                                setStyle(null);
+                            } else {
 
-                            int index = getIndex();
-                            String itemToPrint = item.toString();
+                                int index = getIndex();
+                                String itemToPrint = item.toString();
 
-                            setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
-
-                            if (item.isInfiniteConfig()) {
-                                setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
-                                itemToPrint = item.toString() + "  (Possible infinite path!)";
-                            }
-                            if (algorithmPathList.lastIndexOf(item) == index) {
-                                setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
-                                itemToPrint += " (No More Paths!)";
-                            } else if (algorithmPathList.indexOf(item) < index && index < algorithmPathList.lastIndexOf(item)) {
-                                setStyle("-fx-control-inner-background: " + "derive(#aedaff, 70%);");
-                                itemToPrint += " (New Path!)";
-                            }
-
-                            if (item.getParentConfiguration() == null) {
                                 setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
-                                itemToPrint = item.toString() + " (At the start state!)";
+
+                                if (item.isInfiniteConfig()) {
+                                    setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
+                                    itemToPrint = item.toString() + "  (Possible infinite path!)";
+                                }
+                                if (algorithmPathList.lastIndexOf(item) == index) {
+                                    setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
+                                    itemToPrint += " (No More Paths!)";
+                                } else if (algorithmPathList.indexOf(item) < index && index < algorithmPathList.lastIndexOf(item)) {
+                                    setStyle("-fx-control-inner-background: " + "derive(#aedaff, 70%);");
+                                    itemToPrint += " (New Path!)";
+                                }
+
+                                if (item.getParentConfiguration() == null) {
+                                    setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
+                                    itemToPrint = item.toString() + " (At the start state!)";
+                                }
+
+
+                                if (item.isSuccessConfig()) {
+                                    setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");
+                                    itemToPrint = item.toString() + "  (Success!)";
+                                }
+
+                                setText(itemToPrint);
                             }
-
-
-                            if (item.isSuccessConfig()) {
-                                setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");
-                                itemToPrint = item.toString() + "  (Success!)";
-                            }
-
-                            setText(itemToPrint);
                         }
-                    }
-                };
-            }
-        }));
+                    };
+                }
+            }));
+        }
         simulationView.getContainerForCenterNodes().getChildren().remove(0);
         simulationView.getContainerForCenterNodes().getChildren().add(simulationView.getAlgorithmlistView());
     }
 
 
     public void triggerPathsView() {
-        //Get leaf configurations
-        ArrayList<ConfigurationModel> leafConfigurationPath = simulationModel.getLeafConfigurationPath();
+
 
         //Get accordian
         Accordion accordion = (Accordion) simulationView.getPathsVBox().getChildren().get(0);
-        accordion.getPanes().clear();
 
-        int numPath = 0;
+        if (accordion.getPanes().isEmpty()) {
+            //Get leaf configurations
+            ArrayList<ConfigurationModel> leafConfigurationPath = simulationModel.getLeafConfigurationPath();
+            accordion.getPanes().clear();
 
-        for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
-            ListView<ConfigurationModel> newListView = new ListView<>();
-            newListView.getItems().addAll(leafConfigurationModel.getPath());
+            int numPath = 0;
 
-            newListView.setOnMouseReleased(event -> {
-                ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
-                if (!(selectedConfigurationsToHighlightList.isEmpty())) {
-                    ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
-                    updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                    updateTapeViewForSelectedConfiguration(selectedConfiguration);
-                    updateStackViewForSelectedConfiguration(selectedConfiguration);
+            for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
+                ListView<ConfigurationModel> newListView = new ListView<>();
+                newListView.getItems().addAll(leafConfigurationModel.getPath());
+
+                newListView.setOnMouseReleased(event -> {
+                    ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
+                    if (!(selectedConfigurationsToHighlightList.isEmpty())) {
+                        ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                        updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                        updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                        updateStackViewForSelectedConfiguration(selectedConfiguration);
+                    }
+                });
+
+                ++numPath;
+
+                if (leafConfigurationModel.isSuccessConfig()) {
+                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
+                } else if (leafConfigurationModel.isStuckConfig()) {
+                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Stuck", newListView));
+                } else if (leafConfigurationModel.isFailConfig()) {
+                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Fail", newListView));
+                } else if (leafConfigurationModel.isInfiniteConfig()) {
+                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Infinite", newListView));
                 }
-            });
-
-            ++numPath;
-
-            if (leafConfigurationModel.isSuccessConfig()) {
-                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
-            } else if (leafConfigurationModel.isStuckConfig()) {
-                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Stuck", newListView));
-            } else if (leafConfigurationModel.isFailConfig()) {
-                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Fail", newListView));
-            } else if (leafConfigurationModel.isInfiniteConfig()) {
-                accordion.getPanes().add(new TitledPane("Path " + numPath + ": Infinite", newListView));
             }
         }
 
