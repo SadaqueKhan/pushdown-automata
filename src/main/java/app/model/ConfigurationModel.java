@@ -1,9 +1,7 @@
 package app.model;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 /**
  * @author Mohammed Sadaque Khan
  * <p>
@@ -16,7 +14,7 @@ public class ConfigurationModel {
     private final StateModel currentStateModel;
     private final TapeModel currentTapeModel;
     private final StackModel currentStackModel;
-    
+
     private boolean isVisited;
     private int branch;
     private int step;
@@ -42,7 +40,6 @@ public class ConfigurationModel {
         this.branch = 1;
         this.step = parentConfiguration == null ? 0 : parentConfiguration.getStep() + 1;
     }
-
     /**
      * Get the step value to reach this position from the root
      *
@@ -51,7 +48,6 @@ public class ConfigurationModel {
     public int getStep() {
         return step;
     }
-
     /**
      * Get the head position of the tape for of this configuration.
      *
@@ -60,7 +56,6 @@ public class ConfigurationModel {
     public int getHeadPosition() {
         return currentTapeModel.getHead();
     }
-
     /**
      * Get the parent configuration of this configuration.
      *
