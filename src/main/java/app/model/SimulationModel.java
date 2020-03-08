@@ -7,37 +7,33 @@ import java.util.stream.Collectors;
 public class SimulationModel {
     private final String EMPTY = "\u03B5";
     private MachineModel machineModel;
-    private TapeModel tapeModel;
-    private StackModel stackModel;
     private final String inputWord;
 
     private ConfigurationModel currentConfig;
-    private int numOfPossibleInfinitePaths = 0;
-    private int numOfPossibleSuccessPaths = 0;
+    private TapeModel currentTapeModel;
+    private StackModel currentStackModel;
 
     private ArrayList<ConfigurationModel> configurationPath;
     private ArrayList<ConfigurationModel> leafConfigurationPath;
 
     private boolean isNFA = false;
+    private int numOfPossibleInfinitePaths = 0;
+    private int numOfPossibleSuccessPaths = 0;
 
     public SimulationModel(MachineModel machineModel, String inputWord) {
-        this.tapeModel = new TapeModel();
-        this.stackModel = new StackModel();
+        this.machineModel = machineModel;
+        this.currentTapeModel = new TapeModel();
+        this.currentStackModel = new StackModel();
         this.inputWord = inputWord;
         configurationPath = new ArrayList<>();
         leafConfigurationPath = new ArrayList<>();
 
-        loadMachine(machineModel);
         loadInput(inputWord);
     }
 
-    public void loadMachine(MachineModel machineModel) {
-        this.machineModel = machineModel;
-    }
-
     public void loadInput(String input) {
-        tapeModel.loadInput(input);
-        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), tapeModel, stackModel);
+        currentTapeModel.loadInput(input);
+        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), currentTapeModel, currentStackModel);
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath.add(currentConfig);
@@ -54,7 +50,7 @@ public class SimulationModel {
 
         if (currentConfig.getChildrenConfigurations() == null) {
             //Search for possible children configurations to move to (the transitions have already been applied to this list)
-            applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), tapeModel.getAtHead(), stackModel.peak());
+            applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
             currentConfig.setChildrenConfigurations(applicableConfigurations);
         }
 
@@ -102,16 +98,16 @@ public class SimulationModel {
     private void loadConfiguration(ConfigurationModel toExplore) {
         currentConfig = toExplore;
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
-        tapeModel.setHead(toExplore.getHeadPosition());
-        stackModel.setContent(toExplore.getStackContent());
+        currentTapeModel.setHead(toExplore.getHeadPosition());
+        currentStackModel.setContent(toExplore.getStackContent());
         configurationPath.add(currentConfig);
     }
 
     public void previous() {
         ConfigurationModel previous = currentConfig.getParentConfiguration();
         if (previous != null) {
-            stackModel.setContent(previous.getStackContent());
-            tapeModel.setHead(previous.getHeadPosition());
+            currentStackModel.setContent(previous.getStackContent());
+            currentTapeModel.setHead(previous.getHeadPosition());
         }
         currentConfig = previous;
     }
@@ -131,10 +127,10 @@ public class SimulationModel {
     private ConfigurationModel generateConfig(TransitionModel transitionModelToNextConfiguration) {
         TapeModel currentTapeModel = new TapeModel();
         currentTapeModel.loadInput(inputWord);
-        currentTapeModel.setHead(tapeModel.getHead());
+        currentTapeModel.setHead(this.currentTapeModel.getHead());
 
         StackModel currentStackModel = new StackModel();
-        currentStackModel.setContent(stackModel.getContent());
+        currentStackModel.setContent(this.currentStackModel.getContent());
 
         if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
             currentTapeModel.readSymbol();
@@ -145,13 +141,13 @@ public class SimulationModel {
         if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
             currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
-        
+
         return new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
     }
 
 
     public boolean isInAcceptingConfiguration() {
-        if (tapeModel.isEmpty()) {
+        if (currentTapeModel.isEmpty()) {
             if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
                 return true;
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
@@ -194,7 +190,6 @@ public class SimulationModel {
             }
 
         }
-
         return 300;
     }
 
@@ -213,7 +208,6 @@ public class SimulationModel {
     public ArrayList<ConfigurationModel> getLeafConfigurationPath() {
         return leafConfigurationPath;
     }
-
 
     public boolean isNFA() {
         return isNFA;

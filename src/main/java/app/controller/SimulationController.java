@@ -96,8 +96,6 @@ public class SimulationController {
                                 setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
                                 itemToPrint = item.toString() + "  (Possible infinite path!)";
                             }
-
-
                             if (algorithmPathList.lastIndexOf(item) == index) {
                                 setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
                                 itemToPrint += " (No More Paths!)";
