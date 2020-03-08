@@ -1,7 +1,7 @@
 package app.view;
 
 import app.controller.SimulationController;
-import app.listener.SimulationListener;
+import app.listener.QuickRunSimulationListener;
 import app.model.ConfigurationModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.controlsfx.control.SegmentedButton;
 
-public class SimulationView extends BorderPane {
+public class QuickRunSimulationView extends BorderPane {
 
     //Reference to simulation controller
     private final SimulationController simulationController;
@@ -31,14 +31,13 @@ public class SimulationView extends BorderPane {
     private VBox pathsVBox;
     private ScrollPane pathsScrollPane;
 
-    public SimulationView(SimulationController simulationController) {
+    public QuickRunSimulationView(SimulationController simulationController) {
         this.simulationController = simulationController;
         setUpUIComponents();
         setUpUIListeners();
     }
 
     private void setUpUIComponents() {
-
         //Setup center GUI elements
         this.toggleAlgorithmButton = new ToggleButton("Algorithm");
         this.togglePathButton = new ToggleButton("Paths");
@@ -80,10 +79,10 @@ public class SimulationView extends BorderPane {
     }
 
     private void setUpUIListeners() {
-        SimulationListener simulationListener = new SimulationListener(simulationController);
-        toggleAlgorithmButton.setOnAction(simulationListener);
-        togglePathButton.setOnAction(simulationListener);
-        algorithmlistView.setOnMouseReleased(simulationListener);
+        QuickRunSimulationListener quickRunSimulationListener = new QuickRunSimulationListener(simulationController);
+        toggleAlgorithmButton.setOnAction(quickRunSimulationListener);
+        togglePathButton.setOnAction(quickRunSimulationListener);
+        algorithmlistView.setOnMouseReleased(quickRunSimulationListener);
     }
 
     public Text getSimulationStatsTextField() {

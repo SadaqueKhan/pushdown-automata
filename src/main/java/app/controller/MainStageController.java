@@ -78,8 +78,15 @@ public class MainStageController extends Application {
             invalidActionAlert.setTitle("Invalid Action");
             invalidActionAlert.show();
         } else {
-            setUpTapeView(inputWord);
-            new SimulationController(this, machineModel, inputWord);
+            if (mainStageView.getSimulationByQuickRunMenuItem().isSelected()) {
+                setUpTapeView(inputWord);
+                new SimulationController(this, machineModel, inputWord, mainStageView.getSimulationByQuickRunMenuItem().getText());
+            }
+            if (mainStageView.getSimulationByStepRunMenuItem().isSelected()) {
+
+                setUpTapeView(inputWord);
+                new SimulationController(this, machineModel, inputWord, mainStageView.getSimulationByStepRunMenuItem().getText());
+            }
         }
     }
 
@@ -161,6 +168,16 @@ public class MainStageController extends Application {
         } catch (Exception e1) {
             e1.printStackTrace();
         }
+    }
+
+    public void setSimulationToQuickRun() {
+        mainStageView.getSimulationByQuickRunMenuItem().setSelected(true);
+        mainStageView.getSimulationByStepRunMenuItem().setSelected(false);
+    }
+
+    public void setSimulationToStepRun() {
+        mainStageView.getSimulationByStepRunMenuItem().setSelected(true);
+        mainStageView.getSimulationByQuickRunMenuItem().setSelected(false);
     }
 
     public void setAcceptanceCriteriaToFinalState() {

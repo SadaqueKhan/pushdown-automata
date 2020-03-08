@@ -44,7 +44,6 @@ public class MainStageListener implements EventHandler {
                 } else {
                     mainStageController.triggerTransitionTableView();
                 }
-
             } else if (event.getSource() instanceof MenuItem) {
                 MenuItem isMenuItem = (MenuItem) event.getSource();
                 if (isMenuItem.getText().equals("Save")) {
@@ -55,6 +54,10 @@ public class MainStageListener implements EventHandler {
                     mainStageController.setAcceptanceCriteriaToFinalState();
                 } else if (isMenuItem.getText().equals("By Empty StackModel")) {
                     mainStageController.setAcceptanceCriteriaToEmptyStack();
+                } else if (isMenuItem.getText().equals("By Quick Run")) {
+                    mainStageController.setSimulationToQuickRun();
+                } else if (isMenuItem.getText().equals("By Step Run")) {
+                    mainStageController.setSimulationToStepRun();
                 } else if (isMenuItem.getText().equals("Guide")) {
                     mainStageController.launchWiki();
                 }

@@ -10,10 +10,10 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class SimulationListener implements EventHandler {
+public class QuickRunSimulationListener implements EventHandler {
     private final SimulationController simulationController;
 
-    public SimulationListener(SimulationController simulationController) {
+    public QuickRunSimulationListener(SimulationController simulationController) {
         this.simulationController = simulationController;
     }
 

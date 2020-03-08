@@ -95,7 +95,7 @@ public class SimulationModel {
         return 1;
     }
 
-    private void loadConfiguration(ConfigurationModel toExplore) {
+    public void loadConfiguration(ConfigurationModel toExplore) {
         currentConfig = toExplore;
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
         currentTapeModel.setHead(toExplore.getHeadPosition());
@@ -189,6 +189,30 @@ public class SimulationModel {
 
         }
         return 300;
+    }
+
+    public ConfigurationModel getCurrentConfig() {
+        return currentConfig;
+    }
+
+    public void setCurrentConfig(ConfigurationModel currentConfig) {
+        this.currentConfig = currentConfig;
+    }
+
+    public TapeModel getCurrentTapeModel() {
+        return currentTapeModel;
+    }
+
+    public void setCurrentTapeModel(TapeModel currentTapeModel) {
+        this.currentTapeModel = currentTapeModel;
+    }
+
+    public StackModel getCurrentStackModel() {
+        return currentStackModel;
+    }
+
+    public void setCurrentStackModel(StackModel currentStackModel) {
+        this.currentStackModel = currentStackModel;
     }
 
     public ArrayList<ConfigurationModel> getConfigurationPath() {

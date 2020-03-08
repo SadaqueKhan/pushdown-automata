@@ -39,6 +39,8 @@ public class MainStageView extends BorderPane {
     private StackView stackView;
     private VBox containerForRightNodes;
     private MenuItem helpGuidelItem;
+    private CheckMenuItem simulationByQuickRunMenuItem;
+    private CheckMenuItem simulationByStepRunMenuItem;
 
     public MainStageView(MainStageController mainStageController) {
         this.mainStageController = mainStageController;
@@ -64,6 +66,13 @@ public class MainStageView extends BorderPane {
         acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
         acceptanceByFinalStateMenuItem.setSelected(true);
         menuBar.getMenus().add(acceptanceMenu);
+
+        Menu simulationMenu = new Menu("Simulation");
+        this.simulationByQuickRunMenuItem = new CheckMenuItem("By Quick Run");
+        this.simulationByStepRunMenuItem = new CheckMenuItem("By Step Run");
+        simulationMenu.getItems().addAll(simulationByQuickRunMenuItem, simulationByStepRunMenuItem);
+        simulationByQuickRunMenuItem.setSelected(true);
+        menuBar.getMenus().add(simulationMenu);
 
         Menu helpMenu = new Menu("Help");
         this.helpGuidelItem = new MenuItem("Guide");
@@ -144,6 +153,8 @@ public class MainStageView extends BorderPane {
         loadMenuItem.setOnAction(mainStageListener);
         acceptanceByFinalStateMenuItem.setOnAction(mainStageListener);
         acceptanceByEmptyStackMenuItem.setOnAction(mainStageListener);
+        simulationByQuickRunMenuItem.setOnAction(mainStageListener);
+        simulationByStepRunMenuItem.setOnAction(mainStageListener);
         helpGuidelItem.setOnAction(mainStageListener);
     }
 
@@ -186,5 +197,13 @@ public class MainStageView extends BorderPane {
 
     public Label getInputTextLabel() {
         return inputTextLabel;
+    }
+
+    public CheckMenuItem getSimulationByQuickRunMenuItem() {
+        return simulationByQuickRunMenuItem;
+    }
+
+    public CheckMenuItem getSimulationByStepRunMenuItem() {
+        return simulationByStepRunMenuItem;
     }
 }
