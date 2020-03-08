@@ -33,11 +33,6 @@ public class TapeModel {
         this.head = head;
     }
 
-    public void loadInput(String input) {
-        inputTape.clear();
-        inputTape = Arrays.asList(input.split(""));
-    }
-
     public boolean isEmpty() {
         return inputTape.size() == head;
     }
@@ -50,4 +45,8 @@ public class TapeModel {
         return inputTape;
     }
 
+    public void loadInput(String input) {
+        inputTape.clear();
+        inputTape = Arrays.asList(input.split(""));
+    }
 }
