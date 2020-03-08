@@ -82,4 +82,8 @@ public class StateModel {
         return getStateId().hashCode();
     }
 
+    @Override
+    public String toString() {
+        return stateId;
+    }
 }
