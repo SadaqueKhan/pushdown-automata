@@ -37,7 +37,7 @@ public class SimulationModel {
 
     public void loadInput(String input) {
         tapeModel.loadInput(input);
-        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), inputWord, 0, stackModel.getContent());
+        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), tapeModel, stackModel);
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath.add(currentConfig);
@@ -147,16 +147,8 @@ public class SimulationModel {
             currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
         }
 
-        StringBuilder currentTapeString = new StringBuilder();
-        if (currentTapeModel.getHead() == currentTapeModel.tapeSize()) {
-            currentTapeString.append("\u03B5");
-        } else {
-            for (int i = currentTapeModel.getHead(); i < currentTapeModel.tapeSize(); i++) {
-                currentTapeString.append(currentTapeModel.getInputTape().get(i));
-            }
-        }
 
-        ConfigurationModel newConfig = new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeString.toString(), currentTapeModel.getHead(), currentStackModel.getContent());
+        ConfigurationModel newConfig = new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
         return newConfig;
     }
 
