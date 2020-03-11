@@ -100,7 +100,7 @@ public class SimulationController {
     private void generateSimulation(MachineModel machineModel, String inputWord) {
         quickRunSimulationModel = new SimulationModel(machineModel, inputWord);
 
-        int flag = quickRunSimulationModel.run();
+        int flag = quickRunSimulationModel.createTree();
 
         if (flag == 200) {
             triggerAlgorithmView();

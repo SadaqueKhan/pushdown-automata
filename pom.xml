@@ -31,7 +31,7 @@
                 </configuration>
             </plugin>
 
-            <!-- PLUGIN = Create JAR for the project. (run with mvn clean compile assembly:single)-->
+            <!-- PLUGIN = Create JAR for the project. (createTree with mvn clean compile assembly:single)-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>

@@ -159,7 +159,7 @@ public class SimulationModel {
         return false;
     }
 
-    public int run() {
+    public int createTree() {
         while (currentConfig.getStep() < 51) {
             int result = next(); // if one is returned more children exist
 
