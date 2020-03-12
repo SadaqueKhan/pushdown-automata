@@ -42,8 +42,6 @@ public class SimulationController {
             //Create a new scene to render simulation
             Scene scene = new Scene(quickRunSimulationView, 550, 500);
             simulationStage = new Stage();
-            simulationStage.initModality(Modality.WINDOW_MODAL);
-            simulationStage.initOwner(mainStageController.getPrimaryWindow());
             simulationStage.setResizable(false);
             simulationStage.setTitle("Simulation: Quick Run");
             simulationStage.setScene(scene);
