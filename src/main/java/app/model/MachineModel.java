@@ -80,20 +80,6 @@ public class MachineModel {
     }
 
 
-    public HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
-        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
-        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
-        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
-        for (TransitionModel isRelatedTransitionModel : transitionModelSet) {
-            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
-            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
-            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
-                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
-            }
-        }
-        return relatedTransitionModelsToReturn;
-    }
-
     public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
         for (TransitionModel isExitingTransitionModel : transitionModelSet) {

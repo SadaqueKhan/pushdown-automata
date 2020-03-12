@@ -149,7 +149,7 @@ public class DiagramController {
                     if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
                         VBox newTransitionListVBox = transitionViewToCheck.getTransitionListVBox();
                         newTransitionListVBox.getChildren().clear();
-                        for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
+                        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
                             newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
                         }
                         newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
@@ -240,7 +240,7 @@ public class DiagramController {
         });
 
 
-        for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
+        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
             newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
         }
 
@@ -428,7 +428,7 @@ public class DiagramController {
         }
 
         sourceCell.getListOfTransitionsVBox().getChildren().clear();
-        for (TransitionModel transitionModel : machineModel.getRelatedTransitions(newTransitionModel)) {
+        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
             Label newLabel = new Label(transitionModel.toString());
             sourceCell.getListOfTransitionsVBox().getChildren().add(newLabel);
         }
@@ -489,11 +489,11 @@ public class DiagramController {
                         if (node instanceof TransitionView) {
                             TransitionView transitionViewToUpdate = (TransitionView) node;
                             if (transitionViewToUpdate.getSource().getStateID().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateID().equals(resultingStateModelID)) {
-                                if (machineModel.getRelatedTransitions(deletedTransition).isEmpty()) {
+                                if (getRelatedTransitions(deletedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionToRemoveSet.add(currentStateView);
                                 }
-                                for (TransitionModel transitionModel : machineModel.getRelatedTransitions(deletedTransition)) {
+                                for (TransitionModel transitionModel : getRelatedTransitions(deletedTransition)) {
                                     transitionViewToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
                                 }
                             }
@@ -935,6 +935,20 @@ public class DiagramController {
             }
         }
         return TransitionViewSet;
+    }
+
+    public HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
+        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
+        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
+        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
+        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
+            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
+            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
+            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
+                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
+            }
+        }
+        return relatedTransitionModelsToReturn;
     }
 
 }
