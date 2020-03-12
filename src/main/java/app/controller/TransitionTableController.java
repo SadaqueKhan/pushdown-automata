@@ -95,7 +95,7 @@ public class TransitionTableController {
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
         //Check to see if the transition already exists for the current state model
-        for (TransitionModel transitionModel : machineModel.getExitingTranstionsFromStateModel(currentStateModel)) {
+        for (TransitionModel transitionModel : getExitingTranstionsFromStateModel(currentStateModel)) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
                 Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -177,4 +177,15 @@ public class TransitionTableController {
         transitionTableView.getStackSymbolToPushComboBox().getItems().clear();
         transitionTableView.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
     }
+
+    public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isExitingTransitionModel : machineModel.getTransitionModelSet()) {
+            if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
+                exitingTransitionFromStateModelToReturn.add(isExitingTransitionModel);
+            }
+        }
+        return exitingTransitionFromStateModelToReturn;
+    }
+
 }

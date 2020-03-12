@@ -79,27 +79,6 @@ public class MachineModel {
         return stackAlphabetSet;
     }
 
-
-    public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
-        HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
-        for (TransitionModel isExitingTransitionModel : transitionModelSet) {
-            if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
-                exitingTransitionFromStateModelToReturn.add(isExitingTransitionModel);
-            }
-        }
-        return exitingTransitionFromStateModelToReturn;
-    }
-
-    public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
-        HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
-        for (TransitionModel isEnteringTransitionModel : transitionModelSet) {
-            if (isEnteringTransitionModel.getResultingStateModel().equals(stateModel)) {
-                enteringTransitionFromStateModelToReturn.add(isEnteringTransitionModel);
-            }
-        }
-        return enteringTransitionFromStateModelToReturn;
-    }
-
     public boolean isAcceptanceByFinalState() {
         return isAcceptanceByFinalState;
     }

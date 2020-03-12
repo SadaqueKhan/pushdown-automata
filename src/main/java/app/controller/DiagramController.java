@@ -757,7 +757,7 @@ public class DiagramController {
                 TransitionModel newTransitionModel = new TransitionModel(stateModelSelected, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
 
                 //Check to see if the transition already exists for the current state model
-                for (TransitionModel transitionModel : machineModel.getExitingTranstionsFromStateModel(stateModelSelected)) {
+                for (TransitionModel transitionModel : getExitingTranstionsFromStateModel(stateModelSelected)) {
                     if (transitionModel.equals(newTransitionModel)) {
                         // if transition exists alert the user and don't do anything further
                         Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -789,8 +789,8 @@ public class DiagramController {
 
         deleteStateItem.setOnAction(e -> {
             //Update machine model
-            HashSet<TransitionModel> exitingTranstionsFromStateModel = machineModel.getExitingTranstionsFromStateModel(stateModelSelected);
-            HashSet<TransitionModel> enteringTranstionsFromStateModel = machineModel.getEnteringTransitionsFromStateModel(stateModelSelected);
+            HashSet<TransitionModel> exitingTranstionsFromStateModel = getExitingTranstionsFromStateModel(stateModelSelected);
+            HashSet<TransitionModel> enteringTranstionsFromStateModel = getEnteringTransitionsFromStateModel(stateModelSelected);
             machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
             machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
             machineModel.removeStateModelFromStateModelSet(stateModelSelected);
@@ -949,6 +949,26 @@ public class DiagramController {
             }
         }
         return relatedTransitionModelsToReturn;
+    }
+
+    public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isExitingTransitionModel : machineModel.getTransitionModelSet()) {
+            if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
+                exitingTransitionFromStateModelToReturn.add(isExitingTransitionModel);
+            }
+        }
+        return exitingTransitionFromStateModelToReturn;
+    }
+
+    public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isEnteringTransitionModel : machineModel.getTransitionModelSet()) {
+            if (isEnteringTransitionModel.getResultingStateModel().equals(stateModel)) {
+                enteringTransitionFromStateModelToReturn.add(isEnteringTransitionModel);
+            }
+        }
+        return enteringTransitionFromStateModelToReturn;
     }
 
 }
