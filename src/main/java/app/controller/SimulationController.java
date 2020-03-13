@@ -302,9 +302,9 @@ public class SimulationController {
         if (selectedTransitionModel != null) {
             listView.getItems().clear();
 
-            ConfigurationModel previousConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+            ConfigurationModel currentConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             ConfigurationModel nextConfigurationModel = null;
-            for (ConfigurationModel currentConfigurationModelChild : previousConfigurationModel.getChildrenConfigurations()) {
+            for (ConfigurationModel currentConfigurationModelChild : currentConfigurationModel.getChildrenConfigurations()) {
                 if (selectedTransitionModel.equals(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration())) {
                     nextConfigurationModel = currentConfigurationModelChild;
                 }
@@ -312,18 +312,20 @@ public class SimulationController {
             }
 
             stepRunSimulationModel.loadConfiguration(nextConfigurationModel);
-            ConfigurationModel currentConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+
+            //Loaded configuration
+            ConfigurationModel newCurrentConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             TapeModel currentTapeModel = stepRunSimulationModel.getCurrentTapeModel();
             StackModel currentStackModel = stepRunSimulationModel.getCurrentStackModel();
-            List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.configurationApplicable(currentConfigurationModel.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
-            currentConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
+            List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.configurationApplicable(newCurrentConfigurationModel.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
+            newCurrentConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
 
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationView.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
-            updateDiagramViewForSelectedConfiguration(currentConfigurationModel);
-            updateTapeViewForSelectedConfiguration(currentConfigurationModel);
-            updateStackViewForSelectedConfiguration(currentConfigurationModel);
+            updateDiagramViewForSelectedConfiguration(newCurrentConfigurationModel);
+            updateTapeViewForSelectedConfiguration(newCurrentConfigurationModel);
+            updateStackViewForSelectedConfiguration(newCurrentConfigurationModel);
         }
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SimulationModel {
+
     private final String EMPTY = "\u03B5";
     private MachineModel machineModel;
     private final String inputWord;
@@ -111,12 +112,12 @@ public class SimulationModel {
     }
 
 
-    public List<ConfigurationModel> configurationApplicable(StateModel stateModel, String inputSymbol, String stackSymbol) {
+    public List<ConfigurationModel> configurationApplicable(StateModel currentStateModel, String currentInputSymbolAtHeadOnTape, String currentTopElementOnStack) {
         return machineModel.getTransitionModelSet()
                 .stream()
-                .filter(transitionModel -> transitionModel.getCurrentStateModel().equals(stateModel))
-                .filter(transitionModel -> transitionModel.getInputSymbol().equals(inputSymbol) || transitionModel.getInputSymbol().equals(EMPTY))
-                .filter(transitionModel -> transitionModel.getStackSymbolToPop().equals(stackSymbol) || transitionModel.getStackSymbolToPop().equals(EMPTY))
+                .filter(transitionModel -> transitionModel.getCurrentStateModel().equals(currentStateModel))
+                .filter(transitionModel -> transitionModel.getInputSymbol().equals(currentInputSymbolAtHeadOnTape) || transitionModel.getInputSymbol().equals(EMPTY))
+                .filter(transitionModel -> transitionModel.getStackSymbolToPop().equals(currentTopElementOnStack) || transitionModel.getStackSymbolToPop().equals(EMPTY))
                 .map(transitionModel -> generateConfig(transitionModel))
                 .collect(Collectors.toList());
     }
