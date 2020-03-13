@@ -28,16 +28,14 @@ public class SimulationModel {
         configurationPath = new ArrayList<>();
         leafConfigurationPath = new ArrayList<>();
 
-        loadInput(inputWord);
-    }
-
-    public void loadInput(String input) {
-        currentTapeModel.loadInput(input);
+        //Set the root node 
+        currentTapeModel.loadInput(inputWord);
         currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), currentTapeModel, currentStackModel);
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         configurationPath.add(currentConfig);
     }
+
 
     public int next() {
         //checking for acceptance
