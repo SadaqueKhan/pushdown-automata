@@ -21,6 +21,10 @@ public class MainStageView extends BorderPane {
 
     private TextField inputTextField;
     AutoCompletionBinding<String> autoCompletionBinding;
+    String cssLayout = "-fx-border-color: black;\n" +
+            "-fx-border-insets: 5;\n" +
+            "-fx-border-width: 3;\n" +
+            "-fx-border-style: solid;\n";
     private ToggleButton toggleDiagramButton;
     private ToggleButton toggleTransitionTableButton;
     private VBox containerForCenterNodes;
@@ -108,6 +112,7 @@ public class MainStageView extends BorderPane {
         containerForCenterNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForCenterNodes.setSpacing(5);
         containerForCenterNodes.setAlignment(Pos.TOP_CENTER);
+        containerForCenterNodes.setStyle(cssLayout);
         containerForCenterNodes.getChildren().add(segmentedButton);
 
         this.setCenter(containerForCenterNodes);
@@ -117,6 +122,7 @@ public class MainStageView extends BorderPane {
         this.containerForRightNodes = new VBox();
         containerForRightNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForRightNodes.setSpacing(5);
+        containerForRightNodes.setStyle(cssLayout);
         containerForRightNodes.getChildren().addAll(new Text("Stack"), stackView);
 
         this.setRight(containerForRightNodes);
@@ -127,13 +133,12 @@ public class MainStageView extends BorderPane {
         this.containerForBotoomNodes = new VBox();
         containerForBotoomNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForBotoomNodes.setSpacing(5);
+        containerForBotoomNodes.setStyle(cssLayout);
         containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeView);
 
         this.setBottom(containerForBotoomNodes);
 
     }
-
-
     private void setUpUIListeners() {
         MainStageListener mainStageListener = new MainStageListener(mainStageController);
         inputTextField.setOnKeyPressed(mainStageListener);
