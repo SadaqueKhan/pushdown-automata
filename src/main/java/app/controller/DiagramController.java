@@ -58,7 +58,7 @@ public class DiagramController {
         this.mainStageController = mainStageController;
         this.mainStageView = mainStageView;
         this.machineModel = machineModel;
-        this.diagramView = new DiagramView(this, mainStageView);
+        this.diagramView = new DiagramView(this);
 
         this.stateMap = new HashMap<>();
         this.linkedTransitionViewsMap = new HashMap<>();
