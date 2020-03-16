@@ -57,8 +57,7 @@ public class SimulationModel {
 
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
-            if (!(currentConfig.isFailConfig() || currentConfig.isSuccessConfig())) {
-                currentConfig.setStuckConfig(true);
+            if (!(currentConfig.isSuccessConfig())) {
                 leafConfigurationPath.add(currentConfig);
             }
             //no more paths to search for this child
@@ -152,8 +151,6 @@ public class SimulationModel {
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 return true;
             }
-            currentConfig.setFailConfig(true);
-            leafConfigurationPath.add(currentConfig);
         }
         return false;
     }

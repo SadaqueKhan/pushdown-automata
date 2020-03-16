@@ -100,7 +100,6 @@ public class DiagramController {
     }
 
     public void addStateViewOntoDiagramView(StateModel newStateModel) {
-        //Create stateview UI
         StateView stateView = new StateView(newStateModel.getStateId(), this);
         stateView.relocate(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram());
         diagramView.getChildren().add(stateView);
