@@ -204,12 +204,10 @@ public class SimulationController {
 
                 if (leafConfigurationModel.isSuccessConfig()) {
                     accordion.getPanes().add(new TitledPane("Path " + numPath + ": Success", newListView));
-                } else if (leafConfigurationModel.isStuckConfig()) {
-                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Stuck", newListView));
-                } else if (leafConfigurationModel.isFailConfig()) {
-                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Fail", newListView));
                 } else if (leafConfigurationModel.isInfiniteConfig()) {
                     accordion.getPanes().add(new TitledPane("Path " + numPath + ": Infinite", newListView));
+                } else {
+                    accordion.getPanes().add(new TitledPane("Path " + numPath + ": Fail", newListView));
                 }
             }
         }

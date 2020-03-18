@@ -39,10 +39,6 @@ public class SimulationModel {
 
 
     public int next() {
-        //checking for acceptance
-        if (isInAcceptingConfiguration() && !(currentConfig.isSuccessConfig())) {
-            return 100;
-        }
 
         //Retrieve applicable configurations stored in the current configuration
         List<ConfigurationModel> applicableConfigurations = currentConfig.getChildrenConfigurations();
@@ -157,13 +153,16 @@ public class SimulationModel {
 
     public int createTree() {
         while (currentConfig.getStep() < 51) {
-            int result = next(); // if one is returned more children exist
 
-            if (result == 100) {
+            //checking for acceptance
+            if (isInAcceptingConfiguration()) {
                 ++numOfPossibleSuccessPaths;
                 currentConfig.setSuccessConfig(true);
                 leafConfigurationPath.add(currentConfig);
             }
+
+            int result = next(); // if one is returned more children exist
+            
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
                 //Check if children have all be explored of root

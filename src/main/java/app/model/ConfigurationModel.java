@@ -20,8 +20,6 @@ public class ConfigurationModel {
     private int step;
 
     private boolean isSuccessConfig = false;
-    private boolean isFailConfig = false;
-    private boolean isStuckConfig = false;
     private boolean isInfiniteConfig = false;
 
     private List<ConfigurationModel> childrenConfigurations;
@@ -214,36 +212,6 @@ public class ConfigurationModel {
      */
     public void setSuccessConfig(boolean successConfig) {
         isSuccessConfig = successConfig;
-    }
-
-    /**
-     * Check if the configuration is a fail configuration.
-     * @return <tt>true</tt> if the configuration is a fail configuration
-     */
-    public boolean isFailConfig() {
-        return isFailConfig;
-    }
-
-    /**
-     * Sets this configuration to a fail configuration.
-     */
-    public void setFailConfig(boolean failConfig) {
-        isFailConfig = failConfig;
-    }
-
-    /**
-     * Check if the configuration is a stuck configuration.
-     * @return <tt>true</tt> if the configuration is a stuck configuration
-     */
-    public boolean isStuckConfig() {
-        return isStuckConfig;
-    }
-
-    /**
-     * Sets this configuration to a stuck configuration.
-     */
-    public void setStuckConfig(boolean stuckConfig) {
-        isStuckConfig = stuckConfig;
     }
 
     /**
