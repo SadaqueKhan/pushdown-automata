@@ -179,7 +179,7 @@ public class DiagramController {
         transitionView.setStrokeWidth(2);
 
         VBox newTransitionListVBox = transitionView.getTransitionListVBox();
-        
+
         newTransitionListVBox.setOnMousePressed(mouseEvent -> {
             sceneX = mouseEvent.getScreenX();
             sceneY = mouseEvent.getScreenY();
