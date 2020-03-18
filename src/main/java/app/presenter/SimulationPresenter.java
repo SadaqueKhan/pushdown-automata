@@ -1,8 +1,8 @@
 package app.presenter;
 
 import app.model.*;
-import app.view.QuickRunSimulationView;
-import app.view.StepRunSimulationView;
+import app.view.QuickRunSimulationStage;
+import app.view.StepRunSimulationStage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -17,48 +17,48 @@ import javafx.util.Callback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimulationController {
-    private final MainStageController mainStageController;
+public class SimulationPresenter {
+    private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final String typeOfSimulation;
-    private QuickRunSimulationView quickRunSimulationView;
-    private StepRunSimulationView stepRunSimulationView;
+    private QuickRunSimulationStage quickRunSimulationStage;
+    private StepRunSimulationStage stepRunSimulationStage;
     private Stage simulationStage;
     private SimulationModel quickRunSimulationModel;
     private SimulationModel stepRunSimulationModel;
 
-    public SimulationController(MainStageController mainStageController, MachineModel machineModel, String inputWord, String typeOfSimulation) {
-        this.mainStageController = mainStageController;
+    public SimulationPresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord, String typeOfSimulation) {
+        this.mainStagePresenter = mainStagePresenter;
         this.machineModel = machineModel;
         this.typeOfSimulation = typeOfSimulation;
         System.out.println("check 2");
 
         if (typeOfSimulation.equals("By Quick Run")) {
-            this.quickRunSimulationView = new QuickRunSimulationView(this);
+            this.quickRunSimulationStage = new QuickRunSimulationStage(this);
             generateSimulation(machineModel, inputWord);
 
-            mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(true);
-            mainStageController.getMainStageView().getInputTextField().setDisable(true);
+            mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(true);
+            mainStagePresenter.getMainStage().getInputTextField().setDisable(true);
             //Create a new scene to render simulation
-            Scene scene = new Scene(quickRunSimulationView, 550, 500);
+            Scene scene = new Scene(quickRunSimulationStage, 550, 500);
             simulationStage = new Stage();
             simulationStage.setResizable(false);
             simulationStage.setTitle("Simulation: Quick Run");
             simulationStage.setScene(scene);
             simulationStage.show();
             simulationStage.setOnCloseRequest(event -> {
-                DiagramController diagramController = mainStageController.getDiagramController();
-                diagramController.removeHighlightedTransitionView();
-                mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(false);
-                mainStageController.getMainStageView().getInputTextField().setDisable(false);
-                mainStageController.updateStackView(new ArrayList<>());
-                mainStageController.updateTapeView(0);
+                DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
+                diagramPresenter.removeHighlightedTransitionView();
+                mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(false);
+                mainStagePresenter.getMainStage().getInputTextField().setDisable(false);
+                mainStagePresenter.updateStackView(new ArrayList<>());
+                mainStagePresenter.updateTapeView(0);
             });
         }
 
 
         if (typeOfSimulation.equals("By Step Run")) {
-            this.stepRunSimulationView = new StepRunSimulationView(this);
+            this.stepRunSimulationStage = new StepRunSimulationStage(this);
             this.stepRunSimulationModel = new SimulationModel(machineModel, inputWord);
 
             ConfigurationModel rootConfigurationModel = stepRunSimulationModel.getCurrentConfig();
@@ -70,27 +70,27 @@ public class SimulationController {
             rootConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
 
             for (ConfigurationModel rootConfigurationModelChild : rootChildrenConfigurationList) {
-                stepRunSimulationView.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
 
-            mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(true);
-            mainStageController.getMainStageView().getInputTextField().setDisable(true);
+            mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(true);
+            mainStagePresenter.getMainStage().getInputTextField().setDisable(true);
             //Create a new scene to render simulation
-            Scene scene = new Scene(stepRunSimulationView, 550, 500);
+            Scene scene = new Scene(stepRunSimulationStage, 550, 500);
             simulationStage = new Stage();
             simulationStage.initModality(Modality.WINDOW_MODAL);
-            simulationStage.initOwner(mainStageController.getPrimaryWindow());
+            simulationStage.initOwner(mainStagePresenter.getPrimaryWindow());
             simulationStage.setResizable(false);
             simulationStage.setTitle("Simulation: Step Run");
             simulationStage.setScene(scene);
             simulationStage.show();
             simulationStage.setOnCloseRequest(event -> {
-                DiagramController diagramController = mainStageController.getDiagramController();
-                diagramController.removeHighlightedTransitionView();
-                mainStageController.getMainStageView().getContainerForCenterNodes().setDisable(false);
-                mainStageController.getMainStageView().getInputTextField().setDisable(false);
-                mainStageController.updateStackView(new ArrayList<>());
-                mainStageController.updateTapeView(0);
+                DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
+                diagramPresenter.removeHighlightedTransitionView();
+                mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(false);
+                mainStagePresenter.getMainStage().getInputTextField().setDisable(false);
+                mainStagePresenter.updateStackView(new ArrayList<>());
+                mainStagePresenter.updateTapeView(0);
             });
         }
     }
@@ -108,13 +108,13 @@ public class SimulationController {
             } else {
                 simulationStatsString = "Type: " + "DFA" + " " + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
             }
-            quickRunSimulationView.getSimulationStatsTextField().setText(simulationStatsString);
+            quickRunSimulationStage.getSimulationStatsTextField().setText(simulationStatsString);
 
         }
     }
 
     public void triggerAlgorithmView() {
-        ListView<ConfigurationModel> simulationListView = quickRunSimulationView.getAlgorithmlistView();
+        ListView<ConfigurationModel> simulationListView = quickRunSimulationStage.getAlgorithmlistView();
 
         if (simulationListView.getItems().isEmpty()) {
             // Get algorithm path list
@@ -168,8 +168,8 @@ public class SimulationController {
                 }
             }));
         }
-        quickRunSimulationView.getContainerForCenterNodes().getChildren().remove(0);
-        quickRunSimulationView.getContainerForCenterNodes().getChildren().add(quickRunSimulationView.getAlgorithmlistView());
+        quickRunSimulationStage.getContainerForCenterNodes().getChildren().remove(0);
+        quickRunSimulationStage.getContainerForCenterNodes().getChildren().add(quickRunSimulationStage.getAlgorithmlistView());
     }
 
 
@@ -177,7 +177,7 @@ public class SimulationController {
 
 
         //Get accordian
-        Accordion accordion = (Accordion) quickRunSimulationView.getPathsVBox().getChildren().get(0);
+        Accordion accordion = (Accordion) quickRunSimulationStage.getPathsVBox().getChildren().get(0);
 
         if (accordion.getPanes().isEmpty()) {
             //Get leaf configurations
@@ -212,22 +212,22 @@ public class SimulationController {
             }
         }
 
-        quickRunSimulationView.getContainerForCenterNodes().getChildren().remove(0);
-        quickRunSimulationView.getContainerForCenterNodes().getChildren().add(quickRunSimulationView.getPathsScrollPane());
+        quickRunSimulationStage.getContainerForCenterNodes().getChildren().remove(0);
+        quickRunSimulationStage.getContainerForCenterNodes().getChildren().add(quickRunSimulationStage.getPathsScrollPane());
     }
 
 
     public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        DiagramController diagramController = mainStageController.getDiagramController();
-        diagramController.highlightTransitionTakenInDiagram(selectedConfiguration);
+        DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
+        diagramPresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
     }
 
     public void updateTapeViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        mainStageController.updateTapeView(selectedConfiguration.getHeadPosition());
+        mainStagePresenter.updateTapeView(selectedConfiguration.getHeadPosition());
     }
 
     public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        mainStageController.updateStackView(selectedConfiguration.getStackContent());
+        mainStagePresenter.updateStackView(selectedConfiguration.getStackContent());
     }
 
 
@@ -278,13 +278,13 @@ public class SimulationController {
     }
 
     public void stepBack() {
-        ListView<TransitionModel> listView = stepRunSimulationView.getTransitionOptionsListView();
+        ListView<TransitionModel> listView = stepRunSimulationStage.getTransitionOptionsListView();
         if (stepRunSimulationModel.getCurrentConfig().getParentConfiguration() != null) {
             listView.getItems().clear();
             stepRunSimulationModel.previous();
             ConfigurationModel currentConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             for (ConfigurationModel currentConfigurationModelChild : currentConfigurationModel.getChildrenConfigurations()) {
-                stepRunSimulationView.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
             updateDiagramViewForSelectedConfiguration(currentConfigurationModel);
             updateTapeViewForSelectedConfiguration(currentConfigurationModel);
@@ -293,7 +293,7 @@ public class SimulationController {
     }
 
     public void stepForward() {
-        ListView<TransitionModel> listView = stepRunSimulationView.getTransitionOptionsListView();
+        ListView<TransitionModel> listView = stepRunSimulationStage.getTransitionOptionsListView();
         ObservableList<TransitionModel> selectedTransitionModelObservableList = listView.getSelectionModel().getSelectedItems();
         TransitionModel selectedTransitionModel = selectedTransitionModelObservableList.get(0);
 
@@ -319,7 +319,7 @@ public class SimulationController {
             newCurrentConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
 
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
-                stepRunSimulationView.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
             updateDiagramViewForSelectedConfiguration(newCurrentConfigurationModel);
             updateTapeViewForSelectedConfiguration(newCurrentConfigurationModel);

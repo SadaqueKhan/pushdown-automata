@@ -1,7 +1,7 @@
 package app.view;
 
 import app.listener.MainStageListener;
-import app.presenter.MainStageController;
+import app.presenter.MainStagePresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -15,9 +15,9 @@ import org.controlsfx.control.textfield.TextFields;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MainStageView extends BorderPane {
+public class MainStage extends BorderPane {
 
-    private final MainStageController mainStageController;
+    private final MainStagePresenter mainStagePresenter;
 
     private TextField inputTextField;
     AutoCompletionBinding<String> autoCompletionBinding;
@@ -29,21 +29,21 @@ public class MainStageView extends BorderPane {
     private ToggleButton toggleTransitionTableButton;
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
-    private TapeView tapeView;
+    private TapeScene tapeScene;
     private VBox containerForBotoomNodes;
     private MenuItem saveMenuItem;
     private MenuItem loadMenuItem;
     private CheckMenuItem acceptanceByFinalStateMenuItem;
     private CheckMenuItem acceptanceByEmptyStackMenuItem;
     private Label inputTextLabel;
-    private StackView stackView;
+    private StackScene stackScene;
     private VBox containerForRightNodes;
     private MenuItem helpGuidelItem;
     private CheckMenuItem simulationByQuickRunMenuItem;
     private CheckMenuItem simulationByStepRunMenuItem;
 
-    public MainStageView(MainStageController mainStageController) {
-        this.mainStageController = mainStageController;
+    public MainStage(MainStagePresenter mainStagePresenter) {
+        this.mainStagePresenter = mainStagePresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
@@ -117,30 +117,30 @@ public class MainStageView extends BorderPane {
 
         this.setCenter(containerForCenterNodes);
 
-        this.stackView = new StackView();
+        this.stackScene = new StackScene();
 
         this.containerForRightNodes = new VBox();
         containerForRightNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForRightNodes.setSpacing(5);
         containerForRightNodes.setStyle(cssLayout);
-        containerForRightNodes.getChildren().addAll(new Text("Stack"), stackView);
+        containerForRightNodes.getChildren().addAll(new Text("Stack"), stackScene);
 
         this.setRight(containerForRightNodes);
 
         //Setup bottom GUI elements
-        this.tapeView = new TapeView();
+        this.tapeScene = new TapeScene();
 
         this.containerForBotoomNodes = new VBox();
         containerForBotoomNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForBotoomNodes.setSpacing(5);
         containerForBotoomNodes.setStyle(cssLayout);
-        containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeView);
+        containerForBotoomNodes.getChildren().addAll(new Text("Tape"), tapeScene);
 
         this.setBottom(containerForBotoomNodes);
 
     }
     private void setUpUIListeners() {
-        MainStageListener mainStageListener = new MainStageListener(mainStageController);
+        MainStageListener mainStageListener = new MainStageListener(mainStagePresenter);
         inputTextField.setOnKeyPressed(mainStageListener);
         toggleDiagramButton.setOnAction(mainStageListener);
         toggleTransitionTableButton.setOnAction(mainStageListener);
@@ -174,12 +174,12 @@ public class MainStageView extends BorderPane {
     }
 
 
-    public TapeView getTapeView() {
-        return tapeView;
+    public TapeScene getTapeScene() {
+        return tapeScene;
     }
 
-    public StackView getStackView() {
-        return stackView;
+    public StackScene getStackScene() {
+        return stackScene;
     }
 
     public CheckMenuItem getAcceptanceByFinalStateMenuItem() {

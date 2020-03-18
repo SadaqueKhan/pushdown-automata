@@ -1,17 +1,17 @@
 package app.listener;
 
-import app.presenter.TransitionTableController;
+import app.presenter.TransitionTablePresenter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
 public class TransitionTableListener implements EventHandler {
 
-    private final TransitionTableController transitionTableController;
+    private final TransitionTablePresenter transitionTablePresenter;
 
-    public TransitionTableListener(TransitionTableController transitionTableController) {
+    public TransitionTableListener(TransitionTablePresenter transitionTablePresenter) {
 
-        this.transitionTableController = transitionTableController;
+        this.transitionTablePresenter = transitionTablePresenter;
 
     }
 
@@ -26,10 +26,10 @@ public class TransitionTableListener implements EventHandler {
             String tempIsButton = isButton.getText();
 
             if (tempIsButton.equals("Submit")) {
-                transitionTableController.addUserTransitionModelEntryToTransitionTable();
+                transitionTablePresenter.addUserTransitionModelEntryToTransitionTable();
             }
             if (tempIsButton.equals("Delete")) {
-                transitionTableController.deleteTransitionModelEntriesFromTransitionTable();
+                transitionTablePresenter.deleteTransitionModelEntriesFromTransitionTable();
             }
 
         }

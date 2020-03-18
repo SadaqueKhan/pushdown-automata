@@ -1,7 +1,7 @@
 package app.presenter;
 
 import app.model.MachineModel;
-import app.view.MainStageView;
+import app.view.MainStage;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,13 +27,13 @@ import java.net.URI;
 import java.util.ArrayList;
 
 
-public class MainStageController extends Application {
+public class MainStagePresenter extends Application {
 
     private MachineModel machineModel;
-    private MainStageView mainStageView;
+    private MainStage mainStage;
 
-    private TransitionTableController transitionTableController;
-    private DiagramController diagramController;
+    private TransitionTablePresenter transitionTablePresenter;
+    private DiagramPresenter diagramPresenter;
 
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
@@ -45,29 +45,29 @@ public class MainStageController extends Application {
     @Override
     public void start(Stage primaryWindow) throws Exception {
         this.machineModel = new MachineModel();
-        this.mainStageView = new MainStageView(this);
-        this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
-        this.diagramController = new DiagramController(mainStageView, this, machineModel);
+        this.mainStage = new MainStage(this);
+        this.transitionTablePresenter = new TransitionTablePresenter(mainStage, this, machineModel);
+        this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
 
-        diagramController.loadDiagramViewOntoStage(transitionTableController);
+        diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
 
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
-        this.primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+        this.primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
         this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
     }
 
     public void triggerDiagramView() {
-        mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        mainStageView.getInputTextField().setDisable(false);
-        diagramController.loadDiagramViewOntoStage(transitionTableController);
+        mainStage.getContainerForCenterNodes().getChildren().remove(1);
+        mainStage.getInputTextField().setDisable(false);
+        diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
     }
 
     public void triggerTransitionTableView() {
-        mainStageView.getContainerForCenterNodes().getChildren().remove(1);
-        mainStageView.getInputTextField().setDisable(true);
-        transitionTableController.loadTransitionTableOntoStage(diagramController);
+        mainStage.getContainerForCenterNodes().getChildren().remove(1);
+        mainStage.getInputTextField().setDisable(true);
+        transitionTablePresenter.loadTransitionTableOntoStage(diagramPresenter);
     }
 
     public void triggerSimulationView(String inputWord) {
@@ -78,29 +78,29 @@ public class MainStageController extends Application {
             invalidActionAlert.setTitle("Invalid Action");
             invalidActionAlert.show();
         } else {
-            if (mainStageView.getSimulationByQuickRunMenuItem().isSelected()) {
+            if (mainStage.getSimulationByQuickRunMenuItem().isSelected()) {
                 setUpTapeView(inputWord);
-                new SimulationController(this, machineModel, inputWord, mainStageView.getSimulationByQuickRunMenuItem().getText());
+                new SimulationPresenter(this, machineModel, inputWord, mainStage.getSimulationByQuickRunMenuItem().getText());
             }
-            if (mainStageView.getSimulationByStepRunMenuItem().isSelected()) {
+            if (mainStage.getSimulationByStepRunMenuItem().isSelected()) {
 
                 setUpTapeView(inputWord);
-                new SimulationController(this, machineModel, inputWord, mainStageView.getSimulationByStepRunMenuItem().getText());
+                new SimulationPresenter(this, machineModel, inputWord, mainStage.getSimulationByStepRunMenuItem().getText());
             }
         }
     }
 
     public void saveInputWord(String userInputWord) {
-        mainStageView.getInputWordSet().add(userInputWord);
-        if (mainStageView.getAutoCompletionBinding() != null) {
-            mainStageView.getAutoCompletionBinding().dispose();
+        mainStage.getInputWordSet().add(userInputWord);
+        if (mainStage.getAutoCompletionBinding() != null) {
+            mainStage.getAutoCompletionBinding().dispose();
         }
-        mainStageView.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStageView.getInputTextField(), mainStageView.getInputWordSet()));
+        mainStage.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStage.getInputTextField(), mainStage.getInputWordSet()));
     }
 
 
-    public DiagramController getDiagramController() {
-        return diagramController;
+    public DiagramPresenter getDiagramPresenter() {
+        return diagramPresenter;
     }
 
     public Stage getPrimaryWindow() {
@@ -142,18 +142,18 @@ public class MainStageController extends Application {
                 primaryWindow.close();
 
                 this.machineModel = machineModelLoaded;
-                this.mainStageView = new MainStageView(this);
+                this.mainStage = new MainStage(this);
 
-                this.transitionTableController = new TransitionTableController(mainStageView, this, machineModel);
-                transitionTableController.loadTransitionTableView();
+                this.transitionTablePresenter = new TransitionTablePresenter(mainStage, this, machineModel);
+                transitionTablePresenter.loadTransitionTableView();
 
-                this.diagramController = new DiagramController(mainStageView, this, machineModel);
-                diagramController.loadStatesOntoDiagram();
-                diagramController.loadTransitionsOntoDiagram();
-                diagramController.loadDiagramViewOntoStage(transitionTableController);
+                this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
+                diagramPresenter.loadStatesOntoDiagram();
+                diagramPresenter.loadTransitionsOntoDiagram();
+                diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
 
                 primaryWindow.setTitle("Pushdown Automata");
-                primaryWindow.setScene(new Scene(mainStageView, 1500, 1000));
+                primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
                 primaryWindow.setResizable(false);
                 primaryWindow.show();
             }
@@ -171,33 +171,33 @@ public class MainStageController extends Application {
     }
 
     public void setSimulationToQuickRun() {
-        mainStageView.getSimulationByQuickRunMenuItem().setSelected(true);
-        mainStageView.getSimulationByStepRunMenuItem().setSelected(false);
+        mainStage.getSimulationByQuickRunMenuItem().setSelected(true);
+        mainStage.getSimulationByStepRunMenuItem().setSelected(false);
     }
 
     public void setSimulationToStepRun() {
-        mainStageView.getSimulationByStepRunMenuItem().setSelected(true);
-        mainStageView.getSimulationByQuickRunMenuItem().setSelected(false);
+        mainStage.getSimulationByStepRunMenuItem().setSelected(true);
+        mainStage.getSimulationByQuickRunMenuItem().setSelected(false);
     }
 
     public void setAcceptanceCriteriaToFinalState() {
         machineModel.setAcceptanceByFinalState(true);
         machineModel.setAcceptanceByEmptyStack(false);
-        mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(true);
-        mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(false);
-        mainStageView.getInputTextLabel().setText("Input word (acceptance by final state)");
+        mainStage.getAcceptanceByFinalStateMenuItem().setSelected(true);
+        mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(false);
+        mainStage.getInputTextLabel().setText("Input word (acceptance by final state)");
     }
 
     public void setAcceptanceCriteriaToEmptyStack() {
         machineModel.setAcceptanceByFinalState(false);
         machineModel.setAcceptanceByEmptyStack(true);
-        mainStageView.getAcceptanceByFinalStateMenuItem().setSelected(false);
-        mainStageView.getAcceptanceByEmptyStackMenuItem().setSelected(true);
-        mainStageView.getInputTextLabel().setText("Input word (acceptance by empty stack)");
+        mainStage.getAcceptanceByFinalStateMenuItem().setSelected(false);
+        mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(true);
+        mainStage.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
 
     public void setUpTapeView(String inputWord) {
-        HBox tapeViewHBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
+        HBox tapeViewHBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
         tapeViewHBoxContainer.getChildren().clear();
 
         for (String inputSymbol : inputWord.split("")) {
@@ -230,7 +230,7 @@ public class MainStageController extends Application {
         if (headPointerStackPane != null) {
             headPointerStackPane.getChildren().get(2).setVisible(false);
         }
-        HBox tapeViewVBoxContainer = mainStageView.getTapeView().getTapeViewHBoxContainer();
+        HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
 
         if (!(headPosition == 0)) {
             this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
@@ -241,7 +241,7 @@ public class MainStageController extends Application {
 
 
     public void updateStackView(ArrayList<String> stackContent) {
-        VBox stackViewVBoxContainer = mainStageView.getStackView().getStackViewVBoxContainer();
+        VBox stackViewVBoxContainer = mainStage.getStackScene().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
         if (stackContent.isEmpty()) {
             Rectangle rectangle = new Rectangle();
@@ -275,7 +275,7 @@ public class MainStageController extends Application {
         }
     }
 
-    public MainStageView getMainStageView() {
-        return mainStageView;
+    public MainStage getMainStage() {
+        return mainStage;
     }
 }

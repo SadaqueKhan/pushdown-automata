@@ -1,8 +1,8 @@
 package app.listener;
 
-import app.presenter.DiagramController;
-import app.view.DiagramView;
-import app.view.StateView;
+import app.presenter.DiagramPresenter;
+import app.view.DiagramScene;
+import app.view.StateNode;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -15,10 +15,10 @@ import javafx.scene.text.Text;
 
 public class DiagramListener implements EventHandler {
 
-    private final DiagramController diagramController;
+    private final DiagramPresenter diagramPresenter;
 
-    public DiagramListener(DiagramController diagramController) {
-        this.diagramController = diagramController;
+    public DiagramListener(DiagramPresenter diagramPresenter) {
+        this.diagramPresenter = diagramPresenter;
     }
 
     @Override
@@ -37,35 +37,35 @@ public class DiagramListener implements EventHandler {
         double yPositionOfMouse = mouseEvent.getScreenY();
 
 
-        if (picked instanceof DiagramView) {
-            if (event.getSource() instanceof DiagramView) {
+        if (picked instanceof DiagramScene) {
+            if (event.getSource() instanceof DiagramScene) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     //Add the state to diagram
                     double X = mouseEvent.getX(); // remove pane's coordinate system here
                     double Y = mouseEvent.getY(); // remove pane's coordinate system here
-                    diagramController.addStateViewOntoDiagramViewDynamicRender(X, Y);
+                    diagramPresenter.addStateViewOntoDiagramViewDynamicRender(X, Y);
                 }
             }
         }
 
         if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
-            if (event.getSource() instanceof StateView) {
-                StateView stateView = (StateView) event.getSource();
+            if (event.getSource() instanceof StateNode) {
+                StateNode stateNode = (StateNode) event.getSource();
                 //       String eventType = event.getEventType().toString();
                 if (eventType.equals("MOUSE_PRESSED")) {
-                    diagramController.stateViewOnMousePressed(stateView, xPositionOfMouse, yPositionOfMouse);
+                    diagramPresenter.stateViewOnMousePressed(stateNode, xPositionOfMouse, yPositionOfMouse);
                     // Popup dialog
                     if (mouseEvent.isPopupTrigger()) {
-                        diagramController.stateViewContextMenuPopUp(stateView);
+                        diagramPresenter.stateViewContextMenuPopUp(stateNode);
                     }
                 }
 
                 if (eventType.equals("MOUSE_DRAGGED")) {
-                    diagramController.stateViewOnMouseDragged(stateView, xPositionOfMouse, yPositionOfMouse);
+                    diagramPresenter.stateViewOnMouseDragged(stateNode, xPositionOfMouse, yPositionOfMouse);
                 }
 
                 if (eventType.equals("MOUSE_RELEASED")) {
-                    diagramController.stateViewOnMouseReleased(stateView);
+                    diagramPresenter.stateViewOnMouseReleased(stateNode);
                 }
             }
         }

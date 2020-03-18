@@ -3,7 +3,7 @@ package app.presenter;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.view.MainStageView;
+import app.view.MainStage;
 import app.view.TransitionTableView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -12,27 +12,27 @@ import javafx.scene.control.ButtonType;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class TransitionTableController {
+public class TransitionTablePresenter {
 
     private final MachineModel machineModel;
-    private final MainStageView mainStageView;
-    private final MainStageController mainStageController;
+    private final MainStage mainStage;
+    private final MainStagePresenter mainStagePresenter;
 
-    private DiagramController diagramController;
+    private DiagramPresenter diagramPresenter;
 
     private TransitionTableView transitionTableView;
 
-    public TransitionTableController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
+    public TransitionTablePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.machineModel = machineModel;
-        this.mainStageController = mainStageController;
-        this.mainStageView = mainStageView;
+        this.mainStagePresenter = mainStagePresenter;
+        this.mainStage = mainStage;
 
-        this.transitionTableView = new TransitionTableView(mainStageView, this);
+        this.transitionTableView = new TransitionTableView(mainStage, this);
     }
 
-    public void loadTransitionTableOntoStage(DiagramController diagramController) {
-        this.diagramController = diagramController;
-        mainStageView.getContainerForCenterNodes().getChildren().add(transitionTableView.getTransitionTableContainer());
+    public void loadTransitionTableOntoStage(DiagramPresenter diagramPresenter) {
+        this.diagramPresenter = diagramPresenter;
+        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableView.getTransitionTableContainer());
     }
 
     public void loadTransitionTableView() {
@@ -80,7 +80,7 @@ public class TransitionTableController {
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramController.addStateViewOntoDiagramView(currentStateModel);
+            diagramPresenter.addStateViewOntoDiagramView(currentStateModel);
         }
 
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
@@ -88,7 +88,7 @@ public class TransitionTableController {
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramController.addStateViewOntoDiagramView(resultingStateModel);
+            diagramPresenter.addStateViewOntoDiagramView(resultingStateModel);
         }
 
         //Create transition model placeholder
@@ -118,9 +118,9 @@ public class TransitionTableController {
 
         //Add transitionview onto diagram view
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
-            diagramController.addReflexiveTransitionToDiagramView(newTransitionModel);
+            diagramPresenter.addReflexiveTransitionToDiagramView(newTransitionModel);
         } else {
-            diagramController.addDirectionalTransitionToView(newTransitionModel);
+            diagramPresenter.addDirectionalTransitionToView(newTransitionModel);
         }
     }
 
@@ -147,7 +147,7 @@ public class TransitionTableController {
         transitionTableView.getTransitionTable().getItems().removeAll(removeTransitionSet);
 
         //Update diagram view
-        diagramController.deleteTransitionView(removeTransitionSet);
+        diagramPresenter.deleteTransitionView(removeTransitionSet);
     }
 
     public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {

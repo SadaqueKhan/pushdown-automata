@@ -2,22 +2,22 @@ package app.view;
 
 import app.listener.StepRunSimulationListener;
 import app.model.TransitionModel;
-import app.presenter.SimulationController;
+import app.presenter.SimulationPresenter;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class StepRunSimulationView extends BorderPane {
+public class StepRunSimulationStage extends BorderPane {
 
     //Reference to simulation controller
-    private final SimulationController simulationController;
+    private final SimulationPresenter simulationPresenter;
     private ListView<TransitionModel> transitionOptionsListView;
     private Button backButton;
     private Button forwardButton;
 
-    public StepRunSimulationView(SimulationController simulationController) {
-        this.simulationController = simulationController;
+    public StepRunSimulationStage(SimulationPresenter simulationPresenter) {
+        this.simulationPresenter = simulationPresenter;
         setUpUIComponents();
         setUpStepUIListeners();
     }
@@ -34,7 +34,7 @@ public class StepRunSimulationView extends BorderPane {
     }
 
     private void setUpStepUIListeners() {
-        StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationController);
+        StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationPresenter);
         backButton.setOnAction(stepRunSimulationListener);
         forwardButton.setOnAction(stepRunSimulationListener);
     }

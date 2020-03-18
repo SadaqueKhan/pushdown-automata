@@ -1,15 +1,15 @@
 package app.listener;
 
-import app.presenter.SimulationController;
+import app.presenter.SimulationPresenter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
 public class StepRunSimulationListener implements EventHandler {
-    private final SimulationController simulationController;
+    private final SimulationPresenter simulationPresenter;
 
-    public StepRunSimulationListener(SimulationController simulationController) {
-        this.simulationController = simulationController;
+    public StepRunSimulationListener(SimulationPresenter simulationPresenter) {
+        this.simulationPresenter = simulationPresenter;
     }
 
     @Override
@@ -19,11 +19,11 @@ public class StepRunSimulationListener implements EventHandler {
         String buttonText = isButton.getText();
 
         if (buttonText.equals("Back")) {
-            simulationController.stepBack();
+            simulationPresenter.stepBack();
         }
 
         if (buttonText.equals("Forward")) {
-            simulationController.stepForward();
+            simulationPresenter.stepForward();
         }
     }
 }

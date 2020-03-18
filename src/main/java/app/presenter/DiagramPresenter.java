@@ -4,9 +4,9 @@ import app.model.ConfigurationModel;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.view.DiagramView;
-import app.view.MainStageView;
-import app.view.StateView;
+import app.view.DiagramScene;
+import app.view.MainStage;
+import app.view.StateNode;
 import app.view.TransitionView;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -30,15 +30,13 @@ import org.controlsfx.control.PopOver;
 
 import java.util.*;
 
-public class DiagramController {
+public class DiagramPresenter {
 
-    private final MainStageView mainStageView;
-    private final MainStageController mainStageController;
+    private final MainStage mainStage;
+    private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
-
-    private TransitionTableController transitionTableController;
-
-    private final DiagramView diagramView;
+    private final DiagramScene diagramScene;
+    private TransitionTablePresenter transitionTablePresenter;
 
     // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
     private double layoutX;
@@ -47,41 +45,41 @@ public class DiagramController {
     private double sceneY;
 
     private TransitionModel transitionModelHighlighted;
-    private StateView startStateView;
+    private StateNode startStateNode;
 
-    private Map<StateModel, StateView> stateMap;
-    private Map<StateView, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
+    private Map<StateModel, StateNode> stateMap;
+    private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     private LinkedHashMap<TransitionView, PopOver> popOvers;
 
 
-    public DiagramController(MainStageView mainStageView, MainStageController mainStageController, MachineModel machineModel) {
-        this.mainStageController = mainStageController;
-        this.mainStageView = mainStageView;
+    public DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+        this.mainStagePresenter = mainStagePresenter;
+        this.mainStage = mainStage;
         this.machineModel = machineModel;
-        this.diagramView = new DiagramView(this);
+        this.diagramScene = new DiagramScene(this);
 
         this.stateMap = new HashMap<>();
         this.linkedTransitionViewsMap = new HashMap<>();
     }
 
 
-    public void loadDiagramViewOntoStage(TransitionTableController transitionTableController) {
-        this.transitionTableController = transitionTableController;
-        this.mainStageView.getContainerForCenterNodes().getChildren().add(diagramView);
+    public void loadDiagramViewOntoStage(TransitionTablePresenter transitionTablePresenter) {
+        this.transitionTablePresenter = transitionTablePresenter;
+        this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
 
 
     public void loadStatesOntoDiagram() {
-        StateView stateViewToLoad;
+        StateNode stateNodeToLoad;
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             addStateViewOntoDiagramView(stateModelToLoad);
-            stateViewToLoad = stateMap.get(stateModelToLoad);
+            stateNodeToLoad = stateMap.get(stateModelToLoad);
             if (stateModelToLoad.isStartState()) {
-                stateViewToLoad.getStartStatePointLine1().setVisible(stateModelToLoad.isStartState());
-                stateViewToLoad.getStartStatePointLine2().setVisible(stateModelToLoad.isStartState());
+                stateNodeToLoad.getStartStatePointLine1().setVisible(stateModelToLoad.isStartState());
+                stateNodeToLoad.getStartStatePointLine2().setVisible(stateModelToLoad.isStartState());
             }
             if (stateModelToLoad.isFinalState()) {
-                stateViewToLoad.getFinalStateArc().setVisible(stateModelToLoad.isFinalState());
+                stateNodeToLoad.getFinalStateArc().setVisible(stateModelToLoad.isFinalState());
             }
         }
     }
@@ -100,11 +98,11 @@ public class DiagramController {
     }
 
     public void addStateViewOntoDiagramView(StateModel newStateModel) {
-        StateView stateView = new StateView(newStateModel.getStateId(), this);
-        stateView.relocate(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram());
-        diagramView.getChildren().add(stateView);
-        stateMap.put(newStateModel, stateView);
-        linkedTransitionViewsMap.put(stateView, new HashSet<>());
+        StateNode stateNode = new StateNode(newStateModel.getStateId(), this);
+        stateNode.relocate(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram());
+        diagramScene.getChildren().add(stateNode);
+        stateMap.put(newStateModel, stateNode);
+        linkedTransitionViewsMap.put(stateNode, new HashSet<>());
     }
 
 
@@ -129,23 +127,23 @@ public class DiagramController {
         newStateModel.setyCoordinateOnDiagram(yCoordinateOnDiagram);
         machineModel.addStateModelToStateModelSet(newStateModel);
         addStateViewOntoDiagramView(newStateModel);
-        transitionTableController.updateAvailableStateListForCombobox();
+        transitionTablePresenter.updateAvailableStateListForCombobox();
     }
 
 
     public void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
 
         //Get state from map using state ID
-        StateView currentStateView = stateMap.get(newTransitionModel.getCurrentStateModel());
-        StateView resultingStateView = stateMap.get(newTransitionModel.getResultingStateModel());
+        StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
+        StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
 
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
 
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToCheck = (TransitionView) node;
-                    if (transitionViewToCheck.getSource() == currentStateView && transitionViewToCheck.getTarget() == resultingStateView) {
+                    if (transitionViewToCheck.getSource() == currentStateNode && transitionViewToCheck.getTarget() == resultingStateNode) {
                         VBox newTransitionListVBox = transitionViewToCheck.getTransitionListVBox();
                         newTransitionListVBox.getChildren().clear();
                         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
@@ -159,22 +157,22 @@ public class DiagramController {
         }
 
         //Transition does not exist create fresh transition
-        diagramView.getChildren().remove(currentStateView);
-        diagramView.getChildren().remove(resultingStateView);
+        diagramScene.getChildren().remove(currentStateNode);
+        diagramScene.getChildren().remove(resultingStateNode);
 
         Line virtualCenterLine = new Line();
-        virtualCenterLine.startXProperty().bind(currentStateView.layoutXProperty().add(currentStateView.translateXProperty()).add(currentStateView.widthProperty().divide(2)));
-        virtualCenterLine.startYProperty().bind(currentStateView.layoutYProperty().add(currentStateView.translateYProperty()).add(currentStateView.heightProperty().divide(2)));
-        virtualCenterLine.endXProperty().bind(resultingStateView.layoutXProperty().add(resultingStateView.translateXProperty()).add(resultingStateView.widthProperty().divide(2)));
-        virtualCenterLine.endYProperty().bind(resultingStateView.layoutYProperty().add(resultingStateView.translateYProperty()).add(resultingStateView.heightProperty().divide(2)));
+        virtualCenterLine.startXProperty().bind(currentStateNode.layoutXProperty().add(currentStateNode.translateXProperty()).add(currentStateNode.widthProperty().divide(2)));
+        virtualCenterLine.startYProperty().bind(currentStateNode.layoutYProperty().add(currentStateNode.translateYProperty()).add(currentStateNode.heightProperty().divide(2)));
+        virtualCenterLine.endXProperty().bind(resultingStateNode.layoutXProperty().add(resultingStateNode.translateXProperty()).add(resultingStateNode.widthProperty().divide(2)));
+        virtualCenterLine.endYProperty().bind(resultingStateNode.layoutYProperty().add(resultingStateNode.translateYProperty()).add(resultingStateNode.heightProperty().divide(2)));
         virtualCenterLine.setOpacity(0);
 
-        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateView, resultingStateView);
+        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateNode, resultingStateNode);
         centerLineArrowAB.setOpacity(0);
-        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateView, resultingStateView);
+        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
         centerLineArrowBA.setOpacity(0);
 
-        TransitionView transitionView = new TransitionView(currentStateView, resultingStateView);
+        TransitionView transitionView = new TransitionView(currentStateNode, resultingStateNode);
         transitionView.setStroke(Color.BLACK);
         transitionView.setStrokeWidth(2);
 
@@ -271,7 +269,7 @@ public class DiagramController {
         virtualCenterLine.endYProperty().addListener(listener);
 
 
-        StackPane arrowTip = createArrowTip(true, transitionView, currentStateView, resultingStateView);
+        StackPane arrowTip = createArrowTip(true, transitionView, currentStateNode, resultingStateNode);
         arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
 
         HashSet<Node> setOfNode = new HashSet<>();
@@ -280,10 +278,10 @@ public class DiagramController {
         setOfNode.add(centerLineArrowBA);
         setOfNode.add(transitionView);
         setOfNode.add(arrowTip);
-        linkedTransitionViewsMap.get(currentStateView).add(setOfNode);
+        linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
 
-        diagramView.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, transitionView.getTransitionListVBox());
-        diagramView.getChildren().addAll(currentStateView, resultingStateView);
+        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, transitionView.getTransitionListVBox());
+        diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
 
     }
 
@@ -358,7 +356,7 @@ public class DiagramController {
 
 
     public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
-        StateView sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
+        StateNode sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
 
         if (sourceCell.getListOfTransitionsVBox() == null) {
             VBox newListOfTransitionsVBox = new VBox();
@@ -423,7 +421,7 @@ public class DiagramController {
             });
 
             sourceCell.setListOfTransitionsVBox(newListOfTransitionsVBox);
-            diagramView.getChildren().add(sourceCell.getListOfTransitionsVBox());
+            diagramScene.getChildren().add(sourceCell.getListOfTransitionsVBox());
         }
 
         sourceCell.getListOfTransitionsVBox().getChildren().clear();
@@ -440,33 +438,33 @@ public class DiagramController {
 
     public void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel> exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
         //Retrieve stateview to be deleted
-        StateView stateViewToRemove = stateMap.get(stateModelToDelete);
+        StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
         //Retrieve and remove linked transitionviews to stateview
         deleteTransitionView(exitingTransitionModelsSetToDelete);
         deleteTransitionView(enteringTransitionModelsSetToDelete);
 
         // Remove mapping of stateview in data structures
         stateMap.remove(stateModelToDelete);
-        linkedTransitionViewsMap.remove(stateViewToRemove);
+        linkedTransitionViewsMap.remove(stateNodeToRemove);
 
         //Remove the stateview from the diagramview
-        diagramView.getChildren().remove(stateViewToRemove);
+        diagramScene.getChildren().remove(stateNodeToRemove);
     }
 
 
     public void deleteTransitionView(HashSet<TransitionModel> deletedTransitionModelsSet) {
 
         HashSet<HashSet<Node>> transitionViewNodesToRemoveSet = new HashSet<>();
-        HashSet<StateView> stateViewsWithTransitionToRemoveSet = new HashSet<>();
+        HashSet<StateNode> stateViewsWithTransitionToRemoveSet = new HashSet<>();
 
         for (TransitionModel deletedTransition : deletedTransitionModelsSet) {
             String currentStateModelID = deletedTransition.getCurrentStateModel().getStateId();
             String resultingStateModelID = deletedTransition.getResultingStateModel().getStateId();
-            StateView currentStateView = stateMap.get(deletedTransition.getCurrentStateModel());
+            StateNode currentStateNode = stateMap.get(deletedTransition.getCurrentStateModel());
 
             //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
-                VBox listOfTransitionsVBox = currentStateView.getListOfTransitionsVBox();
+                VBox listOfTransitionsVBox = currentStateNode.getListOfTransitionsVBox();
                 Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
                 while (iter.hasNext()) {
                     Label labelToRemove = (Label) iter.next();
@@ -475,13 +473,13 @@ public class DiagramController {
                     }
                 }
                 if (listOfTransitionsVBox.getChildren().isEmpty()) {
-                    currentStateView.getReflexiveArrowShaftArc().setVisible(false);
-                    currentStateView.getReflexiveArrowTipPolygon().setVisible(false);
-                    diagramView.getChildren().remove(listOfTransitionsVBox);
+                    currentStateNode.getReflexiveArrowShaftArc().setVisible(false);
+                    currentStateNode.getReflexiveArrowTipPolygon().setVisible(false);
+                    diagramScene.getChildren().remove(listOfTransitionsVBox);
                 }
             } else {
                 //Find bi-directional transition view
-                HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+                HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
 
                 for (HashSet<Node> nextHashSet : linkedTransitionViews) {
                     for (Node node : nextHashSet) {
@@ -490,7 +488,7 @@ public class DiagramController {
                             if (transitionViewToUpdate.getSource().getStateID().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateID().equals(resultingStateModelID)) {
                                 if (getRelatedTransitions(deletedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
-                                    stateViewsWithTransitionToRemoveSet.add(currentStateView);
+                                    stateViewsWithTransitionToRemoveSet.add(currentStateNode);
                                 }
                                 for (TransitionModel transitionModel : getRelatedTransitions(deletedTransition)) {
                                     transitionViewToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
@@ -503,9 +501,9 @@ public class DiagramController {
         }
         if (!(transitionViewNodesToRemoveSet.isEmpty())) {
             // Get affect key i.e. ControlState view to access map
-            for (StateView stateView : stateViewsWithTransitionToRemoveSet) {
+            for (StateNode stateNode : stateViewsWithTransitionToRemoveSet) {
                 // Retrieve all transitionview linked to stateview
-                Iterator<HashSet<Node>> iter = linkedTransitionViewsMap.get(stateView).iterator();
+                Iterator<HashSet<Node>> iter = linkedTransitionViewsMap.get(stateNode).iterator();
                 while (iter.hasNext()) {
                     HashSet<Node> nextHashSet = iter.next();
                     for (HashSet<Node> nodeSetToRemove : transitionViewNodesToRemoveSet) {
@@ -515,9 +513,9 @@ public class DiagramController {
 
                                 if (node instanceof TransitionView) {
                                     TransitionView isTransitionView = (TransitionView) node;
-                                    diagramView.getChildren().remove(isTransitionView.getTransitionListVBox());
+                                    diagramScene.getChildren().remove(isTransitionView.getTransitionListVBox());
                                 }
-                                diagramView.getChildren().remove(node);
+                                diagramScene.getChildren().remove(node);
 
                             }
                             iter.remove();
@@ -529,68 +527,68 @@ public class DiagramController {
     }
 
     //StateGUIEventResponses
-    public void stateViewOnMousePressed(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
+    public void stateViewOnMousePressed(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
         sceneX = xPositionOfMouse;
         sceneY = yPositionOfMouse;
-        layoutX = stateView.getLayoutX();
-        layoutY = stateView.getLayoutY();
+        layoutX = stateNode.getLayoutX();
+        layoutY = stateNode.getLayoutY();
     }
 
-    public void stateViewOnMouseDragged(StateView stateView, double xPositionOfMouse, double yPositionOfMouse) {
+    public void stateViewOnMouseDragged(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
         // Offset of drag
         double offsetX = xPositionOfMouse - sceneX;
         double offsetY = yPositionOfMouse - sceneY;
 
         // Taking parent bounds
-        Bounds parentBounds = stateView.getParent().getLayoutBounds();
+        Bounds parentBounds = stateNode.getParent().getLayoutBounds();
 
         // Drag node bounds
-        double currPaneLayoutX = stateView.getLayoutX();
-        double currPaneWidth = stateView.getWidth();
-        double currPaneLayoutY = stateView.getLayoutY();
-        double currPaneHeight = stateView.getHeight();
+        double currPaneLayoutX = stateNode.getLayoutX();
+        double currPaneWidth = stateNode.getWidth();
+        double currPaneLayoutY = stateNode.getLayoutY();
+        double currPaneHeight = stateNode.getHeight();
 
         if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
             // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-            stateView.setTranslateX(offsetX);
+            stateNode.setTranslateX(offsetX);
 
         } else if (currPaneLayoutX + offsetX < 0) {
             // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
             // which makes the final layout position to 0 in mouse released event.
-            stateView.setTranslateX(-currPaneLayoutX);
+            stateNode.setTranslateX(-currPaneLayoutX);
         } else {
             // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-            stateView.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            stateNode.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
         }
 
         if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-            stateView.setTranslateY(offsetY);
+            stateNode.setTranslateY(offsetY);
         } else if (currPaneLayoutY + offsetY < 0) {
-            stateView.setTranslateY(-currPaneLayoutY);
+            stateNode.setTranslateY(-currPaneLayoutY);
         } else {
-            stateView.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            stateNode.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
         }
     }
 
-    public void stateViewOnMouseReleased(StateView stateView) {
+    public void stateViewOnMouseReleased(StateNode stateNode) {
         // Updating the new layout positions
-        stateView.setLayoutX(layoutX + stateView.getTranslateX());
-        stateView.setLayoutY(layoutY + stateView.getTranslateY());
+        stateNode.setLayoutX(layoutX + stateNode.getTranslateX());
+        stateNode.setLayoutY(layoutY + stateNode.getTranslateY());
 
         // Updating state model coordinates
-        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateView.getStateID());
-        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateView.getTranslateX());
-        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateView.getTranslateY());
+        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
+        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
+        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
 
         // Resetting the translate positions
-        stateView.setTranslateX(0);
-        stateView.setTranslateY(0);
+        stateNode.setTranslateX(0);
+        stateNode.setTranslateY(0);
     }
 
 
-    public void stateViewContextMenuPopUp(StateView stateView) {
+    public void stateViewContextMenuPopUp(StateNode stateNode) {
 
-        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateView.getStateID());
+        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
 
         //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
@@ -604,16 +602,16 @@ public class DiagramController {
             stateModelSelected.setStartState(false);
             stateModelSelected.setFinalState(false);
 
-            stateView.getStartStatePointLine1().setVisible(false);
-            stateView.getStartStatePointLine2().setVisible(false);
-            stateView.getFinalStateArc().setVisible(false);
+            stateNode.getStartStatePointLine1().setVisible(false);
+            stateNode.getStartStatePointLine2().setVisible(false);
+            stateNode.getFinalStateArc().setVisible(false);
         });
 
         toggleStartStateItem.setOnAction(e -> {
             if (stateModelSelected.isStartState()) {
                 stateModelSelected.setStartState(false);
-                stateView.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
-                stateView.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
+                stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
             } else {
                 if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
                     Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -623,18 +621,18 @@ public class DiagramController {
                     invalidActionAlert.show();
                 } else {
                     stateModelSelected.setStartState(true);
-                    stateView.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
-                    stateView.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
+                    stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                    stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
                 }
             }
         });
         toggleFinalStateItem.setOnAction(e -> {
             if (stateModelSelected.isFinalState()) {
                 stateModelSelected.setFinalState(false);
-                stateView.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
+                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
             } else {
                 stateModelSelected.setFinalState(true);
-                stateView.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
+                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
             }
         });
 
@@ -712,7 +710,7 @@ public class DiagramController {
             Scene scene = new Scene(gridPane, 800, 150);
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(mainStageController.getPrimaryWindow());
+            stage.initOwner(mainStagePresenter.getPrimaryWindow());
             stage.setResizable(false);
             stage.setTitle("Create Transition");
             stage.setScene(scene);
@@ -749,7 +747,7 @@ public class DiagramController {
                     resultingStateModel = new StateModel(userEntryResultingState);
                     machineModel.addStateModelToStateModelSet(resultingStateModel);
                     this.addStateViewOntoDiagramView(resultingStateModel);
-                    transitionTableController.updateAvailableStateListForCombobox();
+                    transitionTablePresenter.updateAvailableStateListForCombobox();
                 }
 
                 //Create transition model placeholder
@@ -772,7 +770,7 @@ public class DiagramController {
                 machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
                 //Update table view
-                transitionTableController.addTransitionModelEntryToTransitionTable(newTransitionModel);
+                transitionTablePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
 
                 //Add transitionview onto diagram view
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
@@ -795,7 +793,7 @@ public class DiagramController {
             machineModel.removeStateModelFromStateModelSet(stateModelSelected);
 
             //Notify transition table controller
-            transitionTableController.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            transitionTablePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
             //Update view
 
             //Update view
@@ -808,7 +806,7 @@ public class DiagramController {
         contextMenu.getItems().add(createTransitionItem);
         contextMenu.getItems().add(deleteStateItem);
 
-        contextMenu.show(stateView, Side.RIGHT, 5, 5);
+        contextMenu.show(stateNode, Side.RIGHT, 5, 5);
 
     }
 
@@ -832,31 +830,31 @@ public class DiagramController {
         TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
 
         if (transitionModelToHighlight == null) {
-            this.startStateView = stateMap.get(selectedConfiguration.getCurrentStateModel());
-            startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+            this.startStateNode = stateMap.get(selectedConfiguration.getCurrentStateModel());
+            startStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
             if (transitionModelHighlighted != null) {
                 removeHighlightedTransitionView();
                 //TODO: FIX THIS LOGIC CURRENT IMP IS QUICK FIX
-                startStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+                startStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
             }
         } else {
-            if (startStateView != null) {
-                startStateView.getStateCircle().setStroke(Color.BLACK);
+            if (startStateNode != null) {
+                startStateNode.getStateCircle().setStroke(Color.BLACK);
             }
             if (transitionModelHighlighted != null) {
                 removeHighlightedTransitionView();
             }
             transitionModelHighlighted = transitionModelToHighlight;
 
-            StateView currentStateView = stateMap.get(transitionModelToHighlight.getCurrentStateModel());
-            StateView resultingStateView = stateMap.get(transitionModelToHighlight.getResultingStateModel());
-            currentStateView.getStateCircle().setStroke(Color.LAWNGREEN);
-            resultingStateView.getStateCircle().setStroke(Color.LAWNGREEN);
+            StateNode currentStateNode = stateMap.get(transitionModelToHighlight.getCurrentStateModel());
+            StateNode resultingStateNode = stateMap.get(transitionModelToHighlight.getResultingStateModel());
+            currentStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
+            resultingStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
 
             if (transitionModelToHighlight.getCurrentStateModel().equals(transitionModelToHighlight.getResultingStateModel())) {
-                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
-                currentStateView.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
-                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
+                currentStateNode.getReflexiveArrowShaftArc().setStroke(Color.LAWNGREEN);
+                currentStateNode.getReflexiveArrowTipPolygon().setFill(Color.LAWNGREEN);
+                currentStateNode.getReflexiveArrowTipPolygon().setStroke(Color.LAWNGREEN);
             } else {
                 HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHighlight);
 
@@ -878,18 +876,18 @@ public class DiagramController {
     public void removeHighlightedTransitionView() {
 
         if (transitionModelHighlighted != null) {
-            StateView currentStateView = stateMap.get(transitionModelHighlighted.getCurrentStateModel());
-            StateView resultingStateView = stateMap.get(transitionModelHighlighted.getResultingStateModel());
-            currentStateView.getStateCircle().setStroke(Color.BLACK);
+            StateNode currentStateNode = stateMap.get(transitionModelHighlighted.getCurrentStateModel());
+            StateNode resultingStateNode = stateMap.get(transitionModelHighlighted.getResultingStateModel());
+            currentStateNode.getStateCircle().setStroke(Color.BLACK);
 
             //TODO: Figure out why you have to null check for this
-            if (resultingStateView != null) {
-                resultingStateView.getStateCircle().setStroke(Color.BLACK);
+            if (resultingStateNode != null) {
+                resultingStateNode.getStateCircle().setStroke(Color.BLACK);
             }
             if (transitionModelHighlighted.getCurrentStateModel().equals(transitionModelHighlighted.getResultingStateModel())) {
-                currentStateView.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
-                currentStateView.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
-                currentStateView.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
+                currentStateNode.getReflexiveArrowShaftArc().setStroke(Color.BLACK);
+                currentStateNode.getReflexiveArrowTipPolygon().setFill(Color.BLACK);
+                currentStateNode.getReflexiveArrowTipPolygon().setStroke(Color.BLACK);
             } else {
                 HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelHighlighted);
 
@@ -909,17 +907,17 @@ public class DiagramController {
 
     private HashSet<Node> retrieveDirectionalTransitionView(TransitionModel transitionModel) {
 
-        StateView currentStateView = stateMap.get(transitionModel.getCurrentStateModel());
-        StateView resultingStateView = stateMap.get(transitionModel.getResultingStateModel());
+        StateNode currentStateNode = stateMap.get(transitionModel.getCurrentStateModel());
+        StateNode resultingStateNode = stateMap.get(transitionModel.getResultingStateModel());
 
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateView);
+        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
         HashSet<Node> TransitionViewSet = new HashSet<>();
 
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionView) {
                     TransitionView transitionViewToUpdate = (TransitionView) node;
-                    if (transitionViewToUpdate.getTarget().getStateID().equals(resultingStateView.getStateID())) {
+                    if (transitionViewToUpdate.getTarget().getStateID().equals(resultingStateNode.getStateID())) {
                         TransitionViewSet.add(transitionViewToUpdate);
                     }
                 } else if (node instanceof StackPane) {
@@ -927,7 +925,7 @@ public class DiagramController {
                     if (arrowTipStackPaneToUpdate.getId() == null) {
                         continue;
                     }
-                    if (arrowTipStackPaneToUpdate.getId().equals(resultingStateView.getStateID())) {
+                    if (arrowTipStackPaneToUpdate.getId().equals(resultingStateNode.getStateID())) {
                         TransitionViewSet.add(arrowTipStackPaneToUpdate);
                     }
                 }

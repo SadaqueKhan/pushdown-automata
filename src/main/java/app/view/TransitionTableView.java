@@ -2,7 +2,7 @@ package app.view;
 
 import app.listener.TransitionTableListener;
 import app.model.TransitionModel;
-import app.presenter.TransitionTableController;
+import app.presenter.TransitionTablePresenter;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,9 +15,9 @@ import javafx.scene.layout.VBox;
 
 public class TransitionTableView extends BorderPane {
 
-    private final MainStageView mainStageView;
+    private final MainStage mainStage;
 
-    private final TransitionTableController transitionTableController;
+    private final TransitionTablePresenter transitionTablePresenter;
 
     // Transition Table GUI
     private TableView<TransitionModel> transitionTable;
@@ -47,9 +47,9 @@ public class TransitionTableView extends BorderPane {
     private Button deleteTransitionButton;
     private VBox transitionTableContainer;
 
-    public TransitionTableView(MainStageView mainStageView, TransitionTableController transitionTableController) {
-        this.transitionTableController = transitionTableController;
-        this.mainStageView = mainStageView;
+    public TransitionTableView(MainStage mainStage, TransitionTablePresenter transitionTablePresenter) {
+        this.transitionTablePresenter = transitionTablePresenter;
+        this.mainStage = mainStage;
 
         setUpUIComponents();
         setUpUIListeners();
@@ -180,7 +180,7 @@ public class TransitionTableView extends BorderPane {
 
     private void setUpUIListeners() {
         //Create listener for this view
-        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableController);
+        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTablePresenter);
         //Set a listener that is triggered when the submit button is clicked
         submitTransitionButton.setOnAction(transitionTableListener);
         deleteTransitionButton.setOnAction(transitionTableListener);

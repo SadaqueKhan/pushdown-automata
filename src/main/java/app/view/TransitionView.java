@@ -6,11 +6,11 @@ import javafx.scene.shape.Line;
 
 public class TransitionView extends Line {
 
-    private StateView source;
-    private StateView target;
+    private StateNode source;
+    private StateNode target;
     private VBox transitionListVBox;
 
-    public TransitionView(StateView source, StateView target) {
+    public TransitionView(StateNode source, StateNode target) {
         this.source = source;
         this.target = target;
         setUpUIComponents();
@@ -25,12 +25,12 @@ public class TransitionView extends Line {
     }
 
 
-    public StateView getSource() {
+    public StateNode getSource() {
         return source;
     }
 
 
-    public StateView getTarget() {
+    public StateNode getTarget() {
         return target;
     }
 

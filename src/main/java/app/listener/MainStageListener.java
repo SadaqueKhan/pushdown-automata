@@ -1,7 +1,7 @@
 package app.listener;
 
 
-import app.presenter.MainStageController;
+import app.presenter.MainStagePresenter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
@@ -14,11 +14,11 @@ import javafx.scene.input.KeyEvent;
 public class MainStageListener implements EventHandler {
 
 
-    private final MainStageController mainStageController;
+    private final MainStagePresenter mainStagePresenter;
 
 
-    public MainStageListener(MainStageController mainStageController) {
-        this.mainStageController = mainStageController;
+    public MainStageListener(MainStagePresenter mainStagePresenter) {
+        this.mainStagePresenter = mainStagePresenter;
     }
 
 
@@ -31,8 +31,8 @@ public class MainStageListener implements EventHandler {
             TextField isInputTextField = (TextField) event.getSource();
             KeyEvent keyEvent = (KeyEvent) event;
             if (keyEvent.getCode() == KeyCode.ENTER) {
-                mainStageController.saveInputWord(isInputTextField.getText());
-                mainStageController.triggerSimulationView(isInputTextField.getText());
+                mainStagePresenter.saveInputWord(isInputTextField.getText());
+                mainStagePresenter.triggerSimulationView(isInputTextField.getText());
             }
         }
 
@@ -40,26 +40,26 @@ public class MainStageListener implements EventHandler {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Diagram")) {
-                    mainStageController.triggerDiagramView();
+                    mainStagePresenter.triggerDiagramView();
                 } else {
-                    mainStageController.triggerTransitionTableView();
+                    mainStagePresenter.triggerTransitionTableView();
                 }
             } else if (event.getSource() instanceof MenuItem) {
                 MenuItem isMenuItem = (MenuItem) event.getSource();
                 if (isMenuItem.getText().equals("Save")) {
-                    mainStageController.saveMachine();
+                    mainStagePresenter.saveMachine();
                 } else if (isMenuItem.getText().equals("Load")) {
-                    mainStageController.loadMachine();
+                    mainStagePresenter.loadMachine();
                 } else if (isMenuItem.getText().equals("By Final State")) {
-                    mainStageController.setAcceptanceCriteriaToFinalState();
+                    mainStagePresenter.setAcceptanceCriteriaToFinalState();
                 } else if (isMenuItem.getText().equals("By Empty StackModel")) {
-                    mainStageController.setAcceptanceCriteriaToEmptyStack();
+                    mainStagePresenter.setAcceptanceCriteriaToEmptyStack();
                 } else if (isMenuItem.getText().equals("By Quick Run")) {
-                    mainStageController.setSimulationToQuickRun();
+                    mainStagePresenter.setSimulationToQuickRun();
                 } else if (isMenuItem.getText().equals("By Step Run")) {
-                    mainStageController.setSimulationToStepRun();
+                    mainStagePresenter.setSimulationToStepRun();
                 } else if (isMenuItem.getText().equals("Guide")) {
-                    mainStageController.launchWiki();
+                    mainStagePresenter.launchWiki();
                 }
             }
         }

@@ -8,11 +8,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
-public class StackView extends ScrollPane {
+public class StackScene extends ScrollPane {
 
     private VBox stackViewVBoxContainer;
 
-    public StackView() {
+    public StackScene() {
         setUpUIComponents();
     }
 

@@ -1,7 +1,7 @@
 package app.view;
 
 import app.listener.DiagramListener;
-import app.presenter.DiagramController;
+import app.presenter.DiagramPresenter;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -9,10 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
-public class StateView extends StackPane {
+public class StateNode extends StackPane {
 
     //Reference to diagram controller
-    private final DiagramController diagramController;
+    private final DiagramPresenter diagramPresenter;
 
     //Data fields for view
     private String stateID;
@@ -31,12 +31,12 @@ public class StateView extends StackPane {
     private Polygon reflexiveArrowTipPolygon;
     private VBox listOfTransitionsVBox;
 
-    public StateView(String stateID, DiagramController diagramController) {
+    public StateNode(String stateID, DiagramPresenter diagramPresenter) {
 
         this.stateID = stateID;
 
         // Reference to the controller of this view
-        this.diagramController = diagramController;
+        this.diagramPresenter = diagramPresenter;
 
         //Set up the components to represent the stateCircle in the view
         setUpUIComponents();
@@ -153,7 +153,7 @@ public class StateView extends StackPane {
 
     private void setUpUIListeners() {
         //Create listener for this view
-        DiagramListener diagramListener = new DiagramListener(diagramController);
+        DiagramListener diagramListener = new DiagramListener(diagramPresenter);
         //Link listener to events
         this.setOnMousePressed(diagramListener);
         this.setOnMouseDragged(diagramListener);
@@ -166,7 +166,7 @@ public class StateView extends StackPane {
 
     @Override
     public String toString() {
-        return "StateView: " + stateID;
+        return "StateNode: " + stateID;
     }
 
 
@@ -182,8 +182,8 @@ public class StateView extends StackPane {
         return stateCircle;
     }
 
-    public DiagramController getDiagramController() {
-        return diagramController;
+    public DiagramPresenter getDiagramPresenter() {
+        return diagramPresenter;
     }
 
 
