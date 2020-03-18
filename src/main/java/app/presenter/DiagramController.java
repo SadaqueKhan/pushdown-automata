@@ -1,4 +1,4 @@
-package app.controller;
+package app.presenter;
 
 import app.model.ConfigurationModel;
 import app.model.MachineModel;

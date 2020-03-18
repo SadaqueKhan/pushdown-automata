@@ -1,8 +1,8 @@
 package app.view;
 
-import app.controller.SimulationController;
 import app.listener.StepRunSimulationListener;
 import app.model.TransitionModel;
+import app.presenter.SimulationController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;

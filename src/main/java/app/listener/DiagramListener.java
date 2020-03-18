@@ -1,6 +1,6 @@
 package app.listener;
 
-import app.controller.DiagramController;
+import app.presenter.DiagramController;
 import app.view.DiagramView;
 import app.view.StateView;
 import javafx.event.Event;

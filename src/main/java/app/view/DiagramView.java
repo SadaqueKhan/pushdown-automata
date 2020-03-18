@@ -1,7 +1,7 @@
 package app.view;
 
-import app.controller.DiagramController;
 import app.listener.DiagramListener;
+import app.presenter.DiagramController;
 import javafx.scene.layout.Pane;
 
 public class DiagramView extends Pane {

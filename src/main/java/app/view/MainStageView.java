@@ -1,7 +1,7 @@
 package app.view;
 
-import app.controller.MainStageController;
 import app.listener.MainStageListener;
+import app.presenter.MainStageController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

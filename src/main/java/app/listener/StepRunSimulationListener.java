@@ -1,6 +1,6 @@
 package app.listener;
 
-import app.controller.SimulationController;
+import app.presenter.SimulationController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

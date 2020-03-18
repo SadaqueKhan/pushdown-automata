@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>app.controller.MainStageController</mainClass>
+                            <mainClass>app.presenter.MainStageController</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

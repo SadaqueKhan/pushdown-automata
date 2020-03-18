@@ -1,7 +1,7 @@
 package app.view;
 
-import app.controller.DiagramController;
 import app.listener.DiagramListener;
+import app.presenter.DiagramController;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;

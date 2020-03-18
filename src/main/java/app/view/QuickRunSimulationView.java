@@ -1,8 +1,8 @@
 package app.view;
 
-import app.controller.SimulationController;
 import app.listener.QuickRunSimulationListener;
 import app.model.ConfigurationModel;
+import app.presenter.SimulationController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Accordion;

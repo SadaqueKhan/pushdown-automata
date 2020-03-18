@@ -1,8 +1,8 @@
 package app.view;
 
-import app.controller.TransitionTableController;
 import app.listener.TransitionTableListener;
 import app.model.TransitionModel;
+import app.presenter.TransitionTableController;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

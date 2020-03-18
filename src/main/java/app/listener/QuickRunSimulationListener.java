@@ -1,7 +1,7 @@
 package app.listener;
 
-import app.controller.SimulationController;
 import app.model.ConfigurationModel;
+import app.presenter.SimulationController;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;

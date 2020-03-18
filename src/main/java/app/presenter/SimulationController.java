@@ -1,4 +1,4 @@
-package app.controller;
+package app.presenter;
 
 import app.model.*;
 import app.view.QuickRunSimulationView;
