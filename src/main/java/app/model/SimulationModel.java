@@ -57,7 +57,7 @@ public class SimulationModel {
                 leafConfigurationPath.add(currentConfig);
             }
             //no more paths to search for this child
-            return 8; // Go back to parent
+            return 0; // Go back to parent
         }
 
 
@@ -69,7 +69,7 @@ public class SimulationModel {
 
             //Check if this child is visited
             if (toExplore.isVisited()) {
-                return 8;
+                return 0;
             }
         } else {
             //Explore non-deterministic path
@@ -80,7 +80,7 @@ public class SimulationModel {
 
             // All children are visited
             if (toExplore == null) {
-                return 8; // Go back to parent
+                return 0; // Go back to parent
             }
         }
 
@@ -88,7 +88,6 @@ public class SimulationModel {
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
         currentTapeModel.setHead(toExplore.getHeadPosition());
         currentStackModel.setContent(toExplore.getStackContent());
-        configurationPath.add(currentConfig);
 
         return 1;
     }
@@ -159,8 +158,12 @@ public class SimulationModel {
 
             int result = next(); // if one is returned more children exist
 
+            if (result == 1) {
+                configurationPath.add(currentConfig);
+            }
+            
             //Returning 8 when no more children present to search for given parent
-            if (result == 8) {
+            if (result == 0) {
                 //Check if children have all be explored of root
                 previous();
 
