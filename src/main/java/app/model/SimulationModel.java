@@ -84,17 +84,13 @@ public class SimulationModel {
             }
         }
 
-        // Move to next configuration
-        loadConfiguration(toExplore);
-        return 1;
-    }
-
-    public void loadConfiguration(ConfigurationModel toExplore) {
         currentConfig = toExplore;
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
         currentTapeModel.setHead(toExplore.getHeadPosition());
         currentStackModel.setContent(toExplore.getStackContent());
         configurationPath.add(currentConfig);
+
+        return 1;
     }
 
     public void previous() {
@@ -162,7 +158,7 @@ public class SimulationModel {
             }
 
             int result = next(); // if one is returned more children exist
-            
+
             //Returning 8 when no more children present to search for given parent
             if (result == 8) {
                 //Check if children have all be explored of root

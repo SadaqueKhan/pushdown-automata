@@ -323,7 +323,7 @@ public class SimulationPresenter {
             List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.configurationApplicable(newCurrentConfigurationModel.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
             newCurrentConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
 
-            //Set up view 
+            //Set up view
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationStage.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
