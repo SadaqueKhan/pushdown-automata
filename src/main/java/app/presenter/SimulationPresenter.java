@@ -309,15 +309,21 @@ public class SimulationPresenter {
 
             }
 
-            stepRunSimulationModel.loadConfiguration(nextConfigurationModel);
+            stepRunSimulationModel.setCurrentConfig(nextConfigurationModel);
 
-            //Loaded configuration
+            //Setup new configuration
             ConfigurationModel newCurrentConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+            newCurrentConfigurationModel.markAsVisited();
             TapeModel currentTapeModel = stepRunSimulationModel.getCurrentTapeModel();
+            currentTapeModel.setHead(nextConfigurationModel.getHeadPosition());
             StackModel currentStackModel = stepRunSimulationModel.getCurrentStackModel();
+            currentStackModel.setContent(nextConfigurationModel.getStackContent());
+
+            // Find children
             List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.configurationApplicable(newCurrentConfigurationModel.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
             newCurrentConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
 
+            //Set up view 
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationStage.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
