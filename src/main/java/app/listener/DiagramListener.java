@@ -30,20 +30,14 @@ public class DiagramListener implements EventHandler {
         //Node selected
         Node picked = mouseEvent.getPickResult().getIntersectedNode();
 
-        //absolute horizontal x position of the event.
-        double xPositionOfMouse = mouseEvent.getScreenX();
-
-        //absolute vertical y position of the event.
-        double yPositionOfMouse = mouseEvent.getScreenY();
-
 
         if (picked instanceof DiagramScene) {
             if (event.getSource() instanceof DiagramScene) {
                 if (mouseEvent.getButton() == MouseButton.PRIMARY) {
                     //Add the state to diagram
-                    double X = mouseEvent.getX(); // remove pane's coordinate system here
-                    double Y = mouseEvent.getY(); // remove pane's coordinate system here
-                    diagramPresenter.addStateViewOntoDiagramViewDynamicRender(X, Y);
+                    double relXPosOfEvent = mouseEvent.getX();
+                    double relYPosOfEvent = mouseEvent.getY();
+                    diagramPresenter.addStateViewOntoDiagramViewDynamicRender(relXPosOfEvent, relYPosOfEvent);
                 }
             }
         }
@@ -51,9 +45,10 @@ public class DiagramListener implements EventHandler {
         if (picked instanceof Circle || picked instanceof Text || picked instanceof Arc) {
             if (event.getSource() instanceof StateNode) {
                 StateNode stateNode = (StateNode) event.getSource();
-                //       String eventType = event.getEventType().toString();
+                double absXPosOfEvent = mouseEvent.getScreenX();
+                double absYPosOfEvent = mouseEvent.getScreenY();
                 if (eventType.equals("MOUSE_PRESSED")) {
-                    diagramPresenter.stateViewOnMousePressed(stateNode, xPositionOfMouse, yPositionOfMouse);
+                    diagramPresenter.stateViewOnMousePressed(stateNode, absXPosOfEvent, absYPosOfEvent);
                     // Popup dialog
                     if (mouseEvent.isPopupTrigger()) {
                         diagramPresenter.stateViewContextMenuPopUp(stateNode);
@@ -61,7 +56,7 @@ public class DiagramListener implements EventHandler {
                 }
 
                 if (eventType.equals("MOUSE_DRAGGED")) {
-                    diagramPresenter.stateViewOnMouseDragged(stateNode, xPositionOfMouse, yPositionOfMouse);
+                    diagramPresenter.stateViewOnMouseDragged(stateNode, absXPosOfEvent, absYPosOfEvent);
                 }
 
                 if (eventType.equals("MOUSE_RELEASED")) {
