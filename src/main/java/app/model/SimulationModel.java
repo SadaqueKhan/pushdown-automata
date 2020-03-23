@@ -53,7 +53,8 @@ public class SimulationModel {
 
         // Parent has no children i.e. no applicable transitions
         if (applicableConfigurations.isEmpty()) {
-            if (!(currentConfig.isSuccessConfig())) {
+            if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
+                currentConfig.setStuckConfig(true);
                 leafConfigurationPath.add(currentConfig);
             }
             //no more paths to search for this child
@@ -84,11 +85,11 @@ public class SimulationModel {
             }
         }
 
+        //Set the new config (i.e. move to next applicable configuration
         currentConfig = toExplore;
         currentConfig.markAsVisited(); // Mark the currently explored config as explored
         currentTapeModel.setHead(toExplore.getHeadPosition());
         currentStackModel.setContent(toExplore.getStackContent());
-
         return 1;
     }
 
@@ -142,6 +143,10 @@ public class SimulationModel {
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 return true;
             }
+            //Set current config to fail
+            currentConfig.setFailConfig(true);
+            //Add it to leaf list
+            leafConfigurationPath.add(currentConfig);
         }
         return false;
     }
@@ -152,7 +157,9 @@ public class SimulationModel {
             //checking for acceptance
             if (isInAcceptingConfiguration()) {
                 ++numOfPossibleSuccessPaths;
+                //Set current config to success
                 currentConfig.setSuccessConfig(true);
+                //Add it to leaf list
                 leafConfigurationPath.add(currentConfig);
             }
 
@@ -161,7 +168,7 @@ public class SimulationModel {
             if (result == 1) {
                 configurationPath.add(currentConfig);
             }
-            
+
             //Returning 8 when no more children present to search for given parent
             if (result == 0) {
                 //Check if children have all be explored of root

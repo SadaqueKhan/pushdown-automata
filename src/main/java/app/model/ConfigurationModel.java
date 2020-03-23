@@ -1,7 +1,9 @@
 package app.model;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 /**
  * @author Mohammed Sadaque Khan
  * <p>
@@ -21,6 +23,8 @@ public class ConfigurationModel {
 
     private boolean isSuccessConfig = false;
     private boolean isInfiniteConfig = false;
+    private boolean isStuckConfig = false;
+    private boolean isFailConfig = false;
 
     private List<ConfigurationModel> childrenConfigurations;
 
@@ -38,6 +42,7 @@ public class ConfigurationModel {
         this.branch = 1;
         this.step = parentConfiguration == null ? 0 : parentConfiguration.getStep() + 1;
     }
+
     /**
      * Get the step value to reach this position from the root
      *
@@ -46,6 +51,7 @@ public class ConfigurationModel {
     public int getStep() {
         return step;
     }
+
     /**
      * Get the head position of the tape for of this configuration.
      *
@@ -54,6 +60,7 @@ public class ConfigurationModel {
     public int getHeadPosition() {
         return currentTapeModel.getHead();
     }
+
     /**
      * Get the parent configuration of this configuration.
      *
@@ -65,6 +72,7 @@ public class ConfigurationModel {
 
     /**
      * Get the transition model taken to reach this configuration.
+     *
      * @return the {@code TransitionModel} took to reach this configuration
      */
     public TransitionModel getTransitionModelTakenToReachCurrentConfiguration() {
@@ -73,6 +81,7 @@ public class ConfigurationModel {
 
     /**
      * Get the state model for this configuration.
+     *
      * @return the {@code StateModel} linked to this configuration
      */
     public StateModel getCurrentStateModel() {
@@ -81,6 +90,7 @@ public class ConfigurationModel {
 
     /**
      * Get the stack content for this configuration.
+     *
      * @return the {@code ArrayList<String>} containing stack content for this configuration
      */
     public ArrayList<String> getStackContent() {
@@ -89,14 +99,15 @@ public class ConfigurationModel {
 
     /**
      * Checks if the configuration has been visited with respect to traversal of the tree algorithm.
-     * @return  <tt>true</tt> if the configuration has been visited
+     *
+     * @return <tt>true</tt> if the configuration has been visited
      */
     public boolean isVisited() {
         return isVisited;
     }
 
     /**
-     *  Sets this configuration to visited with respect to traversal of the tree algorithm.
+     * Sets this configuration to visited with respect to traversal of the tree algorithm.
      */
     public void markAsVisited() {
         isVisited = true;
@@ -122,6 +133,7 @@ public class ConfigurationModel {
 
     /**
      * Sets the children configuration for this configuration.
+     *
      * @param childrenConfigurations for this configuration
      */
     public void setChildrenConfigurations(List<ConfigurationModel> childrenConfigurations) {
@@ -137,6 +149,7 @@ public class ConfigurationModel {
 
     /**
      * Get this configurations path from the root.
+     *
      * @return a {@code ArrayList<ConfigurationModel>} which is a list of configurations take from the root to reach this configuration
      */
     public ArrayList<ConfigurationModel> getPath() {
@@ -212,6 +225,23 @@ public class ConfigurationModel {
      */
     public void setSuccessConfig(boolean successConfig) {
         isSuccessConfig = successConfig;
+    }
+
+
+    public boolean isStuckConfig() {
+        return isStuckConfig;
+    }
+
+    public void setStuckConfig(boolean stuckConfig) {
+        isStuckConfig = stuckConfig;
+    }
+
+    public boolean isFailConfig() {
+        return isFailConfig;
+    }
+
+    public void setFailConfig(boolean failConfig) {
+        isFailConfig = failConfig;
     }
 
     /**
