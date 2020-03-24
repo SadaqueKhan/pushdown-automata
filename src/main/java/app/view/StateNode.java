@@ -19,7 +19,7 @@ import javafx.scene.transform.Rotate;
  * </p>
  */
 public class StateNode extends StackPane {
-    //Reference to diagram controller.
+    //Reference to diagram presenter.
     private final DiagramPresenter diagramPresenter;
     //Reference data linked to view.
     private String stateID;
@@ -128,7 +128,7 @@ public class StateNode extends StackPane {
         this.setOnMouseDragged(diagramListener);
         this.setOnMouseReleased(diagramListener);
     }
-    //Getter for data linked to this view.
+    //Getters for data linked to this view.
     public String getStateID() {
         return stateID;
     }
