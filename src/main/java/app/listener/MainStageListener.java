@@ -32,7 +32,7 @@ public class MainStageListener implements EventHandler {
             KeyEvent keyEvent = (KeyEvent) event;
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 mainStagePresenter.saveInputWord(isInputTextField.getText());
-                mainStagePresenter.triggerSimulationView(isInputTextField.getText());
+                mainStagePresenter.loadSimulationStage(isInputTextField.getText());
             }
         }
 
@@ -40,9 +40,9 @@ public class MainStageListener implements EventHandler {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Diagram")) {
-                    mainStagePresenter.triggerDiagramView();
+                    mainStagePresenter.loadDiagramScene();
                 } else {
-                    mainStagePresenter.triggerTransitionTableView();
+                    mainStagePresenter.loadTransitionTableScene();
                 }
             } else if (event.getSource() instanceof MenuItem) {
                 MenuItem isMenuItem = (MenuItem) event.getSource();

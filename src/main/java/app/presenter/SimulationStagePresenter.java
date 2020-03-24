@@ -22,8 +22,7 @@ import java.util.List;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Presenter presenter acts upon the model and the view.
- * It retrieves data from repositories (the model), and formats it for display in the simulation stage.
+ * Presenter retrieves data from repositories (the model), and formats it for display in the simulation stage.
  * </p>
  */
 public class SimulationStagePresenter {
@@ -94,8 +93,8 @@ public class SimulationStagePresenter {
             diagramPresenter.removeHighlightedTransitionView();
             mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(false);
             mainStagePresenter.getMainStage().getInputTextField().setDisable(false);
-            mainStagePresenter.updateStackView(new ArrayList<>());
-            mainStagePresenter.updateTapeView(0);
+            mainStagePresenter.updateStackScene(new ArrayList<>());
+            mainStagePresenter.updateTapeScene(0);
         });
     }
     /**
@@ -244,7 +243,8 @@ public class SimulationStagePresenter {
         stage.show();
     }
     /**
-     * Handles
+     * Moves the step run simulation forward to the next applicable configuration, by computing the next configuration
+     * using the repository of models and formats it to display in the step-run scene.
      */
     public void stepForward() {
         // Get the step run transition list
@@ -288,6 +288,33 @@ public class SimulationStagePresenter {
             updateStackViewForSelectedConfiguration(nextConfigurationModel);
         }
     }
+    /**
+     * Request to the diagram presenter to update its view for which it controls.
+     * @param selectedConfiguration
+     */
+    public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
+        DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
+        diagramPresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
+    }
+    /**
+     * Request to the main stage presenter to update the tape scene for which it controls.
+     * @param selectedConfiguration
+     */
+    public void updateTapeViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
+        mainStagePresenter.updateTapeScene(selectedConfiguration.getHeadPosition());
+    }
+    // Highlight tape scene
+    /**
+     * Request to the main stage presenter to update the stack scene for which it controls.
+     * @param selectedConfiguration
+     */
+    public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
+        mainStagePresenter.updateStackScene(selectedConfiguration.getStackContent());
+    }
+    /**
+     * Moves the step run simulation back to a previous configuration, by computing the previous configuration
+     * using the repository of models and formats it to display in the step-run scene.
+     */
     public void stepBack() {
         ListView<TransitionModel> listView = stepRunSimulationScene.getTransitionOptionsListView();
         if (stepRunSimulationModel.getCurrentConfig().getParentConfiguration() != null) {
@@ -317,21 +344,11 @@ public class SimulationStagePresenter {
             updateStackViewForSelectedConfiguration(prevConfigurationModel);
         }
     }
-    //Auxiliary method
-    // Highlight diagram scene
-    public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
-        diagramPresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
-    }
-    // Highlight tape scene
-    public void updateTapeViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        mainStagePresenter.updateTapeView(selectedConfiguration.getHeadPosition());
-    }
-    // Highlight stack scene
-    public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        mainStagePresenter.updateStackView(selectedConfiguration.getStackContent());
-    }
-    // Create listener for items in new transition list view, to help highlight diagram scene/tape scene/stack scene
+    /**
+     * Create dynamic listener for items in lists found in the simulation stage to be highlighted in the diagram
+     * scene/tape/stack scene.
+     * @param newListView
+     */
     private void setListenerForTransitionListView(ListView<ConfigurationModel> newListView) {
         newListView.setOnMouseReleased(event -> {
             ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();

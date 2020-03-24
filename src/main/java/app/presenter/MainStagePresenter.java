@@ -24,6 +24,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Presenter retrieves data from repositories (the model), and formats it for display in the main stage.
+ * </p>
+ */
 public class MainStagePresenter extends Application {
     private MachineModel machineModel;
     private MainStage mainStage;
@@ -31,11 +37,19 @@ public class MainStagePresenter extends Application {
     private DiagramPresenter diagramPresenter;
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
+    /**
+     * Entry point to start the application.
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
+    /**
+     * Handles launching the main stage.
+     * @param primaryWindow
+     */
     @Override
-    public void start(Stage primaryWindow) throws Exception {
+    public void start(Stage primaryWindow) {
         this.machineModel = new MachineModel();
         this.mainStage = new MainStage(this);
         this.transitionTablePresenter = new TransitionTablePresenter(mainStage, machineModel);
@@ -47,17 +61,28 @@ public class MainStagePresenter extends Application {
         this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
     }
-    public void triggerDiagramView() {
+    /**
+     * Loads the diagram scene onto the main stage when selected via the tab found on in the main stage.
+     */
+    public void loadDiagramScene() {
         mainStage.getContainerForCenterNodes().getChildren().remove(1);
         mainStage.getInputTextField().setDisable(false);
         diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
     }
-    public void triggerTransitionTableView() {
+    /**
+     * Loads the transition table scene onto the main stage when selected via the tab found on in the main stage.
+     */
+    public void loadTransitionTableScene() {
         mainStage.getContainerForCenterNodes().getChildren().remove(1);
         mainStage.getInputTextField().setDisable(true);
         transitionTablePresenter.loadTransitionTableSceneOntoMainStage(diagramPresenter);
     }
-    public void triggerSimulationView(String inputWord) {
+    /**
+     * Loads the simulation stage when the user presses enter on the textfield retaining an input word to be
+     * simulated against there constructed PDA.
+     * @param inputWord
+     */
+    public void loadSimulationStage(String inputWord) {
         if (machineModel.findStartStateModel() == null) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
                     "No start state defined for machine simulation can not be executed.", ButtonType.OK);
@@ -75,7 +100,11 @@ public class MainStagePresenter extends Application {
             }
         }
     }
-    public void setUpTapeView(String inputWord) {
+    /**
+     * Sets the tape scene with the data from the input word.
+     * @param inputWord
+     */
+    private void setUpTapeView(String inputWord) {
         HBox tapeViewHBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
         tapeViewHBoxContainer.getChildren().clear();
         for (String inputSymbol : inputWord.split("")) {
@@ -99,12 +128,30 @@ public class MainStagePresenter extends Application {
             tapeViewHBoxContainer.getChildren().add(stackPane);
         }
     }
-    public DiagramPresenter getDiagramPresenter() {
-        return diagramPresenter;
+    /**
+     * Handles saving an input word to history auto completion.
+     * @param userInputWord
+     */
+    public void saveInputWord(String userInputWord) {
+        mainStage.getInputWordSet().add(userInputWord);
+        if (mainStage.getAutoCompletionBinding() != null) {
+            mainStage.getAutoCompletionBinding().dispose();
+        }
+        mainStage.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStage.getInputTextField(), mainStage.getInputWordSet()));
     }
-    public Stage getPrimaryWindow() {
-        return primaryWindow;
+    /**
+     * Handles the launching of the GitHub wiki.
+     */
+    public void launchWiki() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata"));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
+    /**
+     * Handles the saving of a user defined machine.
+     */
     public void saveMachine() {
         try {
             FileChooser fileChooser = new FileChooser();
@@ -121,20 +168,9 @@ public class MainStagePresenter extends Application {
             e1.printStackTrace();
         }
     }
-    public void saveInputWord(String userInputWord) {
-        mainStage.getInputWordSet().add(userInputWord);
-        if (mainStage.getAutoCompletionBinding() != null) {
-            mainStage.getAutoCompletionBinding().dispose();
-        }
-        mainStage.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStage.getInputTextField(), mainStage.getInputWordSet()));
-    }
-    public void launchWiki() {
-        try {
-            Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata"));
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-    }
+    /**
+     * Handles the loading of a user defined machine.
+     */
     public void loadMachine() {
         try {
             FileChooser fileChooser = new FileChooser();
@@ -163,14 +199,23 @@ public class MainStagePresenter extends Application {
             e2.printStackTrace();
         }
     }
+    /**
+     * Set the simulation to quick run.
+     */
     public void setSimulationToQuickRun() {
         mainStage.getSimulationByQuickRunMenuItem().setSelected(true);
         mainStage.getSimulationByStepRunMenuItem().setSelected(false);
     }
+    /**
+     * Sets the simulation to step run.
+     */
     public void setSimulationToStepRun() {
         mainStage.getSimulationByStepRunMenuItem().setSelected(true);
         mainStage.getSimulationByQuickRunMenuItem().setSelected(false);
     }
+    /**
+     * Sets the acceptance criteria to final state.
+     */
     public void setAcceptanceCriteriaToFinalState() {
         machineModel.setAcceptanceByFinalState(true);
         machineModel.setAcceptanceByEmptyStack(false);
@@ -178,6 +223,9 @@ public class MainStagePresenter extends Application {
         mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(false);
         mainStage.getInputTextLabel().setText("Input word (acceptance by final state)");
     }
+    /**
+     * Sets the acceptance criteria to empty stack.
+     */
     public void setAcceptanceCriteriaToEmptyStack() {
         machineModel.setAcceptanceByFinalState(false);
         machineModel.setAcceptanceByEmptyStack(true);
@@ -185,7 +233,11 @@ public class MainStagePresenter extends Application {
         mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(true);
         mainStage.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
-    public void updateTapeView(int headPosition) {
+    /**
+     * Updates the tape scene given a head position integer value.
+     * @param headPosition
+     */
+    void updateTapeScene(int headPosition) {
         if (headPointerStackPane != null) {
             headPointerStackPane.getChildren().get(2).setVisible(false);
         }
@@ -195,7 +247,11 @@ public class MainStagePresenter extends Application {
             headPointerStackPane.getChildren().get(2).setVisible(true);
         }
     }
-    public void updateStackView(ArrayList<String> stackContent) {
+    /**
+     * Updates the stack scene given a stack content list.
+     * @param stackContent
+     */
+    void updateStackScene(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStage.getStackScene().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
         if (stackContent.isEmpty()) {
@@ -226,7 +282,14 @@ public class MainStagePresenter extends Application {
             }
         }
     }
-    public MainStage getMainStage() {
+    // Getters to provide communication between scenes.
+    MainStage getMainStage() {
         return mainStage;
+    }
+    DiagramPresenter getDiagramPresenter() {
+        return diagramPresenter;
+    }
+    Stage getPrimaryWindow() {
+        return primaryWindow;
     }
 }

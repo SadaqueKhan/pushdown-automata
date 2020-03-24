@@ -13,8 +13,7 @@ import java.util.HashSet;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Presenter presenter acts upon the model and the view.
- * It retrieves data from repositories (the model), and formats it for display in the transition table scene.
+ * Presenter retrieves data from repositories (the model), and formats it for display in the transition table scene.
  * </p>
  */
 public class TransitionTablePresenter {
