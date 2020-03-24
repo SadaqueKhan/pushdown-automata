@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class TransitionTableView extends BorderPane {
+public class TransitionTableScene extends BorderPane {
 
     private final MainStage mainStage;
 
@@ -47,7 +47,7 @@ public class TransitionTableView extends BorderPane {
     private Button deleteTransitionButton;
     private VBox transitionTableContainer;
 
-    public TransitionTableView(MainStage mainStage, TransitionTablePresenter transitionTablePresenter) {
+    public TransitionTableScene(MainStage mainStage, TransitionTablePresenter transitionTablePresenter) {
         this.transitionTablePresenter = transitionTablePresenter;
         this.mainStage = mainStage;
 

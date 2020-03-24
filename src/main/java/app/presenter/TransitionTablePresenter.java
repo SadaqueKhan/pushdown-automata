@@ -4,7 +4,7 @@ import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
 import app.view.MainStage;
-import app.view.TransitionTableView;
+import app.view.TransitionTableScene;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,24 +20,24 @@ public class TransitionTablePresenter {
 
     private DiagramPresenter diagramPresenter;
 
-    private TransitionTableView transitionTableView;
+    private TransitionTableScene transitionTableScene;
 
     public TransitionTablePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStagePresenter = mainStagePresenter;
         this.mainStage = mainStage;
 
-        this.transitionTableView = new TransitionTableView(mainStage, this);
+        this.transitionTableScene = new TransitionTableScene(mainStage, this);
     }
 
     public void loadTransitionTableOntoStage(DiagramPresenter diagramPresenter) {
         this.diagramPresenter = diagramPresenter;
-        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableView.getTransitionTableContainer());
+        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
     }
 
     public void loadTransitionTableView() {
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
-            transitionTableView.getTransitionTable().getItems().add(transitionModelToLoad);
+            transitionTableScene.getTransitionTable().getItems().add(transitionModelToLoad);
         }
         updateAvailableStateListForCombobox();
         updateInputAlphabetForComboxBox();
@@ -46,13 +46,13 @@ public class TransitionTablePresenter {
 
     public void addUserTransitionModelEntryToTransitionTable() {
         //User input for a configuration
-        String userEntryCurrentStateID = transitionTableView.getCurrentStateComboBox().getValue();
-        String userEntryInputSymbol = transitionTableView.getInputSymbolComboBox().getValue();
-        String userEntryStackSymbolToPop = transitionTableView.getStackSymbolToPopComboBox().getValue();
+        String userEntryCurrentStateID = transitionTableScene.getCurrentStateComboBox().getValue();
+        String userEntryInputSymbol = transitionTableScene.getInputSymbolComboBox().getValue();
+        String userEntryStackSymbolToPop = transitionTableScene.getStackSymbolToPopComboBox().getValue();
 
         //User input for a action
-        String userEntryResultingStateID = transitionTableView.getResultingStateComboBox().getValue();
-        String userEntryStackSymbolToPush = transitionTableView.getStackSymbolToPushComboBox().getValue();
+        String userEntryResultingStateID = transitionTableScene.getResultingStateComboBox().getValue();
+        String userEntryStackSymbolToPush = transitionTableScene.getStackSymbolToPushComboBox().getValue();
 
         if ((userEntryCurrentStateID == null || userEntryCurrentStateID.equals("")) || (userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
                 (userEntryResultingStateID == null || userEntryResultingStateID.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals(""))) {
@@ -111,7 +111,7 @@ public class TransitionTablePresenter {
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
         //Update table view
-        transitionTableView.getTransitionTable().getItems().add(newTransitionModel);
+        transitionTableScene.getTransitionTable().getItems().add(newTransitionModel);
         updateAvailableStateListForCombobox();
         updateInputAlphabetForComboxBox();
         updateStackAlphabetForComboxBox();
@@ -127,7 +127,7 @@ public class TransitionTablePresenter {
 
     public void addTransitionModelEntryToTransitionTable(TransitionModel transitionModelToBeAdded) {
         //Update table view
-        transitionTableView.getTransitionTable().getItems().add(transitionModelToBeAdded);
+        transitionTableScene.getTransitionTable().getItems().add(transitionModelToBeAdded);
         updateAvailableStateListForCombobox();
         updateInputAlphabetForComboxBox();
         updateStackAlphabetForComboxBox();
@@ -135,7 +135,7 @@ public class TransitionTablePresenter {
 
     public void deleteTransitionModelEntriesFromTransitionTable() {
         // Retrieve selected rows
-        ObservableList<TransitionModel> selectedRows = transitionTableView.getTransitionTable().getSelectionModel().getSelectedItems();
+        ObservableList<TransitionModel> selectedRows = transitionTableScene.getTransitionTable().getSelectionModel().getSelectedItems();
 
         HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
         removeTransitionSet.addAll(selectedRows);
@@ -144,15 +144,15 @@ public class TransitionTablePresenter {
         machineModel.removeTransitionModelsFromTransitionModelSet(removeTransitionSet);
 
         //Update transition table view
-        transitionTableView.getTransitionTable().getItems().removeAll(removeTransitionSet);
+        transitionTableScene.getTransitionTable().getItems().removeAll(removeTransitionSet);
 
         //Update diagram view
         diagramPresenter.deleteTransitionView(removeTransitionSet);
     }
 
     public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
-        transitionTableView.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
-        transitionTableView.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+        transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
+        transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
         updateAvailableStateListForCombobox();
     }
     public void updateAvailableStateListForCombobox() {
@@ -160,22 +160,22 @@ public class TransitionTablePresenter {
         for (StateModel stateModel : machineModel.getStateModelSet()) {
             availableStateList.add(stateModel.getStateId());
         }
-        transitionTableView.getCurrentStateComboBox().getItems().clear();
-        transitionTableView.getCurrentStateComboBox().getItems().addAll(availableStateList);
-        transitionTableView.getResultingStateComboBox().getItems().clear();
-        transitionTableView.getResultingStateComboBox().getItems().addAll(availableStateList);
+        transitionTableScene.getCurrentStateComboBox().getItems().clear();
+        transitionTableScene.getCurrentStateComboBox().getItems().addAll(availableStateList);
+        transitionTableScene.getResultingStateComboBox().getItems().clear();
+        transitionTableScene.getResultingStateComboBox().getItems().addAll(availableStateList);
     }
 
     public void updateInputAlphabetForComboxBox() {
-        transitionTableView.getInputSymbolComboBox().getItems().clear();
-        transitionTableView.getInputSymbolComboBox().getItems().addAll(machineModel.getInputAlphabetSet());
+        transitionTableScene.getInputSymbolComboBox().getItems().clear();
+        transitionTableScene.getInputSymbolComboBox().getItems().addAll(machineModel.getInputAlphabetSet());
     }
 
     public void updateStackAlphabetForComboxBox() {
-        transitionTableView.getStackSymbolToPopComboBox().getItems().clear();
-        transitionTableView.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
-        transitionTableView.getStackSymbolToPushComboBox().getItems().clear();
-        transitionTableView.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+        transitionTableScene.getStackSymbolToPopComboBox().getItems().clear();
+        transitionTableScene.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+        transitionTableScene.getStackSymbolToPushComboBox().getItems().clear();
+        transitionTableScene.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
     }
 
     public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {

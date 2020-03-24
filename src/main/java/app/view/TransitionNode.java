@@ -4,13 +4,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class TransitionView extends Line {
+public class TransitionNode extends Line {
 
     private StateNode source;
     private StateNode target;
     private VBox transitionListVBox;
 
-    public TransitionView(StateNode source, StateNode target) {
+    public TransitionNode(StateNode source, StateNode target) {
         this.source = source;
         this.target = target;
         setUpUIComponents();

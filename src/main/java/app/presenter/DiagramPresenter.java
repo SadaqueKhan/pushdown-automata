@@ -7,7 +7,7 @@ import app.model.TransitionModel;
 import app.view.DiagramScene;
 import app.view.MainStage;
 import app.view.StateNode;
-import app.view.TransitionView;
+import app.view.TransitionNode;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -49,7 +49,7 @@ public class DiagramPresenter {
 
     private Map<StateModel, StateNode> stateMap;
     private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
-    private LinkedHashMap<TransitionView, PopOver> popOvers;
+    private LinkedHashMap<TransitionNode, PopOver> popOvers;
 
 
     public DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
@@ -141,10 +141,10 @@ public class DiagramPresenter {
 
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
-                if (node instanceof TransitionView) {
-                    TransitionView transitionViewToCheck = (TransitionView) node;
-                    if (transitionViewToCheck.getSource() == currentStateNode && transitionViewToCheck.getTarget() == resultingStateNode) {
-                        VBox newTransitionListVBox = transitionViewToCheck.getTransitionListVBox();
+                if (node instanceof TransitionNode) {
+                    TransitionNode transitionNodeToCheck = (TransitionNode) node;
+                    if (transitionNodeToCheck.getSource() == currentStateNode && transitionNodeToCheck.getTarget() == resultingStateNode) {
+                        VBox newTransitionListVBox = transitionNodeToCheck.getTransitionListVBox();
                         newTransitionListVBox.getChildren().clear();
                         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
                             newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
@@ -172,11 +172,11 @@ public class DiagramPresenter {
         StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
         centerLineArrowBA.setOpacity(0);
 
-        TransitionView transitionView = new TransitionView(currentStateNode, resultingStateNode);
-        transitionView.setStroke(Color.BLACK);
-        transitionView.setStrokeWidth(2);
+        TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
+        transitionNode.setStroke(Color.BLACK);
+        transitionNode.setStrokeWidth(2);
 
-        VBox newTransitionListVBox = transitionView.getTransitionListVBox();
+        VBox newTransitionListVBox = transitionNode.getTransitionListVBox();
 
         newTransitionListVBox.setOnMousePressed(mouseEvent -> {
             sceneX = mouseEvent.getScreenX();
@@ -250,16 +250,16 @@ public class DiagramPresenter {
             r.setPivotY(virtualCenterLine.getStartY());
             r.setAngle(centerLineArrowAB.getRotate());
             Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
-            transitionView.setStartX(point.getX());
-            transitionView.setStartY(point.getY());
+            transitionNode.setStartX(point.getX());
+            transitionNode.setStartY(point.getY());
 
             Rotate r2 = new Rotate();
             r2.setPivotX(virtualCenterLine.getEndX());
             r2.setPivotY(virtualCenterLine.getEndY());
             r2.setAngle(centerLineArrowBA.getRotate());
             Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
-            transitionView.setEndX(point2.getX());
-            transitionView.setEndY(point2.getY());
+            transitionNode.setEndX(point2.getX());
+            transitionNode.setEndY(point2.getY());
         };
         centerLineArrowAB.rotateProperty().addListener(listener);
         centerLineArrowBA.rotateProperty().addListener(listener);
@@ -269,18 +269,18 @@ public class DiagramPresenter {
         virtualCenterLine.endYProperty().addListener(listener);
 
 
-        StackPane arrowTip = createArrowTip(true, transitionView, currentStateNode, resultingStateNode);
+        StackPane arrowTip = createArrowTip(true, transitionNode, currentStateNode, resultingStateNode);
         arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
 
         HashSet<Node> setOfNode = new HashSet<>();
         setOfNode.add(virtualCenterLine);
         setOfNode.add(centerLineArrowAB);
         setOfNode.add(centerLineArrowBA);
-        setOfNode.add(transitionView);
+        setOfNode.add(transitionNode);
         setOfNode.add(arrowTip);
         linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
 
-        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionView, arrowTip, transitionView.getTransitionListVBox());
+        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionListVBox());
         diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
 
     }
@@ -483,15 +483,15 @@ public class DiagramPresenter {
 
                 for (HashSet<Node> nextHashSet : linkedTransitionViews) {
                     for (Node node : nextHashSet) {
-                        if (node instanceof TransitionView) {
-                            TransitionView transitionViewToUpdate = (TransitionView) node;
-                            if (transitionViewToUpdate.getSource().getStateID().equals(currentStateModelID) && transitionViewToUpdate.getTarget().getStateID().equals(resultingStateModelID)) {
+                        if (node instanceof TransitionNode) {
+                            TransitionNode transitionNodeToUpdate = (TransitionNode) node;
+                            if (transitionNodeToUpdate.getSource().getStateID().equals(currentStateModelID) && transitionNodeToUpdate.getTarget().getStateID().equals(resultingStateModelID)) {
                                 if (getRelatedTransitions(deletedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionToRemoveSet.add(currentStateNode);
                                 }
                                 for (TransitionModel transitionModel : getRelatedTransitions(deletedTransition)) {
-                                    transitionViewToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                                    transitionNodeToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
                                 }
                             }
                         }
@@ -511,9 +511,9 @@ public class DiagramPresenter {
                         if (nextHashSet == nodeSetToRemove) {
                             for (Node node : nextHashSet) {
 
-                                if (node instanceof TransitionView) {
-                                    TransitionView isTransitionView = (TransitionView) node;
-                                    diagramScene.getChildren().remove(isTransitionView.getTransitionListVBox());
+                                if (node instanceof TransitionNode) {
+                                    TransitionNode isTransitionNode = (TransitionNode) node;
+                                    diagramScene.getChildren().remove(isTransitionNode.getTransitionListVBox());
                                 }
                                 diagramScene.getChildren().remove(node);
 
@@ -859,9 +859,9 @@ public class DiagramPresenter {
                 HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelToHighlight);
 
                 for (Node node : transitionViewHighlightedSet) {
-                    if (node instanceof TransitionView) {
-                        TransitionView transitionView = (TransitionView) node;
-                        transitionView.setStroke(Color.LAWNGREEN);
+                    if (node instanceof TransitionNode) {
+                        TransitionNode transitionNode = (TransitionNode) node;
+                        transitionNode.setStroke(Color.LAWNGREEN);
                     }
                     if (node instanceof StackPane) {
                         StackPane arrowTipStackPane = (StackPane) node;
@@ -892,9 +892,9 @@ public class DiagramPresenter {
                 HashSet<Node> transitionViewHighlightedSet = retrieveDirectionalTransitionView(transitionModelHighlighted);
 
                 for (Node node : transitionViewHighlightedSet) {
-                    if (node instanceof TransitionView) {
-                        TransitionView transitionView = (TransitionView) node;
-                        transitionView.setStroke(Color.BLACK);
+                    if (node instanceof TransitionNode) {
+                        TransitionNode transitionNode = (TransitionNode) node;
+                        transitionNode.setStroke(Color.BLACK);
                     }
                     if (node instanceof StackPane) {
                         StackPane arrowTipStackPane = (StackPane) node;
@@ -915,10 +915,10 @@ public class DiagramPresenter {
 
         for (HashSet<Node> nextHashSet : linkedTransitionViews) {
             for (Node node : nextHashSet) {
-                if (node instanceof TransitionView) {
-                    TransitionView transitionViewToUpdate = (TransitionView) node;
-                    if (transitionViewToUpdate.getTarget().getStateID().equals(resultingStateNode.getStateID())) {
-                        TransitionViewSet.add(transitionViewToUpdate);
+                if (node instanceof TransitionNode) {
+                    TransitionNode transitionNodeToUpdate = (TransitionNode) node;
+                    if (transitionNodeToUpdate.getTarget().getStateID().equals(resultingStateNode.getStateID())) {
+                        TransitionViewSet.add(transitionNodeToUpdate);
                     }
                 } else if (node instanceof StackPane) {
                     StackPane arrowTipStackPaneToUpdate = (StackPane) node;
