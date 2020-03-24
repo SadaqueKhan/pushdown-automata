@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Blueprint for the main stage.
+ * Blueprint for the main scene.
  * </p>
  */
 public class MainScene extends BorderPane {
