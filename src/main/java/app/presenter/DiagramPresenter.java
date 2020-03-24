@@ -60,7 +60,7 @@ public class DiagramPresenter {
     private Map<StateModel, StateNode> stateMap;
     private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     private LinkedHashMap<TransitionNode, PopOver> popOvers;
-    public DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
         this.mainStage = mainStage;
         this.machineModel = machineModel;
@@ -68,11 +68,11 @@ public class DiagramPresenter {
         this.stateMap = new HashMap<>();
         this.linkedTransitionViewsMap = new HashMap<>();
     }
-    public void loadDiagramViewOntoStage(TransitionTablePresenter transitionTablePresenter) {
+    void loadDiagramViewOntoStage(TransitionTablePresenter transitionTablePresenter) {
         this.transitionTablePresenter = transitionTablePresenter;
         this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
-    public void loadStatesOntoDiagram() {
+    void loadStatesOntoDiagram() {
         StateNode stateNodeToLoad;
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             addStateViewOntoDiagramView(stateModelToLoad);
@@ -128,131 +128,189 @@ public class DiagramPresenter {
         addStateViewOntoDiagramView(newStateModel);
         transitionTablePresenter.updateAvailableStateListForCombobox();
     }
-    public void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
-        //Get state from map using state ID
-        StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
-        StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
-        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
-            for (Node node : nextHashSet) {
-                if (node instanceof TransitionNode) {
-                    TransitionNode transitionNodeToCheck = (TransitionNode) node;
-                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode()
-                            ==
-                            resultingStateNode) {
-                        VBox newTransitionListVBox = transitionNodeToCheck.getTransitionListVBox();
-                        newTransitionListVBox.getChildren().clear();
-                        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-                            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
-                        }
-                        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+    public void stateViewContextMenuPopUp(StateNode stateNode) {
+        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
+        //TODO need to MVC this
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem toggleStandardStateItem = new MenuItem("Toggle standard state");
+        MenuItem toggleStartStateItem = new MenuItem("Toggle start state");
+        MenuItem toggleFinalStateItem = new MenuItem("Toggle final state");
+        MenuItem createTransitionItem = new MenuItem("Create transition");
+        MenuItem deleteStateItem = new MenuItem("Delete");
+        toggleStandardStateItem.setOnAction(e -> {
+            stateModelSelected.setStartState(false);
+            stateModelSelected.setFinalState(false);
+            stateNode.getStartStatePointLine1().setVisible(false);
+            stateNode.getStartStatePointLine2().setVisible(false);
+            stateNode.getFinalStateArc().setVisible(false);
+        });
+        toggleStartStateItem.setOnAction(e -> {
+            if (stateModelSelected.isStartState()) {
+                stateModelSelected.setStartState(false);
+                stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
+            } else {
+                if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
+                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                            "Only one initial state allowed per machine. " + "State " + machineModel.findStartStateModel() + " is currently defined as the initial state for this machine.", ButtonType.OK);
+                    invalidActionAlert.setHeaderText("Information");
+                    invalidActionAlert.setTitle("Invalid Action");
+                    invalidActionAlert.show();
+                } else {
+                    stateModelSelected.setStartState(true);
+                    stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
+                    stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
+                }
+            }
+        });
+        toggleFinalStateItem.setOnAction(e -> {
+            if (stateModelSelected.isFinalState()) {
+                stateModelSelected.setFinalState(false);
+                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
+            } else {
+                stateModelSelected.setFinalState(true);
+                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
+            }
+        });
+        createTransitionItem.setOnAction(e -> {
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setPadding(new Insets(10, 10, 0, 10));
+            gridPane.setAlignment(Pos.CENTER);
+            //Create input widgets for the user to enter a configuration
+            TextField currentStateTextField = new TextField();
+            currentStateTextField.setText(stateModelSelected.getStateId());
+            currentStateTextField.setPrefWidth(65);
+            // currentStateTextField.setEditable(false);
+            currentStateTextField.setDisable(true);
+            gridPane.add(new Label("Current State"), 1, 1);
+            gridPane.add(currentStateTextField, 1, 2);
+            ComboBox<String> inputSymbolComboBox = new ComboBox<>();
+            inputSymbolComboBox.setPrefWidth(110);
+            inputSymbolComboBox.setEditable(true);
+            inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
+            setUpComboBoxesListeners(inputSymbolComboBox);
+            gridPane.add(new Label("Input Symbol"), 2, 1);
+            gridPane.add(inputSymbolComboBox, 2, 2);
+            ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
+            stackSymbolToPopComboBox.setPrefWidth(110);
+            stackSymbolToPopComboBox.setEditable(true);
+            stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
+            setUpComboBoxesListeners(stackSymbolToPopComboBox);
+            gridPane.add(new Label("Stack Symbol to Pop"), 3, 1);
+            gridPane.add(stackSymbolToPopComboBox, 3, 2);
+            // Create a arrow label to connect the configuration input widgets to action input widgets
+            gridPane.add(new Label("->"), 4, 2);
+            //Create input widgets for the user to enter a configuration
+            ComboBox<String> resultingStateComboBox = new ComboBox<>();
+            resultingStateComboBox.setPrefWidth(110);
+            resultingStateComboBox.setEditable(true);
+            ArrayList<String> availableStateList = new ArrayList<>();
+            for (StateModel availableStateModel : machineModel.getStateModelSet()) {
+                availableStateList.add(availableStateModel.getStateId());
+            }
+            resultingStateComboBox.getItems().addAll(availableStateList);
+            gridPane.add(new Label("Resulting State"), 5, 1);
+            gridPane.add(resultingStateComboBox, 5, 2);
+            ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
+            stackSymbolToPushComboBox.setPrefWidth(110);
+            stackSymbolToPushComboBox.setEditable(true);
+            stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
+            setUpComboBoxesListeners(stackSymbolToPushComboBox);
+            gridPane.add(new Label("Stack Symbol to Push"), 6, 1);
+            gridPane.add(stackSymbolToPushComboBox, 6, 2);
+            //Create submit button for the user to submit a transition
+            Button submitTransitionButton = new Button("Submit");
+            HBox hBoxButtons = new HBox();
+            hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
+            hBoxButtons.setSpacing(10);
+            hBoxButtons.getChildren().add(submitTransitionButton);
+            gridPane.add(hBoxButtons, 7, 2);
+            Scene scene = new Scene(gridPane, 800, 150);
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(mainStagePresenter.getPrimaryWindow());
+            stage.setResizable(false);
+            stage.setTitle("Create Transition");
+            stage.setScene(scene);
+            stage.show();
+            submitTransitionButton.setOnAction(e1 -> {
+                //User input for a configuration
+                String userEntryCurrentState = currentStateTextField.getText();
+                String userEntryInputSymbol = inputSymbolComboBox.getValue();
+                String userEntryStackSymbolToPop = stackSymbolToPopComboBox.getValue();
+                //User input for a action
+                String userEntryResultingState = resultingStateComboBox.getValue();
+                String userEntryStackSymbolToPush = stackSymbolToPushComboBox.getValue();
+                if (((userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
+                        (userEntryResultingState == null || userEntryResultingState.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals("")))) {
+                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                            "All fields must be filled out to create a transition.", ButtonType.OK);
+                    invalidActionAlert.setHeaderText("Information");
+                    invalidActionAlert.setTitle("Invalid Action");
+                    invalidActionAlert.show();
+                    return;
+                }
+                //Update alphabets for machine
+                machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
+                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
+                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
+                StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingState);
+                if (resultingStateModel == null) {
+                    resultingStateModel = new StateModel(userEntryResultingState);
+                    machineModel.addStateModelToStateModelSet(resultingStateModel);
+                    this.addStateViewOntoDiagramView(resultingStateModel);
+                    transitionTablePresenter.updateAvailableStateListForCombobox();
+                }
+                //Create transition model placeholder
+                TransitionModel newTransitionModel = new TransitionModel(stateModelSelected, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
+                //Check to see if the transition already exists for the current state model
+                for (TransitionModel transitionModel : getExitingTranstionsFromStateModel(stateModelSelected)) {
+                    if (transitionModel.equals(newTransitionModel)) {
+                        // if transition exists alert the user and don't do anything further
+                        Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                                "Transition '" + newTransitionModel + "' already exists.", ButtonType.OK);
+                        invalidActionAlert.setHeaderText("Information");
+                        invalidActionAlert.setTitle("Invalid Action");
+                        invalidActionAlert.show();
                         return;
                     }
                 }
-            }
-        }
-        //Transition does not exist create fresh transition
-        diagramScene.getChildren().remove(currentStateNode);
-        diagramScene.getChildren().remove(resultingStateNode);
-        Line virtualCenterLine = new Line();
-        virtualCenterLine.startXProperty().bind(currentStateNode.layoutXProperty().add(currentStateNode.translateXProperty()).add(currentStateNode.widthProperty().divide(2)));
-        virtualCenterLine.startYProperty().bind(currentStateNode.layoutYProperty().add(currentStateNode.translateYProperty()).add(currentStateNode.heightProperty().divide(2)));
-        virtualCenterLine.endXProperty().bind(resultingStateNode.layoutXProperty().add(resultingStateNode.translateXProperty()).add(resultingStateNode.widthProperty().divide(2)));
-        virtualCenterLine.endYProperty().bind(resultingStateNode.layoutYProperty().add(resultingStateNode.translateYProperty()).add(resultingStateNode.heightProperty().divide(2)));
-        virtualCenterLine.setOpacity(0);
-        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateNode, resultingStateNode);
-        centerLineArrowAB.setOpacity(0);
-        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
-        centerLineArrowBA.setOpacity(0);
-        TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
-        transitionNode.setStroke(Color.BLACK);
-        transitionNode.setStrokeWidth(2);
-        VBox newTransitionListVBox = transitionNode.getTransitionListVBox();
-        newTransitionListVBox.setOnMousePressed(mouseEvent -> {
-            sceneX = mouseEvent.getScreenX();
-            sceneY = mouseEvent.getScreenY();
-            layoutX = newTransitionListVBox.getLayoutX();
-            layoutY = newTransitionListVBox.getLayoutY();
+                //Add transition model to machinemodel
+                machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
+                //Update transition table scene
+                transitionTablePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
+                transitionTablePresenter.updateAvailableStateListForCombobox();
+                transitionTablePresenter.updateInputAlphabetForComboBox();
+                transitionTablePresenter.updateStackAlphabetForComboBox();
+                //Update diagram scene
+                if (userEntryCurrentState.equals(userEntryResultingState)) {
+                    addReflexiveTransitionToDiagramView(newTransitionModel);
+                } else {
+                    addDirectionalTransitionToView(newTransitionModel);
+                }
+                stage.close();
+            });
         });
-        newTransitionListVBox.setOnMouseDragged(mouseEvent -> {
-            // Offset of drag
-            double offsetX = mouseEvent.getScreenX() - sceneX;
-            double offsetY = mouseEvent.getScreenY() - sceneY;
-            // Taking parent bounds
-            Bounds parentBounds = newTransitionListVBox.getParent().getLayoutBounds();
-            // Drag node bounds
-            double currPaneLayoutX = newTransitionListVBox.getLayoutX();
-            double currPaneWidth = newTransitionListVBox.getWidth();
-            double currPaneLayoutY = newTransitionListVBox.getLayoutY();
-            double currPaneHeight = newTransitionListVBox.getHeight();
-            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
-                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                newTransitionListVBox.setTranslateX(offsetX);
-            } else if (currPaneLayoutX + offsetX < 0) {
-                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
-                // which makes the final layout position to 0 in mouse released event.
-                newTransitionListVBox.setTranslateX(-currPaneLayoutX);
-            } else {
-                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                newTransitionListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
-            }
-            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                newTransitionListVBox.setTranslateY(offsetY);
-            } else if (currPaneLayoutY + offsetY < 0) {
-                newTransitionListVBox.setTranslateY(-currPaneLayoutY);
-            } else {
-                newTransitionListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
-            }
+        deleteStateItem.setOnAction(e -> {
+            //Update machine model
+            HashSet<TransitionModel> exitingTranstionsFromStateModel = getExitingTranstionsFromStateModel(stateModelSelected);
+            HashSet<TransitionModel> enteringTranstionsFromStateModel = getEnteringTransitionsFromStateModel(stateModelSelected);
+            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
+            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
+            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
+            //Notify transition table controller
+            transitionTablePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            //Update view
+            //Update view
+            deleteStateViewOnDiagramView(stateModelSelected, exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
         });
-        newTransitionListVBox.setOnMouseReleased(event -> {
-            // Updating the new layout positions
-            newTransitionListVBox.setLayoutX(layoutX + newTransitionListVBox.getTranslateX());
-            newTransitionListVBox.setLayoutY(layoutY + newTransitionListVBox.getTranslateY());
-            //Set transitionlist model coordinates
-            newTransitionModel.setxCoordinateOnDiagram(layoutX + newTransitionListVBox.getTranslateX());
-            newTransitionModel.setyCoordinateOnDiagram(layoutY + newTransitionListVBox.getTranslateY());
-            // Resetting the translate positions
-            newTransitionListVBox.setTranslateX(0);
-            newTransitionListVBox.setTranslateY(0);
-        });
-        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
-        }
-        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
-        double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
-        final ChangeListener<Number> listener = (obs, old, newVal) -> {
-            Rotate r = new Rotate();
-            r.setPivotX(virtualCenterLine.getStartX());
-            r.setPivotY(virtualCenterLine.getStartY());
-            r.setAngle(centerLineArrowAB.getRotate());
-            Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
-            transitionNode.setStartX(point.getX());
-            transitionNode.setStartY(point.getY());
-            Rotate r2 = new Rotate();
-            r2.setPivotX(virtualCenterLine.getEndX());
-            r2.setPivotY(virtualCenterLine.getEndY());
-            r2.setAngle(centerLineArrowBA.getRotate());
-            Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
-            transitionNode.setEndX(point2.getX());
-            transitionNode.setEndY(point2.getY());
-        };
-        centerLineArrowAB.rotateProperty().addListener(listener);
-        centerLineArrowBA.rotateProperty().addListener(listener);
-        virtualCenterLine.startXProperty().addListener(listener);
-        virtualCenterLine.startYProperty().addListener(listener);
-        virtualCenterLine.endXProperty().addListener(listener);
-        virtualCenterLine.endYProperty().addListener(listener);
-        StackPane arrowTip = createArrowTip(true, transitionNode, currentStateNode, resultingStateNode);
-        arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
-        HashSet<Node> setOfNode = new HashSet<>();
-        setOfNode.add(virtualCenterLine);
-        setOfNode.add(centerLineArrowAB);
-        setOfNode.add(centerLineArrowBA);
-        setOfNode.add(transitionNode);
-        setOfNode.add(arrowTip);
-        linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
-        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionListVBox());
-        diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
+        contextMenu.getItems().add(toggleStandardStateItem);
+        contextMenu.getItems().add(toggleStartStateItem);
+        contextMenu.getItems().add(toggleFinalStateItem);
+        contextMenu.getItems().add(createTransitionItem);
+        contextMenu.getItems().add(deleteStateItem);
+        contextMenu.show(stateNode, Side.RIGHT, 5, 5);
     }
     private StackPane createArrowTip(boolean toLineEnd, Line line, StackPane startDot, StackPane endDot) {
         double size = 12; // Arrow size
@@ -378,7 +436,133 @@ public class DiagramPresenter {
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
-    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel> exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
+    void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
+        //Get state from map using state ID
+        StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
+        StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
+        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
+        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
+            for (Node node : nextHashSet) {
+                if (node instanceof TransitionNode) {
+                    TransitionNode transitionNodeToCheck = (TransitionNode) node;
+                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode()
+                            ==
+                            resultingStateNode) {
+                        VBox newTransitionListVBox = transitionNodeToCheck.getTransitionListVBox();
+                        newTransitionListVBox.getChildren().clear();
+                        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+                            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
+                        }
+                        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+                        return;
+                    }
+                }
+            }
+        }
+        //Transition does not exist create fresh transition
+        diagramScene.getChildren().remove(currentStateNode);
+        diagramScene.getChildren().remove(resultingStateNode);
+        Line virtualCenterLine = new Line();
+        virtualCenterLine.startXProperty().bind(currentStateNode.layoutXProperty().add(currentStateNode.translateXProperty()).add(currentStateNode.widthProperty().divide(2)));
+        virtualCenterLine.startYProperty().bind(currentStateNode.layoutYProperty().add(currentStateNode.translateYProperty()).add(currentStateNode.heightProperty().divide(2)));
+        virtualCenterLine.endXProperty().bind(resultingStateNode.layoutXProperty().add(resultingStateNode.translateXProperty()).add(resultingStateNode.widthProperty().divide(2)));
+        virtualCenterLine.endYProperty().bind(resultingStateNode.layoutYProperty().add(resultingStateNode.translateYProperty()).add(resultingStateNode.heightProperty().divide(2)));
+        virtualCenterLine.setOpacity(0);
+        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateNode, resultingStateNode);
+        centerLineArrowAB.setOpacity(0);
+        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
+        centerLineArrowBA.setOpacity(0);
+        TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
+        transitionNode.setStroke(Color.BLACK);
+        transitionNode.setStrokeWidth(2);
+        VBox newTransitionListVBox = transitionNode.getTransitionListVBox();
+        newTransitionListVBox.setOnMousePressed(mouseEvent -> {
+            sceneX = mouseEvent.getScreenX();
+            sceneY = mouseEvent.getScreenY();
+            layoutX = newTransitionListVBox.getLayoutX();
+            layoutY = newTransitionListVBox.getLayoutY();
+        });
+        newTransitionListVBox.setOnMouseDragged(mouseEvent -> {
+            // Offset of drag
+            double offsetX = mouseEvent.getScreenX() - sceneX;
+            double offsetY = mouseEvent.getScreenY() - sceneY;
+            // Taking parent bounds
+            Bounds parentBounds = newTransitionListVBox.getParent().getLayoutBounds();
+            // Drag node bounds
+            double currPaneLayoutX = newTransitionListVBox.getLayoutX();
+            double currPaneWidth = newTransitionListVBox.getWidth();
+            double currPaneLayoutY = newTransitionListVBox.getLayoutY();
+            double currPaneHeight = newTransitionListVBox.getHeight();
+            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                newTransitionListVBox.setTranslateX(offsetX);
+            } else if (currPaneLayoutX + offsetX < 0) {
+                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                // which makes the final layout position to 0 in mouse released event.
+                newTransitionListVBox.setTranslateX(-currPaneLayoutX);
+            } else {
+                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                newTransitionListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            }
+            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                newTransitionListVBox.setTranslateY(offsetY);
+            } else if (currPaneLayoutY + offsetY < 0) {
+                newTransitionListVBox.setTranslateY(-currPaneLayoutY);
+            } else {
+                newTransitionListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            }
+        });
+        newTransitionListVBox.setOnMouseReleased(event -> {
+            // Updating the new layout positions
+            newTransitionListVBox.setLayoutX(layoutX + newTransitionListVBox.getTranslateX());
+            newTransitionListVBox.setLayoutY(layoutY + newTransitionListVBox.getTranslateY());
+            //Set transitionlist model coordinates
+            newTransitionModel.setxCoordinateOnDiagram(layoutX + newTransitionListVBox.getTranslateX());
+            newTransitionModel.setyCoordinateOnDiagram(layoutY + newTransitionListVBox.getTranslateY());
+            // Resetting the translate positions
+            newTransitionListVBox.setTranslateX(0);
+            newTransitionListVBox.setTranslateY(0);
+        });
+        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
+        }
+        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+        double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
+        final ChangeListener<Number> listener = (obs, old, newVal) -> {
+            Rotate r = new Rotate();
+            r.setPivotX(virtualCenterLine.getStartX());
+            r.setPivotY(virtualCenterLine.getStartY());
+            r.setAngle(centerLineArrowAB.getRotate());
+            Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
+            transitionNode.setStartX(point.getX());
+            transitionNode.setStartY(point.getY());
+            Rotate r2 = new Rotate();
+            r2.setPivotX(virtualCenterLine.getEndX());
+            r2.setPivotY(virtualCenterLine.getEndY());
+            r2.setAngle(centerLineArrowBA.getRotate());
+            Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
+            transitionNode.setEndX(point2.getX());
+            transitionNode.setEndY(point2.getY());
+        };
+        centerLineArrowAB.rotateProperty().addListener(listener);
+        centerLineArrowBA.rotateProperty().addListener(listener);
+        virtualCenterLine.startXProperty().addListener(listener);
+        virtualCenterLine.startYProperty().addListener(listener);
+        virtualCenterLine.endXProperty().addListener(listener);
+        virtualCenterLine.endYProperty().addListener(listener);
+        StackPane arrowTip = createArrowTip(true, transitionNode, currentStateNode, resultingStateNode);
+        arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
+        HashSet<Node> setOfNode = new HashSet<>();
+        setOfNode.add(virtualCenterLine);
+        setOfNode.add(centerLineArrowAB);
+        setOfNode.add(centerLineArrowBA);
+        setOfNode.add(transitionNode);
+        setOfNode.add(arrowTip);
+        linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
+        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionListVBox());
+        diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
+    }
+    private void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel> exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
         //Retrieve stateview to be deleted
         StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
         //Retrieve and remove linked transitionviews to stateview
@@ -390,7 +574,56 @@ public class DiagramPresenter {
         //Remove the stateview from the diagramview
         diagramScene.getChildren().remove(stateNodeToRemove);
     }
-    public void deleteTransitionView(HashSet<TransitionModel> deletedTransitionModelsSet) {
+    //StateGUIEventResponses
+    public void stateViewOnMousePressed(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
+        sceneX = xPositionOfMouse;
+        sceneY = yPositionOfMouse;
+        layoutX = stateNode.getLayoutX();
+        layoutY = stateNode.getLayoutY();
+    }
+    public void stateViewOnMouseDragged(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
+        // Offset of drag
+        double offsetX = xPositionOfMouse - sceneX;
+        double offsetY = yPositionOfMouse - sceneY;
+        // Taking parent bounds
+        Bounds parentBounds = stateNode.getParent().getLayoutBounds();
+        // Drag node bounds
+        double currPaneLayoutX = stateNode.getLayoutX();
+        double currPaneWidth = stateNode.getWidth();
+        double currPaneLayoutY = stateNode.getLayoutY();
+        double currPaneHeight = stateNode.getHeight();
+        if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+            // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+            stateNode.setTranslateX(offsetX);
+        } else if (currPaneLayoutX + offsetX < 0) {
+            // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+            // which makes the final layout position to 0 in mouse released event.
+            stateNode.setTranslateX(-currPaneLayoutX);
+        } else {
+            // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+            stateNode.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+        }
+        if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+            stateNode.setTranslateY(offsetY);
+        } else if (currPaneLayoutY + offsetY < 0) {
+            stateNode.setTranslateY(-currPaneLayoutY);
+        } else {
+            stateNode.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+        }
+    }
+    public void stateViewOnMouseReleased(StateNode stateNode) {
+        // Updating the new layout positions
+        stateNode.setLayoutX(layoutX + stateNode.getTranslateX());
+        stateNode.setLayoutY(layoutY + stateNode.getTranslateY());
+        // Updating state model coordinates
+        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
+        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
+        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
+        // Resetting the translate positions
+        stateNode.setTranslateX(0);
+        stateNode.setTranslateY(0);
+    }
+    void deleteTransitionView(HashSet<TransitionModel> deletedTransitionModelsSet) {
         HashSet<HashSet<Node>> transitionViewNodesToRemoveSet = new HashSet<>();
         HashSet<StateNode> stateViewsWithTransitionToRemoveSet = new HashSet<>();
         for (TransitionModel deletedTransition : deletedTransitionModelsSet) {
@@ -458,240 +691,6 @@ public class DiagramPresenter {
             }
         }
     }
-    //StateGUIEventResponses
-    public void stateViewOnMousePressed(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
-        sceneX = xPositionOfMouse;
-        sceneY = yPositionOfMouse;
-        layoutX = stateNode.getLayoutX();
-        layoutY = stateNode.getLayoutY();
-    }
-    public void stateViewOnMouseDragged(StateNode stateNode, double xPositionOfMouse, double yPositionOfMouse) {
-        // Offset of drag
-        double offsetX = xPositionOfMouse - sceneX;
-        double offsetY = yPositionOfMouse - sceneY;
-        // Taking parent bounds
-        Bounds parentBounds = stateNode.getParent().getLayoutBounds();
-        // Drag node bounds
-        double currPaneLayoutX = stateNode.getLayoutX();
-        double currPaneWidth = stateNode.getWidth();
-        double currPaneLayoutY = stateNode.getLayoutY();
-        double currPaneHeight = stateNode.getHeight();
-        if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
-            // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-            stateNode.setTranslateX(offsetX);
-        } else if (currPaneLayoutX + offsetX < 0) {
-            // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
-            // which makes the final layout position to 0 in mouse released event.
-            stateNode.setTranslateX(-currPaneLayoutX);
-        } else {
-            // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-            stateNode.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
-        }
-        if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-            stateNode.setTranslateY(offsetY);
-        } else if (currPaneLayoutY + offsetY < 0) {
-            stateNode.setTranslateY(-currPaneLayoutY);
-        } else {
-            stateNode.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
-        }
-    }
-    public void stateViewOnMouseReleased(StateNode stateNode) {
-        // Updating the new layout positions
-        stateNode.setLayoutX(layoutX + stateNode.getTranslateX());
-        stateNode.setLayoutY(layoutY + stateNode.getTranslateY());
-        // Updating state model coordinates
-        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
-        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
-        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
-        // Resetting the translate positions
-        stateNode.setTranslateX(0);
-        stateNode.setTranslateY(0);
-    }
-    public void stateViewContextMenuPopUp(StateNode stateNode) {
-        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
-        //TODO need to MVC this
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem toggleStandardStateItem = new MenuItem("Toggle standard state");
-        MenuItem toggleStartStateItem = new MenuItem("Toggle start state");
-        MenuItem toggleFinalStateItem = new MenuItem("Toggle final state");
-        MenuItem createTransitionItem = new MenuItem("Create transition");
-        MenuItem deleteStateItem = new MenuItem("Delete");
-        toggleStandardStateItem.setOnAction(e -> {
-            stateModelSelected.setStartState(false);
-            stateModelSelected.setFinalState(false);
-            stateNode.getStartStatePointLine1().setVisible(false);
-            stateNode.getStartStatePointLine2().setVisible(false);
-            stateNode.getFinalStateArc().setVisible(false);
-        });
-        toggleStartStateItem.setOnAction(e -> {
-            if (stateModelSelected.isStartState()) {
-                stateModelSelected.setStartState(false);
-                stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
-                stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
-            } else {
-                if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
-                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                            "Only one initial state allowed per machine. " + "State " + machineModel.findStartStateModel() + " is currently defined as the initial state for this machine.", ButtonType.OK);
-                    invalidActionAlert.setHeaderText("Information");
-                    invalidActionAlert.setTitle("Invalid Action");
-                    invalidActionAlert.show();
-                } else {
-                    stateModelSelected.setStartState(true);
-                    stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
-                    stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
-                }
-            }
-        });
-        toggleFinalStateItem.setOnAction(e -> {
-            if (stateModelSelected.isFinalState()) {
-                stateModelSelected.setFinalState(false);
-                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
-            } else {
-                stateModelSelected.setFinalState(true);
-                stateNode.getFinalStateArc().setVisible(stateModelSelected.isFinalState());
-            }
-        });
-        //TODO need to remove this listeners logic
-        createTransitionItem.setOnAction(e -> {
-            GridPane gridPane = new GridPane();
-            gridPane.setHgap(10);
-            gridPane.setPadding(new Insets(10, 10, 0, 10));
-            gridPane.setAlignment(Pos.CENTER);
-//Create input widgets for the user to enter a configuration
-            TextField currentStateTextField = new TextField();
-            currentStateTextField.setText(stateModelSelected.getStateId());
-            currentStateTextField.setPrefWidth(65);
-            // currentStateTextField.setEditable(false);
-            currentStateTextField.setDisable(true);
-            gridPane.add(new Label("Current State"), 1, 1);
-            gridPane.add(currentStateTextField, 1, 2);
-            ComboBox<String> inputSymbolComboBox = new ComboBox<>();
-            inputSymbolComboBox.setPrefWidth(110);
-            inputSymbolComboBox.setEditable(true);
-            inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
-            setUpComboBoxesListeners(inputSymbolComboBox);
-            gridPane.add(new Label("Input Symbol"), 2, 1);
-            gridPane.add(inputSymbolComboBox, 2, 2);
-            ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
-            stackSymbolToPopComboBox.setPrefWidth(110);
-            stackSymbolToPopComboBox.setEditable(true);
-            stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
-            setUpComboBoxesListeners(stackSymbolToPopComboBox);
-            gridPane.add(new Label("Stack Symbol to Pop"), 3, 1);
-            gridPane.add(stackSymbolToPopComboBox, 3, 2);
-// Create a arrow label to connect the configuration input widgets to action input widgets
-            gridPane.add(new Label("->"), 4, 2);
-//Create input widgets for the user to enter a configuration
-            ComboBox<String> resultingStateComboBox = new ComboBox<>();
-            resultingStateComboBox.setPrefWidth(110);
-            resultingStateComboBox.setEditable(true);
-            ArrayList<String> availableStateList = new ArrayList<>();
-            for (StateModel availableStateModel : machineModel.getStateModelSet()) {
-                availableStateList.add(availableStateModel.getStateId());
-            }
-            resultingStateComboBox.getItems().addAll(availableStateList);
-            gridPane.add(new Label("Resulting State"), 5, 1);
-            gridPane.add(resultingStateComboBox, 5, 2);
-            ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
-            stackSymbolToPushComboBox.setPrefWidth(110);
-            stackSymbolToPushComboBox.setEditable(true);
-            stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
-            setUpComboBoxesListeners(stackSymbolToPushComboBox);
-            gridPane.add(new Label("Stack Symbol to Push"), 6, 1);
-            gridPane.add(stackSymbolToPushComboBox, 6, 2);
-//Create submit button for the user to submit a transition
-            Button submitTransitionButton = new Button("Submit");
-            HBox hBoxButtons = new HBox();
-            hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
-            hBoxButtons.setSpacing(10);
-            hBoxButtons.getChildren().add(submitTransitionButton);
-            gridPane.add(hBoxButtons, 7, 2);
-            Scene scene = new Scene(gridPane, 800, 150);
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(mainStagePresenter.getPrimaryWindow());
-            stage.setResizable(false);
-            stage.setTitle("Create Transition");
-            stage.setScene(scene);
-            stage.show();
-            submitTransitionButton.setOnAction(e1 -> {
-                //User input for a configuration
-                String userEntryCurrentState = currentStateTextField.getText();
-                String userEntryInputSymbol = inputSymbolComboBox.getValue();
-                String userEntryStackSymbolToPop = stackSymbolToPopComboBox.getValue();
-                //User input for a action
-                String userEntryResultingState = resultingStateComboBox.getValue();
-                String userEntryStackSymbolToPush = stackSymbolToPushComboBox.getValue();
-                if (((userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
-                        (userEntryResultingState == null || userEntryResultingState.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals("")))) {
-                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                            "All fields must be filled out to create a transition.", ButtonType.OK);
-                    invalidActionAlert.setHeaderText("Information");
-                    invalidActionAlert.setTitle("Invalid Action");
-                    invalidActionAlert.show();
-                    return;
-                }
-                //Update alphabets for machine
-                machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
-                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
-                machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
-                StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingState);
-                if (resultingStateModel == null) {
-                    resultingStateModel = new StateModel(userEntryResultingState);
-                    machineModel.addStateModelToStateModelSet(resultingStateModel);
-                    this.addStateViewOntoDiagramView(resultingStateModel);
-                    transitionTablePresenter.updateAvailableStateListForCombobox();
-                }
-                //Create transition model placeholder
-                TransitionModel newTransitionModel = new TransitionModel(stateModelSelected, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
-                //Check to see if the transition already exists for the current state model
-                for (TransitionModel transitionModel : getExitingTranstionsFromStateModel(stateModelSelected)) {
-                    if (transitionModel.equals(newTransitionModel)) {
-                        // if transition exists alert the user and don't do anything further
-                        Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                                "Transition '" + newTransitionModel + "' already exists.", ButtonType.OK);
-                        invalidActionAlert.setHeaderText("Information");
-                        invalidActionAlert.setTitle("Invalid Action");
-                        invalidActionAlert.show();
-                        return;
-                    }
-                }
-                //Add transition model to machinemodel
-                machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
-                //Update transition table scene
-                transitionTablePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
-                transitionTablePresenter.updateAvailableStateListForCombobox();
-                transitionTablePresenter.updateInputAlphabetForComboBox();
-                transitionTablePresenter.updateStackAlphabetForComboBox();
-                //Update diagram scene
-                if (userEntryCurrentState.equals(userEntryResultingState)) {
-                    addReflexiveTransitionToDiagramView(newTransitionModel);
-                } else {
-                    addDirectionalTransitionToView(newTransitionModel);
-                }
-                stage.close();
-            });
-        });
-        deleteStateItem.setOnAction(e -> {
-            //Update machine model
-            HashSet<TransitionModel> exitingTranstionsFromStateModel = getExitingTranstionsFromStateModel(stateModelSelected);
-            HashSet<TransitionModel> enteringTranstionsFromStateModel = getEnteringTransitionsFromStateModel(stateModelSelected);
-            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
-            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
-            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
-            //Notify transition table controller
-            transitionTablePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
-            //Update view
-            //Update view
-            deleteStateViewOnDiagramView(stateModelSelected, exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
-        });
-        contextMenu.getItems().add(toggleStandardStateItem);
-        contextMenu.getItems().add(toggleStartStateItem);
-        contextMenu.getItems().add(toggleFinalStateItem);
-        contextMenu.getItems().add(createTransitionItem);
-        contextMenu.getItems().add(deleteStateItem);
-        contextMenu.show(stateNode, Side.RIGHT, 5, 5);
-    }
     private void setUpComboBoxesListeners(ComboBox comboBox) {
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
@@ -705,14 +704,13 @@ public class DiagramPresenter {
             });
         });
     }
-    public void highlightTransitionTakenInDiagram(ConfigurationModel selectedConfiguration) {
+    void highlightTransitionTakenInDiagram(ConfigurationModel selectedConfiguration) {
         TransitionModel transitionModelToHighlight = selectedConfiguration.getTransitionModelTakenToReachCurrentConfiguration();
         if (transitionModelToHighlight == null) {
             this.startStateNode = stateMap.get(selectedConfiguration.getCurrentStateModel());
             startStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
             if (transitionModelHighlighted != null) {
                 removeHighlightedTransitionView();
-                //TODO: FIX THIS LOGIC CURRENT IMP IS QUICK FIX
                 startStateNode.getStateCircle().setStroke(Color.LAWNGREEN);
             }
         } else {

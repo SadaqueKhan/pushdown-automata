@@ -1,6 +1,4 @@
 package app.listener;
-
-
 import app.presenter.MainStagePresenter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -9,24 +7,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
-
 public class MainStageListener implements EventHandler {
-
-
     private final MainStagePresenter mainStagePresenter;
-
-
     public MainStageListener(MainStagePresenter mainStagePresenter) {
         this.mainStagePresenter = mainStagePresenter;
     }
-
-
     @Override
     public void handle(Event event) {
-
         String eventType = event.getEventType().toString();
-
         if (eventType.equals("KEY_PRESSED")) {
             TextField isInputTextField = (TextField) event.getSource();
             KeyEvent keyEvent = (KeyEvent) event;
@@ -35,7 +23,6 @@ public class MainStageListener implements EventHandler {
                 mainStagePresenter.loadSimulationStage(isInputTextField.getText());
             }
         }
-
         if (eventType.equals("ACTION")) {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
@@ -52,7 +39,7 @@ public class MainStageListener implements EventHandler {
                     mainStagePresenter.loadMachine();
                 } else if (isMenuItem.getText().equals("By Final State")) {
                     mainStagePresenter.setAcceptanceCriteriaToFinalState();
-                } else if (isMenuItem.getText().equals("By Empty StackModel")) {
+                } else if (isMenuItem.getText().equals("By Empty Stack")) {
                     mainStagePresenter.setAcceptanceCriteriaToEmptyStack();
                 } else if (isMenuItem.getText().equals("By Quick Run")) {
                     mainStagePresenter.setSimulationToQuickRun();
