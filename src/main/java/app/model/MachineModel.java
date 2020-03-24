@@ -1,6 +1,5 @@
 package app.model;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 
@@ -60,25 +59,38 @@ public class MachineModel {
     }
 
 
-    @XmlElement
     public HashSet<StateModel> getStateModelSet() {
         return stateModelSet;
     }
 
-    @XmlElement
+    public void setStateModelSet(HashSet<StateModel> stateModelSet) {
+        this.stateModelSet = stateModelSet;
+    }
+    
     public HashSet<TransitionModel> getTransitionModelSet() {
         return transitionModelSet;
     }
 
-    @XmlElement
+    public void setTransitionModelSet(HashSet<TransitionModel> transitionModelSet) {
+        this.transitionModelSet = transitionModelSet;
+    }
+
     public HashSet<String> getInputAlphabetSet() {
         return inputAlphabetSet;
     }
 
-    @XmlElement
+    public void setInputAlphabetSet(HashSet<String> inputAlphabetSet) {
+        this.inputAlphabetSet = inputAlphabetSet;
+    }
+
     public HashSet<String> getStackAlphabetSet() {
         return stackAlphabetSet;
     }
+
+    public void setStackAlphabetSet(HashSet<String> stackAlphabetSet) {
+        this.stackAlphabetSet = stackAlphabetSet;
+    }
+
 
     public boolean isAcceptanceByFinalState() {
         return isAcceptanceByFinalState;
