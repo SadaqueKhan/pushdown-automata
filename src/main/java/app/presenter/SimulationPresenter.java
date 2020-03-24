@@ -206,7 +206,7 @@ public class SimulationPresenter {
     }
 
 
-    public void createSuccessSimulationStage(ConfigurationModel doubleClickConfiguration) {
+    public void createIndependentPathSimulationStage(ConfigurationModel doubleClickConfiguration) {
 
         ListView<ConfigurationModel> transitionsTakenListView = new ListView<>();
 
