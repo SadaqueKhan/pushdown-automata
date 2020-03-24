@@ -59,7 +59,6 @@ public class MachineModel {
         return null;
     }
 
-
     public HashSet<StateModel> getStateModelSet() {
         return stateModelSet;
     }
@@ -84,6 +83,7 @@ public class MachineModel {
         this.inputAlphabetSet = inputAlphabetSet;
     }
 
+    @XmlAttribute
     public HashSet<String> getStackAlphabetSet() {
         return stackAlphabetSet;
     }
@@ -98,16 +98,16 @@ public class MachineModel {
         return isAcceptanceByFinalState;
     }
 
-    public void setAcceptanceByFinalState(boolean acceptancebyFinalState) {
-        isAcceptanceByFinalState = acceptancebyFinalState;
+    public void setAcceptanceByFinalState(boolean acceptanceByFinalState) {
+        isAcceptanceByFinalState = acceptanceByFinalState;
     }
-    
+
     @XmlAttribute
     public boolean isAcceptanceByEmptyStack() {
         return isAcceptanceByEmptyStack;
     }
 
-    public void setAcceptanceByEmptyStack(boolean acceptancebyEmptyStack) {
-        isAcceptanceByEmptyStack = acceptancebyEmptyStack;
+    public void setAcceptanceByEmptyStack(boolean acceptanceByEmptyStack) {
+        isAcceptanceByEmptyStack = acceptanceByEmptyStack;
     }
 }
