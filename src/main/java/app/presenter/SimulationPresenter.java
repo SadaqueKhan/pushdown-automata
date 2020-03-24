@@ -4,8 +4,8 @@ import app.model.ConfigurationModel;
 import app.model.MachineModel;
 import app.model.SimulationModel;
 import app.model.TransitionModel;
-import app.view.QuickRunSimulationStage;
-import app.view.StepRunSimulationStage;
+import app.view.QuickRunSimulationScene;
+import app.view.StepRunSimulationScene;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -25,8 +25,8 @@ public class SimulationPresenter {
     private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final String typeOfSimulation;
-    private QuickRunSimulationStage quickRunSimulationStage;
-    private StepRunSimulationStage stepRunSimulationStage;
+    private QuickRunSimulationScene quickRunSimulationScene;
+    private StepRunSimulationScene stepRunSimulationScene;
     private Stage simulationStage;
     private SimulationModel quickRunSimulationModel;
     private SimulationModel stepRunSimulationModel;
@@ -39,7 +39,7 @@ public class SimulationPresenter {
         simulationStage = new Stage();
 
         if (typeOfSimulation.equals("By Quick Run")) {
-            this.quickRunSimulationStage = new QuickRunSimulationStage(this);
+            this.quickRunSimulationScene = new QuickRunSimulationScene(this);
 
             quickRunSimulationModel = new SimulationModel(machineModel, inputWord);
 
@@ -64,11 +64,11 @@ public class SimulationPresenter {
                         "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
                         "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
                         "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
-                quickRunSimulationStage.getSimulationStatsLabel().setText(simulationStatsString);
+                quickRunSimulationScene.getSimulationStatsLabel().setText(simulationStatsString);
             }
             //Create a new scene to render simulation
             simulationStage.setTitle("Simulation: Quick Run");
-            Scene scene = new Scene(quickRunSimulationStage, 550, 500);
+            Scene scene = new Scene(quickRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
 
         }
@@ -84,14 +84,14 @@ public class SimulationPresenter {
 
             //Load view
             simulationStage.setTitle("Simulation: Step Run");
-            this.stepRunSimulationStage = new StepRunSimulationStage(this);
-            stepRunSimulationStage.getCurrentConfigTextField().setText("Current configuration: " + rootConfigurationModel.toString());
+            this.stepRunSimulationScene = new StepRunSimulationScene(this);
+            stepRunSimulationScene.getCurrentConfigTextField().setText("Current configuration: " + rootConfigurationModel.toString());
             for (ConfigurationModel rootConfigurationModelChild : rootChildrenConfigurationList) {
-                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationScene.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
 
             //Create a new scene to render simulation
-            Scene scene = new Scene(stepRunSimulationStage, 550, 500);
+            Scene scene = new Scene(stepRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
         }
 
@@ -111,7 +111,7 @@ public class SimulationPresenter {
 
 
     public void triggerAlgorithmScene() {
-        ListView<ConfigurationModel> algorithmListView = quickRunSimulationStage.getAlgorithmlistView();
+        ListView<ConfigurationModel> algorithmListView = quickRunSimulationScene.getAlgorithmlistView();
 
         if (algorithmListView.getItems().isEmpty()) {
             // Get algorithm path list
@@ -178,15 +178,15 @@ public class SimulationPresenter {
             }));
         }
         //Remove current node at the center of the stage
-        quickRunSimulationStage.getContainerForCenterNodes().getChildren().remove(0);
+        quickRunSimulationScene.getContainerForCenterNodes().getChildren().remove(0);
         //Add the algorithm node to the center of the stage
-        quickRunSimulationStage.getContainerForCenterNodes().getChildren().add(quickRunSimulationStage.getAlgorithmlistView());
+        quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getAlgorithmlistView());
     }
 
 
     public void triggerPathsScene() {
         //Get accordion
-        Accordion accordion = (Accordion) quickRunSimulationStage.getPathsVBox().getChildren().get(0);
+        Accordion accordion = (Accordion) quickRunSimulationScene.getPathsVBox().getChildren().get(0);
 
         if (accordion.getPanes().isEmpty()) {
             //Get leaf configurations
@@ -211,9 +211,8 @@ public class SimulationPresenter {
                 }
             }
         }
-
-        quickRunSimulationStage.getContainerForCenterNodes().getChildren().remove(0);
-        quickRunSimulationStage.getContainerForCenterNodes().getChildren().add(quickRunSimulationStage.getPathsScrollPane());
+        quickRunSimulationScene.getContainerForCenterNodes().getChildren().remove(0);
+        quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getPathsScrollPane());
     }
 
 
@@ -275,7 +274,7 @@ public class SimulationPresenter {
     public void stepForward() {
 
         // Get the step run transition list
-        ListView<TransitionModel> listView = stepRunSimulationStage.getTransitionOptionsListView();
+        ListView<TransitionModel> listView = stepRunSimulationScene.getTransitionOptionsListView();
         // Get the selected transition to move to from the transition list
         ObservableList<TransitionModel> selectedTransitionModelObservableList = listView.getSelectionModel().getSelectedItems();
         // Store the selected transition to move to into transition model instance
@@ -292,7 +291,7 @@ public class SimulationPresenter {
             // Find all applicable transitions from the current configuration to a next configuration
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 // Render each next applicable transition onto a the step run transition list
-                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationScene.getTransitionOptionsListView().getItems().add(nextConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
 
             String style = "-fx-background-color: rgba(238,238,238,0.5);";
@@ -308,10 +307,9 @@ public class SimulationPresenter {
                 currentConfigTextFieldString += "[STUCK]";
                 style = "-fx-background-color: rgba(255,138,0,0.5);";
             }
-
-            stepRunSimulationStage.getCurrentConfigTextField().setText(currentConfigTextFieldString);
-            stepRunSimulationStage.setStyle(style);
-            stepRunSimulationStage.setBackground(Background.EMPTY);
+            stepRunSimulationScene.getCurrentConfigTextField().setText(currentConfigTextFieldString);
+            stepRunSimulationScene.setStyle(style);
+            stepRunSimulationScene.setBackground(Background.EMPTY);
 
             // Highlight diagram scene
             updateDiagramViewForSelectedConfiguration(nextConfigurationModel);
@@ -323,13 +321,13 @@ public class SimulationPresenter {
     }
 
     public void stepBack() {
-        ListView<TransitionModel> listView = stepRunSimulationStage.getTransitionOptionsListView();
+        ListView<TransitionModel> listView = stepRunSimulationScene.getTransitionOptionsListView();
         if (stepRunSimulationModel.getCurrentConfig().getParentConfiguration() != null) {
             listView.getItems().clear();
             stepRunSimulationModel.previous();
             ConfigurationModel prevConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             for (ConfigurationModel currentConfigurationModelChild : prevConfigurationModel.getChildrenConfigurations()) {
-                stepRunSimulationStage.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
+                stepRunSimulationScene.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
 
             String style = "-fx-background-color: rgba(238,238,238,0.5);";
@@ -345,10 +343,9 @@ public class SimulationPresenter {
                 currentConfigTextFieldString += "[STUCK]";
                 style = "-fx-background-color: rgba(255,138,0,0.5);";
             }
-
-            stepRunSimulationStage.getCurrentConfigTextField().setText(currentConfigTextFieldString);
-            stepRunSimulationStage.setStyle(style);
-            stepRunSimulationStage.setBackground(Background.EMPTY);
+            stepRunSimulationScene.getCurrentConfigTextField().setText(currentConfigTextFieldString);
+            stepRunSimulationScene.setStyle(style);
+            stepRunSimulationScene.setBackground(Background.EMPTY);
 
             updateDiagramViewForSelectedConfiguration(prevConfigurationModel);
             updateTapeViewForSelectedConfiguration(prevConfigurationModel);

@@ -1,13 +1,14 @@
 package app.view;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
-import javafx.scene.text.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * View blueprint for a tape scene.
+ * Blueprint for a tape scene.
  * </p>
  */
 public class TapeScene extends ScrollPane {

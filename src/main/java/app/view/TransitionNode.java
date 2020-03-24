@@ -1,11 +1,11 @@
 package app.view;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * View blueprint for a transition node.
+ * Blueprint for a transition node.
  * </p>
  */
 public class TransitionNode extends Line {
@@ -14,6 +14,11 @@ public class TransitionNode extends Line {
     private StateNode resultingStateNode;
     //Reference to UI components for view.
     private VBox transitionListVBox;
+    /**
+     * Constructor of a transition node, used to instantiate an instance of the view.
+     * @param currentStateNode
+     * @param resultingStateNode
+     */
     public TransitionNode(StateNode currentStateNode, StateNode resultingStateNode) {
         this.currentStateNode = currentStateNode;
         this.resultingStateNode = resultingStateNode;

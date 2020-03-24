@@ -1,16 +1,25 @@
 package app.view;
-import app.listener.*;
-import app.model.*;
-import app.presenter.*;
-import javafx.application.*;
-import javafx.geometry.*;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.*;
-import javafx.scene.layout.*;
+import app.listener.TransitionTableListener;
+import app.model.TransitionModel;
+import app.presenter.TransitionTablePresenter;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * View blueprint for a transition table scene.
+ * Blueprint for a transition table scene.
  * </p>
  */
 public class TransitionTableScene extends BorderPane {

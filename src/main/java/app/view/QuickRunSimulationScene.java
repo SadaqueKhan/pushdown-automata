@@ -1,16 +1,22 @@
 package app.view;
-
 import app.listener.QuickRunSimulationListener;
 import app.model.ConfigurationModel;
 import app.presenter.SimulationPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.SegmentedButton;
-
-public class QuickRunSimulationStage extends BorderPane {
+public class QuickRunSimulationScene extends BorderPane {
 
     //Reference to simulation controller
     private final SimulationPresenter simulationPresenter;
@@ -23,9 +29,7 @@ public class QuickRunSimulationStage extends BorderPane {
     private VBox pathsVBox;
     private ScrollPane pathsScrollPane;
     private Label simulationStatsLabel;
-
-
-    public QuickRunSimulationStage(SimulationPresenter simulationPresenter) {
+    public QuickRunSimulationScene(SimulationPresenter simulationPresenter) {
         this.simulationPresenter = simulationPresenter;
         setUpUIComponents();
         setUpUIListeners();
