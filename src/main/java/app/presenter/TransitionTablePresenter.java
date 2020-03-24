@@ -1,16 +1,10 @@
 package app.presenter;
+import app.model.*;
+import app.view.*;
+import javafx.collections.*;
+import javafx.scene.control.*;
 
-import app.model.MachineModel;
-import app.model.StateModel;
-import app.model.TransitionModel;
-import app.view.MainStage;
-import app.view.TransitionTableScene;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class TransitionTablePresenter {
 
@@ -26,8 +20,7 @@ public class TransitionTablePresenter {
         this.machineModel = machineModel;
         this.mainStagePresenter = mainStagePresenter;
         this.mainStage = mainStage;
-
-        this.transitionTableScene = new TransitionTableScene(mainStage, this);
+        this.transitionTableScene = new TransitionTableScene(this);
     }
 
     public void loadTransitionTableOntoStage(DiagramPresenter diagramPresenter) {
