@@ -17,7 +17,7 @@ public class ConfigurationModel {
     private final StackModel currentStackModel;
     private boolean isVisited;
     private int branch;
-    private int depth;
+    private final int depth;
     private boolean isSuccessConfig = false;
     private boolean isInfiniteConfig = false;
     private boolean isStuckConfig = false;
@@ -102,7 +102,7 @@ public class ConfigurationModel {
      * Sets the branch position of this configuration.
      * @param branch position of this configuration
      */
-    public void setBranch(int branch) {
+    private void setBranch(int branch) {
         this.branch = branch;
     }
     /**

@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
  */
 public class SimulationModel {
     private final String EMPTY = "\u03B5";
-    private MachineModel machineModel;
+    private final MachineModel machineModel;
     private final String inputWord;
     private ConfigurationModel currentConfig;
-    private TapeModel currentTapeModel;
-    private StackModel currentStackModel;
-    private ArrayList<ConfigurationModel> computationTreeArrayList;
-    private ArrayList<ConfigurationModel> leafConfigurationArrayList;
+    private final TapeModel currentTapeModel;
+    private final StackModel currentStackModel;
+    private final ArrayList<ConfigurationModel> computationTreeArrayList;
+    private final ArrayList<ConfigurationModel> leafConfigurationArrayList;
     private boolean isNFA = false;
     private int numOfPossibleSuccessPaths = 0;
     private int numOfPossibleFailPaths = 0;
@@ -36,7 +36,7 @@ public class SimulationModel {
         //Add currentConfig to the path
         computationTreeArrayList.add(currentConfig);
     }
-    public int next() {
+    private int next() {
         //Retrieve applicable configurations stored in the current configuration
         List<ConfigurationModel> childrenConfigurations = currentConfig.getChildrenConfigurations();
         if (currentConfig.getChildrenConfigurations() == null) {
@@ -139,7 +139,7 @@ public class SimulationModel {
         }
         return new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
     }
-    public void setTypeOfConfiguration() {
+    private void setTypeOfConfiguration() {
         if (currentTapeModel.isEmpty()) {
             if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
                 currentConfig.setSuccessConfig(true);

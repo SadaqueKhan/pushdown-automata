@@ -22,7 +22,7 @@ public class StateNode extends StackPane {
     //Reference to diagram presenter.
     private final DiagramScenePresenter diagramScenePresenter;
     //Reference data linked to view.
-    private String stateID;
+    private final String stateID;
     //Reference to UI components for view.
     private Circle stateCircle;
     private Line startStatePointLine1;
@@ -45,7 +45,7 @@ public class StateNode extends StackPane {
     /**
      * Sets up the UI components of the view.
      */
-    public void setUpUIComponents() {
+    private void setUpUIComponents() {
         double radius = 25;
         double paneSize = 2 * radius;
         //Create standard state UI components.

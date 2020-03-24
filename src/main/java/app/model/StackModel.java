@@ -7,9 +7,8 @@ import java.util.ArrayList;
  * Model of a transition, consisting of elements commonly found to define a stack in push down automata theory.
  * </p>
  */
-public class StackModel {
-
-    private ArrayList<String> stack;
+class StackModel {
+    private final ArrayList<String> stack;
 
     public StackModel() {
         stack = new ArrayList<>();

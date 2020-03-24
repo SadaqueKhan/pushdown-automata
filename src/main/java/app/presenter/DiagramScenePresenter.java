@@ -61,8 +61,8 @@ public class DiagramScenePresenter {
     private double sceneY;
     private TransitionModel transitionModelHighlighted;
     private StateNode startStateNode;
-    private Map<StateModel, StateNode> stateMap;
-    private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
+    private final Map<StateModel, StateNode> stateMap;
+    private final Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     /**
      * Constructor of the diagram scene presenter, used to instantiate an instance of the presenter.
      * @param mainStage
@@ -380,8 +380,7 @@ public class DiagramScenePresenter {
                 dt = (currentStateNode.getWidth() / 2) + (arrowTipStackPane.getWidth() / 2);
             }
             double t = dt / lineLength;
-            double dx = ((1 - t) * line.getStartX()) + (t * line.getEndX());
-            return dx;
+            return ((1 - t) * line.getStartX()) + (t * line.getEndX());
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
         // Determining the y point on the line which is at a certain distance.
         DoubleBinding tY = Bindings.createDoubleBinding(() -> {
@@ -395,8 +394,7 @@ public class DiagramScenePresenter {
                 dt = (currentStateNode.getHeight() / 2) + (arrowTipStackPane.getHeight() / 2);
             }
             double t = dt / lineLength;
-            double dy = ((1 - t) * line.getStartY()) + (t * line.getEndY());
-            return dy;
+            return ((1 - t) * line.getStartY()) + (t * line.getEndY());
         }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
         arrowTipStackPane.layoutXProperty().bind(tX.subtract(arrowTipStackPane.widthProperty().divide(2)));
         arrowTipStackPane.layoutYProperty().bind(tY.subtract(arrowTipStackPane.heightProperty().divide(2)));

@@ -10,8 +10,8 @@ import javafx.scene.shape.Line;
  */
 public class TransitionNode extends Line {
     //Reference to the state nodes linked to view.
-    private StateNode currentStateNode;
-    private StateNode resultingStateNode;
+    private final StateNode currentStateNode;
+    private final StateNode resultingStateNode;
     //Reference to UI components for view.
     private VBox transitionListVBox;
     /**

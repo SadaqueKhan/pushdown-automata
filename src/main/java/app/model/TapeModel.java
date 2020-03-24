@@ -9,7 +9,7 @@ import java.util.List;
  * Model of a tape, consisting of elements commonly found to define a tape in push down automata theory.
  * </p>
  */
-public class TapeModel {
+class TapeModel {
 
     private List<String> inputTape;
     private int head;
