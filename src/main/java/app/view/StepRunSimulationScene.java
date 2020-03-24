@@ -1,7 +1,7 @@
 package app.view;
 import app.listener.StepRunSimulationListener;
 import app.model.TransitionModel;
-import app.presenter.SimulationPresenter;
+import app.presenter.SimulationStagePresenter;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -17,7 +17,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class StepRunSimulationScene extends BorderPane {
     //Reference to simulation presenter.
-    private final SimulationPresenter simulationPresenter;
+    private final SimulationStagePresenter simulationStagePresenter;
     //Reference to UI components for view.
     private ListView<TransitionModel> transitionOptionsListView;
     private Button backButton;
@@ -25,10 +25,10 @@ public class StepRunSimulationScene extends BorderPane {
     private Text currentConfigTextField;
     /**
      * Constructor of the step run simulation scene, used to instantiate an instance of the view.
-     * @param simulationPresenter
+     * @param simulationStagePresenter
      */
-    public StepRunSimulationScene(SimulationPresenter simulationPresenter) {
-        this.simulationPresenter = simulationPresenter;
+    public StepRunSimulationScene(SimulationStagePresenter simulationStagePresenter) {
+        this.simulationStagePresenter = simulationStagePresenter;
         setUpUIComponents();
         setUpStepUIListeners();
     }
@@ -60,7 +60,7 @@ public class StepRunSimulationScene extends BorderPane {
      * Sets up the listeners for UI components of the view.
      */
     private void setUpStepUIListeners() {
-        StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationPresenter);
+        StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationStagePresenter);
         backButton.setOnAction(stepRunSimulationListener);
         forwardButton.setOnAction(stepRunSimulationListener);
     }

@@ -1,22 +1,51 @@
 package app.presenter;
-import app.model.*;
-import app.view.*;
-import javafx.application.*;
-import javafx.beans.binding.*;
-import javafx.beans.value.*;
-import javafx.geometry.*;
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.scene.shape.*;
-import javafx.scene.transform.*;
-import javafx.stage.*;
-import org.controlsfx.control.*;
+import app.model.ConfigurationModel;
+import app.model.MachineModel;
+import app.model.StateModel;
+import app.model.TransitionModel;
+import app.view.DiagramScene;
+import app.view.MainScene;
+import app.view.StateNode;
+import app.view.TransitionNode;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.transform.Rotate;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.controlsfx.control.PopOver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 public class DiagramPresenter {
-    private final MainStage mainStage;
+    private final MainScene mainScene;
     private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final DiagramScene diagramScene;
@@ -31,9 +60,9 @@ public class DiagramPresenter {
     private Map<StateModel, StateNode> stateMap;
     private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     private LinkedHashMap<TransitionNode, PopOver> popOvers;
-    public DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    public DiagramPresenter(MainScene mainScene, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
-        this.mainStage = mainStage;
+        this.mainScene = mainScene;
         this.machineModel = machineModel;
         this.diagramScene = new DiagramScene(this);
         this.stateMap = new HashMap<>();
@@ -41,7 +70,7 @@ public class DiagramPresenter {
     }
     public void loadDiagramViewOntoStage(TransitionTablePresenter transitionTablePresenter) {
         this.transitionTablePresenter = transitionTablePresenter;
-        this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
+        this.mainScene.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
     public void loadStatesOntoDiagram() {
         StateNode stateNodeToLoad;

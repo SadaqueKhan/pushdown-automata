@@ -1,7 +1,7 @@
 package app.listener;
 
 import app.model.ConfigurationModel;
-import app.presenter.SimulationPresenter;
+import app.presenter.SimulationStagePresenter;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -11,10 +11,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class QuickRunSimulationListener implements EventHandler {
-    private final SimulationPresenter simulationPresenter;
-
-    public QuickRunSimulationListener(SimulationPresenter simulationPresenter) {
-        this.simulationPresenter = simulationPresenter;
+    private final SimulationStagePresenter simulationStagePresenter;
+    public QuickRunSimulationListener(SimulationStagePresenter simulationStagePresenter) {
+        this.simulationStagePresenter = simulationStagePresenter;
     }
 
     @Override
@@ -27,9 +26,9 @@ public class QuickRunSimulationListener implements EventHandler {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Algorithm")) {
-                    simulationPresenter.triggerAlgorithmScene();
+                    simulationStagePresenter.triggerAlgorithmScene();
                 } else {
-                    simulationPresenter.triggerPathsScene();
+                    simulationStagePresenter.triggerPathsScene();
                 }
 
             }
@@ -46,13 +45,13 @@ public class QuickRunSimulationListener implements EventHandler {
                     ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         if (mouseEvent.getClickCount() == 1) {
-                            simulationPresenter.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                            simulationPresenter.updateTapeViewForSelectedConfiguration(selectedConfiguration);
-                            simulationPresenter.updateStackViewForSelectedConfiguration(selectedConfiguration);
+                            simulationStagePresenter.updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                            simulationStagePresenter.updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                            simulationStagePresenter.updateStackViewForSelectedConfiguration(selectedConfiguration);
                         }
                         if (mouseEvent.getClickCount() == 2) {
                             if (event.getSource() instanceof ListView) {
-                                simulationPresenter.createIndependentPathSimulationStage(selectedConfiguration);
+                                simulationStagePresenter.createIndependentPathSimulationStage(selectedConfiguration);
                             }
                         }
                     }

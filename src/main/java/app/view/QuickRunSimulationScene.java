@@ -1,7 +1,7 @@
 package app.view;
 import app.listener.QuickRunSimulationListener;
 import app.model.ConfigurationModel;
-import app.presenter.SimulationPresenter;
+import app.presenter.SimulationStagePresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Accordion;
@@ -24,7 +24,7 @@ import org.controlsfx.control.SegmentedButton;
  */
 public class QuickRunSimulationScene extends BorderPane {
     //Reference to simulation presenter.
-    private final SimulationPresenter simulationPresenter;
+    private final SimulationStagePresenter simulationStagePresenter;
     //Reference to UI components for this view.
     private ListView<ConfigurationModel> algorithmlistView;
     private ToggleButton toggleAlgorithmButton;
@@ -35,10 +35,10 @@ public class QuickRunSimulationScene extends BorderPane {
     private Label simulationStatsLabel;
     /**
      * Constructor of the quick run simulation scene, used to instantiate an instance of this view.
-     * @param simulationPresenter
+     * @param simulationStagePresenter
      */
-    public QuickRunSimulationScene(SimulationPresenter simulationPresenter) {
-        this.simulationPresenter = simulationPresenter;
+    public QuickRunSimulationScene(SimulationStagePresenter simulationStagePresenter) {
+        this.simulationStagePresenter = simulationStagePresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
@@ -81,7 +81,7 @@ public class QuickRunSimulationScene extends BorderPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        QuickRunSimulationListener quickRunSimulationListener = new QuickRunSimulationListener(simulationPresenter);
+        QuickRunSimulationListener quickRunSimulationListener = new QuickRunSimulationListener(simulationStagePresenter);
         //Link listener to events on UI components for this view.
         toggleAlgorithmButton.setOnAction(quickRunSimulationListener);
         togglePathButton.setOnAction(quickRunSimulationListener);

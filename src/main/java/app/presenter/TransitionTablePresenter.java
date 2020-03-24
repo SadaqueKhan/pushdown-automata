@@ -1,31 +1,35 @@
 package app.presenter;
-import app.model.*;
-import app.view.*;
-import javafx.collections.*;
-import javafx.scene.control.*;
+import app.model.MachineModel;
+import app.model.StateModel;
+import app.model.TransitionModel;
+import app.view.MainScene;
+import app.view.TransitionTableScene;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TransitionTablePresenter {
 
     private final MachineModel machineModel;
-    private final MainStage mainStage;
+    private final MainScene mainScene;
     private final MainStagePresenter mainStagePresenter;
 
     private DiagramPresenter diagramPresenter;
 
     private TransitionTableScene transitionTableScene;
-
-    public TransitionTablePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    public TransitionTablePresenter(MainScene mainScene, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStagePresenter = mainStagePresenter;
-        this.mainStage = mainStage;
+        this.mainScene = mainScene;
         this.transitionTableScene = new TransitionTableScene(this);
     }
 
     public void loadTransitionTableOntoStage(DiagramPresenter diagramPresenter) {
         this.diagramPresenter = diagramPresenter;
-        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
+        mainScene.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
     }
 
     public void loadTransitionTableView() {

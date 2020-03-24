@@ -1,31 +1,42 @@
 package app.view;
-
 import app.listener.DiagramListener;
 import app.presenter.DiagramPresenter;
 import javafx.scene.layout.Pane;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Blueprint for a diagram scene.
+ * </p>
+ */
 public class DiagramScene extends Pane {
+    //Reference to views presenter.
     private final DiagramPresenter diagramPresenter;
-    private final String cssLayout = "-fx-border-color: black;\n" +
-            "-fx-background-color: #f8fffa,\n" +
-            "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
-            "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)";
-
+    /**
+     * Constructor of the diagram scene, used to instantiate an instance of the view.
+     * @param diagramPresenter
+     */
     public DiagramScene(DiagramPresenter diagramPresenter) {
         this.diagramPresenter = diagramPresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
-
+    /**
+     * Sets up the UI components of the view.
+     */
     private void setUpUIComponents() {
-        //Add style listener for this view
-        this.setStyle(cssLayout);
+        this.setStyle("-fx-border-color: black;\n" +
+                "-fx-background-color: #f8fffa,\n" +
+                "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
+                "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)");
         this.setMinSize(200, 500);
     }
-
+    /**
+     * Sets up the listeners for UI components of the view.
+     */
     private void setUpUIListeners() {
-        //Create listener for this view
+        //Create listener for UI component for this view.
         DiagramListener diagramListener = new DiagramListener(diagramPresenter);
+        //Link listener to events on UI components for this view.
         this.setOnMousePressed(diagramListener);
     }
 }
