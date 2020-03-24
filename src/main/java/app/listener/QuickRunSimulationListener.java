@@ -1,5 +1,4 @@
 package app.listener;
-
 import app.model.ConfigurationModel;
 import app.presenter.SimulationStagePresenter;
 import javafx.collections.ObservableList;
@@ -9,18 +8,20 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Listener attached to quick run simulation scene UI components.
+ * </p>
+ */
 public class QuickRunSimulationListener implements EventHandler {
     private final SimulationStagePresenter simulationStagePresenter;
     public QuickRunSimulationListener(SimulationStagePresenter simulationStagePresenter) {
         this.simulationStagePresenter = simulationStagePresenter;
     }
-
     @Override
     public void handle(Event event) {
-
         String eventType = event.getEventType().toString();
-
         // Toggle between algorithm scene and paths scene
         if (eventType.equals("ACTION")) {
             if (event.getSource() instanceof ToggleButton) {
@@ -30,14 +31,10 @@ public class QuickRunSimulationListener implements EventHandler {
                 } else {
                     simulationStagePresenter.loadPathsScene();
                 }
-
             }
-
         }
-
         if (eventType.equals("MOUSE_PRESSED") || eventType.equals("MOUSE_DRAGGED") || eventType.equals("MOUSE_RELEASED")) {
             MouseEvent mouseEvent = (MouseEvent) event;
-
             if (event.getSource() instanceof ListView) {
                 ListView<ConfigurationModel> listView = (ListView) event.getSource();
                 ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = listView.getSelectionModel().getSelectedItems();
@@ -55,7 +52,6 @@ public class QuickRunSimulationListener implements EventHandler {
                             }
                         }
                     }
-
                 }
             }
         }

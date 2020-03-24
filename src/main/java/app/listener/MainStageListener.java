@@ -7,6 +7,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Listener attached to main stage UI components.
+ * </p>
+ */
 public class MainStageListener implements EventHandler {
     private final MainStagePresenter mainStagePresenter;
     public MainStageListener(MainStagePresenter mainStagePresenter) {
