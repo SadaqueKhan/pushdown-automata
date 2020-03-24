@@ -769,10 +769,13 @@ public class DiagramPresenter {
                 //Add transition model to machinemodel
                 machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
 
-                //Update table view
+                //Update transition table scene
                 transitionTablePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
+                transitionTablePresenter.updateAvailableStateListForCombobox();
+                transitionTablePresenter.updateInputAlphabetForComboxBox();
+                transitionTablePresenter.updateStackAlphabetForComboxBox();
 
-                //Add transitionview onto diagram view
+                //Update diagram scene
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
                     addReflexiveTransitionToDiagramView(newTransitionModel);
                 } else {

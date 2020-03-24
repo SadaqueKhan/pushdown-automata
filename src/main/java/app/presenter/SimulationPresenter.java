@@ -49,18 +49,21 @@ public class SimulationPresenter {
                 triggerAlgorithmScene();
 
 
-                String simulationStatsString = "Simulation Facts" + "\n";
+                String simulationStatsString = "Simulation Facts - " + "\n";
 
                 if (quickRunSimulationModel.isNFA()) {
-                    simulationStatsString += "Type: " + "NFA" + "\n";
+                    simulationStatsString += "\n" + "Type: " + "NFA" + "\n";
                 } else {
-                    simulationStatsString += "Type: " + "DFA" + "\n";
+                    simulationStatsString += "\n" + "Type: " + "DFA" + "\n";
                 }
-                simulationStatsString +=
+
+                simulationStatsString += "\n" + "Input alphabet: " + machineModel.getInputAlphabetSet() + "\n" + "Stack alphabet: " + machineModel.getInputAlphabetSet() + "\n";
+
+                simulationStatsString += "\n" +
                         "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" +
-                                "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
-                                "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
-                                "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+                        "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
+                        "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
+                        "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
                 quickRunSimulationStage.getSimulationStatsLabel().setText(simulationStatsString);
             }
             //Create a new scene to render simulation

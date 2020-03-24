@@ -70,11 +70,12 @@ public class MachineModel {
         return transitionModelSet;
     }
 
-
+    @XmlElement
     public HashSet<String> getInputAlphabetSet() {
         return inputAlphabetSet;
     }
 
+    @XmlElement
     public HashSet<String> getStackAlphabetSet() {
         return stackAlphabetSet;
     }
