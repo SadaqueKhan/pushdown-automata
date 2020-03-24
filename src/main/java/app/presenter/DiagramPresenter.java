@@ -36,21 +36,24 @@ import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Presenter retrieves data from repositories (the model), and formats it for display in the diagram scene.
+ * </p>
+ */
 public class DiagramPresenter {
     private final MainStage mainStage;
     private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final DiagramScene diagramScene;
     private TransitionTablePresenter transitionTablePresenter;
-    // Defines the x and y coordinate of the translation that is added to this {@code Node}'transform for the purpose of layout.
     private double layoutX;
     private double layoutY;
     private double sceneX;
@@ -59,7 +62,6 @@ public class DiagramPresenter {
     private StateNode startStateNode;
     private Map<StateModel, StateNode> stateMap;
     private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
-    private LinkedHashMap<TransitionNode, PopOver> popOvers;
     DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
         this.mainStage = mainStage;

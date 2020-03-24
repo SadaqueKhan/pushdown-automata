@@ -3,7 +3,12 @@ package app.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Model of a tape, consisting of elements commonly found to define a tape in push down automata theory.
+ * </p>
+ */
 public class TapeModel {
 
     private List<String> inputTape;

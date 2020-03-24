@@ -1,7 +1,12 @@
 package app.model;
 
 import java.util.ArrayList;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Model of a transition, consisting of elements commonly found to define a stack in push down automata theory.
+ * </p>
+ */
 public class StackModel {
 
     private ArrayList<String> stack;

@@ -1,30 +1,28 @@
 package app.model;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Model of a transition, consisting of elements commonly found to define a transition in push down automata theory
+ * and coordinates for which the transition is located on the diagram scene.
+ * </p>
+ */
 @XmlRootElement
 public class TransitionModel {
-
     private StateModel currentStateModel;
     private String inputSymbol;
     private String stackSymbolToPop;
-
     private StateModel resultingStateModel;
     private String stackSymbolToPush;
-
     private double xCoordinateOnDiagram = 0.0;
     private double yCoordinateOnDiagram = 0.0;
-
-
     public TransitionModel() {
     }
-
     public TransitionModel(
             StateModel currentStateModel,
             String inputSymbol,
             String stackSymbolToPop,
-
             StateModel resultingStateModel,
             String stackSymbolToPush
     ) {
@@ -32,81 +30,61 @@ public class TransitionModel {
         this.currentStateModel = currentStateModel;
         this.inputSymbol = inputSymbol;
         this.stackSymbolToPop = stackSymbolToPop;
-
         this.resultingStateModel = resultingStateModel;
         this.stackSymbolToPush = stackSymbolToPush;
-
     }
-
     @XmlElement
     public StateModel getCurrentStateModel() {
         return currentStateModel;
     }
-
     public void setCurrentStateModel(StateModel currentStateModel) {
         this.currentStateModel = currentStateModel;
     }
-
     @XmlElement
     public String getInputSymbol() {
         return inputSymbol;
     }
-
     public void setInputSymbol(String inputSymbol) {
         this.inputSymbol = inputSymbol;
     }
-
     @XmlElement
     public String getStackSymbolToPop() {
         return stackSymbolToPop;
     }
-
     public void setStackSymbolToPop(String stackSymbolToPop) {
         this.stackSymbolToPop = stackSymbolToPop;
     }
-
     @XmlElement
     public StateModel getResultingStateModel() {
         return resultingStateModel;
     }
-
     public void setResultingStateModel(StateModel resultingStateModel) {
         this.resultingStateModel = resultingStateModel;
     }
-
     @XmlElement
     public String getStackSymbolToPush() {
         return stackSymbolToPush;
     }
-
     public void setStackSymbolToPush(String stackSymbolToPush) {
         this.stackSymbolToPush = stackSymbolToPush;
     }
-
-
     public double getxCoordinateOnDiagram() {
         return xCoordinateOnDiagram;
     }
-
     public void setxCoordinateOnDiagram(double xCoordinateOnDiagram) {
         this.xCoordinateOnDiagram = xCoordinateOnDiagram;
     }
-
     public double getyCoordinateOnDiagram() {
         return yCoordinateOnDiagram;
     }
-
     public void setyCoordinateOnDiagram(double yCoordinateOnDiagram) {
         this.yCoordinateOnDiagram = yCoordinateOnDiagram;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TransitionModel)) return false;
-
         TransitionModel that = (TransitionModel) o;
-
         if (getCurrentStateModel() != null ? !getCurrentStateModel().equals(that.getCurrentStateModel()) : that.getCurrentStateModel() != null)
             return false;
         if (getInputSymbol() != null ? !getInputSymbol().equals(that.getInputSymbol()) : that.getInputSymbol() != null)
@@ -117,7 +95,6 @@ public class TransitionModel {
             return false;
         return getStackSymbolToPush() != null ? getStackSymbolToPush().equals(that.getStackSymbolToPush()) : that.getStackSymbolToPush() == null;
     }
-
     @Override
     public int hashCode() {
         int result = getCurrentStateModel() != null ? getCurrentStateModel().hashCode() : 0;
@@ -127,7 +104,6 @@ public class TransitionModel {
         result = 31 * result + (getStackSymbolToPush() != null ? getStackSymbolToPush().hashCode() : 0);
         return result;
     }
-
     @Override
     public String toString() {
         return "{ " + "[" + currentStateModel.getStateId() + ", " + inputSymbol + ", " + stackSymbolToPop + "] " + "->" + " [" + resultingStateModel.getStateId() + ", " + stackSymbolToPush + "]" + " }";
