@@ -26,9 +26,9 @@ public class QuickRunSimulationListener implements EventHandler {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Algorithm")) {
-                    simulationStagePresenter.triggerAlgorithmScene();
+                    simulationStagePresenter.loadAlgorithmScene();
                 } else {
-                    simulationStagePresenter.triggerPathsScene();
+                    simulationStagePresenter.loadPathsScene();
                 }
 
             }

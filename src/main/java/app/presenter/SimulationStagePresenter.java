@@ -19,26 +19,36 @@ import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Presenter presenter acts upon the model and the view.
+ * It retrieves data from repositories (the model), and formats it for display in the simulation stage.
+ * </p>
+ */
 public class SimulationStagePresenter {
     private final MainStagePresenter mainStagePresenter;
-    private final MachineModel machineModel;
-    private final String typeOfSimulation;
+    private final Stage simulationStage;
     private QuickRunSimulationScene quickRunSimulationScene;
     private StepRunSimulationScene stepRunSimulationScene;
-    private Stage simulationStage;
     private SimulationModel quickRunSimulationModel;
     private SimulationModel stepRunSimulationModel;
-    public SimulationStagePresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord, String typeOfSimulation) {
+    /**
+     * Constructor of the simulation stage presenter, used to instantiate an instance of the presenter.
+     * @param mainStagePresenter
+     * @param machineModel
+     * @param inputWord
+     * @param typeOfSimulation
+     */
+    SimulationStagePresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord, String typeOfSimulation) {
         this.mainStagePresenter = mainStagePresenter;
-        this.machineModel = machineModel;
-        this.typeOfSimulation = typeOfSimulation;
-        simulationStage = new Stage();
+        this.simulationStage = new Stage();
         if (typeOfSimulation.equals("By Quick Run")) {
             this.quickRunSimulationScene = new QuickRunSimulationScene(this);
             quickRunSimulationModel = new SimulationModel(machineModel, inputWord);
             int flag = quickRunSimulationModel.createTree();
             if (flag == 200) {
-                triggerAlgorithmScene();
+                loadAlgorithmScene();
                 String simulationStatsString = "Simulation Facts - " + "\n";
                 if (quickRunSimulationModel.isNFA()) {
                     simulationStatsString += "\n" + "Type: " + "NFA" + "\n";
@@ -65,13 +75,13 @@ public class SimulationStagePresenter {
             List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.findChildrenConfigurations(rootConfigurationModel);
             rootConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
             //Load view
-            simulationStage.setTitle("Simulation: Step Run");
             this.stepRunSimulationScene = new StepRunSimulationScene(this);
             stepRunSimulationScene.getCurrentConfigTextField().setText("Current configuration: " + rootConfigurationModel.toString());
             for (ConfigurationModel rootConfigurationModelChild : rootChildrenConfigurationList) {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
-            //Create a new scene to render simulation
+            //Load scene onto the stage.
+            simulationStage.setTitle("Simulation: Step Run");
             Scene scene = new Scene(stepRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
         }
@@ -88,7 +98,10 @@ public class SimulationStagePresenter {
             mainStagePresenter.updateTapeView(0);
         });
     }
-    public void triggerAlgorithmScene() {
+    /**
+     * Handles the loading of the algorithm scene onto the simulation stage.
+     */
+    public void loadAlgorithmScene() {
         ListView<ConfigurationModel> algorithmListView = quickRunSimulationScene.getAlgorithmlistView();
         if (algorithmListView.getItems().isEmpty()) {
             // Get algorithm path list
@@ -149,11 +162,14 @@ public class SimulationStagePresenter {
         //Add the algorithm node to the center of the stage
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getAlgorithmlistView());
     }
-    public void triggerPathsScene() {
-        //Get accordion
+    /**
+     * Handles the loading of the path scene onto the simulation stage.
+     */
+    public void loadPathsScene() {
+        //Retrieve accordion container found in the path scene.
         Accordion accordion = (Accordion) quickRunSimulationScene.getPathsVBox().getChildren().get(0);
         if (accordion.getPanes().isEmpty()) {
-            //Get leaf configurations
+            //Get leaf configurations computed in the simulation model.
             ArrayList<ConfigurationModel> leafConfigurationPath = quickRunSimulationModel.getLeafConfigurationArrayList();
             accordion.getPanes().clear();
             int numPath = 0;
@@ -176,6 +192,11 @@ public class SimulationStagePresenter {
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().remove(0);
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getPathsScrollPane());
     }
+    /**
+     * Handles the loading of a secondary stage to show the path from the root configuration node to the configuration
+     * node selected by the user in the computation tree listing found in the algorithm scene.
+     * @param doubleClickConfiguration
+     */
     public void createIndependentPathSimulationStage(ConfigurationModel doubleClickConfiguration) {
         ListView<ConfigurationModel> transitionsTakenListView = new ListView<>();
         transitionsTakenListView.getItems().addAll(doubleClickConfiguration.getPath());
@@ -212,7 +233,7 @@ public class SimulationStagePresenter {
         if (doubleClickConfiguration.isSuccessConfig()) {
             windowTitle = "Success Path";
         }
-        //Create a new scene to render simulation
+        //Create a new scene to render computation path. ¬
         Scene scene = new Scene(transitionsTakenListView, 750, 500);
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
@@ -222,6 +243,9 @@ public class SimulationStagePresenter {
         stage.setScene(scene);
         stage.show();
     }
+    /**
+     * Handles
+     */
     public void stepForward() {
         // Get the step run transition list
         ListView<TransitionModel> listView = stepRunSimulationScene.getTransitionOptionsListView();
