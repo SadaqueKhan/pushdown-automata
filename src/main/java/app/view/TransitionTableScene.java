@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * View which renders UI components for transition table scene.
+ * View blueprint for transition table scene.
  * </p>
  */
 public class TransitionTableScene extends BorderPane {
@@ -28,6 +28,7 @@ public class TransitionTableScene extends BorderPane {
     private VBox transitionTableContainer;
     /**
      * Constructor of the transition table scene, used to instantiate an instance of the view.
+     * @param transitionTablePresenter
      */
     public TransitionTableScene(TransitionTablePresenter transitionTablePresenter) {
         // Reference to the presenter of this view.
@@ -38,7 +39,7 @@ public class TransitionTableScene extends BorderPane {
         setUpUIListeners();
     }
     /**
-     * Method for setting up the UI components of the view.
+     * Sets up the UI components of the view.
      */
     private void setUpUIComponents() {
         //Create table.
@@ -126,7 +127,7 @@ public class TransitionTableScene extends BorderPane {
         transitionTableContainer.getChildren().addAll(transitionTable, gridPane);
     }
     /**
-     * Method for setting up the listeners for UI components of the view.
+     * Sets up the listeners for UI components of the view.
      */
     private void setUpUIListeners() {
         //Create listener for this view
@@ -152,7 +153,7 @@ public class TransitionTableScene extends BorderPane {
             });
         });
     }
-    // Getters for UI components found in the fields, that need to be accessed by presenter.
+    // Getters for UI components of the view.
     public TableView<TransitionModel> getTransitionTable() {
         return transitionTable;
     }
