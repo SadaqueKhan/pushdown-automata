@@ -1,5 +1,5 @@
 package app.listener;
-import app.presenter.DiagramPresenter;
+import app.presenter.DiagramScenePresenter;
 import app.view.DiagramScene;
 import app.view.StateNode;
 import javafx.event.Event;
@@ -17,9 +17,9 @@ import javafx.scene.text.Text;
  * </p>
  */
 public class DiagramListener implements EventHandler {
-    private final DiagramPresenter diagramPresenter;
-    public DiagramListener(DiagramPresenter diagramPresenter) {
-        this.diagramPresenter = diagramPresenter;
+    private final DiagramScenePresenter diagramScenePresenter;
+    public DiagramListener(DiagramScenePresenter diagramScenePresenter) {
+        this.diagramScenePresenter = diagramScenePresenter;
     }
     @Override
     public void handle(Event event) {
@@ -33,7 +33,7 @@ public class DiagramListener implements EventHandler {
                     //Add the state to diagram
                     double relXPosOfEvent = mouseEvent.getX();
                     double relYPosOfEvent = mouseEvent.getY();
-                    diagramPresenter.addStateViewOntoDiagramViewDynamicRender(relXPosOfEvent, relYPosOfEvent);
+                    diagramScenePresenter.addStateViewOntoDiagramViewDynamicRender(relXPosOfEvent, relYPosOfEvent);
                 }
             }
         }
@@ -43,17 +43,17 @@ public class DiagramListener implements EventHandler {
                 double absXPosOfEvent = mouseEvent.getScreenX();
                 double absYPosOfEvent = mouseEvent.getScreenY();
                 if (eventType.equals("MOUSE_PRESSED")) {
-                    diagramPresenter.stateViewOnMousePressed(stateNode, absXPosOfEvent, absYPosOfEvent);
+                    diagramScenePresenter.stateViewOnMousePressed(stateNode, absXPosOfEvent, absYPosOfEvent);
                     // Popup dialog
                     if (mouseEvent.isPopupTrigger()) {
-                        diagramPresenter.stateViewContextMenuPopUp(stateNode);
+                        diagramScenePresenter.stateViewContextMenuPopUp(stateNode);
                     }
                 }
                 if (eventType.equals("MOUSE_DRAGGED")) {
-                    diagramPresenter.stateViewOnMouseDragged(stateNode, absXPosOfEvent, absYPosOfEvent);
+                    diagramScenePresenter.stateViewOnMouseDragged(stateNode, absXPosOfEvent, absYPosOfEvent);
                 }
                 if (eventType.equals("MOUSE_RELEASED")) {
-                    diagramPresenter.stateViewOnMouseReleased(stateNode);
+                    diagramScenePresenter.stateViewOnMouseReleased(stateNode);
                 }
             }
         }

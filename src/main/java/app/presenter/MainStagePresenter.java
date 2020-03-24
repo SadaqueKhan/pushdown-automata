@@ -27,14 +27,14 @@ import java.util.ArrayList;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Presenter retrieves data from repositories (the model), and formats it for display in the main stage.
+ * Main stage presenter retrieves data from repositories (the model), and formats it for display in the main stage.
  * </p>
  */
 public class MainStagePresenter extends Application {
     private MachineModel machineModel;
     private MainStage mainStage;
-    private TransitionTablePresenter transitionTablePresenter;
-    private DiagramPresenter diagramPresenter;
+    private TransitionTableScenePresenter transitionTableScenePresenter;
+    private DiagramScenePresenter diagramScenePresenter;
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
     /**
@@ -52,9 +52,9 @@ public class MainStagePresenter extends Application {
     public void start(Stage primaryWindow) {
         this.machineModel = new MachineModel();
         this.mainStage = new MainStage(this);
-        this.transitionTablePresenter = new TransitionTablePresenter(mainStage, machineModel);
-        this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
-        diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
+        this.transitionTableScenePresenter = new TransitionTableScenePresenter(mainStage, machineModel);
+        this.diagramScenePresenter = new DiagramScenePresenter(mainStage, this, machineModel);
+        diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
         this.primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
@@ -67,7 +67,7 @@ public class MainStagePresenter extends Application {
     public void loadDiagramScene() {
         mainStage.getContainerForCenterNodes().getChildren().remove(1);
         mainStage.getInputTextField().setDisable(false);
-        diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
+        diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
     }
     /**
      * Loads the transition table scene onto the main stage when selected via the tab found on in the main stage.
@@ -75,7 +75,7 @@ public class MainStagePresenter extends Application {
     public void loadTransitionTableScene() {
         mainStage.getContainerForCenterNodes().getChildren().remove(1);
         mainStage.getInputTextField().setDisable(true);
-        transitionTablePresenter.loadTransitionTableSceneOntoMainStage(diagramPresenter);
+        transitionTableScenePresenter.loadTransitionTableSceneOntoMainStage(diagramScenePresenter);
     }
     /**
      * Loads the simulation stage when the user presses enter on the textfield retaining an input word to be
@@ -184,12 +184,12 @@ public class MainStagePresenter extends Application {
                 primaryWindow.close();
                 this.machineModel = machineModelLoaded;
                 this.mainStage = new MainStage(this);
-                this.transitionTablePresenter = new TransitionTablePresenter(mainStage, machineModel);
-                transitionTablePresenter.loadTransitionTableView();
-                this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
-                diagramPresenter.loadStatesOntoDiagram();
-                diagramPresenter.loadTransitionsOntoDiagram();
-                diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
+                this.transitionTableScenePresenter = new TransitionTableScenePresenter(mainStage, machineModel);
+                transitionTableScenePresenter.loadTransitionTableView();
+                this.diagramScenePresenter = new DiagramScenePresenter(mainStage, this, machineModel);
+                diagramScenePresenter.loadStatesOntoDiagram();
+                diagramScenePresenter.loadTransitionsOntoDiagram();
+                diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
                 primaryWindow.setTitle("Pushdown Automata");
                 primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
                 primaryWindow.setResizable(false);
@@ -286,8 +286,8 @@ public class MainStagePresenter extends Application {
     MainStage getMainStage() {
         return mainStage;
     }
-    DiagramPresenter getDiagramPresenter() {
-        return diagramPresenter;
+    DiagramScenePresenter getDiagramScenePresenter() {
+        return diagramScenePresenter;
     }
     Stage getPrimaryWindow() {
         return primaryWindow;

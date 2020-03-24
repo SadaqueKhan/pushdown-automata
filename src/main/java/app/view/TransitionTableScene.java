@@ -1,7 +1,7 @@
 package app.view;
 import app.listener.TransitionTableListener;
 import app.model.TransitionModel;
-import app.presenter.TransitionTablePresenter;
+import app.presenter.TransitionTableScenePresenter;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
  */
 public class TransitionTableScene extends BorderPane {
     //Reference to views presenter.
-    private final TransitionTablePresenter transitionTablePresenter;
+    private final TransitionTableScenePresenter transitionTableScenePresenter;
     //Reference to UI components for view.
     private TableView<TransitionModel> transitionTable;
     private ComboBox<String> currentStateComboBox;
@@ -37,10 +37,10 @@ public class TransitionTableScene extends BorderPane {
     private VBox transitionTableContainer;
     /**
      * Constructor of the transition table scene, used to instantiate an instance of the view.
-     * @param transitionTablePresenter
+     * @param transitionTableScenePresenter
      */
-    public TransitionTableScene(TransitionTablePresenter transitionTablePresenter) {
-        this.transitionTablePresenter = transitionTablePresenter;
+    public TransitionTableScene(TransitionTableScenePresenter transitionTableScenePresenter) {
+        this.transitionTableScenePresenter = transitionTableScenePresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
@@ -137,7 +137,7 @@ public class TransitionTableScene extends BorderPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTablePresenter);
+        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableScenePresenter);
         //Link listener to events on UI components for this view.
         submitTransitionButton.setOnAction(transitionTableListener);
         deleteTransitionButton.setOnAction(transitionTableListener);

@@ -13,34 +13,35 @@ import java.util.HashSet;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Presenter retrieves data from repositories (the model), and formats it for display in the transition table scene.
+ * Transition table scene presenter retrieves data from repositories (the model), and formats it for display in the
+ * transition table scene.
  * </p>
  */
-public class TransitionTablePresenter {
+public class TransitionTableScenePresenter {
     private final MachineModel machineModel;
     private final MainStage mainStage;
     private final TransitionTableScene transitionTableScene;
-    private DiagramPresenter diagramPresenter;
+    private DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the transition table presenter, used to instantiate an instance of the presenter.
      * @param mainStage
      * @param machineModel
      */
-    TransitionTablePresenter(MainStage mainStage, MachineModel machineModel) {
+    TransitionTableScenePresenter(MainStage mainStage, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStage = mainStage;
         this.transitionTableScene = new TransitionTableScene(this);
     }
     /**
      * Reloads the transition table scene back onto the main stage when selected via the tab found on in the main stage.
-     * @param diagramPresenter
+     * @param diagramScenePresenter
      */
-    void loadTransitionTableSceneOntoMainStage(DiagramPresenter diagramPresenter) {
-        this.diagramPresenter = diagramPresenter;
+    void loadTransitionTableSceneOntoMainStage(DiagramScenePresenter diagramScenePresenter) {
+        this.diagramScenePresenter = diagramScenePresenter;
         mainStage.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
     }
     /**
-     * Loads data found on the transition table scene.
+     * Loads transition data onto the transition table scene.
      */
     void loadTransitionTableView() {
         // Load data found on the transition table UI component in the transition table scene.
@@ -118,7 +119,7 @@ public class TransitionTablePresenter {
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
-            diagramPresenter.addStateViewOntoDiagramView(currentStateModel);
+            diagramScenePresenter.addStateViewOntoDiagramView(currentStateModel);
         }
         // Retrieve current resulting model from the state model set found in the machine model.
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
@@ -127,7 +128,7 @@ public class TransitionTablePresenter {
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
-            diagramPresenter.addStateViewOntoDiagramView(resultingStateModel);
+            diagramScenePresenter.addStateViewOntoDiagramView(resultingStateModel);
         }
         //Create transition model placeholder.
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
@@ -153,9 +154,9 @@ public class TransitionTablePresenter {
         updateStackAlphabetForComboBox();
         //Notify diagram presenter to add a new transition node on the diagram scene.
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
-            diagramPresenter.addReflexiveTransitionToDiagramView(newTransitionModel);
+            diagramScenePresenter.addReflexiveTransitionToDiagramView(newTransitionModel);
         } else {
-            diagramPresenter.addDirectionalTransitionToView(newTransitionModel);
+            diagramScenePresenter.addDirectionalTransitionToView(newTransitionModel);
         }
     }
     /**
@@ -197,7 +198,7 @@ public class TransitionTablePresenter {
         //Update transition table UI component.
         transitionTableScene.getTransitionTable().getItems().removeAll(removeTransitionSet);
         //Notify diagram presenter to delete selected transitions node on the diagram scene.
-        diagramPresenter.deleteTransitionView(removeTransitionSet);
+        diagramScenePresenter.deleteTransitionView(removeTransitionSet);
     }
     /**
      * Handles bulk deletion of transitions when a state has been requested to be deleted by the user.

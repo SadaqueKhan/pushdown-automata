@@ -1,6 +1,6 @@
 package app.view;
 import app.listener.DiagramListener;
-import app.presenter.DiagramPresenter;
+import app.presenter.DiagramScenePresenter;
 import javafx.scene.layout.Pane;
 /**
  * @author Mohammed Sadaque Khan
@@ -10,13 +10,13 @@ import javafx.scene.layout.Pane;
  */
 public class DiagramScene extends Pane {
     //Reference to views presenter.
-    private final DiagramPresenter diagramPresenter;
+    private final DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the diagram scene, used to instantiate an instance of the view.
-     * @param diagramPresenter
+     * @param diagramScenePresenter
      */
-    public DiagramScene(DiagramPresenter diagramPresenter) {
-        this.diagramPresenter = diagramPresenter;
+    public DiagramScene(DiagramScenePresenter diagramScenePresenter) {
+        this.diagramScenePresenter = diagramScenePresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
@@ -35,7 +35,7 @@ public class DiagramScene extends Pane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        DiagramListener diagramListener = new DiagramListener(diagramPresenter);
+        DiagramListener diagramListener = new DiagramListener(diagramScenePresenter);
         //Link listener to events on UI components for this view.
         this.setOnMousePressed(diagramListener);
     }

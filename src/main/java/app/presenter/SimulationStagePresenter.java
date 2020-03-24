@@ -22,7 +22,8 @@ import java.util.List;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Presenter retrieves data from repositories (the model), and formats it for display in the simulation stage.
+ * Simulation stage presenter retrieves data from repositories (the model), and formats it for display in the
+ * simulation stage.
  * </p>
  */
 public class SimulationStagePresenter {
@@ -96,7 +97,7 @@ public class SimulationStagePresenter {
             // Notify other scenes.
             mainStagePresenter.updateStackScene(new ArrayList<>());
             mainStagePresenter.updateTapeScene(0);
-            mainStagePresenter.getDiagramPresenter().removeHighlightedTransitionView();
+            mainStagePresenter.getDiagramScenePresenter().removeHighlightedTransitionView();
         });
     }
     /**
@@ -324,8 +325,8 @@ public class SimulationStagePresenter {
      * @param selectedConfiguration
      */
     public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
-        diagramPresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
+        DiagramScenePresenter diagramScenePresenter = mainStagePresenter.getDiagramScenePresenter();
+        diagramScenePresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
     }
     /**
      * Request to the main stage presenter to update the tape scene for which it controls.

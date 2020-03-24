@@ -1,5 +1,5 @@
 package app.listener;
-import app.presenter.TransitionTablePresenter;
+import app.presenter.TransitionTableScenePresenter;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -10,9 +10,9 @@ import javafx.scene.control.Button;
  * </p>
  */
 public class TransitionTableListener implements EventHandler {
-    private final TransitionTablePresenter transitionTablePresenter;
-    public TransitionTableListener(TransitionTablePresenter transitionTablePresenter) {
-        this.transitionTablePresenter = transitionTablePresenter;
+    private final TransitionTableScenePresenter transitionTableScenePresenter;
+    public TransitionTableListener(TransitionTableScenePresenter transitionTableScenePresenter) {
+        this.transitionTableScenePresenter = transitionTableScenePresenter;
     }
     @Override
     public void handle(Event event) {
@@ -21,10 +21,10 @@ public class TransitionTableListener implements EventHandler {
             Button isButton = (Button) event.getSource();
             String tempIsButton = isButton.getText();
             if (tempIsButton.equals("Submit")) {
-                transitionTablePresenter.addUserTransitionModelEntryToTransitionTable();
+                transitionTableScenePresenter.addUserTransitionModelEntryToTransitionTable();
             }
             if (tempIsButton.equals("Delete")) {
-                transitionTablePresenter.deleteTransitionModelEntriesFromTransitionTable();
+                transitionTableScenePresenter.deleteTransitionModelEntriesFromTransitionTable();
             }
         }
     }

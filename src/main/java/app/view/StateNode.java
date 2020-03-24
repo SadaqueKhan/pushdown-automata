@@ -1,6 +1,6 @@
 package app.view;
 import app.listener.DiagramListener;
-import app.presenter.DiagramPresenter;
+import app.presenter.DiagramScenePresenter;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,7 +20,7 @@ import javafx.scene.transform.Rotate;
  */
 public class StateNode extends StackPane {
     //Reference to diagram presenter.
-    private final DiagramPresenter diagramPresenter;
+    private final DiagramScenePresenter diagramScenePresenter;
     //Reference data linked to view.
     private String stateID;
     //Reference to UI components for view.
@@ -34,11 +34,11 @@ public class StateNode extends StackPane {
     /**
      * Constructor of the state node, used to instantiate an instance of the view.
      * @param stateID
-     * @param diagramPresenter
+     * @param diagramScenePresenter
      */
-    public StateNode(String stateID, DiagramPresenter diagramPresenter) {
+    public StateNode(String stateID, DiagramScenePresenter diagramScenePresenter) {
         this.stateID = stateID;
-        this.diagramPresenter = diagramPresenter;
+        this.diagramScenePresenter = diagramScenePresenter;
         setUpUIComponents();
         setUpUIListeners();
     }
@@ -121,7 +121,7 @@ public class StateNode extends StackPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        DiagramListener diagramListener = new DiagramListener(diagramPresenter);
+        DiagramListener diagramListener = new DiagramListener(diagramScenePresenter);
         //Link listener to events on UI components for this view.
         this.setOnMousePressed(diagramListener);
         this.setOnMouseDragged(diagramListener);
