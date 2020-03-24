@@ -18,11 +18,11 @@ public class StepRunSimulationListener implements EventHandler {
 
         String buttonText = isButton.getText();
 
-        if (buttonText.equals("Back")) {
+        if (buttonText.equals("<<< Back")) {
             simulationPresenter.stepBack();
         }
 
-        if (buttonText.equals("Forward")) {
+        if (buttonText.equals("Forward >>>")) {
             simulationPresenter.stepForward();
         }
     }

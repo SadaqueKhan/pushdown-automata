@@ -22,13 +22,14 @@ public class QuickRunSimulationListener implements EventHandler {
 
         String eventType = event.getEventType().toString();
 
+        // Toggle between algorithm scene and paths scene
         if (eventType.equals("ACTION")) {
             if (event.getSource() instanceof ToggleButton) {
                 ToggleButton isToggleButton = (ToggleButton) event.getSource();
                 if (isToggleButton.getText().equals("Algorithm")) {
-                    simulationPresenter.triggerAlgorithmView();
+                    simulationPresenter.triggerAlgorithmScene();
                 } else {
-                    simulationPresenter.triggerPathsView();
+                    simulationPresenter.triggerPathsScene();
                 }
 
             }

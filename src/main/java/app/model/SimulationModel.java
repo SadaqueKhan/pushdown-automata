@@ -14,8 +14,8 @@ public class SimulationModel {
     private TapeModel currentTapeModel;
     private StackModel currentStackModel;
 
-    private ArrayList<ConfigurationModel> configurationPath;
-    private ArrayList<ConfigurationModel> leafConfigurationPath;
+    private ArrayList<ConfigurationModel> computationTreeArrayList;
+    private ArrayList<ConfigurationModel> leafConfigurationArrayList;
 
     private boolean isNFA = false;
     private int numOfPossibleInfinitePaths = 0;
@@ -26,47 +26,45 @@ public class SimulationModel {
         this.currentTapeModel = new TapeModel();
         this.currentStackModel = new StackModel();
         this.inputWord = inputWord;
-        configurationPath = new ArrayList<>();
-        leafConfigurationPath = new ArrayList<>();
+        computationTreeArrayList = new ArrayList<>();
+        leafConfigurationArrayList = new ArrayList<>();
 
         //Set the root node 
         currentTapeModel.loadInput(inputWord);
         currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), currentTapeModel, currentStackModel);
         currentConfig.markAsVisited();
         //Add currentConfig to the path
-        configurationPath.add(currentConfig);
+        computationTreeArrayList.add(currentConfig);
     }
 
 
     public int next() {
-
         //Retrieve applicable configurations stored in the current configuration
-        List<ConfigurationModel> applicableConfigurations = currentConfig.getChildrenConfigurations();
+        List<ConfigurationModel> childrenConfigurations = currentConfig.getChildrenConfigurations();
 
         if (currentConfig.getChildrenConfigurations() == null) {
             //Search for possible children configurations to move to (the transitions have already been applied to this list)
-            applicableConfigurations = configurationApplicable(currentConfig.getCurrentStateModel(), currentTapeModel.getAtHead(), currentStackModel.peak());
-            currentConfig.setChildrenConfigurations(applicableConfigurations);
+            childrenConfigurations = findChildrenConfigurations(currentConfig);
+            currentConfig.setChildrenConfigurations(childrenConfigurations);
         }
 
         ConfigurationModel toExplore;
 
         // Parent has no children i.e. no applicable transitions
-        if (applicableConfigurations.isEmpty()) {
+        if (childrenConfigurations.isEmpty()) {
+            //no more paths to search for this child
             if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
                 currentConfig.setStuckConfig(true);
-                leafConfigurationPath.add(currentConfig);
+                leafConfigurationArrayList.add(currentConfig);
             }
-            //no more paths to search for this child
             return 0; // Go back to parent
         }
 
-
         //Parent has a single child, then a check if path is deterministic
-        if (applicableConfigurations.size() == 1) {
+        if (childrenConfigurations.size() == 1) {
 
             //Explore deterministic path
-            toExplore = applicableConfigurations.get(0);
+            toExplore = childrenConfigurations.get(0);
 
             //Check if this child is visited
             if (toExplore.isVisited()) {
@@ -77,7 +75,7 @@ public class SimulationModel {
             isNFA = true;
 
             //Find configuration to explore that hasn't been explored yet, if all paths have been explored then set applicable configuration to null
-            toExplore = applicableConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
+            toExplore = childrenConfigurations.stream().filter(config -> !config.isVisited()).findFirst().orElse(null);
 
             // All children are visited
             if (toExplore == null) {
@@ -93,6 +91,34 @@ public class SimulationModel {
         return 1;
     }
 
+    public void next(TransitionModel selectedTransitionModelToTake) {
+        // Search for the next configuration that can be reached given the selected transition to move to
+
+        for (ConfigurationModel currentConfigurationModelChild : currentConfig.getChildrenConfigurations()) {
+            if (selectedTransitionModelToTake.equals(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration())) {
+                currentConfig = currentConfigurationModelChild;
+                // Set the current configuration to the next
+                currentConfig.markAsVisited();
+                currentTapeModel.setHead(currentConfig.getHeadPosition());
+                currentStackModel.setContent(currentConfig.getStackContent());
+                //Setup current configuration children configurations
+                List<ConfigurationModel> childrenConfigurationList = findChildrenConfigurations(currentConfig);
+                currentConfig.setChildrenConfigurations(childrenConfigurationList);
+
+                // Set type of configuration
+                setTypeOfConfiguration();
+
+                if (childrenConfigurationList.isEmpty()) {
+                    //no more paths to search for this child
+                    if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
+                        currentConfig.setStuckConfig(true);
+                        leafConfigurationArrayList.add(currentConfig);
+                    }
+                }
+            }
+        }
+    }
+
     public void previous() {
         ConfigurationModel previous = currentConfig.getParentConfiguration();
         if (previous != null) {
@@ -103,13 +129,13 @@ public class SimulationModel {
     }
 
 
-    public List<ConfigurationModel> configurationApplicable(StateModel currentStateModel, String currentInputSymbolAtHeadOnTape, String currentTopElementOnStack) {
+    public List<ConfigurationModel> findChildrenConfigurations(ConfigurationModel configurationModel) {
         return machineModel.getTransitionModelSet()
                 .stream()
-                .filter(transitionModel -> transitionModel.getCurrentStateModel().equals(currentStateModel))
-                .filter(transitionModel -> transitionModel.getInputSymbol().equals(currentInputSymbolAtHeadOnTape) || transitionModel.getInputSymbol().equals(EMPTY))
-                .filter(transitionModel -> transitionModel.getStackSymbolToPop().equals(currentTopElementOnStack) || transitionModel.getStackSymbolToPop().equals(EMPTY))
-                .map(transitionModel -> generateConfig(transitionModel))
+                .filter(transitionModel -> transitionModel.getCurrentStateModel().equals(configurationModel.getCurrentStateModel()))
+                .filter(transitionModel -> transitionModel.getInputSymbol().equals(currentTapeModel.getAtHead()) || transitionModel.getInputSymbol().equals(EMPTY))
+                .filter(transitionModel -> transitionModel.getStackSymbolToPop().equals(currentStackModel.peak()) || transitionModel.getStackSymbolToPop().equals(EMPTY))
+                .map(this::generateConfig)
                 .collect(Collectors.toList());
     }
 
@@ -136,37 +162,33 @@ public class SimulationModel {
     }
 
 
-    public boolean isInAcceptingConfiguration() {
+    public void setTypeOfConfiguration() {
         if (currentTapeModel.isEmpty()) {
             if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
-                return true;
+                currentConfig.setSuccessConfig(true);
+                leafConfigurationArrayList.add(currentConfig);
+                ++numOfPossibleSuccessPaths;
+
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
-                return true;
+                currentConfig.setSuccessConfig(true);
+                leafConfigurationArrayList.add(currentConfig);
+                ++numOfPossibleSuccessPaths;
             }
-            //Set current config to fail
             currentConfig.setFailConfig(true);
-            //Add it to leaf list
-            leafConfigurationPath.add(currentConfig);
+            leafConfigurationArrayList.add(currentConfig);
         }
-        return false;
+
     }
 
     public int createTree() {
-        while (currentConfig.getStep() < 51) {
+        while (currentConfig.getDepth() < 51) {
 
-            //checking for acceptance
-            if (isInAcceptingConfiguration()) {
-                ++numOfPossibleSuccessPaths;
-                //Set current config to success
-                currentConfig.setSuccessConfig(true);
-                //Add it to leaf list
-                leafConfigurationPath.add(currentConfig);
-            }
+            setTypeOfConfiguration();
 
             int result = next(); // if one is returned more children exist
 
             if (result == 1) {
-                configurationPath.add(currentConfig);
+                computationTreeArrayList.add(currentConfig);
             }
 
             //Returning 8 when no more children present to search for given parent
@@ -177,15 +199,15 @@ public class SimulationModel {
                 if (currentConfig == null) {
                     return 200;
                 }
-                configurationPath.add(currentConfig);
+                computationTreeArrayList.add(currentConfig);
             }
 
-            if (currentConfig.getStep() == 50) {
+            if (currentConfig.getDepth() == 50) {
                 currentConfig.setInfiniteConfig(true);
                 ++numOfPossibleInfinitePaths;
-                leafConfigurationPath.add(currentConfig);
+                leafConfigurationArrayList.add(currentConfig);
                 previous();
-                configurationPath.add(currentConfig);
+                computationTreeArrayList.add(currentConfig);
             }
 
         }
@@ -196,28 +218,17 @@ public class SimulationModel {
         return currentConfig;
     }
 
-    public void setCurrentConfig(ConfigurationModel currentConfig) {
-        this.currentConfig = currentConfig;
-    }
-
     public TapeModel getCurrentTapeModel() {
         return currentTapeModel;
-    }
-
-    public void setCurrentTapeModel(TapeModel currentTapeModel) {
-        this.currentTapeModel = currentTapeModel;
     }
 
     public StackModel getCurrentStackModel() {
         return currentStackModel;
     }
 
-    public void setCurrentStackModel(StackModel currentStackModel) {
-        this.currentStackModel = currentStackModel;
-    }
 
-    public ArrayList<ConfigurationModel> getConfigurationPath() {
-        return configurationPath;
+    public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
+        return computationTreeArrayList;
     }
 
     public int getNumOfPossibleInfinitePaths() {
@@ -228,8 +239,8 @@ public class SimulationModel {
         return numOfPossibleSuccessPaths;
     }
 
-    public ArrayList<ConfigurationModel> getLeafConfigurationPath() {
-        return leafConfigurationPath;
+    public ArrayList<ConfigurationModel> getLeafConfigurationArrayList() {
+        return leafConfigurationArrayList;
     }
 
     public boolean isNFA() {

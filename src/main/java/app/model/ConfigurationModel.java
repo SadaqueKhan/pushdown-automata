@@ -19,7 +19,7 @@ public class ConfigurationModel {
 
     private boolean isVisited;
     private int branch;
-    private int step;
+    private int depth;
 
     private boolean isSuccessConfig = false;
     private boolean isInfiniteConfig = false;
@@ -40,16 +40,25 @@ public class ConfigurationModel {
 
         this.isVisited = false;
         this.branch = 1;
-        this.step = parentConfiguration == null ? 0 : parentConfiguration.getStep() + 1;
+        this.depth = parentConfiguration == null ? 0 : parentConfiguration.getDepth() + 1;
     }
 
     /**
-     * Get the step value to reach this position from the root
+     * Get the branch value to reach this position from the root
      *
-     * @return the step integer value to reach this position from the root
+     * @return the branch integer value to reach this position from the root
      */
-    public int getStep() {
-        return step;
+    public int getBranch() {
+        return branch;
+    }
+
+    /**
+     * Get the depth value to reach this position from the root
+     *
+     * @return the depth integer value to reach this position from the root
+     */
+    public int getDepth() {
+        return depth;
     }
 
     /**
@@ -171,6 +180,7 @@ public class ConfigurationModel {
         return pathList;
     }
 
+
     /**
      * Get this configurations toString.
      *
@@ -178,14 +188,6 @@ public class ConfigurationModel {
      */
     @Override
     public String toString() {
-        // Check if the start state
-        if (parentConfiguration == null) {
-            // create the string for the root node configuration in the tree
-            return "At the start state: " + currentStateModel.getStateId();
-        }
-
-        // Otherwise create string for other node configuration in the tree
-
         // Create string of the current tape state at this configuration
         StringBuilder currentTapeString = new StringBuilder();
         if (currentTapeModel.getHead() == currentTapeModel.tapeSize()) {
@@ -203,12 +205,8 @@ public class ConfigurationModel {
             stackState.append(stackSymbol);
         }
 
-        // Create string of the position of the configuration in the tree search
-        String positionInTreeString = "depth " + step + ":branch " + branch + ": ";
-
-        // Create a string depicting the current configuration state
-        String configurationString = "( " + currentStateModel.getStateId() + ", " + currentTapeString + ", " + stackState + " )";
-        return positionInTreeString + this.getTransitionModelTakenToReachCurrentConfiguration() + " -> " + configurationString;
+        // Concatenate the three elements that make up a configuration into one string
+        return "( " + currentStateModel.getStateId() + ", " + currentTapeString + ", " + stackState + " )";
     }
 
     /**
