@@ -25,7 +25,6 @@ public class StateNode extends StackPane {
     private String stateID;
     //Reference to UI components for view.
     private Circle stateCircle;
-    private Label stateIdText;
     private Line startStatePointLine1;
     private Line startStatePointLine2;
     private Arc finalStateArc;
@@ -53,7 +52,7 @@ public class StateNode extends StackPane {
         this.stateCircle = new Circle();
         stateCircle.setRadius(radius);
         stateCircle.setStyle("-fx-fill:orange;-fx-stroke-width:2px;-fx-stroke:black;");
-        stateIdText = new Label(stateID);
+        Label stateIdText = new Label(stateID);
         stateIdText.setStyle("-fx-font-size:18px;-fx-font-weight:bold;");
         this.setPrefSize(paneSize, paneSize);
         this.setMaxSize(paneSize, paneSize);

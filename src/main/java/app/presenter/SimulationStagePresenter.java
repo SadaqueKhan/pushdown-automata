@@ -75,15 +75,15 @@ public class SimulationStagePresenter {
             Scene scene = new Scene(stepRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
         }
-        mainStagePresenter.getMainScene().getContainerForCenterNodes().setDisable(true);
-        mainStagePresenter.getMainScene().getInputTextField().setDisable(true);
+        mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(true);
+        mainStagePresenter.getMainStage().getInputTextField().setDisable(true);
         simulationStage.setResizable(false);
         simulationStage.show();
         simulationStage.setOnCloseRequest(event -> {
             DiagramPresenter diagramPresenter = mainStagePresenter.getDiagramPresenter();
             diagramPresenter.removeHighlightedTransitionView();
-            mainStagePresenter.getMainScene().getContainerForCenterNodes().setDisable(false);
-            mainStagePresenter.getMainScene().getInputTextField().setDisable(false);
+            mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(false);
+            mainStagePresenter.getMainStage().getInputTextField().setDisable(false);
             mainStagePresenter.updateStackView(new ArrayList<>());
             mainStagePresenter.updateTapeView(0);
         });

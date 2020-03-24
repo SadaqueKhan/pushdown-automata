@@ -2,7 +2,7 @@ package app.presenter;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.view.MainScene;
+import app.view.MainStage;
 import app.view.TransitionTableScene;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -10,47 +10,91 @@ import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * Presenter presenter acts upon the model and the view.
+ * It retrieves data from repositories (the model), and formats it for display in the transition table view.
+ * </p>
+ */
 public class TransitionTablePresenter {
-
     private final MachineModel machineModel;
-    private final MainScene mainScene;
-    private final MainStagePresenter mainStagePresenter;
-
+    private final MainStage mainStage;
+    private final TransitionTableScene transitionTableScene;
     private DiagramPresenter diagramPresenter;
-
-    private TransitionTableScene transitionTableScene;
-    public TransitionTablePresenter(MainScene mainScene, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    /**
+     * Constructor of the transition table presenter, used to instantiate an instance of the presenter.
+     * @param mainStage
+     * @param machineModel
+     */
+    TransitionTablePresenter(MainStage mainStage, MachineModel machineModel) {
         this.machineModel = machineModel;
-        this.mainStagePresenter = mainStagePresenter;
-        this.mainScene = mainScene;
+        this.mainStage = mainStage;
         this.transitionTableScene = new TransitionTableScene(this);
     }
-
-    public void loadTransitionTableOntoStage(DiagramPresenter diagramPresenter) {
+    /**
+     * Reloads the transition table scene back onto the main stage when selected via the tab found on in the main stage.
+     * @param diagramPresenter
+     */
+    void loadTransitionTableSceneOntoMainStage(DiagramPresenter diagramPresenter) {
         this.diagramPresenter = diagramPresenter;
-        mainScene.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
+        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
     }
-
-    public void loadTransitionTableView() {
+    /**
+     * Loads data found on the transition table scene.
+     */
+    void loadTransitionTableView() {
+        // Load data found on the transition table UI component in the transition table scene.
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
             transitionTableScene.getTransitionTable().getItems().add(transitionModelToLoad);
         }
+        // Load data found in the combo box UI component in the transition table scene.
         updateAvailableStateListForCombobox();
-        updateInputAlphabetForComboxBox();
-        updateStackAlphabetForComboxBox();
+        updateInputAlphabetForComboBox();
+        updateStackAlphabetForComboBox();
     }
-
+    /**
+     * Handles updates to combo boxes which list states.
+     */
+    void updateAvailableStateListForCombobox() {
+        ArrayList<String> availableStateList = new ArrayList<>();
+        for (StateModel stateModel : machineModel.getStateModelSet()) {
+            availableStateList.add(stateModel.getStateId());
+        }
+        transitionTableScene.getCurrentStateComboBox().getItems().clear();
+        transitionTableScene.getCurrentStateComboBox().getItems().addAll(availableStateList);
+        transitionTableScene.getResultingStateComboBox().getItems().clear();
+        transitionTableScene.getResultingStateComboBox().getItems().addAll(availableStateList);
+    }
+    /**
+     * Handles updates to combo boxes which list input alphabet symbols.
+     */
+    void updateInputAlphabetForComboBox() {
+        transitionTableScene.getInputSymbolComboBox().getItems().clear();
+        transitionTableScene.getInputSymbolComboBox().getItems().addAll(machineModel.getInputAlphabetSet());
+    }
+    /**
+     * Handles updates to combo boxes which list stack alphabet symbols.
+     */
+    void updateStackAlphabetForComboBox() {
+        transitionTableScene.getStackSymbolToPopComboBox().getItems().clear();
+        transitionTableScene.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+        transitionTableScene.getStackSymbolToPushComboBox().getItems().clear();
+        transitionTableScene.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
+    }
+    /**
+     * Handles creating a new transition entry in the transition table, updating the models found in the application,
+     * and notifying the new transition diagram presenter.
+     */
     public void addUserTransitionModelEntryToTransitionTable() {
-        //User input for a configuration
+        //User input for a configuration part of input needed to create a transition.
         String userEntryCurrentStateID = transitionTableScene.getCurrentStateComboBox().getValue();
         String userEntryInputSymbol = transitionTableScene.getInputSymbolComboBox().getValue();
         String userEntryStackSymbolToPop = transitionTableScene.getStackSymbolToPopComboBox().getValue();
-
-        //User input for a action
+        //User input for a action part of input needed to create a transition.
         String userEntryResultingStateID = transitionTableScene.getResultingStateComboBox().getValue();
         String userEntryStackSymbolToPush = transitionTableScene.getStackSymbolToPushComboBox().getValue();
-
+        // Validate whether all input field ahve been filled.
         if ((userEntryCurrentStateID == null || userEntryCurrentStateID.equals("")) || (userEntryInputSymbol == null || userEntryInputSymbol.equals("")) || (userEntryStackSymbolToPop == null || userEntryStackSymbolToPop.equals("")) ||
                 (userEntryResultingStateID == null || userEntryResultingStateID.equals("")) || (userEntryStackSymbolToPush == null || userEntryStackSymbolToPush.equals(""))) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -60,39 +104,36 @@ public class TransitionTablePresenter {
             invalidActionAlert.show();
             return;
         }
-
-        //Update alphabets for machine
+        //Update input alphabet set and stack alphabet set found in the machine model.
         machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
         machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
         machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
-        //Update transtion table combobox
+        //Update transition table combo boxes
         updateAvailableStateListForCombobox();
-        updateInputAlphabetForComboxBox();
-        updateStackAlphabetForComboxBox();
-
-        // Create placeholders for state models
+        updateInputAlphabetForComboBox();
+        updateStackAlphabetForComboBox();
+        // Retrieve current state model from the state model set found in the machine model.
         StateModel currentStateModel = machineModel.getStateModelFromStateModelSet(userEntryCurrentStateID);
-
-        // Check to see if current state id exists,    // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
+        // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state model with
+        // the specified details and notify the diagram presenter to update it UI accordingly.
         if (currentStateModel == null) {
             currentStateModel = new StateModel(userEntryCurrentStateID);
             machineModel.addStateModelToStateModelSet(currentStateModel);
             diagramPresenter.addStateViewOntoDiagramView(currentStateModel);
         }
-
+        // Retrieve current resulting model from the state model set found in the machine model.
         StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingStateID);
-        // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state with the specified details.
+        // Check to see if resulting state id exists, if it does retrieve it otherwise create a new state model with
+        // the specified details and notify the diagram presenter to update it UI accordingly.
         if (resultingStateModel == null) {
             resultingStateModel = new StateModel(userEntryResultingStateID);
             machineModel.addStateModelToStateModelSet(resultingStateModel);
             diagramPresenter.addStateViewOntoDiagramView(resultingStateModel);
         }
-
-        //Create transition model placeholder
+        //Create transition model placeholder.
         TransitionModel newTransitionModel = new TransitionModel(currentStateModel, userEntryInputSymbol, userEntryStackSymbolToPop, resultingStateModel, userEntryStackSymbolToPush);
-
-        //Check to see if the transition already exists for the current state model
-        for (TransitionModel transitionModel : getExitingTranstionsFromStateModel(currentStateModel)) {
+        //Check to see if the transition model already exists for the current state model.
+        for (TransitionModel transitionModel : getExitingTransitionsFromStateModel(currentStateModel)) {
             if (transitionModel.equals(newTransitionModel)) {
                 // if transition exists alert the user and don't do anything further
                 Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -103,79 +144,27 @@ public class TransitionTablePresenter {
                 return;
             }
         }
-
-        //Add transition model to machinemodel
+        //Add transition model into the transition model set found in the machine model.
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
-
-        //Update table view
+        //Update transition table UI component found in transition table scene.
         transitionTableScene.getTransitionTable().getItems().add(newTransitionModel);
+        //Update combo boxes UI component found in transition table scene.
         updateAvailableStateListForCombobox();
-        updateInputAlphabetForComboxBox();
-        updateStackAlphabetForComboxBox();
-
-        //Add transitionview onto diagram view
+        updateInputAlphabetForComboBox();
+        updateStackAlphabetForComboBox();
+        //Notify diagram presenter to add a new transition node on the diagram scene.
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
             diagramPresenter.addReflexiveTransitionToDiagramView(newTransitionModel);
         } else {
             diagramPresenter.addDirectionalTransitionToView(newTransitionModel);
         }
     }
-
-
-    public void addTransitionModelEntryToTransitionTable(TransitionModel transitionModelToBeAdded) {
-        //Update table view
-        transitionTableScene.getTransitionTable().getItems().add(transitionModelToBeAdded);
-        updateAvailableStateListForCombobox();
-        updateInputAlphabetForComboxBox();
-        updateStackAlphabetForComboxBox();
-    }
-
-    public void deleteTransitionModelEntriesFromTransitionTable() {
-        // Retrieve selected rows
-        ObservableList<TransitionModel> selectedRows = transitionTableScene.getTransitionTable().getSelectionModel().getSelectedItems();
-
-        HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
-        removeTransitionSet.addAll(selectedRows);
-
-        //Update machine model
-        machineModel.removeTransitionModelsFromTransitionModelSet(removeTransitionSet);
-
-        //Update transition table view
-        transitionTableScene.getTransitionTable().getItems().removeAll(removeTransitionSet);
-
-        //Update diagram view
-        diagramPresenter.deleteTransitionView(removeTransitionSet);
-    }
-
-    public void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
-        transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
-        transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
-        updateAvailableStateListForCombobox();
-    }
-    public void updateAvailableStateListForCombobox() {
-        ArrayList<String> availableStateList = new ArrayList<>();
-        for (StateModel stateModel : machineModel.getStateModelSet()) {
-            availableStateList.add(stateModel.getStateId());
-        }
-        transitionTableScene.getCurrentStateComboBox().getItems().clear();
-        transitionTableScene.getCurrentStateComboBox().getItems().addAll(availableStateList);
-        transitionTableScene.getResultingStateComboBox().getItems().clear();
-        transitionTableScene.getResultingStateComboBox().getItems().addAll(availableStateList);
-    }
-
-    public void updateInputAlphabetForComboxBox() {
-        transitionTableScene.getInputSymbolComboBox().getItems().clear();
-        transitionTableScene.getInputSymbolComboBox().getItems().addAll(machineModel.getInputAlphabetSet());
-    }
-
-    public void updateStackAlphabetForComboxBox() {
-        transitionTableScene.getStackSymbolToPopComboBox().getItems().clear();
-        transitionTableScene.getStackSymbolToPopComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
-        transitionTableScene.getStackSymbolToPushComboBox().getItems().clear();
-        transitionTableScene.getStackSymbolToPushComboBox().getItems().addAll(machineModel.getStackAlphabetSet());
-    }
-
-    public HashSet<TransitionModel> getExitingTranstionsFromStateModel(StateModel stateModel) {
+    /**
+     * Retrieves all exiting transitions from a given state.
+     * @param stateModel
+     * @return the {@code HashSet<TransitionModel>} which represents the set of all transitions from a given state.
+     */
+    private HashSet<TransitionModel> getExitingTransitionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
         for (TransitionModel isExitingTransitionModel : machineModel.getTransitionModelSet()) {
             if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
@@ -184,5 +173,41 @@ public class TransitionTablePresenter {
         }
         return exitingTransitionFromStateModelToReturn;
     }
-
+    /**
+     * Handles updating the transition table scene given the creation of a new transition model in the repository.
+     * @param newTransitionModel
+     */
+    void addTransitionModelEntryToTransitionTable(TransitionModel newTransitionModel) {
+        //Update transition table UI component.
+        transitionTableScene.getTransitionTable().getItems().add(newTransitionModel);
+        updateAvailableStateListForCombobox();
+        updateInputAlphabetForComboBox();
+        updateStackAlphabetForComboBox();
+    }
+    /**
+     * Handles deletion of selected transitions from the transition table UI component found in the transition table
+     * scene.
+     */
+    public void deleteTransitionModelEntriesFromTransitionTable() {
+        // Retrieve selected rows.
+        ObservableList<TransitionModel> selectedRows = transitionTableScene.getTransitionTable().getSelectionModel().getSelectedItems();
+        HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
+        removeTransitionSet.addAll(selectedRows);
+        //Update transition model set found in the machine model.
+        machineModel.removeTransitionModelsFromTransitionModelSet(removeTransitionSet);
+        //Update transition table UI component.
+        transitionTableScene.getTransitionTable().getItems().removeAll(removeTransitionSet);
+        //Notify diagram presenter to delete selected transitions node on the diagram scene.
+        diagramPresenter.deleteTransitionView(removeTransitionSet);
+    }
+    /**
+     * Handles bulk deletion of transitions when a state has been requested to be deleted by the user.
+     * @param exitingTransitionModelsSet
+     * @param enteringTransitionModelsSet
+     */
+    void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
+        transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
+        transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+        updateAvailableStateListForCombobox();
+    }
 }

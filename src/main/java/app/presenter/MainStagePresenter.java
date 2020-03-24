@@ -1,7 +1,6 @@
 package app.presenter;
-
 import app.model.MachineModel;
-import app.view.MainScene;
+import app.view.MainStage;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,51 +24,39 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-
-
 public class MainStagePresenter extends Application {
-
     private MachineModel machineModel;
-    private MainScene mainScene;
-
+    private MainStage mainStage;
     private TransitionTablePresenter transitionTablePresenter;
     private DiagramPresenter diagramPresenter;
-
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
-
     public static void main(String[] args) {
         launch(args);
     }
-
     @Override
     public void start(Stage primaryWindow) throws Exception {
         this.machineModel = new MachineModel();
-        this.mainScene = new MainScene(this);
-        this.transitionTablePresenter = new TransitionTablePresenter(mainScene, this, machineModel);
-        this.diagramPresenter = new DiagramPresenter(mainScene, this, machineModel);
-
+        this.mainStage = new MainStage(this);
+        this.transitionTablePresenter = new TransitionTablePresenter(mainStage, machineModel);
+        this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
         diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
-
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
-        this.primaryWindow.setScene(new Scene(mainScene, 1500, 1000));
+        this.primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
         this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
     }
-
     public void triggerDiagramView() {
-        mainScene.getContainerForCenterNodes().getChildren().remove(1);
-        mainScene.getInputTextField().setDisable(false);
+        mainStage.getContainerForCenterNodes().getChildren().remove(1);
+        mainStage.getInputTextField().setDisable(false);
         diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
     }
-
     public void triggerTransitionTableView() {
-        mainScene.getContainerForCenterNodes().getChildren().remove(1);
-        mainScene.getInputTextField().setDisable(true);
-        transitionTablePresenter.loadTransitionTableOntoStage(diagramPresenter);
+        mainStage.getContainerForCenterNodes().getChildren().remove(1);
+        mainStage.getInputTextField().setDisable(true);
+        transitionTablePresenter.loadTransitionTableSceneOntoMainStage(diagramPresenter);
     }
-
     public void triggerSimulationView(String inputWord) {
         if (machineModel.findStartStateModel() == null) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
@@ -78,19 +65,18 @@ public class MainStagePresenter extends Application {
             invalidActionAlert.setTitle("Invalid Action");
             invalidActionAlert.show();
         } else {
-            if (mainScene.getSimulationByQuickRunMenuItem().isSelected()) {
+            if (mainStage.getSimulationByQuickRunMenuItem().isSelected()) {
                 setUpTapeView(inputWord);
-                new SimulationStagePresenter(this, machineModel, inputWord, mainScene.getSimulationByQuickRunMenuItem().getText());
+                new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByQuickRunMenuItem().getText());
             }
-            if (mainScene.getSimulationByStepRunMenuItem().isSelected()) {
-
+            if (mainStage.getSimulationByStepRunMenuItem().isSelected()) {
                 setUpTapeView(inputWord);
-                new SimulationStagePresenter(this, machineModel, inputWord, mainScene.getSimulationByStepRunMenuItem().getText());
+                new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByStepRunMenuItem().getText());
             }
         }
     }
     public void setUpTapeView(String inputWord) {
-        HBox tapeViewHBoxContainer = mainScene.getTapeScene().getTapeViewHBoxContainer();
+        HBox tapeViewHBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
         tapeViewHBoxContainer.getChildren().clear();
         for (String inputSymbol : inputWord.split("")) {
             Polygon headPointer = new Polygon(4, 0, 8, 8, 0, 8);
@@ -113,23 +99,18 @@ public class MainStagePresenter extends Application {
             tapeViewHBoxContainer.getChildren().add(stackPane);
         }
     }
-
-
     public DiagramPresenter getDiagramPresenter() {
         return diagramPresenter;
     }
-
     public Stage getPrimaryWindow() {
         return primaryWindow;
     }
-
     public void saveMachine() {
         try {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save Machine");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
             File fileChosen = fileChooser.showSaveDialog(primaryWindow);
-
             if (fileChosen != null) {
                 JAXBContext contextObj = JAXBContext.newInstance(MachineModel.class);
                 Marshaller marshallerObj = contextObj.createMarshaller();
@@ -141,11 +122,11 @@ public class MainStagePresenter extends Application {
         }
     }
     public void saveInputWord(String userInputWord) {
-        mainScene.getInputWordSet().add(userInputWord);
-        if (mainScene.getAutoCompletionBinding() != null) {
-            mainScene.getAutoCompletionBinding().dispose();
+        mainStage.getInputWordSet().add(userInputWord);
+        if (mainStage.getAutoCompletionBinding() != null) {
+            mainStage.getAutoCompletionBinding().dispose();
         }
-        mainScene.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainScene.getInputTextField(), mainScene.getInputWordSet()));
+        mainStage.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStage.getInputTextField(), mainStage.getInputWordSet()));
     }
     public void launchWiki() {
         try {
@@ -159,28 +140,22 @@ public class MainStagePresenter extends Application {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Load Machine");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-
             File fileChosen = fileChooser.showOpenDialog(primaryWindow);
-
             if (fileChosen != null) {
-
                 JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
-
                 primaryWindow.close();
-
                 this.machineModel = machineModelLoaded;
-                this.mainScene = new MainScene(this);
-                this.transitionTablePresenter = new TransitionTablePresenter(mainScene, this, machineModel);
+                this.mainStage = new MainStage(this);
+                this.transitionTablePresenter = new TransitionTablePresenter(mainStage, machineModel);
                 transitionTablePresenter.loadTransitionTableView();
-                this.diagramPresenter = new DiagramPresenter(mainScene, this, machineModel);
+                this.diagramPresenter = new DiagramPresenter(mainStage, this, machineModel);
                 diagramPresenter.loadStatesOntoDiagram();
                 diagramPresenter.loadTransitionsOntoDiagram();
                 diagramPresenter.loadDiagramViewOntoStage(transitionTablePresenter);
-
                 primaryWindow.setTitle("Pushdown Automata");
-                primaryWindow.setScene(new Scene(mainScene, 1500, 1000));
+                primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
                 primaryWindow.setResizable(false);
                 primaryWindow.show();
             }
@@ -189,43 +164,39 @@ public class MainStagePresenter extends Application {
         }
     }
     public void setSimulationToQuickRun() {
-        mainScene.getSimulationByQuickRunMenuItem().setSelected(true);
-        mainScene.getSimulationByStepRunMenuItem().setSelected(false);
+        mainStage.getSimulationByQuickRunMenuItem().setSelected(true);
+        mainStage.getSimulationByStepRunMenuItem().setSelected(false);
     }
     public void setSimulationToStepRun() {
-        mainScene.getSimulationByStepRunMenuItem().setSelected(true);
-        mainScene.getSimulationByQuickRunMenuItem().setSelected(false);
+        mainStage.getSimulationByStepRunMenuItem().setSelected(true);
+        mainStage.getSimulationByQuickRunMenuItem().setSelected(false);
     }
     public void setAcceptanceCriteriaToFinalState() {
         machineModel.setAcceptanceByFinalState(true);
         machineModel.setAcceptanceByEmptyStack(false);
-        mainScene.getAcceptanceByFinalStateMenuItem().setSelected(true);
-        mainScene.getAcceptanceByEmptyStackMenuItem().setSelected(false);
-        mainScene.getInputTextLabel().setText("Input word (acceptance by final state)");
+        mainStage.getAcceptanceByFinalStateMenuItem().setSelected(true);
+        mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(false);
+        mainStage.getInputTextLabel().setText("Input word (acceptance by final state)");
     }
     public void setAcceptanceCriteriaToEmptyStack() {
         machineModel.setAcceptanceByFinalState(false);
         machineModel.setAcceptanceByEmptyStack(true);
-        mainScene.getAcceptanceByFinalStateMenuItem().setSelected(false);
-        mainScene.getAcceptanceByEmptyStackMenuItem().setSelected(true);
-        mainScene.getInputTextLabel().setText("Input word (acceptance by empty stack)");
+        mainStage.getAcceptanceByFinalStateMenuItem().setSelected(false);
+        mainStage.getAcceptanceByEmptyStackMenuItem().setSelected(true);
+        mainStage.getInputTextLabel().setText("Input word (acceptance by empty stack)");
     }
     public void updateTapeView(int headPosition) {
         if (headPointerStackPane != null) {
             headPointerStackPane.getChildren().get(2).setVisible(false);
         }
-        HBox tapeViewVBoxContainer = mainScene.getTapeScene().getTapeViewHBoxContainer();
-
+        HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
         if (!(headPosition == 0)) {
             this.headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(headPosition - 1);
             headPointerStackPane.getChildren().get(2).setVisible(true);
         }
-
     }
-
-
     public void updateStackView(ArrayList<String> stackContent) {
-        VBox stackViewVBoxContainer = mainScene.getStackScene().getStackViewVBoxContainer();
+        VBox stackViewVBoxContainer = mainStage.getStackScene().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
         if (stackContent.isEmpty()) {
             Rectangle rectangle = new Rectangle();
@@ -235,7 +206,6 @@ public class MainStagePresenter extends Application {
             rectangle.setHeight(35);
             rectangle.setFill(Color.WHITE);
             rectangle.setStroke(Color.BLACK);
-
             StackPane stackPane = new StackPane();
             stackPane.getChildren().addAll(rectangle, new Text("..."));
             stackViewVBoxContainer.getChildren().add(stackPane);
@@ -250,15 +220,13 @@ public class MainStagePresenter extends Application {
                 rectangle.setHeight(35);
                 rectangle.setFill(Color.WHITE);
                 rectangle.setStroke(Color.BLACK);
-
                 StackPane stackPane = new StackPane();
                 stackPane.getChildren().addAll(rectangle, new Text(stackContent.get(i)));
-
                 stackViewVBoxContainer.getChildren().add(stackPane);
             }
         }
     }
-    public MainScene getMainScene() {
-        return mainScene;
+    public MainStage getMainStage() {
+        return mainStage;
     }
 }

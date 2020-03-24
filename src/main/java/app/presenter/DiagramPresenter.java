@@ -4,7 +4,7 @@ import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
 import app.view.DiagramScene;
-import app.view.MainScene;
+import app.view.MainStage;
 import app.view.StateNode;
 import app.view.TransitionNode;
 import javafx.application.Platform;
@@ -45,7 +45,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 public class DiagramPresenter {
-    private final MainScene mainScene;
+    private final MainStage mainStage;
     private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final DiagramScene diagramScene;
@@ -60,9 +60,9 @@ public class DiagramPresenter {
     private Map<StateModel, StateNode> stateMap;
     private Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     private LinkedHashMap<TransitionNode, PopOver> popOvers;
-    public DiagramPresenter(MainScene mainScene, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    public DiagramPresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
-        this.mainScene = mainScene;
+        this.mainStage = mainStage;
         this.machineModel = machineModel;
         this.diagramScene = new DiagramScene(this);
         this.stateMap = new HashMap<>();
@@ -70,7 +70,7 @@ public class DiagramPresenter {
     }
     public void loadDiagramViewOntoStage(TransitionTablePresenter transitionTablePresenter) {
         this.transitionTablePresenter = transitionTablePresenter;
-        this.mainScene.getContainerForCenterNodes().getChildren().add(diagramScene);
+        this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
     public void loadStatesOntoDiagram() {
         StateNode stateNodeToLoad;
@@ -661,8 +661,8 @@ public class DiagramPresenter {
                 //Update transition table scene
                 transitionTablePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
                 transitionTablePresenter.updateAvailableStateListForCombobox();
-                transitionTablePresenter.updateInputAlphabetForComboxBox();
-                transitionTablePresenter.updateStackAlphabetForComboxBox();
+                transitionTablePresenter.updateInputAlphabetForComboBox();
+                transitionTablePresenter.updateStackAlphabetForComboBox();
                 //Update diagram scene
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
                     addReflexiveTransitionToDiagramView(newTransitionModel);
