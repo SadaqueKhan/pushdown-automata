@@ -175,6 +175,35 @@ public class SimulationStagePresenter {
             for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
                 ListView<ConfigurationModel> newListView = new ListView<>();
                 newListView.getItems().addAll(leafConfigurationModel.getPath());
+                Platform.runLater(() -> newListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
+                    @Override
+                    public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
+                        return new ListCell<ConfigurationModel>() {
+                            @Override
+                            protected void updateItem(ConfigurationModel item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item == null || empty) {
+                                    setText(null);
+                                    setStyle(null);
+                                } else {
+                                    String itemToPrint = "";
+                                    // Create string of the position of the configuration in the tree search
+                                    String positionInTreeString = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
+                                    String configurationReachedString = item.toString();
+                                    if (item.getParentConfiguration() == null) {
+                                        // Create the string for the root node configuration in the computation tree..
+                                        itemToPrint += positionInTreeString + " -> " + configurationReachedString;
+                                    } else {
+                                        // Create string of the position of the configuration in the computation tree.
+                                        String transitionTakenToReachConfigString = item.getTransitionModelTakenToReachCurrentConfiguration().toString();
+                                        itemToPrint += positionInTreeString + transitionTakenToReachConfigString + " -> " + configurationReachedString;
+                                    }
+                                    setText(itemToPrint);
+                                }
+                            }
+                        };
+                    }
+                }));
                 setListenerForTransitionListView(newListView);
                 ++numPath;
                 if (leafConfigurationModel.isSuccessConfig()) {
