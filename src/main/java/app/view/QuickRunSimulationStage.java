@@ -5,14 +5,9 @@ import app.model.ConfigurationModel;
 import app.presenter.SimulationPresenter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.SegmentedButton;
 
 public class QuickRunSimulationStage extends BorderPane {
@@ -20,16 +15,15 @@ public class QuickRunSimulationStage extends BorderPane {
     //Reference to simulation controller
     private final SimulationPresenter simulationPresenter;
 
-    //UI components at the top of the scene
-    private Text simulationStatsTextField;
-
-    //UI components in the center of the scene
+    // UI components
     private ListView<ConfigurationModel> algorithmlistView;
     private ToggleButton toggleAlgorithmButton;
     private ToggleButton togglePathButton;
     private VBox containerForCenterNodes;
     private VBox pathsVBox;
     private ScrollPane pathsScrollPane;
+    private Label simulationStatsLabel;
+
 
     public QuickRunSimulationStage(SimulationPresenter simulationPresenter) {
         this.simulationPresenter = simulationPresenter;
@@ -44,16 +38,8 @@ public class QuickRunSimulationStage extends BorderPane {
         SegmentedButton segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleAlgorithmButton, togglePathButton);
         toggleAlgorithmButton.setSelected(true);
-
-        HBox statsBarHBoxContainer = new HBox();
-        statsBarHBoxContainer.setAlignment(Pos.CENTER);
-        //UI components at the top of the scene
-        this.simulationStatsTextField = new Text();
-        statsBarHBoxContainer.getChildren().add(simulationStatsTextField);
-
         VBox containerForTopNodes = new VBox();
-        containerForTopNodes.getChildren().addAll(segmentedButton, statsBarHBoxContainer);
-
+        containerForTopNodes.getChildren().addAll(segmentedButton);
         containerForTopNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForTopNodes.setSpacing(5);
         containerForTopNodes.setAlignment(Pos.TOP_CENTER);
@@ -75,7 +61,16 @@ public class QuickRunSimulationStage extends BorderPane {
         pathsScrollPane.setContent(pathsVBox);
         pathsScrollPane.setFitToWidth(true);
 
-        setCenter(containerForCenterNodes);
+        //---
+        HiddenSidesPane pane = new HiddenSidesPane();
+        pane.setContent(containerForCenterNodes);
+        simulationStatsLabel = new Label();
+        simulationStatsLabel.setWrapText(true);
+
+        simulationStatsLabel.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.setRight(simulationStatsLabel);
+
+        setCenter(pane);
     }
 
     private void setUpUIListeners() {
@@ -85,8 +80,8 @@ public class QuickRunSimulationStage extends BorderPane {
         algorithmlistView.setOnMouseReleased(quickRunSimulationListener);
     }
 
-    public Text getSimulationStatsTextField() {
-        return simulationStatsTextField;
+    public Label getSimulationStatsLabel() {
+        return simulationStatsLabel;
     }
 
     public ListView<ConfigurationModel> getAlgorithmlistView() {

@@ -49,11 +49,11 @@ public class SimulationPresenter {
                 triggerAlgorithmScene();
                 String simulationStatsString;
                 if (quickRunSimulationModel.isNFA()) {
-                    simulationStatsString = "Type: " + "NFA" + " " + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+                    simulationStatsString = "Type: " + "NFA" + "\n" + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
                 } else {
-                    simulationStatsString = "Type: " + "DFA" + " " + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + " " + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+                    simulationStatsString = "Type: " + "DFA" + "\n" + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
                 }
-                quickRunSimulationStage.getSimulationStatsTextField().setText(simulationStatsString);
+                quickRunSimulationStage.getSimulationStatsLabel().setText(simulationStatsString);
 
             }
             //Create a new scene to render simulation
