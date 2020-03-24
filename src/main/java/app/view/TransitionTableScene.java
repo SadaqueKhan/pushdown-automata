@@ -40,11 +40,8 @@ public class TransitionTableScene extends BorderPane {
      * @param transitionTablePresenter
      */
     public TransitionTableScene(TransitionTablePresenter transitionTablePresenter) {
-        // Reference to the presenter of this view.
         this.transitionTablePresenter = transitionTablePresenter;
-        //Set up the UI components that are present in the view.
         setUpUIComponents();
-        //Set up the listener of the view.
         setUpUIListeners();
     }
     /**
@@ -139,9 +136,9 @@ public class TransitionTableScene extends BorderPane {
      * Sets up the listeners for UI components of the view.
      */
     private void setUpUIListeners() {
-        //Create listener for this view
+        //Create listener for UI component for this view.
         TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTablePresenter);
-        //Set a listener that is triggered when the submit button is clicked
+        //Link listener to events on UI components for this view.
         submitTransitionButton.setOnAction(transitionTableListener);
         deleteTransitionButton.setOnAction(transitionTableListener);
     }
