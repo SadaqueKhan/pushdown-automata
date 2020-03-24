@@ -66,7 +66,6 @@ public class QuickRunSimulationStage extends BorderPane {
         pane.setContent(containerForCenterNodes);
         simulationStatsLabel = new Label();
         simulationStatsLabel.setWrapText(true);
-
         simulationStatsLabel.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         pane.setRight(simulationStatsLabel);
 

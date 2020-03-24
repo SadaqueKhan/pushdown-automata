@@ -47,14 +47,21 @@ public class SimulationPresenter {
 
             if (flag == 200) {
                 triggerAlgorithmScene();
-                String simulationStatsString;
-                if (quickRunSimulationModel.isNFA()) {
-                    simulationStatsString = "Type: " + "NFA" + "\n" + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
-                } else {
-                    simulationStatsString = "Type: " + "DFA" + "\n" + "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" + "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
-                }
-                quickRunSimulationStage.getSimulationStatsLabel().setText(simulationStatsString);
 
+
+                String simulationStatsString = "Simulation Facts" + "\n";
+
+                if (quickRunSimulationModel.isNFA()) {
+                    simulationStatsString += "Type: " + "NFA" + "\n";
+                } else {
+                    simulationStatsString += "Type: " + "DFA" + "\n";
+                }
+                simulationStatsString +=
+                        "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" +
+                                "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
+                                "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
+                                "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+                quickRunSimulationStage.getSimulationStatsLabel().setText(simulationStatsString);
             }
             //Create a new scene to render simulation
             simulationStage.setTitle("Simulation: Quick Run");

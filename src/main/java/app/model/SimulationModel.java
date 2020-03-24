@@ -18,8 +18,11 @@ public class SimulationModel {
     private ArrayList<ConfigurationModel> leafConfigurationArrayList;
 
     private boolean isNFA = false;
-    private int numOfPossibleInfinitePaths = 0;
     private int numOfPossibleSuccessPaths = 0;
+    private int numOfPossibleFailPaths = 0;
+    private int numOfPossibleStuckPaths = 0;
+
+    private int numOfPossibleInfinitePaths = 0;
 
     public SimulationModel(MachineModel machineModel, String inputWord) {
         this.machineModel = machineModel;
@@ -56,6 +59,7 @@ public class SimulationModel {
             if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
                 currentConfig.setStuckConfig(true);
                 leafConfigurationArrayList.add(currentConfig);
+                ++numOfPossibleStuckPaths;
             }
             return 0; // Go back to parent
         }
@@ -168,14 +172,15 @@ public class SimulationModel {
                 currentConfig.setSuccessConfig(true);
                 leafConfigurationArrayList.add(currentConfig);
                 ++numOfPossibleSuccessPaths;
-
             } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
                 currentConfig.setSuccessConfig(true);
                 leafConfigurationArrayList.add(currentConfig);
                 ++numOfPossibleSuccessPaths;
+            } else {
+                currentConfig.setFailConfig(true);
+                leafConfigurationArrayList.add(currentConfig);
+                ++numOfPossibleFailPaths;
             }
-            currentConfig.setFailConfig(true);
-            leafConfigurationArrayList.add(currentConfig);
         }
 
     }
@@ -218,25 +223,26 @@ public class SimulationModel {
         return currentConfig;
     }
 
-    public TapeModel getCurrentTapeModel() {
-        return currentTapeModel;
-    }
-
-    public StackModel getCurrentStackModel() {
-        return currentStackModel;
-    }
 
 
     public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
         return computationTreeArrayList;
     }
 
-    public int getNumOfPossibleInfinitePaths() {
-        return numOfPossibleInfinitePaths;
-    }
-
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
+    }
+
+    public int getNumOfPossibleFailPaths() {
+        return numOfPossibleFailPaths;
+    }
+
+    public int getNumOfPossibleStuckPaths() {
+        return numOfPossibleStuckPaths;
+    }
+
+    public int getNumOfPossibleInfinitePaths() {
+        return numOfPossibleInfinitePaths;
     }
 
     public ArrayList<ConfigurationModel> getLeafConfigurationArrayList() {
