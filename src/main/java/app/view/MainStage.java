@@ -46,6 +46,7 @@ public class MainStage extends BorderPane {
     private MenuItem helpGuideItem;
     private CheckMenuItem simulationByQuickRunMenuItem;
     private CheckMenuItem simulationByStepRunMenuItem;
+    private MenuBar menuBar;
     /**
      * Constructor of the main stage, used to instantiate an instance of this view.
      * @param mainStagePresenter
@@ -60,7 +61,7 @@ public class MainStage extends BorderPane {
      */
     private void setUpUIComponents() {
         //Setup top GUI elements
-        MenuBar menuBar = new MenuBar();
+        menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
         this.saveMenuItem = new MenuItem("Save");
         this.loadMenuItem = new MenuItem("Load");
@@ -187,5 +188,8 @@ public class MainStage extends BorderPane {
     }
     public CheckMenuItem getSimulationByStepRunMenuItem() {
         return simulationByStepRunMenuItem;
+    }
+    public MenuBar getMenuBar() {
+        return menuBar;
     }
 }

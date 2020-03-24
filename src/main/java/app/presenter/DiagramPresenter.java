@@ -130,7 +130,6 @@ public class DiagramPresenter {
     }
     public void stateViewContextMenuPopUp(StateNode stateNode) {
         StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
-        //TODO need to MVC this
         ContextMenu contextMenu = new ContextMenu();
         MenuItem toggleStandardStateItem = new MenuItem("Toggle standard state");
         MenuItem toggleStartStateItem = new MenuItem("Toggle start state");
@@ -744,12 +743,11 @@ public class DiagramPresenter {
             }
         }
     }
-    public void removeHighlightedTransitionView() {
+    void removeHighlightedTransitionView() {
         if (transitionModelHighlighted != null) {
             StateNode currentStateNode = stateMap.get(transitionModelHighlighted.getCurrentStateModel());
             StateNode resultingStateNode = stateMap.get(transitionModelHighlighted.getResultingStateModel());
             currentStateNode.getStateCircle().setStroke(Color.BLACK);
-            //TODO: Figure out why you have to null check for this
             if (resultingStateNode != null) {
                 resultingStateNode.getStateCircle().setStroke(Color.BLACK);
             }
