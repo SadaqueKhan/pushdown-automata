@@ -122,14 +122,16 @@ public class SimulationPresenter {
 
                                 String itemToPrint = "";
 
+                                // Create string of the position of the configuration in the tree search
+                                String positionInTreeString = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
+                                String configurationReachedString = item.toString();
+
                                 if (item.getParentConfiguration() == null) {
                                     // create the string for the root node configuration in the tree
-                                    itemToPrint += "At the start state: " + item.getCurrentStateModel().getStateId();
+                                    itemToPrint += positionInTreeString + " -> " + configurationReachedString;
                                 } else {
                                     // Create string of the position of the configuration in the tree search
-                                    String positionInTreeString = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
                                     String transitionTakenToReachConfigString = item.getTransitionModelTakenToReachCurrentConfiguration().toString();
-                                    String configurationReachedString = item.toString();
                                     itemToPrint += positionInTreeString + transitionTakenToReachConfigString + " -> " + configurationReachedString;
                                 }
 
@@ -152,11 +154,10 @@ public class SimulationPresenter {
 
                                 if (item.getParentConfiguration() == null) {
                                     setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
-                                    itemToPrint = item.toString() + " (At the start state!)";
                                 }
                                 if (item.isSuccessConfig()) {
                                     setStyle("-fx-control-inner-background: " + "derive(#b3ff05, 50%);");
-                                    itemToPrint = item.toString() + "  (Success!)";
+                                    itemToPrint += "(Success!)";
                                 }
 
                                 setText(itemToPrint);
