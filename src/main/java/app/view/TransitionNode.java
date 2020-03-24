@@ -1,39 +1,41 @@
 package app.view;
-
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * View blueprint for a transition node.
+ * </p>
+ */
 public class TransitionNode extends Line {
-
-    private StateNode source;
-    private StateNode target;
+    //Reference to the state nodes linked to view.
+    private StateNode currentStateNode;
+    private StateNode resultingStateNode;
+    //Reference to UI components for view.
     private VBox transitionListVBox;
-
-    public TransitionNode(StateNode source, StateNode target) {
-        this.source = source;
-        this.target = target;
+    public TransitionNode(StateNode currentStateNode, StateNode resultingStateNode) {
+        this.currentStateNode = currentStateNode;
+        this.resultingStateNode = resultingStateNode;
         setUpUIComponents();
     }
-
+    /**
+     * Sets up the UI components of the view.
+     */
     private void setUpUIComponents() {
         transitionListVBox = new VBox();
         transitionListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
-
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(2);
     }
-
-
-    public StateNode getSource() {
-        return source;
+    // Getters for state nodes linked to view.
+    public StateNode getCurrentStateNode() {
+        return currentStateNode;
     }
-
-
-    public StateNode getTarget() {
-        return target;
+    public StateNode getResultingStateNode() {
+        return resultingStateNode;
     }
-
+    // Getters for UI components of the view.
     public VBox getTransitionListVBox() {
         return transitionListVBox;
     }

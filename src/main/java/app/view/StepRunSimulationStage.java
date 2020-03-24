@@ -1,16 +1,17 @@
 package app.view;
-
-import app.listener.StepRunSimulationListener;
-import app.model.TransitionModel;
-import app.presenter.SimulationPresenter;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-
+import app.listener.*;
+import app.model.*;
+import app.presenter.*;
+import javafx.geometry.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.*;
+/**
+ * @author Mohammed Sadaque Khan
+ * <p>
+ * View blueprint for a tape scene.
+ * </p>
+ */
 public class StepRunSimulationStage extends BorderPane {
 
     //Reference to simulation controller
