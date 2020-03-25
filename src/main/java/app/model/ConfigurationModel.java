@@ -182,19 +182,19 @@ public class ConfigurationModel {
     /**
      * Sets this configuration to a success configuration.
      */
-    public void setSuccessConfig(boolean successConfig) {
+    void setSuccessConfig(boolean successConfig) {
         isSuccessConfig = successConfig;
     }
     public boolean isStuckConfig() {
         return isStuckConfig;
     }
-    public void setStuckConfig(boolean stuckConfig) {
+    void setStuckConfig(boolean stuckConfig) {
         isStuckConfig = stuckConfig;
     }
     public boolean isFailConfig() {
         return isFailConfig;
     }
-    public void setFailConfig(boolean failConfig) {
+    void setFailConfig(boolean failConfig) {
         isFailConfig = failConfig;
     }
     /**
@@ -207,7 +207,7 @@ public class ConfigurationModel {
     /**
      * Sets this configuration to the last configuration apart of an infinite configuration.
      */
-    public void setInfiniteConfig(boolean infiniteConfig) {
+    void setInfiniteConfig(boolean infiniteConfig) {
         isInfiniteConfig = infiniteConfig;
     }
 }

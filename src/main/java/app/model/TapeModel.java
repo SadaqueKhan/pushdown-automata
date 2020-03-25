@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Model of a tape, consisting of elements commonly found to define a tape in push down automata theory.
+ * Implementation of the tape using a array list. Consisting of elements and methods commonly found to define a
+ * tape in push down automata theory.
  * </p>
  */
 class TapeModel {

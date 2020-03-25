@@ -1,48 +1,68 @@
 package app.model;
-
 import java.util.ArrayList;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Model of a transition, consisting of elements commonly found to define a stack in push down automata theory.
+ * Implementation of the stack using a array list.
  * </p>
  */
 class StackModel {
     private final ArrayList<String> stack;
-
-    public StackModel() {
+    StackModel() {
         stack = new ArrayList<>();
     }
-
-    public void push(String toPush) {
+    /**
+     * Inserts an input symbol at the top of the stack.
+     * This method runs in O(1) time.
+     * @param toPush input symbol to be inserted.
+     */
+    void push(String toPush) {
         stack.add(toPush);
     }
-
-    public void pop() {
+    /**
+     * /**
+     * Removes the top element from the stack.
+     * This method runs in O(1) time.
+     */
+    void pop() {
         if (!(isEmpty())) {
             stack.remove(stack.size() - 1);
         }
     }
-
-    public String peak() {
+    /**
+     * Testes whether the stack is empty.
+     * This method runs in O(1) time.
+     * @return <tt>true</tt>  if the stack is empty, false otherwise.
+     */
+    boolean isEmpty() {
+        return stack.isEmpty();
+    }
+    /**
+     * Index of the top element of the stack in the array.
+     */
+    String peak() {
         if (isEmpty()) {
             return "\u03B5";
         }
         return stack.get(stack.size() - 1);
     }
-
-    public boolean isEmpty() {
-        return stack.isEmpty();
-    }
-
-    public ArrayList<String> getContent() {
+    /**
+     * Gets the stack array list.
+     * @return the stack array list.
+     */
+    ArrayList<String> getContent() {
         return stack;
     }
-
-    public void setContent(ArrayList<String> stack) {
+    /**
+     * Gets the stack array list.
+     * @return the stack array list.
+     */
+    /**
+     * Sets the stack array list for this stack.
+     * @param stack array list to be set for this stack array list.
+     */
+    void setContent(ArrayList<String> stack) {
         this.stack.clear();
         this.stack.addAll(stack);
     }
-
-
 }

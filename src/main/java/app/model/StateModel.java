@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Model of a transition, consisting of elements commonly found to define a state in push down automata theory
+ * Model of a state, consisting of elements commonly found to define a state in push down automata theory
  * and coordinates for which the state is located on the diagram scene.
  * </p>
  */
@@ -41,7 +41,7 @@ public class StateModel {
      * Sets the id set for this state model.
      * @param stateId the id used to set the id for this state model.
      */
-    public void setStateId(String stateId) {
+    void setStateId(String stateId) {
         this.stateId = stateId;
     }
     /**
