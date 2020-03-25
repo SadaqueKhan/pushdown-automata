@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Listener attached to main stage UI components.
+ * Listener attached to main stage nodes.
  * </p>
  */
 public class MainStageListener implements EventHandler {

@@ -11,7 +11,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Listener attached to quick run simulation scene UI components.
+ * Listener attached to quick run simulation scene nodes.
  * </p>
  */
 public class QuickRunSimulationListener implements EventHandler {

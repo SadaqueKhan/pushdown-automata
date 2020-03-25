@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Listener attached to step run simulation scene UI components.
+ * Listener attached to step run simulation scene nodes.
  * </p>
  */
 public class StepRunSimulationListener implements EventHandler {

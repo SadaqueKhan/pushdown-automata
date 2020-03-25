@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Listener attached to diagram scene UI components.
+ * Listener attached to diagram scene nodes.
  * </p>
  */
 public class DiagramListener implements EventHandler {

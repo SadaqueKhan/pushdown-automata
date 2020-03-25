@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
- * Listener attached to transition table scene UI components.
+ * Listener attached to transition table scene nodes.
  * </p>
  */
 public class TransitionTableListener implements EventHandler {
