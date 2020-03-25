@@ -185,27 +185,43 @@ public class ConfigurationModel {
     void setSuccessConfig(boolean successConfig) {
         isSuccessConfig = successConfig;
     }
+    /**
+     * Check if the configuration is a stuck configuration.
+     * @return <tt>true</tt> if the configuration is a stuck configuration
+     */
     public boolean isStuckConfig() {
         return isStuckConfig;
     }
+    /**
+     * Sets this configuration to a stuck configuration.
+     */
     void setStuckConfig(boolean stuckConfig) {
         isStuckConfig = stuckConfig;
     }
+    /**
+     * Check if the configuration is a fail configuration.
+     * @return <tt>true</tt> if the configuration is a fail configuration
+     */
     public boolean isFailConfig() {
         return isFailConfig;
     }
+    /**
+     * Sets this configuration to a fail configuration.
+     */
     void setFailConfig(boolean failConfig) {
         isFailConfig = failConfig;
     }
     /**
-     * Check if the configuration is the last configuration in a possible infinite configuration.
-     * @return <tt>true</tt> if the configuration is the last configuration apart of a possible infinite configuration
+     * Check if the configuration is the last configuration computable for this application indicating a large
+     * computation path.
+     * @return <tt>true</tt> if the configuration is the last configuration computable for this application
+     * indicating a large computation.
      */
     public boolean isInfiniteConfig() {
         return isInfiniteConfig;
     }
     /**
-     * Sets this configuration to the last configuration apart of an infinite configuration.
+     * Sets this configuration to the last configuration computable for this application indicating a large computation.
      */
     void setInfiniteConfig(boolean infiniteConfig) {
         isInfiniteConfig = infiniteConfig;

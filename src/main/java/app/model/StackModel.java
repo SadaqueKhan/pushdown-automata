@@ -20,7 +20,6 @@ class StackModel {
         stack.add(toPush);
     }
     /**
-     * /**
      * Removes the top element from the stack.
      * This method runs in O(1) time.
      */
@@ -53,10 +52,6 @@ class StackModel {
     ArrayList<String> getContent() {
         return stack;
     }
-    /**
-     * Gets the stack array list.
-     * @return the stack array list.
-     */
     /**
      * Sets the stack array list for this stack.
      * @param stack array list to be set for this stack array list.

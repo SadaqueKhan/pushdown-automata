@@ -468,9 +468,9 @@ public class DiagramScenePresenter {
                 stateNode.getStartStatePointLine1().setVisible(stateModelSelected.isStartState());
                 stateNode.getStartStatePointLine2().setVisible(stateModelSelected.isStartState());
             } else {
-                if (machineModel.findStartStateModel() != null) { // Check to see if start state exists in machine
+                if (machineModel.getStartStateModel() != null) { // Check to see if start state exists in machine
                     Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
-                            "Only one initial state allowed per machine. " + "State " + machineModel.findStartStateModel() + " is currently defined as the initial state for this machine.", ButtonType.OK);
+                            "Only one initial state allowed per machine. " + "State " + machineModel.getStartStateModel() + " is currently defined as the initial state for this machine.", ButtonType.OK);
                     invalidActionAlert.setHeaderText("Information");
                     invalidActionAlert.setTitle("Invalid Action");
                     invalidActionAlert.show();

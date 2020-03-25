@@ -31,7 +31,7 @@ public class SimulationModel {
         leafConfigurationArrayList = new ArrayList<>();
         //Set the root node
         currentTapeModel.loadInput(inputWord);
-        currentConfig = new ConfigurationModel(null, null, machineModel.findStartStateModel(), currentTapeModel, currentStackModel);
+        currentConfig = new ConfigurationModel(null, null, machineModel.getStartStateModel(), currentTapeModel, currentStackModel);
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         computationTreeArrayList.add(currentConfig);

@@ -84,7 +84,7 @@ public class MainStagePresenter extends Application {
      * @param inputWord requested to be simulated.
      */
     public void loadSimulationStage(String inputWord) {
-        if (machineModel.findStartStateModel() == null) {
+        if (machineModel.getStartStateModel() == null) {
             Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
                     "No start state defined for machine simulation can not be executed.", ButtonType.OK);
             invalidActionAlert.setHeaderText("Information");
