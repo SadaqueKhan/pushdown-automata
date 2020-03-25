@@ -13,7 +13,7 @@ public class DiagramScene extends Pane {
     private final DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the diagram scene, used to instantiate an instance of the view.
-     * @param diagramScenePresenter
+     * @param diagramScenePresenter a reference to the views presenter.
      */
     public DiagramScene(DiagramScenePresenter diagramScenePresenter) {
         this.diagramScenePresenter = diagramScenePresenter;

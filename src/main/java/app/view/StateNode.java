@@ -33,8 +33,8 @@ public class StateNode extends StackPane {
     private VBox listOfTransitionsVBox;
     /**
      * Constructor of the state node, used to instantiate an instance of the view.
-     * @param stateID
-     * @param diagramScenePresenter
+     * @param stateID a reference to the views identification.
+     * @param diagramScenePresenter a reference to the views presenter.
      */
     public StateNode(String stateID, DiagramScenePresenter diagramScenePresenter) {
         this.stateID = stateID;

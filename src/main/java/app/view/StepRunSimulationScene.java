@@ -25,7 +25,7 @@ public class StepRunSimulationScene extends BorderPane {
     private Text currentConfigTextField;
     /**
      * Constructor of the step run simulation scene, used to instantiate an instance of the view.
-     * @param simulationStagePresenter
+     * @param simulationStagePresenter a reference to the views presenter.
      */
     public StepRunSimulationScene(SimulationStagePresenter simulationStagePresenter) {
         this.simulationStagePresenter = simulationStagePresenter;

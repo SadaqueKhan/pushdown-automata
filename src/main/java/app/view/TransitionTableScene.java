@@ -37,7 +37,7 @@ public class TransitionTableScene extends BorderPane {
     private VBox transitionTableContainer;
     /**
      * Constructor of the transition table scene, used to instantiate an instance of the view.
-     * @param transitionTableScenePresenter
+     * @param transitionTableScenePresenter a reference to the views presenter.
      */
     public TransitionTableScene(TransitionTableScenePresenter transitionTableScenePresenter) {
         this.transitionTableScenePresenter = transitionTableScenePresenter;
@@ -145,7 +145,7 @@ public class TransitionTableScene extends BorderPane {
     /**
      * Dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the size of
      * the input does not exceed 1 and clearing the input if it does back to 0.
-     * @param comboBox
+     * @param comboBox for which a listener is added to.
      */
     private void setUpComboBoxesListeners(ComboBox comboBox) {
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {

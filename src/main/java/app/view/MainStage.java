@@ -49,7 +49,7 @@ public class MainStage extends BorderPane {
     private MenuBar menuBar;
     /**
      * Constructor of the main stage, used to instantiate an instance of this view.
-     * @param mainStagePresenter
+     * @param mainStagePresenter a reference to the views presenter.
      */
     public MainStage(MainStagePresenter mainStagePresenter) {
         this.mainStagePresenter = mainStagePresenter;

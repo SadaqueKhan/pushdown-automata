@@ -16,8 +16,8 @@ public class TransitionNode extends Line {
     private VBox transitionListVBox;
     /**
      * Constructor of a transition node, used to instantiate an instance of the view.
-     * @param currentStateNode
-     * @param resultingStateNode
+     * @param currentStateNode a reference to the current state node for which the transition is attached to.
+     * @param resultingStateNode a reference to the resulting state node for which the transition is attached to.
      */
     public TransitionNode(StateNode currentStateNode, StateNode resultingStateNode) {
         this.currentStateNode = currentStateNode;

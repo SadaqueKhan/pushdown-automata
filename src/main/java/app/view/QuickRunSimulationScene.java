@@ -35,7 +35,7 @@ public class QuickRunSimulationScene extends BorderPane {
     private Label simulationStatsLabel;
     /**
      * Constructor of the quick run simulation scene, used to instantiate an instance of this view.
-     * @param simulationStagePresenter
+     * @param simulationStagePresenter a reference to the views presenter.
      */
     public QuickRunSimulationScene(SimulationStagePresenter simulationStagePresenter) {
         this.simulationStagePresenter = simulationStagePresenter;
