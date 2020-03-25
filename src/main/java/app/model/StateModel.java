@@ -55,6 +55,11 @@ public class StateModel {
     public void setFinalState(boolean finalState) {
         isFinalState = finalState;
     }
+    /**
+     * Method checks if this object is equal to the object that is passed as an argument.
+     * @param o object that is passed as an argument to check if it is equal to this object.
+     * @return <tt>true</tt> if the argument is not null and is an object of the same type.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,10 +67,18 @@ public class StateModel {
         StateModel that = (StateModel) o;
         return getStateId().equals(that.getStateId());
     }
+    /**
+     * Method to return an integer hash code value of this object.
+     * @return the integer hash code value of the object.
+     */
     @Override
     public int hashCode() {
         return getStateId().hashCode();
     }
+    /**
+     * Method to return a string representation of this object.
+     * @return the string representation of the object.
+     */
     @Override
     public String toString() {
         return stateId;

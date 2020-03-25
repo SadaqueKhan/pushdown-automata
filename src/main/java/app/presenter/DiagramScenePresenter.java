@@ -179,8 +179,8 @@ public class DiagramScenePresenter {
                 newListOfTransitionsVBox.setLayoutX(layoutX + newListOfTransitionsVBox.getTranslateX());
                 newListOfTransitionsVBox.setLayoutY(layoutY + newListOfTransitionsVBox.getTranslateY());
                 //Update coordinate stored in transition tabel model
-                newTransitionModel.setxCoordinateOnDiagram(layoutX + newListOfTransitionsVBox.getTranslateX());
-                newTransitionModel.setyCoordinateOnDiagram(layoutY + newListOfTransitionsVBox.getTranslateY());
+                newTransitionModel.setXCoordinateOnDiagram(layoutX + newListOfTransitionsVBox.getTranslateX());
+                newTransitionModel.setYCoordinateOnDiagram(layoutY + newListOfTransitionsVBox.getTranslateY());
                 // Resetting the translate positions
                 newListOfTransitionsVBox.setTranslateX(0);
                 newListOfTransitionsVBox.setTranslateY(0);
@@ -193,7 +193,7 @@ public class DiagramScenePresenter {
             Label newLabel = new Label(transitionModel.toString());
             sourceCell.getListOfTransitionsVBox().getChildren().add(newLabel);
         }
-        sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+        sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
@@ -218,7 +218,7 @@ public class DiagramScenePresenter {
                         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
                             newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
                         }
-                        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+                        newTransitionListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
                         return;
                     }
                 }
@@ -282,8 +282,8 @@ public class DiagramScenePresenter {
             newTransitionListVBox.setLayoutX(layoutX + newTransitionListVBox.getTranslateX());
             newTransitionListVBox.setLayoutY(layoutY + newTransitionListVBox.getTranslateY());
             //Set transitionlist model coordinates
-            newTransitionModel.setxCoordinateOnDiagram(layoutX + newTransitionListVBox.getTranslateX());
-            newTransitionModel.setyCoordinateOnDiagram(layoutY + newTransitionListVBox.getTranslateY());
+            newTransitionModel.setXCoordinateOnDiagram(layoutX + newTransitionListVBox.getTranslateX());
+            newTransitionModel.setYCoordinateOnDiagram(layoutY + newTransitionListVBox.getTranslateY());
             // Resetting the translate positions
             newTransitionListVBox.setTranslateX(0);
             newTransitionListVBox.setTranslateY(0);
@@ -291,7 +291,7 @@ public class DiagramScenePresenter {
         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
             newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
         }
-        newTransitionListVBox.relocate(newTransitionModel.getxCoordinateOnDiagram(), newTransitionModel.getyCoordinateOnDiagram());
+        newTransitionListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
             Rotate r = new Rotate();

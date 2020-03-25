@@ -149,8 +149,8 @@ public class ConfigurationModel {
         return pathList;
     }
     /**
-     * Get this configurations toString.
-     * @return the string identifying the configuration node in the tree
+     * Method to return a string representation of this object.
+     * @return the string representation of the object.
      */
     @Override
     public String toString() {
