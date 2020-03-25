@@ -1,6 +1,7 @@
 package app.model;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class StateModelTest {
@@ -63,6 +64,10 @@ public class StateModelTest {
         stateModel.setStateId("Q1");
         assertEquals("Q1", stateModel.getStateId());
     }
-
+    @Test
+    public void requestingObjectToStringShouldStateTheIdOfAState() {
+        StateModel stateModel = new StateModel("Q0");
+        assertThat(stateModel.toString(), containsString("Q0"));
+    }
 
 }
