@@ -39,7 +39,7 @@ public class StateModelTest {
     public void requestingYCoordinateShouldReturnSpecifiedYCoordinateOfStateModel() {
         StateModel stateModel = new StateModel("Q0");
         stateModel.setYCoordinateOnDiagram(10.0);
-        assertEquals("X coordinate of ", 10.0, stateModel.getYCoordinateOnDiagram(), 10.0);
+        assertEquals("Y coordinate of ", 10.0, stateModel.getYCoordinateOnDiagram(), 10.0);
     }
     @Test
     public void twoStatesWithSameIdShouldBeEqual() {

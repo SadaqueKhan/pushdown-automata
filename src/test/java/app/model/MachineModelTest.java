@@ -40,7 +40,7 @@ public class MachineModelTest {
     public void addingDuplicateTransitionsToTheMachineShouldBePrevented() {
         StateModel currentStateModel = new StateModel("Q0");
         machineModel.getStateModelSet().add(currentStateModel);
-        StateModel resultingStateModel = new StateModel("Q0");
+        StateModel resultingStateModel = new StateModel("Q1");
         machineModel.getStateModelSet().add(resultingStateModel);
         HashSet<TransitionModel> transitionModelSet = new HashSet<>();
         machineModel.setTransitionModelSet(transitionModelSet);
