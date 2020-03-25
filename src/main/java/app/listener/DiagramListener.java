@@ -18,9 +18,18 @@ import javafx.scene.text.Text;
  */
 public class DiagramListener implements EventHandler {
     private final DiagramScenePresenter diagramScenePresenter;
+    /**
+     * Constructor of the diagram scene listener, used to instantiate an instance of the listener.
+     * @param diagramScenePresenter a reference to the presenter which responds to the events picked up by the
+     * listener.
+     */
     public DiagramListener(DiagramScenePresenter diagramScenePresenter) {
         this.diagramScenePresenter = diagramScenePresenter;
     }
+    /**
+     * Method which routes user commands (events) to the presenter to act upon that data.
+     * @param event which occurred on a node that the listener is attached to.
+     */
     @Override
     public void handle(Event event) {
         String eventType = event.getEventType().toString();

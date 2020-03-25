@@ -15,9 +15,18 @@ import javafx.scene.input.KeyEvent;
  */
 public class MainStageListener implements EventHandler {
     private final MainStagePresenter mainStagePresenter;
+    /**
+     * Constructor of the main stage listener, used to instantiate an instance of the listener.
+     * @param mainStagePresenter a reference to the presenter which responds to the events picked up by the
+     * listener.
+     */
     public MainStageListener(MainStagePresenter mainStagePresenter) {
         this.mainStagePresenter = mainStagePresenter;
     }
+    /**
+     * Method which routes user commands (events) to the presenter to act upon that data.
+     * @param event which occurred on a node that the listener is attached to.
+     */
     @Override
     public void handle(Event event) {
         String eventType = event.getEventType().toString();

@@ -206,7 +206,7 @@ public class SimulationModel {
         }
         currentConfig = previous;
     }
-    //Getters for data retaining to a simulation.
+    // Getters for data pretaining to a simulation found in the attributes of the class. ¬
     public ConfigurationModel getCurrentConfig() {
         return currentConfig;
     }
