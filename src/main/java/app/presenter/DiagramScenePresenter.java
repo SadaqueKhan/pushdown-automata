@@ -104,15 +104,34 @@ public class DiagramScenePresenter {
         }
     }
     /**
-     * Handles adding a state node onto the diagram scene given a state model.
-     * @param newStateModel used to add a state node onto the diagram scene.
+     * Handles dynamic adding of a state node onto the diagram scene given x and y coordinates.
+     * @param xCoordinateOnDiagram used to position the x coordinate of state node to be rendered onto the diagram
+     * scene.
+     * @param yCoordinateOnDiagram used to position the y coordinate of state node to be rendered onto the diagram
+     * scene.
      */
-    void addStateViewOntoDiagramView(StateModel newStateModel) {
-        StateNode stateNode = new StateNode(newStateModel.getStateId(), this);
-        stateNode.relocate(newStateModel.getxCoordinateOnDiagram(), newStateModel.getyCoordinateOnDiagram());
-        diagramScene.getChildren().add(stateNode);
-        stateMap.put(newStateModel, stateNode);
-        linkedTransitionViewsMap.put(stateNode, new HashSet<>());
+    public void addStateViewOntoDiagramViewDynamicRender(double xCoordinateOnDiagram, double yCoordinateOnDiagram) {
+        StateModel newStateModel = null;
+        if (machineModel.getStateModelSet().isEmpty()) {
+            newStateModel = new StateModel();
+        } else {
+            boolean stateModelExists = true;
+            outerloop:
+            while (stateModelExists) {
+                newStateModel = new StateModel();
+                for (StateModel stateModel : machineModel.getStateModelSet()) {
+                    if (stateModel.equals(newStateModel)) {
+                        continue outerloop;
+                    }
+                }
+                stateModelExists = false;
+            }
+        }
+        newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram);
+        newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram);
+        machineModel.addStateModelToStateModelSet(newStateModel);
+        addStateViewOntoDiagramView(newStateModel);
+        transitionTableScenePresenter.updateAvailableStateListForCombobox();
     }
     /**
      * Loads transition data back the diagram scene.
@@ -413,34 +432,15 @@ public class DiagramScenePresenter {
         return arrowTipStackPane;
     }
     /**
-     * Handles dynamic adding of a state node onto the diagram scene given x and y coordinates.
-     * @param xCoordinateOnDiagram used to position the x coordinate of state node to be rendered onto the diagram
-     * scene.
-     * @param yCoordinateOnDiagram used to position the y coordinate of state node to be rendered onto the diagram
-     * scene.
+     * Handles adding a state node onto the diagram scene given a state model.
+     * @param newStateModel used to add a state node onto the diagram scene.
      */
-    public void addStateViewOntoDiagramViewDynamicRender(double xCoordinateOnDiagram, double yCoordinateOnDiagram) {
-        StateModel newStateModel = null;
-        if (machineModel.getStateModelSet().isEmpty()) {
-            newStateModel = new StateModel();
-        } else {
-            boolean stateModelExists = true;
-            outerloop:
-            while (stateModelExists) {
-                newStateModel = new StateModel();
-                for (StateModel stateModel : machineModel.getStateModelSet()) {
-                    if (stateModel.equals(newStateModel)) {
-                        continue outerloop;
-                    }
-                }
-                stateModelExists = false;
-            }
-        }
-        newStateModel.setxCoordinateOnDiagram(xCoordinateOnDiagram);
-        newStateModel.setyCoordinateOnDiagram(yCoordinateOnDiagram);
-        machineModel.addStateModelToStateModelSet(newStateModel);
-        addStateViewOntoDiagramView(newStateModel);
-        transitionTableScenePresenter.updateAvailableStateListForCombobox();
+    void addStateViewOntoDiagramView(StateModel newStateModel) {
+        StateNode stateNode = new StateNode(newStateModel.getStateId(), this);
+        stateNode.relocate(newStateModel.getXCoordinateOnDiagram(), newStateModel.getYCoordinateOnDiagram());
+        diagramScene.getChildren().add(stateNode);
+        stateMap.put(newStateModel, stateNode);
+        linkedTransitionViewsMap.put(stateNode, new HashSet<>());
     }
     /**
      * Handles the rendering of context menu on a given state node, and the respective actions when an action menu
@@ -825,8 +825,8 @@ public class DiagramScenePresenter {
         stateNode.setLayoutY(layoutY + stateNode.getTranslateY());
         // Updating state model coordinates
         StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
-        stateModelDragged.setxCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
-        stateModelDragged.setyCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
+        stateModelDragged.setXCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
+        stateModelDragged.setYCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
         // Resetting the translate positions
         stateNode.setTranslateX(0);
         stateNode.setTranslateY(0);

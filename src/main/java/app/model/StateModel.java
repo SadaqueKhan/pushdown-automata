@@ -16,42 +16,91 @@ public class StateModel {
     private boolean isFinalState = false;
     private double xCoordinateOnDiagram = 0.0;
     private double yCoordinateOnDiagram = 0.0;
+    /**
+     * Constructor that initialises a state model with a dynamic id.
+     */
     public StateModel() {
         this.stateId = "Q" + (num++);
     }
-    public StateModel(String stateID) {
-        this.stateId = stateID;
+    /**
+     * Constructor that initialises a state model by specifying an id.
+     * @param stateId the id for this state model.
+     */
+    public StateModel(String stateId) {
+        this.stateId = stateId;
     }
+    /**
+     * Gets the id set for this state model.
+     * @return the id for this state model.
+     */
     @XmlAttribute
     public String getStateId() {
         return stateId;
     }
+    /**
+     * Sets the id set for this state model.
+     * @param stateId the id used to set the id for this state model.
+     */
     public void setStateId(String stateId) {
         this.stateId = stateId;
     }
+    /**
+     * Gets the x coordinate for which this state representation is located on the view.
+     * @return the x coordinate for which this state is located on the view.
+     */
     @XmlAttribute
-    public double getxCoordinateOnDiagram() {
+    public double getXCoordinateOnDiagram() {
         return xCoordinateOnDiagram;
     }
-    public void setxCoordinateOnDiagram(double xCoordinateOnDiagram) {
+    /**
+     * Sets the x coordinate for which this state representation is located on the view.
+     * @param xCoordinateOnDiagram the x coordinate set for which this state is located on the view.
+     */
+    public void setXCoordinateOnDiagram(double xCoordinateOnDiagram) {
         this.xCoordinateOnDiagram = xCoordinateOnDiagram;
     }
+    /**
+     * Gets the y coordinate for which this state representation is located on the view.
+     * @return the y coordinate for which this state is located on the view.
+     */
     @XmlAttribute
-    public double getyCoordinateOnDiagram() {
+    public double getYCoordinateOnDiagram() {
         return yCoordinateOnDiagram;
     }
-    public void setyCoordinateOnDiagram(double yCoordinateOnDiagram) {
+    /**
+     * Sets the x coordinate for which this state representation is located on the view.
+     * @param yCoordinateOnDiagram the x coordinate set for which this state is located on the view.
+     */
+    public void setYCoordinateOnDiagram(double yCoordinateOnDiagram) {
         this.yCoordinateOnDiagram = yCoordinateOnDiagram;
     }
+    /**
+     * Checks whether this state is a start state.
+     * @return <tt>true</tt> if the state is a start state.
+     */
     public boolean isStartState() {
         return isStartState;
     }
+    /**
+     * Sets this state to be a start state if the specified value is <tt>true</tt>, otherwise the state is set
+     * to not be a start state.
+     * @param startState boolean value to specify whether this state is a start state.
+     */
     public void setStartState(boolean startState) {
         isStartState = startState;
     }
+    /**
+     * Checks whether this state is a final state.
+     * @return <tt>true</tt> if the state is a final state.
+     */
     public boolean isFinalState() {
         return isFinalState;
     }
+    /**
+     * Sets this state to be a final state if the specified value is <tt>true</tt>, otherwise the state is set
+     * to not be a final state.
+     * @param finalState boolean value to specify whether this state is a final state.
+     */
     public void setFinalState(boolean finalState) {
         isFinalState = finalState;
     }

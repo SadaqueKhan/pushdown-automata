@@ -1,9 +1,7 @@
 package app.model;
-
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class StateModelTest {
 
@@ -40,15 +38,15 @@ public class StateModelTest {
     @Test
     public void requestingXCoordinateShouldReturnSpecifiedXCoordinateOfStateModel() {
         StateModel stateModel = new StateModel("Q0");
-        stateModel.setxCoordinateOnDiagram(10.0);
-        assertEquals("X coordinate of ", 10.0, stateModel.getxCoordinateOnDiagram(), 10.0);
+        stateModel.setXCoordinateOnDiagram(10.0);
+        assertEquals("X coordinate of ", 10.0, stateModel.getXCoordinateOnDiagram(), 10.0);
     }
 
     @Test
     public void requestingYCoordinateShouldReturnSpecifiedYCoordinateOfStateModel() {
         StateModel stateModel = new StateModel("Q0");
-        stateModel.setyCoordinateOnDiagram(10.0);
-        assertEquals("X coordinate of ", 10.0, stateModel.getyCoordinateOnDiagram(), 10.0);
+        stateModel.setYCoordinateOnDiagram(10.0);
+        assertEquals("X coordinate of ", 10.0, stateModel.getYCoordinateOnDiagram(), 10.0);
     }
 
     @Test

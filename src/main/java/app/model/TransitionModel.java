@@ -48,28 +48,28 @@ public class TransitionModel {
         this.stackSymbolToPush = stackSymbolToPush;
     }
     /**
-     * Get the x coordinate for which this state is located on the view.
+     * Gets the x coordinate for which this transition representation is located on the view.
      * @return the x coordinate for which this state is located on the view.
      */
     public double getXCoordinateOnDiagram() {
         return xCoordinateOnDiagram;
     }
     /**
-     * Set the x coordinate for which this state is located on the view.
+     * Sets the x coordinate for which this transition representation is located on the view.
      * @param xCoordinateOnDiagram the x coordinate set for which this state is located on the view.
      */
     public void setXCoordinateOnDiagram(double xCoordinateOnDiagram) {
         this.xCoordinateOnDiagram = xCoordinateOnDiagram;
     }
     /**
-     * Get the y coordinate for which this state is located on the view.
+     * Gets the y coordinate for which this transition representation is located on the view.
      * @return the y coordinate for which this state is located on the view.
      */
     public double getYCoordinateOnDiagram() {
         return yCoordinateOnDiagram;
     }
     /**
-     * Set the y coordinate for which this state is located on the view.
+     * Sets the y coordinate for which this transition representation is located on the view.
      * @param yCoordinateOnDiagram the y coordinate set for which this state is located on the view.
      */
     public void setYCoordinateOnDiagram(double yCoordinateOnDiagram) {
@@ -88,7 +88,7 @@ public class TransitionModel {
         return (getCurrentStateModel() != null ? getCurrentStateModel().equals(that.getCurrentStateModel()) : that.getCurrentStateModel() == null) && (getInputSymbol() != null ? getInputSymbol().equals(that.getInputSymbol()) : that.getInputSymbol() == null) && (getStackSymbolToPop() != null ? getStackSymbolToPop().equals(that.getStackSymbolToPop()) : that.getStackSymbolToPop() == null) && (getResultingStateModel() != null ? getResultingStateModel().equals(that.getResultingStateModel()) : that.getResultingStateModel() == null) && (getStackSymbolToPush() != null ? getStackSymbolToPush().equals(that.getStackSymbolToPush()) : that.getStackSymbolToPush() == null);
     }
     /**
-     * Get the {@code StateModel} which this transition starts from.
+     * Gets the {@code StateModel} which this transition starts from.
      * @return the {@code StateModel} which this transition starts from.
      */
     @XmlElement
@@ -96,14 +96,14 @@ public class TransitionModel {
         return currentStateModel;
     }
     /**
-     * Set the the state which this transition starts from.
+     * Sets the the state which this transition starts from.
      * @param currentStateModel the state set for which this transition starts from.
      */
     public void setCurrentStateModel(StateModel currentStateModel) {
         this.currentStateModel = currentStateModel;
     }
     /**
-     * Get the input symbol required to use this transition to move to another state.
+     * Gets the input symbol required to use this transition to move to another state.
      * @return the input symbol used by this transition.
      */
     @XmlElement
@@ -111,14 +111,14 @@ public class TransitionModel {
         return inputSymbol;
     }
     /**
-     * Set the input symbol required to use this transition to move to another state.
+     * Sets the input symbol required to use this transition to move to another state.
      * @param inputSymbol the input symbol set for this transition.
      */
     public void setInputSymbol(String inputSymbol) {
         this.inputSymbol = inputSymbol;
     }
     /**
-     * Get the stack symbol needed to pop to use this transition to move to another state.
+     * Gets the stack symbol needed to pop to use this transition to move to another state.
      * @return the stack symbol to pop used by this transition.
      */
     @XmlElement
@@ -126,14 +126,14 @@ public class TransitionModel {
         return stackSymbolToPop;
     }
     /**
-     * Set the stack symbol needed to pop to use this transition to move to another state.
+     * Sets the stack symbol needed to pop to use this transition to move to another state.
      * @param stackSymbolToPop the stack symbol to pop set for this transition.
      */
     public void setStackSymbolToPop(String stackSymbolToPop) {
         this.stackSymbolToPop = stackSymbolToPop;
     }
     /**
-     * Get the {@code StateModel} which this transition points to.
+     * Gets the {@code StateModel} which this transition points to.
      * @return the {@code StateModel} which this transition points to
      */
     @XmlElement
@@ -141,14 +141,14 @@ public class TransitionModel {
         return resultingStateModel;
     }
     /**
-     * Set the the state which this transition points to.
+     * Sets the the state which this transition points to.
      * @param resultingStateModel the state set for which this transition points to.
      */
     public void setResultingStateModel(StateModel resultingStateModel) {
         this.resultingStateModel = resultingStateModel;
     }
     /**
-     * Get the stack symbol needed to push to use this transition to move to another state.
+     * Gets the stack symbol needed to push to use this transition to move to another state.
      * @return the stack symbol to push used by this transition.
      */
     @XmlElement
@@ -156,7 +156,7 @@ public class TransitionModel {
         return stackSymbolToPush;
     }
     /**
-     * Set the stack symbol needed to push to use this transition to move to another state.
+     * Sets the stack symbol needed to push to use this transition to move to another state.
      * @param stackSymbolToPush the stack symbol to push set for this transition.
      */
     public void setStackSymbolToPush(String stackSymbolToPush) {
