@@ -111,8 +111,8 @@ public class TransitionModelTest {
         StateModel currentStateModel = new StateModel("Q0");
         StateModel resultingStateModel = new StateModel("Q1");
         TransitionModel transitionModel = new TransitionModel(currentStateModel, "A", "B", resultingStateModel, "C");
-        String[] terms = {currentStateModel.getStateId(), "A", "B", resultingStateModel.getStateId(), "C"};
-        for (String term : terms) {
+        String[] attributes = {currentStateModel.getStateId(), "A", "B", resultingStateModel.getStateId(), "C"};
+        for (String term : attributes) {
             assertThat(transitionModel.toString(), containsString(term));
         }
     }
