@@ -24,8 +24,8 @@ public class TransitionTableScenePresenter {
     private DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the transition table presenter, used to instantiate an instance of the presenter.
-     * @param mainStage
-     * @param machineModel
+     * @param mainStage for which the transition table scene is rendered on.
+     * @param machineModel the model containing the data about the pushdown automaton machine.
      */
     TransitionTableScenePresenter(MainStage mainStage, MachineModel machineModel) {
         this.machineModel = machineModel;
@@ -34,7 +34,7 @@ public class TransitionTableScenePresenter {
     }
     /**
      * Reloads the transition table scene back onto the main stage when selected via the tab found on in the main stage.
-     * @param diagramScenePresenter
+     * @param diagramScenePresenter the presenter which needs to be notified about events on the transition table scene.
      */
     void loadTransitionTableSceneOntoMainStage(DiagramScenePresenter diagramScenePresenter) {
         this.diagramScenePresenter = diagramScenePresenter;
@@ -161,7 +161,7 @@ public class TransitionTableScenePresenter {
     }
     /**
      * Retrieves all exiting transitions from a given state.
-     * @param stateModel
+     * @param stateModel the state for which all exiting transitions need to identified upon.
      * @return the {@code HashSet<TransitionModel>} which represents the set of all transitions from a given state.
      */
     private HashSet<TransitionModel> getExitingTransitionsFromStateModel(StateModel stateModel) {
@@ -174,8 +174,9 @@ public class TransitionTableScenePresenter {
         return exitingTransitionFromStateModelToReturn;
     }
     /**
-     * Handles updating the transition table scene given the creation of a new transition model in the repository.
-     * @param newTransitionModel
+     * Handles updating the transition table scene given the creation of a new transition model in the repository of
+     * models.
+     * @param newTransitionModel the transition model used to update the transition table scene UI components.
      */
     void addTransitionModelEntryToTransitionTable(TransitionModel newTransitionModel) {
         //Update transition table UI component.
@@ -202,8 +203,8 @@ public class TransitionTableScenePresenter {
     }
     /**
      * Handles bulk deletion of transitions when a state has been requested to be deleted by the user.
-     * @param exitingTransitionModelsSet
-     * @param enteringTransitionModelsSet
+     * @param exitingTransitionModelsSet all exiting transitions from a given state to be deleted.
+     * @param enteringTransitionModelsSet all entering transitions from a given state to be deleted.
      */
     void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
         transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);

@@ -35,10 +35,10 @@ public class SimulationStagePresenter {
     private SimulationModel stepRunSimulationModel;
     /**
      * Constructor of the simulation stage presenter, used to instantiate an instance of the presenter.
-     * @param mainStagePresenter
-     * @param machineModel
-     * @param inputWord
-     * @param typeOfSimulation
+     * @param mainStagePresenter the presenter which needs to be notified about events on the simulation scenes.
+     * @param machineModel the model containing the data about the pushdown automaton machine.
+     * @param inputWord the input word to be simulated.
+     * @param typeOfSimulation the type of simulation to be run, either quick run or step run.
      */
     SimulationStagePresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord, String typeOfSimulation) {
         this.mainStagePresenter = mainStagePresenter;
@@ -225,8 +225,9 @@ public class SimulationStagePresenter {
     }
     /**
      * Handles the loading of a secondary stage to show the path from the root configuration node to the configuration
-     * node selected by the user in the computation tree listing found in the algorithm scene.
-     * @param doubleClickConfiguration
+     * node selected by the user in the algorithm listing in the quick run scene.
+     * @param doubleClickConfiguration the configuration node chosen for its path from the root configuration node to
+     * be rendered.
      */
     public void createIndependentPathSimulationStage(ConfigurationModel doubleClickConfiguration) {
         ListView<ConfigurationModel> transitionsTakenListView = new ListView<>();
@@ -321,27 +322,36 @@ public class SimulationStagePresenter {
         }
     }
     /**
+     * Create dynamic listener for items in lists found in the simulation stage to be highlighted in the diagram
+     * scene/tape/stack scene.
+     * @param newListView the UI component for which a dynamic listener is added to.
+     */
+    private void setListenerForTransitionListView(ListView<ConfigurationModel> newListView) {
+        newListView.setOnMouseReleased(event -> {
+            ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
+            if (!(selectedConfigurationsToHighlightList.isEmpty())) {
+                ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
+                updateDiagramViewForSelectedConfiguration(selectedConfiguration);
+                updateTapeViewForSelectedConfiguration(selectedConfiguration);
+                updateStackViewForSelectedConfiguration(selectedConfiguration);
+            }
+        });
+    }
+    /**
      * Request to the diagram presenter to update its view for which it controls.
-     * @param selectedConfiguration
+     * @param selectedConfiguration used to inform the update.
      */
     public void updateDiagramViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         DiagramScenePresenter diagramScenePresenter = mainStagePresenter.getDiagramScenePresenter();
         diagramScenePresenter.highlightTransitionTakenInDiagram(selectedConfiguration);
     }
+    // Highlight tape scene
     /**
      * Request to the main stage presenter to update the tape scene for which it controls.
-     * @param selectedConfiguration
+     * @param selectedConfiguration used to inform the update.
      */
     public void updateTapeViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStagePresenter.updateTapeScene(selectedConfiguration.getHeadPosition());
-    }
-    // Highlight tape scene
-    /**
-     * Request to the main stage presenter to update the stack scene for which it controls.
-     * @param selectedConfiguration
-     */
-    public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
-        mainStagePresenter.updateStackScene(selectedConfiguration.getStackContent());
     }
     /**
      * Moves the step run simulation back to a previous configuration, by computing the previous configuration
@@ -377,19 +387,10 @@ public class SimulationStagePresenter {
         }
     }
     /**
-     * Create dynamic listener for items in lists found in the simulation stage to be highlighted in the diagram
-     * scene/tape/stack scene.
-     * @param newListView
+     * Request to the main stage presenter to update the stack scene for which it controls.
+     * @param selectedConfiguration used to inform the update.
      */
-    private void setListenerForTransitionListView(ListView<ConfigurationModel> newListView) {
-        newListView.setOnMouseReleased(event -> {
-            ObservableList<ConfigurationModel> selectedConfigurationsToHighlightList = newListView.getSelectionModel().getSelectedItems();
-            if (!(selectedConfigurationsToHighlightList.isEmpty())) {
-                ConfigurationModel selectedConfiguration = selectedConfigurationsToHighlightList.get(0);
-                updateDiagramViewForSelectedConfiguration(selectedConfiguration);
-                updateTapeViewForSelectedConfiguration(selectedConfiguration);
-                updateStackViewForSelectedConfiguration(selectedConfiguration);
-            }
-        });
+    public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
+        mainStagePresenter.updateStackScene(selectedConfiguration.getStackContent());
     }
 }

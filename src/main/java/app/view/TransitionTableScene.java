@@ -145,7 +145,7 @@ public class TransitionTableScene extends BorderPane {
     /**
      * Dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the size of
      * the input does not exceed 1 and clearing the input if it does back to 0.
-     * @param comboBox for which a listener is added to.
+     * @param comboBox the UI component for which a dynamic listener is added to.
      */
     private void setUpComboBoxesListeners(ComboBox comboBox) {
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {

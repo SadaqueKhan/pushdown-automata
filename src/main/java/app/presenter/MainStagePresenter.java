@@ -38,15 +38,16 @@ public class MainStagePresenter extends Application {
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
     /**
-     * Entry point to start the application.
-     * @param args
+     * Method so you can run JAR files that were created without the JavaFX Launcher, such as when using an IDE in
+     * which the JavaFX tools are not fully integrated.
+     * @param args command line arguments when executing a program.
      */
     public static void main(String[] args) {
         launch(args);
     }
     /**
-     * Handles launching the main stage.
-     * @param primaryWindow
+     * Method is the main entry point for the applications.
+     * @param primaryWindow the initial window that is rendered.
      */
     @Override
     public void start(Stage primaryWindow) {
@@ -80,7 +81,7 @@ public class MainStagePresenter extends Application {
     /**
      * Loads the simulation stage when the user presses enter on the textfield retaining an input word to be
      * simulated against there constructed PDA.
-     * @param inputWord
+     * @param inputWord requested to be simulated.
      */
     public void loadSimulationStage(String inputWord) {
         if (machineModel.findStartStateModel() == null) {
@@ -101,8 +102,8 @@ public class MainStagePresenter extends Application {
         }
     }
     /**
-     * Sets the tape scene with the data from the input word.
-     * @param inputWord
+     * Sets up the tape scene with the input word selected to be simulated.
+     * @param inputWord requested to be simulated.
      */
     private void setUpTapeView(String inputWord) {
         HBox tapeViewHBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
@@ -129,11 +130,11 @@ public class MainStagePresenter extends Application {
         }
     }
     /**
-     * Handles saving an input word to history auto completion.
-     * @param userInputWord
+     * Handles saving an input word to a history list for auto completion.
+     * @param inputWord requested to be simulated.
      */
-    public void saveInputWord(String userInputWord) {
-        mainStage.getInputWordSet().add(userInputWord);
+    public void saveInputWord(String inputWord) {
+        mainStage.getInputWordSet().add(inputWord);
         if (mainStage.getAutoCompletionBinding() != null) {
             mainStage.getAutoCompletionBinding().dispose();
         }
@@ -235,7 +236,7 @@ public class MainStagePresenter extends Application {
     }
     /**
      * Updates the tape scene given a head position integer value.
-     * @param headPosition
+     * @param headPosition the current head position for a simulation.
      */
     void updateTapeScene(int headPosition) {
         if (headPointerStackPane != null) {
@@ -249,7 +250,7 @@ public class MainStagePresenter extends Application {
     }
     /**
      * Updates the stack scene given a stack content list.
-     * @param stackContent
+     * @param stackContent the current stack content for a simulation.
      */
     void updateStackScene(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStage.getStackScene().getStackViewVBoxContainer();

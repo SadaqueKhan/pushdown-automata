@@ -65,9 +65,9 @@ public class DiagramScenePresenter {
     private final Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     /**
      * Constructor of the diagram scene presenter, used to instantiate an instance of the presenter.
-     * @param mainStage
-     * @param mainStagePresenter
-     * @param machineModel
+     * @param mainStage for which the diagram scene is rendered on.
+     * @param mainStagePresenter the presenter which needs to be notified about events on the diagram scene.
+     * @param machineModel the model containing the data about the pushdown automaton machine.
      */
     DiagramScenePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
