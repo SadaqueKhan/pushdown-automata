@@ -63,24 +63,35 @@ public class MainStage extends BorderPane {
         //Setup top GUI elements
         menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
+        fileMenu.setId("fileMenu");
         this.saveMenuItem = new MenuItem("Save");
+        saveMenuItem.setId("saveMenuItem");
         this.loadMenuItem = new MenuItem("Load");
+        loadMenuItem.setId("loadMenuItem");
         fileMenu.getItems().addAll(saveMenuItem, loadMenuItem);
         menuBar.getMenus().add(fileMenu);
         Menu acceptanceMenu = new Menu("Acceptance");
+        acceptanceMenu.setId("acceptanceMenu");
         this.acceptanceByFinalStateMenuItem = new CheckMenuItem("By Final State");
+        acceptanceByFinalStateMenuItem.setId("acceptanceByFinalStateMenuItem");
         this.acceptanceByEmptyStackMenuItem = new CheckMenuItem("By Empty Stack");
+        acceptanceByEmptyStackMenuItem.setId("acceptanceByEmptyStackMenuItem");
         acceptanceMenu.getItems().addAll(acceptanceByFinalStateMenuItem, acceptanceByEmptyStackMenuItem);
         acceptanceByFinalStateMenuItem.setSelected(true);
         menuBar.getMenus().add(acceptanceMenu);
         Menu simulationMenu = new Menu("Simulation");
+        simulationMenu.setId("simulationMenu");
         this.simulationByQuickRunMenuItem = new CheckMenuItem("By Quick Run");
+        simulationByQuickRunMenuItem.setId("simulationByQuickRunMenuItem");
         this.simulationByStepRunMenuItem = new CheckMenuItem("By Step Run");
+        simulationByStepRunMenuItem.setId("simulationByStepRunMenuItem");
         simulationMenu.getItems().addAll(simulationByQuickRunMenuItem, simulationByStepRunMenuItem);
         simulationByQuickRunMenuItem.setSelected(true);
         menuBar.getMenus().add(simulationMenu);
         Menu helpMenu = new Menu("Help");
+        helpMenu.setId("helpMenu");
         this.helpGuideItem = new MenuItem("Guide");
+        helpGuideItem.setId("helpGuideItem");
         helpMenu.getItems().addAll(helpGuideItem);
         menuBar.getMenus().add(helpMenu);
         this.inputTextLabel = new Label("Input Word (acceptance by final state)");
@@ -191,5 +202,11 @@ public class MainStage extends BorderPane {
     }
     public MenuBar getMenuBar() {
         return menuBar;
+    }
+    public ToggleButton getToggleDiagramButton() {
+        return toggleDiagramButton;
+    }
+    public ToggleButton getToggleTransitionTableButton() {
+        return toggleTransitionTableButton;
     }
 }

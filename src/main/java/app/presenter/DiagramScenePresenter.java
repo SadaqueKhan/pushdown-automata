@@ -69,7 +69,7 @@ public class DiagramScenePresenter {
      * @param mainStagePresenter the presenter which needs to be notified about events on the diagram scene.
      * @param machineModel the model containing the data about the pushdown automaton machine.
      */
-    DiagramScenePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    public DiagramScenePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
         this.mainStage = mainStage;
         this.machineModel = machineModel;
@@ -82,14 +82,14 @@ public class DiagramScenePresenter {
      * @param transitionTableScenePresenter used to notify of any updates that may affect its respective view
      * it controls.
      */
-    void loadDiagramViewOntoStage(TransitionTableScenePresenter transitionTableScenePresenter) {
+    public void loadDiagramViewOntoStage(TransitionTableScenePresenter transitionTableScenePresenter) {
         this.transitionTableScenePresenter = transitionTableScenePresenter;
         this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
     /**
      * Loads state data back the diagram scene.
      */
-    void loadStatesOntoDiagram() {
+    public void loadStatesOntoDiagram() {
         StateNode stateNodeToLoad;
         for (StateModel stateModelToLoad : machineModel.getStateModelSet()) {
             addStateViewOntoDiagramView(stateModelToLoad);
@@ -136,7 +136,7 @@ public class DiagramScenePresenter {
     /**
      * Loads transition data back the diagram scene.
      */
-    void loadTransitionsOntoDiagram() {
+    public void loadTransitionsOntoDiagram() {
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
             String currentStateModelToLoadID = transitionModelToLoad.getCurrentStateModel().getStateId();
             String resultingStateModelToLoadID = transitionModelToLoad.getResultingStateModel().getStateId();
@@ -152,7 +152,7 @@ public class DiagramScenePresenter {
      * Handles creating a reflexive transition given a transition model.
      * @param newTransitionModel used to structure the formulation of a transition node.
      */
-    void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
+    public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
         StateNode sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
         if (sourceCell.getListOfTransitionsVBox() == null) {
             VBox newListOfTransitionsVBox = new VBox();
@@ -220,7 +220,7 @@ public class DiagramScenePresenter {
      * Handles creating a transition node given a transition model.
      * @param newTransitionModel used to form the transition node.
      */
-    void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
+    public void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
         //Get state from map using state ID
         StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
         StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
@@ -934,5 +934,8 @@ public class DiagramScenePresenter {
             }
         }
         return TransitionViewSet;
+    }
+    public DiagramScene getDiagramScene() {
+        return diagramScene;
     }
 }

@@ -393,4 +393,7 @@ public class SimulationStagePresenter {
     public void updateStackViewForSelectedConfiguration(ConfigurationModel selectedConfiguration) {
         mainStagePresenter.updateStackScene(selectedConfiguration.getStackContent());
     }
+    public QuickRunSimulationScene getQuickRunSimulationScene() {
+        return quickRunSimulationScene;
+    }
 }

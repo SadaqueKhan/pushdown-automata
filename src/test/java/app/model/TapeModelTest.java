@@ -26,12 +26,6 @@ public class TapeModelTest {
         assertEquals("ε", tapeModel.getAtHead());
     }
     @Test
-    public void checkAnEmptyTapeShouldReturnTrue() {
-        TapeModel tapeModel = new TapeModel();
-        assertEquals(0, tapeModel.tapeSize());
-        assertTrue(tapeModel.isEmpty());
-    }
-    @Test
     public void settingHeadShouldReturnANewElementAtTheHead() {
         TapeModel tapeModel = new TapeModel();
         tapeModel.loadInput("test");
@@ -44,6 +38,8 @@ public class TapeModelTest {
         String inputWord = "test";
         TapeModel tapeModel = new TapeModel();
         tapeModel.loadInput(inputWord);
+        assertNotEquals(0, tapeModel.tapeSize());
+        assertFalse(tapeModel.isEmpty());
         for (String inputSymbol : tapeModel.getInputTape()) {
             assertThat(inputWord, containsString(inputSymbol));
         }

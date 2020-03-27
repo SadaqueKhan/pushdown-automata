@@ -37,6 +37,7 @@ public class MainStagePresenter extends Application {
     private DiagramScenePresenter diagramScenePresenter;
     private Stage primaryWindow;
     private StackPane headPointerStackPane;
+    private SimulationStagePresenter simulationStagePresenter;
     /**
      * Method so you can run JAR files that were created without the JavaFX Launcher, such as when using an IDE in
      * which the JavaFX tools are not fully integrated.
@@ -58,7 +59,7 @@ public class MainStagePresenter extends Application {
         diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
-        this.primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
+        this.primaryWindow.setScene(new Scene(mainStage, 1200, 800));
         this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
     }
@@ -91,13 +92,12 @@ public class MainStagePresenter extends Application {
             invalidActionAlert.setTitle("Invalid Action");
             invalidActionAlert.show();
         } else {
+            setUpTapeView(inputWord);
             if (mainStage.getSimulationByQuickRunMenuItem().isSelected()) {
-                setUpTapeView(inputWord);
-                new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByQuickRunMenuItem().getText());
+                this.simulationStagePresenter = new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByQuickRunMenuItem().getText());
             }
             if (mainStage.getSimulationByStepRunMenuItem().isSelected()) {
-                setUpTapeView(inputWord);
-                new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByStepRunMenuItem().getText());
+                this.simulationStagePresenter = new SimulationStagePresenter(this, machineModel, inputWord, mainStage.getSimulationByStepRunMenuItem().getText());
             }
         }
     }
@@ -238,7 +238,7 @@ public class MainStagePresenter extends Application {
      * Updates the tape scene given a head position integer value.
      * @param headPosition the current head position for a simulation.
      */
-    void updateTapeScene(int headPosition) {
+    public void updateTapeScene(int headPosition) {
         if (headPointerStackPane != null) {
             headPointerStackPane.getChildren().get(2).setVisible(false);
         }
@@ -252,7 +252,7 @@ public class MainStagePresenter extends Application {
      * Updates the stack scene given a stack content list.
      * @param stackContent the current stack content for a simulation.
      */
-    void updateStackScene(ArrayList<String> stackContent) {
+    public void updateStackScene(ArrayList<String> stackContent) {
         VBox stackViewVBoxContainer = mainStage.getStackScene().getStackViewVBoxContainer();
         stackViewVBoxContainer.getChildren().clear();
         if (stackContent.isEmpty()) {
@@ -284,13 +284,22 @@ public class MainStagePresenter extends Application {
         }
     }
     // Getters to provide communication between scenes.
-    MainStage getMainStage() {
+    public MainStage getMainStage() {
         return mainStage;
     }
-    DiagramScenePresenter getDiagramScenePresenter() {
+    public DiagramScenePresenter getDiagramScenePresenter() {
         return diagramScenePresenter;
     }
-    Stage getPrimaryWindow() {
+    public TransitionTableScenePresenter getTransitionTableScenePresenter() {
+        return transitionTableScenePresenter;
+    }
+    public SimulationStagePresenter getSimulationStagePresenter() {
+        return simulationStagePresenter;
+    }
+    public Stage getPrimaryWindow() {
         return primaryWindow;
+    }
+    public MachineModel getMachineModel() {
+        return machineModel;
     }
 }

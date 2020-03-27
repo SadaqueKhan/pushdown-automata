@@ -27,7 +27,7 @@ public class TransitionTableScenePresenter {
      * @param mainStage for which the transition table scene is rendered on.
      * @param machineModel the model containing the data about the pushdown automaton machine.
      */
-    TransitionTableScenePresenter(MainStage mainStage, MachineModel machineModel) {
+    public TransitionTableScenePresenter(MainStage mainStage, MachineModel machineModel) {
         this.machineModel = machineModel;
         this.mainStage = mainStage;
         this.transitionTableScene = new TransitionTableScene(this);
@@ -43,7 +43,7 @@ public class TransitionTableScenePresenter {
     /**
      * Loads transition data onto the transition table scene.
      */
-    void loadTransitionTableView() {
+    public void loadTransitionTableView() {
         // Load data found on the transition table UI component in the transition table scene.
         for (TransitionModel transitionModelToLoad : machineModel.getTransitionModelSet()) {
             transitionTableScene.getTransitionTable().getItems().add(transitionModelToLoad);
