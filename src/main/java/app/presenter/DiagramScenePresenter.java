@@ -215,11 +215,7 @@ public class DiagramScenePresenter {
             sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
                     newTransitionModel.getYCoordinateOnDiagram());
         }
-        sourceCell.getListOfTransitionsVBox().getChildren().clear();
-        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-            Label newLabel = new Label(transitionModel.toString());
-            sourceCell.getListOfTransitionsVBox().getChildren().add(newLabel);
-        }
+        sourceCell.getListOfTransitionsVBox().getChildren().add(new Label(newTransitionModel.toString()));
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
@@ -240,11 +236,7 @@ public class DiagramScenePresenter {
                             ==
                             resultingStateNode) {
                         VBox newTransitionListVBox = transitionNodeToCheck.getTransitionListVBox();
-                        newTransitionListVBox.getChildren().clear();
-                        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-                            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
-                        }
-                        newTransitionListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
+                        newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
                         return;
                     }
                 }
@@ -320,11 +312,7 @@ public class DiagramScenePresenter {
             newTransitionsListVBox.setTranslateX(0);
             newTransitionsListVBox.setTranslateY(0);
         });
-        for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-            newTransitionsListVBox.getChildren().add(new Label(transitionModel.toString()));
-        }
-        System.out.println("X coordinateD:" + newTransitionModel.getXCoordinateOnDiagram());
-        System.out.println("Y coordinateD:" + newTransitionModel.getYCoordinateOnDiagram());
+        newTransitionsListVBox.getChildren().add(new Label(newTransitionModel.toString()));
         newTransitionsListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
