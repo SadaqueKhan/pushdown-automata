@@ -155,57 +155,65 @@ public class DiagramScenePresenter {
     public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
         StateNode sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
         if (sourceCell.getListOfTransitionsVBox() == null) {
-            VBox newListOfTransitionsVBox = new VBox();
-            newListOfTransitionsVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
-            newListOfTransitionsVBox.setOnMousePressed(mouseEvent -> {
+            VBox newTransitionsListVBox = new VBox();
+            newTransitionsListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
+            newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
                 sceneX = mouseEvent.getScreenX();
                 sceneY = mouseEvent.getScreenY();
-                layoutX = newListOfTransitionsVBox.getLayoutX();
-                layoutY = newListOfTransitionsVBox.getLayoutY();
+                layoutX = newTransitionsListVBox.getLayoutX();
+                layoutY = newTransitionsListVBox.getLayoutY();
             });
-            newListOfTransitionsVBox.setOnMouseDragged(mouseEvent -> {
+            newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
                 // Offset of drag
                 double offsetX = mouseEvent.getScreenX() - sceneX;
                 double offsetY = mouseEvent.getScreenY() - sceneY;
                 // Taking parent bounds
-                Bounds parentBounds = newListOfTransitionsVBox.getParent().getLayoutBounds();
+                Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
                 // Drag node bounds
-                double currPaneLayoutX = newListOfTransitionsVBox.getLayoutX();
-                double currPaneWidth = newListOfTransitionsVBox.getWidth();
-                double currPaneLayoutY = newListOfTransitionsVBox.getLayoutY();
-                double currPaneHeight = newListOfTransitionsVBox.getHeight();
+                double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
+                double currPaneWidth = newTransitionsListVBox.getWidth();
+                double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
+                double currPaneHeight = newTransitionsListVBox.getHeight();
                 if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
                     // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                    newListOfTransitionsVBox.setTranslateX(offsetX);
+                    newTransitionsListVBox.setTranslateX(offsetX);
                 } else if (currPaneLayoutX + offsetX < 0) {
                     // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
                     // which makes the final layout position to 0 in mouse released event.
-                    newListOfTransitionsVBox.setTranslateX(-currPaneLayoutX);
+                    newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
                 } else {
                     // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                    newListOfTransitionsVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+                    newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
                 }
                 if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                    newListOfTransitionsVBox.setTranslateY(offsetY);
+                    newTransitionsListVBox.setTranslateY(offsetY);
                 } else if (currPaneLayoutY + offsetY < 0) {
-                    newListOfTransitionsVBox.setTranslateY(-currPaneLayoutY);
+                    newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
                 } else {
-                    newListOfTransitionsVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+                    newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
                 }
             });
-            newListOfTransitionsVBox.setOnMouseReleased(event -> {
+            newTransitionsListVBox.setOnMouseReleased(event -> {
                 // Updating the new layout positions
-                newListOfTransitionsVBox.setLayoutX(layoutX + newListOfTransitionsVBox.getTranslateX());
-                newListOfTransitionsVBox.setLayoutY(layoutY + newListOfTransitionsVBox.getTranslateY());
+                newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
+                newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
                 //Update coordinate stored in transition tabel model
-                newTransitionModel.setXCoordinateOnDiagram(layoutX + newListOfTransitionsVBox.getTranslateX());
-                newTransitionModel.setYCoordinateOnDiagram(layoutY + newListOfTransitionsVBox.getTranslateY());
+                double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
+                double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
+                newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+                for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+                    transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                    transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+                }
                 // Resetting the translate positions
-                newListOfTransitionsVBox.setTranslateX(0);
-                newListOfTransitionsVBox.setTranslateY(0);
+                newTransitionsListVBox.setTranslateX(0);
+                newTransitionsListVBox.setTranslateY(0);
             });
-            sourceCell.setListOfTransitionsVBox(newListOfTransitionsVBox);
+            sourceCell.setListOfTransitionsVBox(newTransitionsListVBox);
             diagramScene.getChildren().add(sourceCell.getListOfTransitionsVBox());
+            sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
+                    newTransitionModel.getYCoordinateOnDiagram());
         }
         sourceCell.getListOfTransitionsVBox().getChildren().clear();
         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
@@ -258,58 +266,66 @@ public class DiagramScenePresenter {
         TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
         transitionNode.setStroke(Color.BLACK);
         transitionNode.setStrokeWidth(2);
-        VBox newTransitionListVBox = transitionNode.getTransitionListVBox();
-        newTransitionListVBox.setOnMousePressed(mouseEvent -> {
+        VBox newTransitionsListVBox = transitionNode.getTransitionListVBox();
+        newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
             sceneX = mouseEvent.getScreenX();
             sceneY = mouseEvent.getScreenY();
-            layoutX = newTransitionListVBox.getLayoutX();
-            layoutY = newTransitionListVBox.getLayoutY();
+            layoutX = newTransitionsListVBox.getLayoutX();
+            layoutY = newTransitionsListVBox.getLayoutY();
         });
-        newTransitionListVBox.setOnMouseDragged(mouseEvent -> {
+        newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
             // Offset of drag
             double offsetX = mouseEvent.getScreenX() - sceneX;
             double offsetY = mouseEvent.getScreenY() - sceneY;
             // Taking parent bounds
-            Bounds parentBounds = newTransitionListVBox.getParent().getLayoutBounds();
+            Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
             // Drag node bounds
-            double currPaneLayoutX = newTransitionListVBox.getLayoutX();
-            double currPaneWidth = newTransitionListVBox.getWidth();
-            double currPaneLayoutY = newTransitionListVBox.getLayoutY();
-            double currPaneHeight = newTransitionListVBox.getHeight();
+            double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
+            double currPaneWidth = newTransitionsListVBox.getWidth();
+            double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
+            double currPaneHeight = newTransitionsListVBox.getHeight();
             if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
                 // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                newTransitionListVBox.setTranslateX(offsetX);
+                newTransitionsListVBox.setTranslateX(offsetX);
             } else if (currPaneLayoutX + offsetX < 0) {
                 // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
                 // which makes the final layout position to 0 in mouse released event.
-                newTransitionListVBox.setTranslateX(-currPaneLayoutX);
+                newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
             } else {
                 // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                newTransitionListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+                newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
             }
             if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                newTransitionListVBox.setTranslateY(offsetY);
+                newTransitionsListVBox.setTranslateY(offsetY);
             } else if (currPaneLayoutY + offsetY < 0) {
-                newTransitionListVBox.setTranslateY(-currPaneLayoutY);
+                newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
             } else {
-                newTransitionListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+                newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
             }
         });
-        newTransitionListVBox.setOnMouseReleased(event -> {
+        newTransitionsListVBox.setOnMouseReleased(event -> {
             // Updating the new layout positions
-            newTransitionListVBox.setLayoutX(layoutX + newTransitionListVBox.getTranslateX());
-            newTransitionListVBox.setLayoutY(layoutY + newTransitionListVBox.getTranslateY());
+            newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
+            newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
             //Set transitionlist model coordinates
-            newTransitionModel.setXCoordinateOnDiagram(layoutX + newTransitionListVBox.getTranslateX());
-            newTransitionModel.setYCoordinateOnDiagram(layoutY + newTransitionListVBox.getTranslateY());
+            double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
+            double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
+            newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+            newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+            for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+                transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+            }
             // Resetting the translate positions
-            newTransitionListVBox.setTranslateX(0);
-            newTransitionListVBox.setTranslateY(0);
+            newTransitionsListVBox.setTranslateX(0);
+            newTransitionsListVBox.setTranslateY(0);
         });
         for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-            newTransitionListVBox.getChildren().add(new Label(transitionModel.toString()));
+            newTransitionsListVBox.getChildren().add(new Label(transitionModel.toString()));
         }
-        newTransitionListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
+        System.out.println("X coordinateD:" + newTransitionModel.getXCoordinateOnDiagram());
+        System.out.println("Y coordinateD:" + newTransitionModel.getYCoordinateOnDiagram());
+        newTransitionsListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
         double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
         final ChangeListener<Number> listener = (obs, old, newVal) -> {
             Rotate r = new Rotate();
