@@ -30,7 +30,7 @@ public class StateNode extends StackPane {
     private Arc finalStateArc;
     private Arc reflexiveArrowShaftArc;
     private Polygon reflexiveArrowTipPolygon;
-    private VBox listOfTransitionsVBox;
+    private VBox transitionsListVBox;
     /**
      * Constructor of the state node, used to instantiate an instance of the view.
      * @param stateID a reference to the views identification.
@@ -128,7 +128,7 @@ public class StateNode extends StackPane {
         this.setOnMouseReleased(diagramListener);
     }
     //Getters for data linked to this view.
-    public String getStateID() {
+    public String getStateId() {
         return stateID;
     }
     // Getters for UI components of this view.
@@ -150,10 +150,10 @@ public class StateNode extends StackPane {
     public Arc getFinalStateArc() {
         return finalStateArc;
     }
-    public VBox getListOfTransitionsVBox() {
-        return listOfTransitionsVBox;
+    public VBox getTransitionsListVBox() {
+        return transitionsListVBox;
     }
-    public void setListOfTransitionsVBox(VBox listOfTransitionsVBox) {
-        this.listOfTransitionsVBox = listOfTransitionsVBox;
+    public void setTransitionsListVBox(VBox transitionsListVBox) {
+        this.transitionsListVBox = transitionsListVBox;
     }
 }

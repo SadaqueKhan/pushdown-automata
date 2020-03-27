@@ -149,309 +149,12 @@ public class DiagramScenePresenter {
         }
     }
     /**
-     * Handles creating a reflexive transition given a transition model.
-     * @param newTransitionModel used to structure the formulation of a transition node.
-     */
-    public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
-        StateNode sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
-        if (sourceCell.getListOfTransitionsVBox() == null) {
-            VBox newTransitionsListVBox = new VBox();
-            newTransitionsListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
-            newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
-                sceneX = mouseEvent.getScreenX();
-                sceneY = mouseEvent.getScreenY();
-                layoutX = newTransitionsListVBox.getLayoutX();
-                layoutY = newTransitionsListVBox.getLayoutY();
-            });
-            newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
-                // Offset of drag
-                double offsetX = mouseEvent.getScreenX() - sceneX;
-                double offsetY = mouseEvent.getScreenY() - sceneY;
-                // Taking parent bounds
-                Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
-                // Drag node bounds
-                double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
-                double currPaneWidth = newTransitionsListVBox.getWidth();
-                double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
-                double currPaneHeight = newTransitionsListVBox.getHeight();
-                if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
-                    // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                    newTransitionsListVBox.setTranslateX(offsetX);
-                } else if (currPaneLayoutX + offsetX < 0) {
-                    // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
-                    // which makes the final layout position to 0 in mouse released event.
-                    newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
-                } else {
-                    // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                    newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
-                }
-                if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                    newTransitionsListVBox.setTranslateY(offsetY);
-                } else if (currPaneLayoutY + offsetY < 0) {
-                    newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
-                } else {
-                    newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
-                }
-            });
-            newTransitionsListVBox.setOnMouseReleased(event -> {
-                // Updating the new layout positions
-                newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
-                newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
-                //Update coordinate stored in transition tabel model
-                double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
-                double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
-                newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
-                newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
-                for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-                    transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
-                    transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
-                }
-                // Resetting the translate positions
-                newTransitionsListVBox.setTranslateX(0);
-                newTransitionsListVBox.setTranslateY(0);
-            });
-            sourceCell.setListOfTransitionsVBox(newTransitionsListVBox);
-            diagramScene.getChildren().add(sourceCell.getListOfTransitionsVBox());
-            sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
-                    newTransitionModel.getYCoordinateOnDiagram());
-        }
-        sourceCell.getListOfTransitionsVBox().getChildren().add(new Label(newTransitionModel.toString()));
-        sourceCell.getReflexiveArrowShaftArc().setVisible(true);
-        sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
-    }
-    /**
-     * Handles creating a transition node given a transition model.
-     * @param newTransitionModel used to form the transition node.
-     */
-    public void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
-        //Get state from map using state ID
-        StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
-        StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
-        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
-        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
-            for (Node node : nextHashSet) {
-                if (node instanceof TransitionNode) {
-                    TransitionNode transitionNodeToCheck = (TransitionNode) node;
-                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode()
-                            ==
-                            resultingStateNode) {
-                        VBox newTransitionListVBox = transitionNodeToCheck.getTransitionListVBox();
-                        newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
-                        return;
-                    }
-                }
-            }
-        }
-        //Transition does not exist create fresh transition
-        diagramScene.getChildren().remove(currentStateNode);
-        diagramScene.getChildren().remove(resultingStateNode);
-        Line virtualCenterLine = new Line();
-        virtualCenterLine.startXProperty().bind(currentStateNode.layoutXProperty().add(currentStateNode.translateXProperty()).add(currentStateNode.widthProperty().divide(2)));
-        virtualCenterLine.startYProperty().bind(currentStateNode.layoutYProperty().add(currentStateNode.translateYProperty()).add(currentStateNode.heightProperty().divide(2)));
-        virtualCenterLine.endXProperty().bind(resultingStateNode.layoutXProperty().add(resultingStateNode.translateXProperty()).add(resultingStateNode.widthProperty().divide(2)));
-        virtualCenterLine.endYProperty().bind(resultingStateNode.layoutYProperty().add(resultingStateNode.translateYProperty()).add(resultingStateNode.heightProperty().divide(2)));
-        virtualCenterLine.setOpacity(0);
-        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateNode, resultingStateNode);
-        centerLineArrowAB.setOpacity(0);
-        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
-        centerLineArrowBA.setOpacity(0);
-        TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
-        transitionNode.setStroke(Color.BLACK);
-        transitionNode.setStrokeWidth(2);
-        VBox newTransitionsListVBox = transitionNode.getTransitionListVBox();
-        newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
-            sceneX = mouseEvent.getScreenX();
-            sceneY = mouseEvent.getScreenY();
-            layoutX = newTransitionsListVBox.getLayoutX();
-            layoutY = newTransitionsListVBox.getLayoutY();
-        });
-        newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
-            // Offset of drag
-            double offsetX = mouseEvent.getScreenX() - sceneX;
-            double offsetY = mouseEvent.getScreenY() - sceneY;
-            // Taking parent bounds
-            Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
-            // Drag node bounds
-            double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
-            double currPaneWidth = newTransitionsListVBox.getWidth();
-            double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
-            double currPaneHeight = newTransitionsListVBox.getHeight();
-            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
-                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
-                newTransitionsListVBox.setTranslateX(offsetX);
-            } else if (currPaneLayoutX + offsetX < 0) {
-                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
-                // which makes the final layout position to 0 in mouse released event.
-                newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
-            } else {
-                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
-                newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
-            }
-            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
-                newTransitionsListVBox.setTranslateY(offsetY);
-            } else if (currPaneLayoutY + offsetY < 0) {
-                newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
-            } else {
-                newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
-            }
-        });
-        newTransitionsListVBox.setOnMouseReleased(event -> {
-            // Updating the new layout positions
-            newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
-            newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
-            //Set transitionlist model coordinates
-            double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
-            double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
-            newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
-            newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
-            for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
-                transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
-                transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
-            }
-            // Resetting the translate positions
-            newTransitionsListVBox.setTranslateX(0);
-            newTransitionsListVBox.setTranslateY(0);
-        });
-        newTransitionsListVBox.getChildren().add(new Label(newTransitionModel.toString()));
-        newTransitionsListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
-        double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
-        final ChangeListener<Number> listener = (obs, old, newVal) -> {
-            Rotate r = new Rotate();
-            r.setPivotX(virtualCenterLine.getStartX());
-            r.setPivotY(virtualCenterLine.getStartY());
-            r.setAngle(centerLineArrowAB.getRotate());
-            Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
-            transitionNode.setStartX(point.getX());
-            transitionNode.setStartY(point.getY());
-            Rotate r2 = new Rotate();
-            r2.setPivotX(virtualCenterLine.getEndX());
-            r2.setPivotY(virtualCenterLine.getEndY());
-            r2.setAngle(centerLineArrowBA.getRotate());
-            Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
-            transitionNode.setEndX(point2.getX());
-            transitionNode.setEndY(point2.getY());
-        };
-        centerLineArrowAB.rotateProperty().addListener(listener);
-        centerLineArrowBA.rotateProperty().addListener(listener);
-        virtualCenterLine.startXProperty().addListener(listener);
-        virtualCenterLine.startYProperty().addListener(listener);
-        virtualCenterLine.endXProperty().addListener(listener);
-        virtualCenterLine.endYProperty().addListener(listener);
-        StackPane arrowTip = createArrowTip(true, transitionNode, currentStateNode, resultingStateNode);
-        arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
-        HashSet<Node> setOfNode = new HashSet<>();
-        setOfNode.add(virtualCenterLine);
-        setOfNode.add(centerLineArrowAB);
-        setOfNode.add(centerLineArrowBA);
-        setOfNode.add(transitionNode);
-        setOfNode.add(arrowTip);
-        linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
-        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionListVBox());
-        diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
-    }
-    /**
-     * Retrieves the transition models related to a given transition model.
-     * @param transitionModel used to determine all related transition model found in the transition model set in a
-     * machine model.
-     * @return {@code HashSet<TransitionModel>} of related transition models to a given transition model.
-     */
-    private HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
-        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
-        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
-        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
-        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
-            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
-            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
-            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
-                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
-            }
-        }
-        return relatedTransitionModelsToReturn;
-    }
-    /**
-     * Handles creation of an arrow tip and linking to a transition node.
-     * @param toLineEnd used for computing the binding of the arrow tip.
-     * @param line used for computing the binding of the arrow tip.
-     * @param currentStateNode used for computing the binding of the arrow tip.
-     * @param resultingStateNode used for computing the binding of the arrow tip.
-     * @return {@code StackPane} retaining the UI components that make up the arrow tip linked to a transition node
-     */
-    private StackPane createArrowTip(boolean toLineEnd, Line line, StackPane currentStateNode, StackPane resultingStateNode) {
-        double size = 12; // Arrow size
-        StackPane arrowTipStackPane = new StackPane();
-        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\";");
-        arrowTipStackPane.setPrefSize(size, size);
-        arrowTipStackPane.setMaxSize(size, size);
-        arrowTipStackPane.setMinSize(size, size);
-        // Determining the arrow visibility unless there is enough space between dots.
-        DoubleBinding xDiff = line.endXProperty().subtract(line.startXProperty());
-        DoubleBinding yDiff = line.endYProperty().subtract(line.startYProperty());
-        BooleanBinding visible = (xDiff.lessThanOrEqualTo(size).and(xDiff.greaterThanOrEqualTo(-size)).and(yDiff.greaterThanOrEqualTo(-size)).and(yDiff.lessThanOrEqualTo(size))).not();
-        arrowTipStackPane.visibleProperty().bind(visible);
-        // Determining the x point on the line which is at a certain distance.
-        DoubleBinding tX = Bindings.createDoubleBinding(() -> {
-            double xDiffSqu = (line.getEndX() - line.getStartX()) * (line.getEndX() - line.getStartX());
-            double yDiffSqu = (line.getEndY() - line.getStartY()) * (line.getEndY() - line.getStartY());
-            double lineLength = Math.sqrt(xDiffSqu + yDiffSqu);
-            double dt;
-            if (toLineEnd) {
-                // When determining the point towards end, the required distance is total length minus (radius + arrow half width)
-                dt = lineLength - (resultingStateNode.getWidth() / 2) - (arrowTipStackPane.getWidth() / 2);
-            } else {
-                // When determining the point towards start, the required distance is just (radius + arrow half width)
-                dt = (currentStateNode.getWidth() / 2) + (arrowTipStackPane.getWidth() / 2);
-            }
-            double t = dt / lineLength;
-            return ((1 - t) * line.getStartX()) + (t * line.getEndX());
-        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
-        // Determining the y point on the line which is at a certain distance.
-        DoubleBinding tY = Bindings.createDoubleBinding(() -> {
-            double xDiffSqu = (line.getEndX() - line.getStartX()) * (line.getEndX() - line.getStartX());
-            double yDiffSqu = (line.getEndY() - line.getStartY()) * (line.getEndY() - line.getStartY());
-            double lineLength = Math.sqrt(xDiffSqu + yDiffSqu);
-            double dt;
-            if (toLineEnd) {
-                dt = lineLength - (resultingStateNode.getHeight() / 2) - (arrowTipStackPane.getHeight() / 2);
-            } else {
-                dt = (currentStateNode.getHeight() / 2) + (arrowTipStackPane.getHeight() / 2);
-            }
-            double t = dt / lineLength;
-            return ((1 - t) * line.getStartY()) + (t * line.getEndY());
-        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
-        arrowTipStackPane.layoutXProperty().bind(tX.subtract(arrowTipStackPane.widthProperty().divide(2)));
-        arrowTipStackPane.layoutYProperty().bind(tY.subtract(arrowTipStackPane.heightProperty().divide(2)));
-        DoubleBinding endArrowAngle = Bindings.createDoubleBinding(() -> {
-            double stX = toLineEnd ? line.getStartX() : line.getEndX();
-            double stY = toLineEnd ? line.getStartY() : line.getEndY();
-            double enX = toLineEnd ? line.getEndX() : line.getStartX();
-            double enY = toLineEnd ? line.getEndY() : line.getStartY();
-            double angle = Math.toDegrees(Math.atan2(enY - stY, enX - stX));
-            if (angle < 0) {
-                angle += 360;
-            }
-            return angle;
-        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
-        arrowTipStackPane.rotateProperty().bind(endArrowAngle);
-        return arrowTipStackPane;
-    }
-    /**
-     * Handles adding a state node onto the diagram scene given a state model.
-     * @param newStateModel used to add a state node onto the diagram scene.
-     */
-    void addStateViewOntoDiagramView(StateModel newStateModel) {
-        StateNode stateNode = new StateNode(newStateModel.getStateId(), this);
-        stateNode.relocate(newStateModel.getXCoordinateOnDiagram(), newStateModel.getYCoordinateOnDiagram());
-        diagramScene.getChildren().add(stateNode);
-        stateMap.put(newStateModel, stateNode);
-        linkedTransitionViewsMap.put(stateNode, new HashSet<>());
-    }
-    /**
      * Handles the rendering of context menu on a given state node, and the respective actions when an action menu
      * item is selected from the context menu popup.
      * @param stateNode used to determine which state node to render a context menu pop on.
      */
     public void stateViewContextMenuPopUp(StateNode stateNode) {
-        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
+        StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateId());
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.setId("contextMenu");
         MenuItem toggleStandardStateItem = new MenuItem("Toggle standard state");
@@ -644,6 +347,303 @@ public class DiagramScenePresenter {
         contextMenu.getItems().add(deleteStateItem);
         contextMenu.show(stateNode, Side.RIGHT, 5, 5);
     }
+    /**
+     * Handles creating a reflexive transition given a transition model.
+     * @param newTransitionModel used to structure the formulation of a transition node.
+     */
+    public void addReflexiveTransitionToDiagramView(TransitionModel newTransitionModel) {
+        StateNode sourceCell = stateMap.get(newTransitionModel.getCurrentStateModel());
+        if (sourceCell.getTransitionsListVBox() == null) {
+            VBox newTransitionsListVBox = new VBox();
+            newTransitionsListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
+            newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
+                sceneX = mouseEvent.getScreenX();
+                sceneY = mouseEvent.getScreenY();
+                layoutX = newTransitionsListVBox.getLayoutX();
+                layoutY = newTransitionsListVBox.getLayoutY();
+            });
+            newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
+                // Offset of drag
+                double offsetX = mouseEvent.getScreenX() - sceneX;
+                double offsetY = mouseEvent.getScreenY() - sceneY;
+                // Taking parent bounds
+                Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
+                // Drag node bounds
+                double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
+                double currPaneWidth = newTransitionsListVBox.getWidth();
+                double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
+                double currPaneHeight = newTransitionsListVBox.getHeight();
+                if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                    // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                    newTransitionsListVBox.setTranslateX(offsetX);
+                } else if (currPaneLayoutX + offsetX < 0) {
+                    // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                    // which makes the final layout position to 0 in mouse released event.
+                    newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
+                } else {
+                    // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                    newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+                }
+                if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                    newTransitionsListVBox.setTranslateY(offsetY);
+                } else if (currPaneLayoutY + offsetY < 0) {
+                    newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
+                } else {
+                    newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+                }
+            });
+            newTransitionsListVBox.setOnMouseReleased(event -> {
+                // Updating the new layout positions
+                newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
+                newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
+                //Update coordinate stored in transition tabel model
+                double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
+                double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
+                newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+                for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+                    transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                    transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+                }
+                // Resetting the translate positions
+                newTransitionsListVBox.setTranslateX(0);
+                newTransitionsListVBox.setTranslateY(0);
+            });
+            sourceCell.setTransitionsListVBox(newTransitionsListVBox);
+            diagramScene.getChildren().add(sourceCell.getTransitionsListVBox());
+            sourceCell.getTransitionsListVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
+                    newTransitionModel.getYCoordinateOnDiagram());
+        }
+        sourceCell.getTransitionsListVBox().getChildren().add(new Label(newTransitionModel.toString()));
+        sourceCell.getReflexiveArrowShaftArc().setVisible(true);
+        sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
+    }
+    /**
+     * Retrieves the transition models related to a given transition model.
+     * @param transitionModel used to determine all related transition model found in the transition model set in a
+     * machine model.
+     * @return {@code HashSet<TransitionModel>} of related transition models to a given transition model.
+     */
+    private HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
+        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
+        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
+        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
+        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
+            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
+            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
+            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
+                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
+            }
+        }
+        return relatedTransitionModelsToReturn;
+    }
+    /**
+     * Handles creation of an arrow tip and linking to a transition node.
+     * @param toLineEnd used for computing the binding of the arrow tip.
+     * @param line used for computing the binding of the arrow tip.
+     * @param currentStateNode used for computing the binding of the arrow tip.
+     * @param resultingStateNode used for computing the binding of the arrow tip.
+     * @return {@code StackPane} retaining the UI components that make up the arrow tip linked to a transition node
+     */
+    private StackPane createArrowTip(boolean toLineEnd, Line line, StackPane currentStateNode, StackPane resultingStateNode) {
+        double size = 12; // Arrow size
+        StackPane arrowTipStackPane = new StackPane();
+        arrowTipStackPane.setStyle("-fx-background-color:black;-fx-border-width:2px;-fx-border-color:black;-fx-shape: \"M0,-4L4,0L0,4Z\";");
+        arrowTipStackPane.setPrefSize(size, size);
+        arrowTipStackPane.setMaxSize(size, size);
+        arrowTipStackPane.setMinSize(size, size);
+        // Determining the arrow visibility unless there is enough space between dots.
+        DoubleBinding xDiff = line.endXProperty().subtract(line.startXProperty());
+        DoubleBinding yDiff = line.endYProperty().subtract(line.startYProperty());
+        BooleanBinding visible = (xDiff.lessThanOrEqualTo(size).and(xDiff.greaterThanOrEqualTo(-size)).and(yDiff.greaterThanOrEqualTo(-size)).and(yDiff.lessThanOrEqualTo(size))).not();
+        arrowTipStackPane.visibleProperty().bind(visible);
+        // Determining the x point on the line which is at a certain distance.
+        DoubleBinding tX = Bindings.createDoubleBinding(() -> {
+            double xDiffSqu = (line.getEndX() - line.getStartX()) * (line.getEndX() - line.getStartX());
+            double yDiffSqu = (line.getEndY() - line.getStartY()) * (line.getEndY() - line.getStartY());
+            double lineLength = Math.sqrt(xDiffSqu + yDiffSqu);
+            double dt;
+            if (toLineEnd) {
+                // When determining the point towards end, the required distance is total length minus (radius + arrow half width)
+                dt = lineLength - (resultingStateNode.getWidth() / 2) - (arrowTipStackPane.getWidth() / 2);
+            } else {
+                // When determining the point towards start, the required distance is just (radius + arrow half width)
+                dt = (currentStateNode.getWidth() / 2) + (arrowTipStackPane.getWidth() / 2);
+            }
+            double t = dt / lineLength;
+            return ((1 - t) * line.getStartX()) + (t * line.getEndX());
+        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
+        // Determining the y point on the line which is at a certain distance.
+        DoubleBinding tY = Bindings.createDoubleBinding(() -> {
+            double xDiffSqu = (line.getEndX() - line.getStartX()) * (line.getEndX() - line.getStartX());
+            double yDiffSqu = (line.getEndY() - line.getStartY()) * (line.getEndY() - line.getStartY());
+            double lineLength = Math.sqrt(xDiffSqu + yDiffSqu);
+            double dt;
+            if (toLineEnd) {
+                dt = lineLength - (resultingStateNode.getHeight() / 2) - (arrowTipStackPane.getHeight() / 2);
+            } else {
+                dt = (currentStateNode.getHeight() / 2) + (arrowTipStackPane.getHeight() / 2);
+            }
+            double t = dt / lineLength;
+            return ((1 - t) * line.getStartY()) + (t * line.getEndY());
+        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
+        arrowTipStackPane.layoutXProperty().bind(tX.subtract(arrowTipStackPane.widthProperty().divide(2)));
+        arrowTipStackPane.layoutYProperty().bind(tY.subtract(arrowTipStackPane.heightProperty().divide(2)));
+        DoubleBinding endArrowAngle = Bindings.createDoubleBinding(() -> {
+            double stX = toLineEnd ? line.getStartX() : line.getEndX();
+            double stY = toLineEnd ? line.getStartY() : line.getEndY();
+            double enX = toLineEnd ? line.getEndX() : line.getStartX();
+            double enY = toLineEnd ? line.getEndY() : line.getStartY();
+            double angle = Math.toDegrees(Math.atan2(enY - stY, enX - stX));
+            if (angle < 0) {
+                angle += 360;
+            }
+            return angle;
+        }, line.startXProperty(), line.endXProperty(), line.startYProperty(), line.endYProperty());
+        arrowTipStackPane.rotateProperty().bind(endArrowAngle);
+        return arrowTipStackPane;
+    }
+    /**
+     * Handles adding a state node onto the diagram scene given a state model.
+     * @param newStateModel used to add a state node onto the diagram scene.
+     */
+    void addStateViewOntoDiagramView(StateModel newStateModel) {
+        StateNode stateNode = new StateNode(newStateModel.getStateId(), this);
+        stateNode.relocate(newStateModel.getXCoordinateOnDiagram(), newStateModel.getYCoordinateOnDiagram());
+        diagramScene.getChildren().add(stateNode);
+        stateMap.put(newStateModel, stateNode);
+        linkedTransitionViewsMap.put(stateNode, new HashSet<>());
+    }
+    /**
+     * Handles creating a transition node given a transition model.
+     * @param newTransitionModel used to form the transition node.
+     */
+    public void addDirectionalTransitionToView(TransitionModel newTransitionModel) {
+        //Get state from map using state ID
+        StateNode currentStateNode = stateMap.get(newTransitionModel.getCurrentStateModel());
+        StateNode resultingStateNode = stateMap.get(newTransitionModel.getResultingStateModel());
+        HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
+        for (HashSet<Node> nextHashSet : linkedTransitionViews) {
+            for (Node node : nextHashSet) {
+                if (node instanceof TransitionNode) {
+                    TransitionNode transitionNodeToCheck = (TransitionNode) node;
+                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode()
+                            ==
+                            resultingStateNode) {
+                        VBox newTransitionListVBox = transitionNodeToCheck.getTransitionsListVBox();
+                        newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
+                        return;
+                    }
+                }
+            }
+        }
+        //Transition does not exist create fresh transition
+        diagramScene.getChildren().remove(currentStateNode);
+        diagramScene.getChildren().remove(resultingStateNode);
+        Line virtualCenterLine = new Line();
+        virtualCenterLine.startXProperty().bind(currentStateNode.layoutXProperty().add(currentStateNode.translateXProperty()).add(currentStateNode.widthProperty().divide(2)));
+        virtualCenterLine.startYProperty().bind(currentStateNode.layoutYProperty().add(currentStateNode.translateYProperty()).add(currentStateNode.heightProperty().divide(2)));
+        virtualCenterLine.endXProperty().bind(resultingStateNode.layoutXProperty().add(resultingStateNode.translateXProperty()).add(resultingStateNode.widthProperty().divide(2)));
+        virtualCenterLine.endYProperty().bind(resultingStateNode.layoutYProperty().add(resultingStateNode.translateYProperty()).add(resultingStateNode.heightProperty().divide(2)));
+        virtualCenterLine.setOpacity(0);
+        StackPane centerLineArrowAB = createArrowTip(true, virtualCenterLine, currentStateNode, resultingStateNode);
+        centerLineArrowAB.setOpacity(0);
+        StackPane centerLineArrowBA = createArrowTip(false, virtualCenterLine, currentStateNode, resultingStateNode);
+        centerLineArrowBA.setOpacity(0);
+        TransitionNode transitionNode = new TransitionNode(currentStateNode, resultingStateNode);
+        transitionNode.setStroke(Color.BLACK);
+        transitionNode.setStrokeWidth(2);
+        VBox newTransitionsListVBox = transitionNode.getTransitionsListVBox();
+        newTransitionsListVBox.setOnMousePressed(mouseEvent -> {
+            sceneX = mouseEvent.getScreenX();
+            sceneY = mouseEvent.getScreenY();
+            layoutX = newTransitionsListVBox.getLayoutX();
+            layoutY = newTransitionsListVBox.getLayoutY();
+        });
+        newTransitionsListVBox.setOnMouseDragged(mouseEvent -> {
+            // Offset of drag
+            double offsetX = mouseEvent.getScreenX() - sceneX;
+            double offsetY = mouseEvent.getScreenY() - sceneY;
+            // Taking parent bounds
+            Bounds parentBounds = newTransitionsListVBox.getParent().getLayoutBounds();
+            // Drag node bounds
+            double currPaneLayoutX = newTransitionsListVBox.getLayoutX();
+            double currPaneWidth = newTransitionsListVBox.getWidth();
+            double currPaneLayoutY = newTransitionsListVBox.getLayoutY();
+            double currPaneHeight = newTransitionsListVBox.getHeight();
+            if ((currPaneLayoutX + offsetX < parentBounds.getWidth() - currPaneWidth) && (currPaneLayoutX + offsetX > -1)) {
+                // If the dragNode bounds is within the parent bounds, then you can set the offset value.
+                newTransitionsListVBox.setTranslateX(offsetX);
+            } else if (currPaneLayoutX + offsetX < 0) {
+                // If the sum of your offset and current layout position is negative, then you ALWAYS update your translate to negative layout value
+                // which makes the final layout position to 0 in mouse released event.
+                newTransitionsListVBox.setTranslateX(-currPaneLayoutX);
+            } else {
+                // If your dragNode bounds are outside parent bounds,ALWAYS setting the translate value that fits your node at end.
+                newTransitionsListVBox.setTranslateX(parentBounds.getWidth() - currPaneLayoutX - currPaneWidth);
+            }
+            if ((currPaneLayoutY + offsetY < parentBounds.getHeight() - currPaneHeight) && (currPaneLayoutY + offsetY > -1)) {
+                newTransitionsListVBox.setTranslateY(offsetY);
+            } else if (currPaneLayoutY + offsetY < 0) {
+                newTransitionsListVBox.setTranslateY(-currPaneLayoutY);
+            } else {
+                newTransitionsListVBox.setTranslateY(parentBounds.getHeight() - currPaneLayoutY - currPaneHeight);
+            }
+        });
+        newTransitionsListVBox.setOnMouseReleased(event -> {
+            // Updating the new layout positions
+            newTransitionsListVBox.setLayoutX(layoutX + newTransitionsListVBox.getTranslateX());
+            newTransitionsListVBox.setLayoutY(layoutY + newTransitionsListVBox.getTranslateY());
+            //Set transitionlist model coordinates
+            double newXCoordinateOfTransitionOnDiagram = layoutX + newTransitionsListVBox.getTranslateX();
+            double newYCoordinateOfTransitionOnDiagram = layoutY + newTransitionsListVBox.getTranslateY();
+            newTransitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+            newTransitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+            for (TransitionModel transitionModel : getRelatedTransitions(newTransitionModel)) {
+                transitionModel.setXCoordinateOnDiagram(newXCoordinateOfTransitionOnDiagram);
+                transitionModel.setYCoordinateOnDiagram(newYCoordinateOfTransitionOnDiagram);
+            }
+            // Resetting the translate positions
+            newTransitionsListVBox.setTranslateX(0);
+            newTransitionsListVBox.setTranslateY(0);
+        });
+        newTransitionsListVBox.getChildren().add(new Label(newTransitionModel.toString()));
+        newTransitionsListVBox.relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
+        double diff = true ? -centerLineArrowAB.getPrefWidth() / 2 : centerLineArrowAB.getPrefWidth() / 2;
+        final ChangeListener<Number> listener = (obs, old, newVal) -> {
+            Rotate r = new Rotate();
+            r.setPivotX(virtualCenterLine.getStartX());
+            r.setPivotY(virtualCenterLine.getStartY());
+            r.setAngle(centerLineArrowAB.getRotate());
+            Point2D point = r.transform(new Point2D(virtualCenterLine.getStartX(), virtualCenterLine.getStartY() + diff));
+            transitionNode.setStartX(point.getX());
+            transitionNode.setStartY(point.getY());
+            Rotate r2 = new Rotate();
+            r2.setPivotX(virtualCenterLine.getEndX());
+            r2.setPivotY(virtualCenterLine.getEndY());
+            r2.setAngle(centerLineArrowBA.getRotate());
+            Point2D point2 = r2.transform(new Point2D(virtualCenterLine.getEndX(), virtualCenterLine.getEndY() - diff));
+            transitionNode.setEndX(point2.getX());
+            transitionNode.setEndY(point2.getY());
+        };
+        centerLineArrowAB.rotateProperty().addListener(listener);
+        centerLineArrowBA.rotateProperty().addListener(listener);
+        virtualCenterLine.startXProperty().addListener(listener);
+        virtualCenterLine.startYProperty().addListener(listener);
+        virtualCenterLine.endXProperty().addListener(listener);
+        virtualCenterLine.endYProperty().addListener(listener);
+        StackPane arrowTip = createArrowTip(true, transitionNode, currentStateNode, resultingStateNode);
+        arrowTip.setId(newTransitionModel.getResultingStateModel().getStateId());
+        HashSet<Node> setOfNode = new HashSet<>();
+        setOfNode.add(virtualCenterLine);
+        setOfNode.add(centerLineArrowAB);
+        setOfNode.add(centerLineArrowBA);
+        setOfNode.add(transitionNode);
+        setOfNode.add(arrowTip);
+        linkedTransitionViewsMap.get(currentStateNode).add(setOfNode);
+        diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionsListVBox());
+        diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
+    }
     //StateGUIEventResponses
     /**
      * Sets up dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the
@@ -723,7 +723,7 @@ public class DiagramScenePresenter {
             StateNode currentStateNode = stateMap.get(deletedTransition.getCurrentStateModel());
             //Check type of transition
             if (currentStateModelID.equals(resultingStateModelID)) {
-                VBox listOfTransitionsVBox = currentStateNode.getListOfTransitionsVBox();
+                VBox listOfTransitionsVBox = currentStateNode.getTransitionsListVBox();
                 Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
                 while (iter.hasNext()) {
                     Label labelToRemove = (Label) iter.next();
@@ -743,14 +743,14 @@ public class DiagramScenePresenter {
                     for (Node node : nextHashSet) {
                         if (node instanceof TransitionNode) {
                             TransitionNode transitionNodeToUpdate = (TransitionNode) node;
-                            if (transitionNodeToUpdate.getCurrentStateNode().getStateID().equals(currentStateModelID) &&
-                                    transitionNodeToUpdate.getResultingStateNode().getStateID().equals(resultingStateModelID)) {
+                            if (transitionNodeToUpdate.getCurrentStateNode().getStateId().equals(currentStateModelID) &&
+                                    transitionNodeToUpdate.getResultingStateNode().getStateId().equals(resultingStateModelID)) {
                                 if (getRelatedTransitions(deletedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionToRemoveSet.add(currentStateNode);
                                 }
                                 for (TransitionModel transitionModel : getRelatedTransitions(deletedTransition)) {
-                                    transitionNodeToUpdate.getTransitionListVBox().getChildren().add(new Label(transitionModel.toString()));
+                                    transitionNodeToUpdate.getTransitionsListVBox().getChildren().add(new Label(transitionModel.toString()));
                                 }
                             }
                         }
@@ -771,7 +771,7 @@ public class DiagramScenePresenter {
                             for (Node node : nextHashSet) {
                                 if (node instanceof TransitionNode) {
                                     TransitionNode isTransitionNode = (TransitionNode) node;
-                                    diagramScene.getChildren().remove(isTransitionNode.getTransitionListVBox());
+                                    diagramScene.getChildren().remove(isTransitionNode.getTransitionsListVBox());
                                 }
                                 diagramScene.getChildren().remove(node);
                             }
@@ -839,7 +839,7 @@ public class DiagramScenePresenter {
         stateNode.setLayoutX(layoutX + stateNode.getTranslateX());
         stateNode.setLayoutY(layoutY + stateNode.getTranslateY());
         // Updating state model coordinates
-        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
+        StateModel stateModelDragged = machineModel.getStateModelFromStateModelSet(stateNode.getStateId());
         stateModelDragged.setXCoordinateOnDiagram(layoutX + stateNode.getTranslateX());
         stateModelDragged.setYCoordinateOnDiagram(layoutY + stateNode.getTranslateY());
         // Resetting the translate positions
@@ -934,7 +934,7 @@ public class DiagramScenePresenter {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionNode) {
                     TransitionNode transitionNodeToUpdate = (TransitionNode) node;
-                    if (transitionNodeToUpdate.getResultingStateNode().getStateID().equals(resultingStateNode.getStateID())) {
+                    if (transitionNodeToUpdate.getResultingStateNode().getStateId().equals(resultingStateNode.getStateId())) {
                         TransitionViewSet.add(transitionNodeToUpdate);
                     }
                 } else if (node instanceof StackPane) {
@@ -942,7 +942,7 @@ public class DiagramScenePresenter {
                     if (arrowTipStackPaneToUpdate.getId() == null) {
                         continue;
                     }
-                    if (arrowTipStackPaneToUpdate.getId().equals(resultingStateNode.getStateID())) {
+                    if (arrowTipStackPaneToUpdate.getId().equals(resultingStateNode.getStateId())) {
                         TransitionViewSet.add(arrowTipStackPaneToUpdate);
                     }
                 }

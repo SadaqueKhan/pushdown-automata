@@ -13,7 +13,7 @@ public class TransitionNode extends Line {
     private final StateNode currentStateNode;
     private final StateNode resultingStateNode;
     //Reference to UI components for view.
-    private VBox transitionListVBox;
+    private VBox transitionsListVBox;
     /**
      * Constructor of a transition node, used to instantiate an instance of the view.
      * @param currentStateNode a reference to the current state node for which the transition is attached to.
@@ -28,8 +28,8 @@ public class TransitionNode extends Line {
      * Sets up the UI components of the view.
      */
     private void setUpUIComponents() {
-        transitionListVBox = new VBox();
-        transitionListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
+        transitionsListVBox = new VBox();
+        transitionsListVBox.setStyle("-fx-background-color:#ffffff;-fx-border-width:2px;-fx-border-color:black;");
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(2);
     }
@@ -41,7 +41,7 @@ public class TransitionNode extends Line {
         return resultingStateNode;
     }
     // Getters for UI components of the view.
-    public VBox getTransitionListVBox() {
-        return transitionListVBox;
+    public VBox getTransitionsListVBox() {
+        return transitionsListVBox;
     }
 }

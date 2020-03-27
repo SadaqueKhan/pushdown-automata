@@ -6,9 +6,12 @@ import app.presenter.DiagramScenePresenter;
 import app.presenter.MainStagePresenter;
 import app.view.MainStage;
 import app.view.StateNode;
+import app.view.TransitionNode;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -125,6 +129,7 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.rightClickOn(notStartStateNode).clickOn("#toggleStartStateItem");
         WaitForAsyncUtils.waitForFxEvents();
         assertFalse(stage.isFocused());
+        robot.press(KeyCode.ESCAPE);
     }
     @Test
     public void toggleStateToFinalStateShouldUpdateMachineModel() throws Exception {
@@ -154,9 +159,9 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         assertFalse(stateModel.isFinalState());
     }
     @Test
-    public void dynamicTransitionShouldUpdateMachineModel() throws Exception {
+    public void dynamicTransitionRenderingShouldUpdateMachineModelIfTransitionNotPresent() throws Exception {
         Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
-        int sizeOfTransitionSetPriorToAddingAtTransition = machineModel.getTransitionModelSet().size();
+        int sizeOfTransitionSetForMachineModelPriorToAddingTransition = machineModel.getTransitionModelSet().size();
         StateModel stateModel = machineModel.getStateModelSet().stream().findFirst().orElse(null);
         StateNode stateNode = stateMap.get(stateModel);
         stateNode.relocate(50, 50);
@@ -168,11 +173,11 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.clickOn("#stackSymbolToPushComboBox").write("A");
         robot.clickOn("#submitTransitionButton");
         WaitForAsyncUtils.waitForFxEvents();
-        int sizeOfTransitionSetAfterAddingAtTransition = machineModel.getTransitionModelSet().size();
-        assertTrue(sizeOfTransitionSetPriorToAddingAtTransition < sizeOfTransitionSetAfterAddingAtTransition);
+        int sizeOfTransitionSetForMachineModelAfterAddingTransition = machineModel.getTransitionModelSet().size();
+        assertTrue(sizeOfTransitionSetForMachineModelPriorToAddingTransition < sizeOfTransitionSetForMachineModelAfterAddingTransition);
     }
     @Test
-    public void dynamicTransitionShouldNotUpdateMachineModel() throws Exception {
+    public void dynamicTransitionShouldNotUpdateMachineModelIfTransitionPresent() throws Exception {
         Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
         int sizeOfTransitionSetPriorToAddingAtTransition = machineModel.getTransitionModelSet().size();
         TransitionModel transitionModel = machineModel.getTransitionModelSet().stream().findFirst().orElse(null);
@@ -186,9 +191,32 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.clickOn("#resultingStateComboBox").write(transitionModel.getResultingStateModel().getStateId());
         robot.clickOn("#stackSymbolToPushComboBox").write(transitionModel.getStackSymbolToPush());
         robot.clickOn("#submitTransitionButton");
+        robot.press(KeyCode.ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
         WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
-        assertFalse(stage.isFocused());
+        int sizeOfTransitionSetForMachineModelAfterAddingTransition = machineModel.getTransitionModelSet().size();
+        assertTrue(sizeOfTransitionSetPriorToAddingAtTransition == sizeOfTransitionSetForMachineModelAfterAddingTransition);
+    }
+    @Test
+    public void dynamicTransitionShouldNotUpdateMachineModelIfAllFieldsAreNotFilled() throws Exception {
+        Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
+        int sizeOfTransitionSetPriorToAddingAtTransition = machineModel.getTransitionModelSet().size();
+        TransitionModel transitionModel = machineModel.getTransitionModelSet().stream().findFirst().orElse(null);
+        StateModel stateModel = transitionModel.getCurrentStateModel();
+        StateNode stateNode = stateMap.get(stateModel);
+        stateNode.relocate(50, 50);
+        FxRobot robot = new FxRobot();
+        robot.rightClickOn(stateNode).clickOn("#createTransitionItem");
+        robot.clickOn("#inputSymbolComboBox").write("");
+        robot.clickOn("#stackSymbolToPopComboBox").write("");
+        robot.clickOn("#resultingStateComboBox").write("");
+        robot.clickOn("#stackSymbolToPushComboBox").write("");
+        robot.clickOn("#submitTransitionButton");
+        robot.press(KeyCode.ESCAPE);
+        WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        int sizeOfTransitionSetForMachineModelAfterAddingTransition = machineModel.getTransitionModelSet().size();
+        assertTrue(sizeOfTransitionSetPriorToAddingAtTransition == sizeOfTransitionSetForMachineModelAfterAddingTransition);
     }
     @Test
     public void draggingStateNodeShouldUpdateStateModelCoordinate() throws Exception {
@@ -201,14 +229,33 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.drag(stateNode, MouseButton.PRIMARY).dropBy(100, 100);
         assertNotEquals(stateModelXCoordinateOnDiagramBeforeDragging, stateModel.getXCoordinateOnDiagram());
     }
-//    @Test
-////    public void draggingTransitionNodeShouldUpdateTransitionModelCoordinate() throws Exception {
-////        TransitionModel stateModel = machineModel.getTransitionModelSet().stream().findFirst().orElse(null);
-////         stateNode = stateMap.get(stateModel);
-////        stateNode.relocate(50, 50);
-////        double transitionModelXCoordinateOnDiagramBeforeDragging = stateModel.getXCoordinateOnDiagram();
-////        FxRobot robot = new FxRobot();
-////        robot.drag(stateNode, MouseButton.PRIMARY).dropBy(100, 100);
-////        assertNotEquals(sizeOfTransitionSetAfterAddingAtTransition, stateModel.getXCoordinateOnDiagram() );
-////    }
+    @Test
+    public void draggingDirectedTransitionsShouldUpdateTransitionModelCoordinate() throws Exception {
+        TransitionModel transitionModel = machineModel.getTransitionModelSet().stream().findFirst().orElse(null);
+        HashSet<Node> transitionViewSet = diagramScenePresenter.retrieveDirectionalTransitionView(transitionModel);
+        VBox transitionListVBox = null;
+        for (Node node : transitionViewSet) {
+            if (node instanceof TransitionNode) {
+                TransitionNode transitionNodeToUpdate = (TransitionNode) node;
+                transitionListVBox = transitionNodeToUpdate.getTransitionsListVBox();
+            }
+        }
+        transitionListVBox.relocate(50, 50);
+        double transitionModelXCoordinateOnDiagramBeforeDragging = transitionModel.getXCoordinateOnDiagram();
+        FxRobot robot = new FxRobot();
+        robot.drag(transitionListVBox, MouseButton.PRIMARY).dropBy(100, 100);
+        assertNotEquals(transitionModelXCoordinateOnDiagramBeforeDragging, transitionModel.getXCoordinateOnDiagram());
+    }
+    @Test
+    public void draggingReflexiveTransitionsShouldUpdateTransitionModelCoordinate() throws Exception {
+        TransitionModel transitionModel = machineModel.getTransitionModelSet().stream().filter(transitionModelToFind -> transitionModelToFind.getCurrentStateModel().equals(transitionModelToFind.getResultingStateModel())).findFirst().orElse(null);
+        Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
+        StateNode stateNode = stateMap.get(transitionModel.getCurrentStateModel());
+        VBox transitionListVBox = stateNode.getTransitionsListVBox();
+        FxRobot robot = new FxRobot();
+        transitionListVBox.relocate(50, 50);
+        double transitionModelXCoordinateOnDiagramBeforeDragging = transitionModel.getXCoordinateOnDiagram();
+        robot.drag(transitionListVBox, MouseButton.PRIMARY).dropBy(100, 100);
+        assertNotEquals(transitionModelXCoordinateOnDiagramBeforeDragging, transitionModel.getXCoordinateOnDiagram());
+    }
 }
