@@ -107,7 +107,7 @@ public class TransitionModel {
      * @return the input symbol used by this transition.
      */
     @XmlElement
-    String getInputSymbol() {
+    public String getInputSymbol() {
         return inputSymbol;
     }
     /**
@@ -122,7 +122,7 @@ public class TransitionModel {
      * @return the stack symbol to pop used by this transition.
      */
     @XmlElement
-    String getStackSymbolToPop() {
+    public String getStackSymbolToPop() {
         return stackSymbolToPop;
     }
     /**
@@ -152,7 +152,7 @@ public class TransitionModel {
      * @return the stack symbol to push used by this transition.
      */
     @XmlElement
-    String getStackSymbolToPush() {
+    public String getStackSymbolToPush() {
         return stackSymbolToPush;
     }
     /**

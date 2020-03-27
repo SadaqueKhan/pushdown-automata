@@ -212,7 +212,6 @@ public class DiagramScenePresenter {
             Label newLabel = new Label(transitionModel.toString());
             sourceCell.getListOfTransitionsVBox().getChildren().add(newLabel);
         }
-        sourceCell.getListOfTransitionsVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(), newTransitionModel.getYCoordinateOnDiagram());
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
@@ -450,11 +449,17 @@ public class DiagramScenePresenter {
     public void stateViewContextMenuPopUp(StateNode stateNode) {
         StateModel stateModelSelected = machineModel.getStateModelFromStateModelSet(stateNode.getStateID());
         ContextMenu contextMenu = new ContextMenu();
+        contextMenu.setId("contextMenu");
         MenuItem toggleStandardStateItem = new MenuItem("Toggle standard state");
+        toggleStandardStateItem.setId("toggleStandardStateItem");
         MenuItem toggleStartStateItem = new MenuItem("Toggle start state");
+        toggleStartStateItem.setId("toggleStartStateItem");
         MenuItem toggleFinalStateItem = new MenuItem("Toggle final state");
+        toggleFinalStateItem.setId("toggleFinalStateItem");
         MenuItem createTransitionItem = new MenuItem("Create transition");
-        MenuItem deleteStateItem = new MenuItem("Delete");
+        createTransitionItem.setId("createTransitionItem");
+        MenuItem deleteStateItem = new MenuItem("Delete state");
+        deleteStateItem.setId("deleteStateItem");
         toggleStandardStateItem.setOnAction(e -> {
             stateModelSelected.setStartState(false);
             stateModelSelected.setFinalState(false);
@@ -504,6 +509,7 @@ public class DiagramScenePresenter {
             gridPane.add(new Label("Current State"), 1, 1);
             gridPane.add(currentStateTextField, 1, 2);
             ComboBox<String> inputSymbolComboBox = new ComboBox<>();
+            inputSymbolComboBox.setId("inputSymbolComboBox");
             inputSymbolComboBox.setPrefWidth(110);
             inputSymbolComboBox.setEditable(true);
             inputSymbolComboBox.getItems().addAll(machineModel.getInputAlphabetSet());
@@ -511,6 +517,7 @@ public class DiagramScenePresenter {
             gridPane.add(new Label("Input Symbol"), 2, 1);
             gridPane.add(inputSymbolComboBox, 2, 2);
             ComboBox<String> stackSymbolToPopComboBox = new ComboBox<>();
+            stackSymbolToPopComboBox.setId("stackSymbolToPopComboBox");
             stackSymbolToPopComboBox.setPrefWidth(110);
             stackSymbolToPopComboBox.setEditable(true);
             stackSymbolToPopComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
@@ -521,6 +528,7 @@ public class DiagramScenePresenter {
             gridPane.add(new Label("->"), 4, 2);
             //Create input widgets for the user to enter a configuration
             ComboBox<String> resultingStateComboBox = new ComboBox<>();
+            resultingStateComboBox.setId("resultingStateComboBox");
             resultingStateComboBox.setPrefWidth(110);
             resultingStateComboBox.setEditable(true);
             ArrayList<String> availableStateList = new ArrayList<>();
@@ -531,6 +539,7 @@ public class DiagramScenePresenter {
             gridPane.add(new Label("Resulting State"), 5, 1);
             gridPane.add(resultingStateComboBox, 5, 2);
             ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
+            stackSymbolToPushComboBox.setId("stackSymbolToPushComboBox");
             stackSymbolToPushComboBox.setPrefWidth(110);
             stackSymbolToPushComboBox.setEditable(true);
             stackSymbolToPushComboBox.getItems().addAll(machineModel.getStackAlphabetSet());
@@ -539,6 +548,7 @@ public class DiagramScenePresenter {
             gridPane.add(stackSymbolToPushComboBox, 6, 2);
             //Create submit button for the user to submit a transition
             Button submitTransitionButton = new Button("Submit");
+            submitTransitionButton.setId("submitTransitionButton");
             HBox hBoxButtons = new HBox();
             hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
             hBoxButtons.setSpacing(10);
@@ -653,7 +663,7 @@ public class DiagramScenePresenter {
      * @param stateModel used to determine all exiting transition model from a given state model.
      * @return {@code HashSet<TransitionModel>} of exiting transition models from a given state model.
      */
-    private HashSet<TransitionModel> getExitingTransitionsFromStateModel(StateModel stateModel) {
+    public HashSet<TransitionModel> getExitingTransitionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> exitingTransitionFromStateModelToReturn = new HashSet<>();
         for (TransitionModel isExitingTransitionModel : machineModel.getTransitionModelSet()) {
             if (isExitingTransitionModel.getCurrentStateModel().equals(stateModel)) {
@@ -666,7 +676,7 @@ public class DiagramScenePresenter {
      * @param stateModel used to determine all entering transition model from a given state model.
      * @return {@code HashSet<TransitionModel>} of entering transition models from a given state model.
      */
-    private HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
+    public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
         HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
         for (TransitionModel isEnteringTransitionModel : machineModel.getTransitionModelSet()) {
             if (isEnteringTransitionModel.getResultingStateModel().equals(stateModel)) {
@@ -683,7 +693,8 @@ public class DiagramScenePresenter {
      * @param enteringTransitionModelsSetToDelete a set of entering transitions linked to state node to be deleted from
      * the diagram scene.
      */
-    private void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel> exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
+    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel>
+            exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
         //Retrieve stateview to be deleted
         StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
         //Retrieve and remove linked transitionviews to stateview
@@ -699,7 +710,7 @@ public class DiagramScenePresenter {
      * Handles deleting of a transition nodes.
      * @param deletedTransitionModelsSet used to determines which transition nodes to delete.
      */
-    void deleteTransitionView(HashSet<TransitionModel> deletedTransitionModelsSet) {
+    public void deleteTransitionView(HashSet<TransitionModel> deletedTransitionModelsSet) {
         HashSet<HashSet<Node>> transitionViewNodesToRemoveSet = new HashSet<>();
         HashSet<StateNode> stateViewsWithTransitionToRemoveSet = new HashSet<>();
         for (TransitionModel deletedTransition : deletedTransitionModelsSet) {
@@ -910,7 +921,7 @@ public class DiagramScenePresenter {
      * @param transitionModel used to determine related transition node found on the diagram scene.
      * @return {@code HashSet<Node> } of components that make up the transition node on the diagram scene.
      */
-    private HashSet<Node> retrieveDirectionalTransitionView(TransitionModel transitionModel) {
+    public HashSet<Node> retrieveDirectionalTransitionView(TransitionModel transitionModel) {
         StateNode currentStateNode = stateMap.get(transitionModel.getCurrentStateModel());
         StateNode resultingStateNode = stateMap.get(transitionModel.getResultingStateModel());
         HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
@@ -937,5 +948,8 @@ public class DiagramScenePresenter {
     }
     public DiagramScene getDiagramScene() {
         return diagramScene;
+    }
+    public Map<StateModel, StateNode> getStateMap() {
+        return stateMap;
     }
 }

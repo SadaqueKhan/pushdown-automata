@@ -64,7 +64,6 @@ public class MainsStagePresenterTest extends ApplicationTest {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
-        mainStagePresenter.getDiagramScenePresenter().getDiagramScene().getChildren().clear();
     }
     @Test
     public void enteringInputWordIntoTextFieldShouldRenderAnInputWordOntoTextField() {
@@ -112,6 +111,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
         write(inputWordString);
         press(KeyCode.ENTER);
         mainStagePresenter.updateTapeScene(1);
+        WaitForAsyncUtils.waitForFxEvents();
         // Avoid throwing IllegalStateException by running from a non-JavaFX thread.
         Platform.runLater(
                 () -> {

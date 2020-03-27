@@ -9,7 +9,8 @@ public class StackModelTest {
     public void pushingAStackSymbolShouldResultInUpdatingTheStack() {
         StackModel stackModel = new StackModel();
         stackModel.push("s");
-        assertEquals("s", stackModel.peak());
+        stackModel.push("y");
+        assertEquals("y", stackModel.peak());
     }
     @Test
     public void poppingAStackSymbolShouldResultInUpdatingTheStack() {
