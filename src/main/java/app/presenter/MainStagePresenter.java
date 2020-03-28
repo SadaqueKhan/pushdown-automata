@@ -290,6 +290,9 @@ public class MainStagePresenter extends Application {
     public DiagramScenePresenter getDiagramScenePresenter() {
         return diagramScenePresenter;
     }
+    public TransitionTableScenePresenter getTransitionTableScenePresenter() {
+        return transitionTableScenePresenter;
+    }
     public SimulationStagePresenter getSimulationStagePresenter() {
         return simulationStagePresenter;
     }

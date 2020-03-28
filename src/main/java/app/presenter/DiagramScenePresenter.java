@@ -328,17 +328,10 @@ public class DiagramScenePresenter {
             });
         });
         deleteStateItem.setOnAction(e -> {
-            //Update machine model
-            HashSet<TransitionModel> exitingTranstionsFromStateModel = getExitingTransitionsFromStateModel(stateModelSelected);
-            HashSet<TransitionModel> enteringTranstionsFromStateModel = getEnteringTransitionsFromStateModel(stateModelSelected);
-            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTranstionsFromStateModel);
-            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTranstionsFromStateModel);
-            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
             //Notify transition table controller
-            transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
             //Update view
-            //Update view
-            deleteStateViewOnDiagramView(stateModelSelected, exitingTranstionsFromStateModel, enteringTranstionsFromStateModel);
+            deleteStateViewOnDiagramView(stateModelSelected);
         });
         contextMenu.getItems().add(toggleStandardStateItem);
         contextMenu.getItems().add(toggleStartStateItem);
@@ -515,6 +508,25 @@ public class DiagramScenePresenter {
         linkedTransitionViewsMap.put(stateNode, new HashSet<>());
     }
     /**
+     * Sets up dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the
+     * size of the input does not exceed 1 and clearing the input if it does back to 0.
+     * @param comboBox to which a dynamic listener is to be attached.
+     */
+    private void setUpComboBoxesListeners(ComboBox comboBox) {
+        comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            if ((newValue.matches("^\\w{1}$")) || newValue.equals("\u03B5")) {
+                return;
+            }
+            Platform.runLater(() -> {
+                comboBox.getEditor().clear();
+            });
+        });
+    }
+    //StateGUIEventResponses
+    /**
      * Handles creating a transition node given a transition model.
      * @param newTransitionModel used to form the transition node.
      */
@@ -527,9 +539,7 @@ public class DiagramScenePresenter {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionNode) {
                     TransitionNode transitionNodeToCheck = (TransitionNode) node;
-                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode()
-                            ==
-                            resultingStateNode) {
+                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode() == resultingStateNode) {
                         VBox newTransitionListVBox = transitionNodeToCheck.getTransitionsListVBox();
                         newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
                         return;
@@ -644,25 +654,6 @@ public class DiagramScenePresenter {
         diagramScene.getChildren().addAll(virtualCenterLine, centerLineArrowAB, centerLineArrowBA, transitionNode, arrowTip, transitionNode.getTransitionsListVBox());
         diagramScene.getChildren().addAll(currentStateNode, resultingStateNode);
     }
-    //StateGUIEventResponses
-    /**
-     * Sets up dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the
-     * size of the input does not exceed 1 and clearing the input if it does back to 0.
-     * @param comboBox to which a dynamic listener is to be attached.
-     */
-    private void setUpComboBoxesListeners(ComboBox comboBox) {
-        comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                return;
-            }
-            if ((newValue.matches("^\\w{1}$")) || newValue.equals("\u03B5")) {
-                return;
-            }
-            Platform.runLater(() -> {
-                comboBox.getEditor().clear();
-            });
-        });
-    }
     /**
      * @param stateModel used to determine all exiting transition model from a given state model.
      * @return {@code HashSet<TransitionModel>} of exiting transition models from a given state model.
@@ -692,22 +683,25 @@ public class DiagramScenePresenter {
     /**
      * Handles deletion of a state node on the diagram scene.
      * @param stateModelToDelete requested to be deleted from the diagram scene.
-     * @param exitingTransitionModelsSetToDelete a set of exiting transitions linked to state node to be deleted from
-     * the diagram scene.
-     * @param enteringTransitionModelsSetToDelete a set of entering transitions linked to state node to be deleted from
-     * the diagram scene.
      */
-    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete, HashSet<TransitionModel>
-            exitingTransitionModelsSetToDelete, HashSet<TransitionModel> enteringTransitionModelsSetToDelete) {
+    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
+        HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
+                (stateModelToDelete);
+        HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
+                (stateModelToDelete);
+        machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
+        machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
+        machineModel.removeStateModelFromStateModelSet(stateModelToDelete);
+
         //Retrieve stateview to be deleted
         StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
-        //Retrieve and remove linked transitionviews to stateview
-        deleteTransitionView(exitingTransitionModelsSetToDelete);
-        deleteTransitionView(enteringTransitionModelsSetToDelete);
-        // Remove mapping of stateview in data structures
+        //Retrieve and remove linked transition views to state view
+        deleteTransitionView(exitingTransitionsFromStateModel);
+        deleteTransitionView(enteringTransitionsFromStateModel);
+        // Remove mapping of state view in data structures
         stateMap.remove(stateModelToDelete);
         linkedTransitionViewsMap.remove(stateNodeToRemove);
-        //Remove the stateview from the diagramview
+        //Remove the state view from the diagram view
         diagramScene.getChildren().remove(stateNodeToRemove);
     }
     /**

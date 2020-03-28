@@ -113,6 +113,7 @@ public class MachineModel {
      * Gets all the input symbols that are a part of this machine.
      * @return {@code HashSet<String>} of this machines states.
      */
+    @XmlAttribute
     public HashSet<String> getInputAlphabetSet() {
         return inputAlphabetSet;
     }

@@ -49,7 +49,8 @@ public class TransitionTableScene extends BorderPane {
      */
     private void setUpUIComponents() {
         //Create table.
-        transitionTable = new TableView<>();
+        this.transitionTable = new TableView<>();
+        transitionTable.setId("transitionTable");
         //Set the table to be editable.
         transitionTable.setEditable(true);
         //Set the default message output for the table when it is empty.
@@ -86,11 +87,13 @@ public class TransitionTableScene extends BorderPane {
         gridPane.setPadding(new Insets(10, 10, 10, 10));
         gridPane.setAlignment(Pos.TOP_CENTER);
         this.currentStateComboBox = new ComboBox<>();
+        currentStateComboBox.setId("currentStateComboBox");
         currentStateComboBox.setEditable(true);
         currentStateComboBox.setPrefWidth(110);
         gridPane.add(new Label("Current State"), 1, 1);
         gridPane.add(currentStateComboBox, 1, 2);
         this.inputSymbolComboBox = new ComboBox<>();
+        inputSymbolComboBox.setId("inputSymbolComboBox");
         inputSymbolComboBox.setEditable(true);
         inputSymbolComboBox.setPrefWidth(110);
         inputSymbolComboBox.getItems().add("\u03B5");
@@ -98,6 +101,7 @@ public class TransitionTableScene extends BorderPane {
         gridPane.add(new Label("Input Symbol"), 2, 1);
         gridPane.add(inputSymbolComboBox, 2, 2);
         this.stackSymbolToPopComboBox = new ComboBox<>();
+        stackSymbolToPopComboBox.setId("stackSymbolToPopComboBox");
         stackSymbolToPopComboBox.setEditable(true);
         stackSymbolToPopComboBox.setPrefWidth(110);
         stackSymbolToPopComboBox.getItems().add("\u03B5");
@@ -108,11 +112,13 @@ public class TransitionTableScene extends BorderPane {
         gridPane.add(new Label("->"), 4, 2);
         //Create input widgets for the user to enter a configuration
         this.resultingStateComboBox = new ComboBox<>();
+        resultingStateComboBox.setId("resultingStateComboBox");
         resultingStateComboBox.setEditable(true);
         resultingStateComboBox.setPrefWidth(110);
         gridPane.add(new Label("Resulting State"), 5, 1);
         gridPane.add(resultingStateComboBox, 5, 2);
         this.stackSymbolToPushComboBox = new ComboBox<>();
+        stackSymbolToPushComboBox.setId("stackSymbolToPushComboBox");
         stackSymbolToPushComboBox.setEditable(true);
         stackSymbolToPushComboBox.setPrefWidth(110);
         stackSymbolToPushComboBox.getItems().add("\u03B5");
@@ -120,8 +126,10 @@ public class TransitionTableScene extends BorderPane {
         gridPane.add(new Label("Stack Symbol to Push"), 6, 1);
         gridPane.add(stackSymbolToPushComboBox, 6, 2);
         this.submitTransitionButton = new Button("Submit");
+        submitTransitionButton.setId("submitTransitionButton");
         //Create submit button for the user to submit a transition
         this.deleteTransitionButton = new Button("Delete");
+        deleteTransitionButton.setId("deleteTransitionButton");
         HBox hBoxButtons = new HBox();
         hBoxButtons.setPadding(new Insets(10, 10, 10, 10));
         hBoxButtons.setSpacing(10);

@@ -7,7 +7,6 @@ import app.presenter.MainStagePresenter;
 import app.view.MainStage;
 import app.view.StateNode;
 import app.view.TransitionNode;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -22,7 +21,6 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.*;
@@ -89,23 +87,6 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         assertTrue(nodesOnDiagramScenePriorToDelete < diagramScenePresenter.getDiagramScene().getChildren().size());
     }
     @Test
-    public void addReflexiveTransitionShouldUpdateMachineModel() {
-        Platform.runLater(
-                () -> {
-                    int nodesOnDiagramScenePriorToDelete = diagramScenePresenter.getDiagramScene().getChildren().size();
-                    diagramScenePresenter.loadStatesOntoDiagram();
-                    diagramScenePresenter.loadTransitionsOntoDiagram();
-                    TransitionModel transitionModel = new TransitionModel(machineModel.getStartStateModel(), "1",
-                            "0", machineModel.getStartStateModel(),
-                            "\u03B5");
-                    machineModel.addTransitionModelToTransitionModelSet(transitionModel);
-                    WaitForAsyncUtils.waitForFxEvents();
-                    assertTrue(nodesOnDiagramScenePriorToDelete < diagramScenePresenter.getDiagramScene().getChildren()
-                            .size());
-                }
-        );
-    }
-    @Test
     public void toggleStateToStartStateShouldUpdateMachineModel() throws Exception {
         Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
         StateModel startStateModel = machineModel.getStartStateModel();
@@ -113,10 +94,10 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         startStateNode.relocate(50, 50);
         FxRobot robot = new FxRobot();
         robot.rightClickOn(startStateNode).clickOn("#toggleStartStateItem");
-        WaitForAsyncUtils.sleep(3, TimeUnit.SECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertFalse(startStateModel.isStartState());
         robot.rightClickOn(startStateNode).clickOn("#toggleStartStateItem");
-        WaitForAsyncUtils.sleep(3, TimeUnit.SECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertTrue(startStateModel.isStartState());
     }
     @Test
@@ -155,7 +136,7 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.rightClickOn(stateNode).clickOn("#toggleStandardStateItem");
         WaitForAsyncUtils.waitForFxEvents();
         assertFalse(stateModel.isStartState());
-        WaitForAsyncUtils.sleep(3, TimeUnit.SECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertFalse(stateModel.isFinalState());
     }
     @Test
@@ -193,7 +174,6 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.clickOn("#submitTransitionButton");
         robot.press(KeyCode.ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
         int sizeOfTransitionSetForMachineModelAfterAddingTransition = machineModel.getTransitionModelSet().size();
         assertTrue(sizeOfTransitionSetPriorToAddingAtTransition == sizeOfTransitionSetForMachineModelAfterAddingTransition);
     }
@@ -214,7 +194,6 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.clickOn("#submitTransitionButton");
         robot.press(KeyCode.ESCAPE);
         WaitForAsyncUtils.waitForFxEvents();
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
         int sizeOfTransitionSetForMachineModelAfterAddingTransition = machineModel.getTransitionModelSet().size();
         assertTrue(sizeOfTransitionSetPriorToAddingAtTransition == sizeOfTransitionSetForMachineModelAfterAddingTransition);
     }

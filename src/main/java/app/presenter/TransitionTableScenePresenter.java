@@ -203,12 +203,31 @@ public class TransitionTableScenePresenter {
     }
     /**
      * Handles bulk deletion of transitions when a state has been requested to be deleted by the user.
-     * @param exitingTransitionModelsSet all exiting transitions from a given state to be deleted.
-     * @param enteringTransitionModelsSet all entering transitions from a given state to be deleted.
+     * @param stateModelToDelete requested to be deleted.
      */
-    void deleteTransitionsLinkedToDeletedStateFromTransitionTable(HashSet<TransitionModel> exitingTransitionModelsSet, HashSet<TransitionModel> enteringTransitionModelsSet) {
-        transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionModelsSet);
-        transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionModelsSet);
+    void deleteTransitionsLinkedToDeletedStateFromTransitionTable(StateModel stateModelToDelete) {
+        HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
+                (stateModelToDelete);
+        HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
+                (stateModelToDelete);
+        transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionsFromStateModel);
+        transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionsFromStateModel);
         updateAvailableStateListForCombobox();
+    }
+    /**
+     * @param stateModel used to determine all entering transition model from a given state model.
+     * @return {@code HashSet<TransitionModel>} of entering transition models from a given state model.
+     */
+    public HashSet<TransitionModel> getEnteringTransitionsFromStateModel(StateModel stateModel) {
+        HashSet<TransitionModel> enteringTransitionFromStateModelToReturn = new HashSet<>();
+        for (TransitionModel isEnteringTransitionModel : machineModel.getTransitionModelSet()) {
+            if (isEnteringTransitionModel.getResultingStateModel().equals(stateModel)) {
+                enteringTransitionFromStateModelToReturn.add(isEnteringTransitionModel);
+            }
+        }
+        return enteringTransitionFromStateModelToReturn;
+    }
+    public TransitionTableScene getTransitionTableScene() {
+        return transitionTableScene;
     }
 }

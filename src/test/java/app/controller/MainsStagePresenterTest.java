@@ -105,22 +105,34 @@ public class MainsStagePresenterTest extends ApplicationTest {
                 .size());
     }
     @Test
-    public void updatinTapeSceneShouldRenderNewStackScene() throws Exception {
+    public void updatingTapeSceneShouldRenderNewTapeScene() throws Exception {
         String inputWordString = "0011";
         clickOn(mainStage.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
-        mainStagePresenter.updateTapeScene(1);
-        WaitForAsyncUtils.waitForFxEvents();
         // Avoid throwing IllegalStateException by running from a non-JavaFX thread.
         Platform.runLater(
                 () -> {
+                    mainStagePresenter.updateTapeScene(1);
                     HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
                     StackPane headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(0);
                     Text tapeItemText = (Text) headPointerStackPane.getChildren().get(1);
                     Polygon tapeItemPointPolygon = (Polygon) headPointerStackPane.getChildren().get(2);
+                    WaitForAsyncUtils.waitForFxEvents();
                     assertTrue(tapeItemPointPolygon.isVisible());
                     assertEquals("0", tapeItemText.getText());
+                }
+        );
+        Platform.runLater(
+                () -> {
+                    mainStagePresenter.updateTapeScene(3);
+                    HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
+                    StackPane headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(2);
+                    Text tapeItemText = (Text) headPointerStackPane.getChildren().get(1);
+                    Polygon tapeItemPointPolygon = (Polygon) headPointerStackPane.getChildren().get(2);
+                    WaitForAsyncUtils.waitForFxEvents();
+                    assertTrue(tapeItemPointPolygon.isVisible());
+                    assertEquals("1", tapeItemText.getText());
                 }
         );
     }
@@ -199,9 +211,5 @@ public class MainsStagePresenterTest extends ApplicationTest {
         robot.clickOn("#simulationMenu").clickOn("#simulationByStepRunMenuItem");
         WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
         assertTrue(mainStage.getSimulationByStepRunMenuItem().isSelected());
-    }
-    @Test
-    public void checkHelpLabelShouldReturnGuide() throws Exception {
-        assertEquals("Guide", mainStage.getMenuBar().getMenus().get(3).getItems().get(0).getText());
     }
 }
