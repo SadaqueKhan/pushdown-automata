@@ -82,7 +82,6 @@ public class SimulationModel {
     }
     /**
      * Method which generates the computation tree for a given simulation.
-     * @return 200 if a computation can be successfully generated otherwise returns 300.
      */
     public void createTree() {
         while (currentConfig.getDepth() < 51) {
