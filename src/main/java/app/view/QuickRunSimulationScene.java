@@ -48,6 +48,7 @@ public class QuickRunSimulationScene extends BorderPane {
     private void setUpUIComponents() {
         this.toggleAlgorithmButton = new ToggleButton("Algorithm");
         this.togglePathButton = new ToggleButton("Paths");
+        togglePathButton.setId("togglePathButton");
         SegmentedButton segmentedButton = new SegmentedButton();
         segmentedButton.getButtons().addAll(toggleAlgorithmButton, togglePathButton);
         toggleAlgorithmButton.setSelected(true);

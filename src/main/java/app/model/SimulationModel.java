@@ -32,6 +32,7 @@ public class SimulationModel {
         //Set the root node
         currentTapeModel.loadInput(inputWord);
         currentConfig = new ConfigurationModel(null, null, machineModel.getStartStateModel(), currentTapeModel, currentStackModel);
+        currentConfig.setChildrenConfigurations(findChildrenConfigurations(currentConfig));
         currentConfig.markAsVisited();
         //Add currentConfig to the path
         computationTreeArrayList.add(currentConfig);
@@ -80,9 +81,38 @@ public class SimulationModel {
                 .collect(Collectors.toList());
     }
     /**
+     * Method which generates the computation tree for a given simulation.
+     * @return 200 if a computation can be successfully generated otherwise returns 300.
+     */
+    public void createTree() {
+        while (currentConfig.getDepth() < 51) {
+            setTypeOfConfiguration();
+            int result = next(); // if one is returned more children exist
+            if (result == 1) {
+                computationTreeArrayList.add(currentConfig);
+            }
+            //Returning 8 when no more children present to search for given parent
+            if (result == 0) {
+                //Check if children have all be explored of root
+                previous();
+                if (currentConfig == null) {
+                    break;
+                }
+                computationTreeArrayList.add(currentConfig);
+            }
+            if (currentConfig.getDepth() == 50) {
+                currentConfig.setInfiniteConfig(true);
+                ++numOfPossibleInfinitePaths;
+                leafConfigurationArrayList.add(currentConfig);
+                previous();
+                computationTreeArrayList.add(currentConfig);
+            }
+        }
+    }
+    /**
      * Determines whether the configuration is a success configuration or fail configuration.
      */
-    private void setTypeOfConfiguration() {
+    public void setTypeOfConfiguration() {
         if (currentTapeModel.isEmpty()) {
             if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
                 currentConfig.setSuccessConfig(true);
@@ -100,58 +130,10 @@ public class SimulationModel {
         }
     }
     /**
-     * Method which generates the computation tree for a given simulation.
-     * @return 200 if a computation can be successfully generated otherwise returns 300.
-     */
-    public int createTree() {
-        while (currentConfig.getDepth() < 51) {
-            setTypeOfConfiguration();
-            int result = next(); // if one is returned more children exist
-            if (result == 1) {
-                computationTreeArrayList.add(currentConfig);
-            }
-            //Returning 8 when no more children present to search for given parent
-            if (result == 0) {
-                //Check if children have all be explored of root
-                previous();
-                if (currentConfig == null) {
-                    return 200;
-                }
-                computationTreeArrayList.add(currentConfig);
-            }
-            if (currentConfig.getDepth() == 50) {
-                currentConfig.setInfiniteConfig(true);
-                ++numOfPossibleInfinitePaths;
-                leafConfigurationArrayList.add(currentConfig);
-                previous();
-                computationTreeArrayList.add(currentConfig);
-            }
-        }
-        return 300;
-    }
-    //Apply action given a transition and return the resulting configuration
-    private ConfigurationModel generateConfig(TransitionModel transitionModelToNextConfiguration) {
-        TapeModel currentTapeModel = new TapeModel();
-        currentTapeModel.loadInput(inputWord);
-        currentTapeModel.setHead(this.currentTapeModel.getHead());
-        StackModel currentStackModel = new StackModel();
-        currentStackModel.setContent(this.currentStackModel.getContent());
-        if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
-            currentTapeModel.readSymbol();
-        }
-        if (!(transitionModelToNextConfiguration.getStackSymbolToPop().equals(EMPTY))) {
-            currentStackModel.pop();
-        }
-        if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
-            currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
-        }
-        return new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
-    }
-    /**
      * Method which determines the next configuration in the computation if one exists.
      * @return an integer 1 if a next configuration is reachable otherwise returns 0.
      */
-    private int next() {
+    public int next() {
         //Retrieve applicable configurations stored in the current configuration
         List<ConfigurationModel> childrenConfigurations = currentConfig.getChildrenConfigurations();
         if (currentConfig.getChildrenConfigurations() == null) {
@@ -194,6 +176,24 @@ public class SimulationModel {
         currentTapeModel.setHead(toExplore.getHeadPosition());
         currentStackModel.setContent(toExplore.getStackContent());
         return 1;
+    }
+    //Apply action given a transition and return the resulting configuration
+    public ConfigurationModel generateConfig(TransitionModel transitionModelToNextConfiguration) {
+        TapeModel currentTapeModel = new TapeModel();
+        currentTapeModel.loadInput(inputWord);
+        currentTapeModel.setHead(this.currentTapeModel.getHead());
+        StackModel currentStackModel = new StackModel();
+        currentStackModel.setContent(this.currentStackModel.getContent());
+        if (!(transitionModelToNextConfiguration.getInputSymbol().equals(EMPTY))) {
+            currentTapeModel.readSymbol();
+        }
+        if (!(transitionModelToNextConfiguration.getStackSymbolToPop().equals(EMPTY))) {
+            currentStackModel.pop();
+        }
+        if (!(transitionModelToNextConfiguration.getStackSymbolToPush().equals(EMPTY))) {
+            currentStackModel.push(transitionModelToNextConfiguration.getStackSymbolToPush());
+        }
+        return new ConfigurationModel(currentConfig, transitionModelToNextConfiguration, transitionModelToNextConfiguration.getResultingStateModel(), currentTapeModel, currentStackModel);
     }
     /**
      * Method which determines the previous configuration in a computation.

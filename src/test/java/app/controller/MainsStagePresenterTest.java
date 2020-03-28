@@ -20,7 +20,6 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.*;
@@ -72,7 +71,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
         assertEquals("0011", mainStage.getInputTextField().getText());
     }
     @Test
-    public void clickingTableTabShoulRenderTransitionScene() {
+    public void clickingTableTabShouldRenderTransitionScene() {
         WaitForAsyncUtils.waitForFxEvents();
         clickOn(mainStage.getToggleTransitionTableButton());
         assertTrue(mainStage.getInputTextField().isDisabled());
@@ -103,6 +102,17 @@ public class MainsStagePresenterTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         assertEquals(inputWordString.length(), mainStage.getTapeScene().getTapeViewHBoxContainer().getChildren()
                 .size());
+    }
+    @Test
+    public void enteringSpaceCharacterIntoTextFieldShouldNotBeAddedToFinalInputWord() {
+        String inputWordString = "0011";
+        clickOn(mainStage.getInputTextField());
+        write(inputWordString);
+        write(" ");
+        write("\u03B5");
+        press(KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+        assertEquals(mainStage.getInputTextField().getText(), inputWordString);
     }
     @Test
     public void updatingTapeSceneShouldRenderNewTapeScene() throws Exception {
@@ -174,42 +184,44 @@ public class MainsStagePresenterTest extends ApplicationTest {
     public void pressingSaveMenuItemShouldLaunchFileExplorer() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#fileMenu").clickOn("#saveMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertFalse(stage.isFocused());
+        robot.press(KeyCode.ESCAPE);
     }
     @Test
     public void pressingLoadMenuItemShouldLaunchFileExplorer() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#fileMenu").clickOn("#loadMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertFalse(stage.isFocused());
+        robot.press(KeyCode.ESCAPE);
     }
     @Test
     public void pressingAcceptByFinalStateMenuItemShouldUpdateAcceptanceCriteria() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#acceptanceMenu").clickOn("#acceptanceByFinalStateMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertTrue(mainStage.getAcceptanceByFinalStateMenuItem().isSelected());
     }
     @Test
     public void pressingAcceptByEmptyStackMenuItemShouldUpdateAcceptanceCriteria() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#acceptanceMenu").clickOn("#acceptanceByEmptyStackMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertTrue(mainStage.getAcceptanceByEmptyStackMenuItem().isSelected());
     }
     @Test
     public void pressingSimulationQuickRunShouldUpdateSimulationTypeToQuickRun() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByQuickRunMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertTrue(mainStage.getSimulationByQuickRunMenuItem().isSelected());
     }
     @Test
     public void pressingSimulationStepRunShouldUpdateSimulationTypeToStepRun() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByStepRunMenuItem");
-        WaitForAsyncUtils.sleep(1000, TimeUnit.MILLISECONDS);
+        WaitForAsyncUtils.waitForFxEvents();
         assertTrue(mainStage.getSimulationByStepRunMenuItem().isSelected());
     }
 }

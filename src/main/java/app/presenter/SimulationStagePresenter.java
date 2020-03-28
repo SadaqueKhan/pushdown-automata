@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.ArrayList;
-import java.util.List;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
@@ -40,44 +39,41 @@ public class SimulationStagePresenter {
      * @param inputWord the input word to be simulated.
      * @param typeOfSimulation the type of simulation to be run, either quick run or step run.
      */
-    SimulationStagePresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord, String typeOfSimulation) {
+    public SimulationStagePresenter(MainStagePresenter mainStagePresenter, MachineModel machineModel, String inputWord,
+                                    String typeOfSimulation) {
         this.mainStagePresenter = mainStagePresenter;
         this.simulationStage = new Stage();
         if (typeOfSimulation.equals("By Quick Run")) {
             this.quickRunSimulationScene = new QuickRunSimulationScene(this);
             quickRunSimulationModel = new SimulationModel(machineModel, inputWord);
-            int flag = quickRunSimulationModel.createTree();
-            if (flag == 200) {
-                loadAlgorithmScene();
-                String simulationStatsString = "Simulation Facts - " + "\n";
-                if (quickRunSimulationModel.isNFA()) {
-                    simulationStatsString += "\n" + "Type: " + "NFA" + "\n";
-                } else {
-                    simulationStatsString += "\n" + "Type: " + "DFA" + "\n";
-                }
-                simulationStatsString += "\n" + "Input alphabet: " + machineModel.getInputAlphabetSet() + "\n" + "Stack alphabet: " + machineModel.getInputAlphabetSet() + "\n";
-                simulationStatsString += "\n" +
-                        "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" +
-                        "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
-                        "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
-                        "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
-                quickRunSimulationScene.getSimulationStatsLabel().setText(simulationStatsString);
+            quickRunSimulationModel.createTree();
+            loadAlgorithmScene();
+            String simulationStatsString = "Simulation Facts - " + "\n";
+            if (quickRunSimulationModel.isNFA()) {
+                simulationStatsString += "\n" + "Type: " + "NFA" + "\n";
+            } else {
+                simulationStatsString += "\n" + "Type: " + "DFA" + "\n";
             }
+            simulationStatsString += "\n" + "Input alphabet: " + machineModel.getInputAlphabetSet() + "\n" + "Stack alphabet: " + machineModel.getInputAlphabetSet() + "\n";
+            simulationStatsString += "\n" +
+                    "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" +
+                    "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
+                    "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
+                    "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+            quickRunSimulationScene.getSimulationStatsLabel().setText(simulationStatsString);
             //Create a new scene to render simulation
             simulationStage.setTitle("Simulation: Quick Run");
             Scene scene = new Scene(quickRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
         }
         if (typeOfSimulation.equals("By Step Run")) {
+            // Load simulation model
             this.stepRunSimulationModel = new SimulationModel(machineModel, inputWord);
-            // Load root configuration
             ConfigurationModel rootConfigurationModel = stepRunSimulationModel.getCurrentConfig();
-            List<ConfigurationModel> rootChildrenConfigurationList = stepRunSimulationModel.findChildrenConfigurations(rootConfigurationModel);
-            rootConfigurationModel.setChildrenConfigurations(rootChildrenConfigurationList);
             //Load view
             this.stepRunSimulationScene = new StepRunSimulationScene(this);
             stepRunSimulationScene.getCurrentConfigTextField().setText("Current configuration: " + rootConfigurationModel.toString());
-            for (ConfigurationModel rootConfigurationModelChild : rootChildrenConfigurationList) {
+            for (ConfigurationModel rootConfigurationModelChild : rootConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
             //Load scene onto the stage.
@@ -395,5 +391,8 @@ public class SimulationStagePresenter {
     }
     public QuickRunSimulationScene getQuickRunSimulationScene() {
         return quickRunSimulationScene;
+    }
+    public StepRunSimulationScene getStepRunSimulationScene() {
+        return stepRunSimulationScene;
     }
 }
