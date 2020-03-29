@@ -441,6 +441,4 @@ public class SimulationStagePresenter {
     public StepRunSimulationScene getStepRunSimulationScene() {
         return stepRunSimulationScene;
     }
-    public void createUserStepRunHistoryStage() {
-    }
 }
