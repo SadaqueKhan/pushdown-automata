@@ -9,10 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.SegmentedButton;
@@ -71,10 +68,16 @@ public class QuickRunSimulationScene extends BorderPane {
         pathsScrollPane.setFitToWidth(true);
         HiddenSidesPane pane = new HiddenSidesPane();
         pane.setContent(containerForCenterNodes);
-        simulationStatsLabel = new Label();
+        VBox simulationStatsLabelVBox = new VBox();
+        String cssLayout = "-fx-border-color: black;\n" +
+                "-fx-border-width: 3;\n" +
+                "-fx-border-style: solid;\n" +
+                "-fx-background-color: white;\n";
+        simulationStatsLabelVBox.setStyle(cssLayout);
+        this.simulationStatsLabel = new Label();
         simulationStatsLabel.setWrapText(true);
-        simulationStatsLabel.setBackground(new Background(new BackgroundFill(javafx.scene.paint.Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        pane.setRight(simulationStatsLabel);
+        simulationStatsLabelVBox.getChildren().add(simulationStatsLabel);
+        pane.setRight(simulationStatsLabelVBox);
         setCenter(pane);
     }
     /**
