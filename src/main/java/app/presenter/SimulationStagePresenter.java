@@ -9,10 +9,12 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -32,6 +34,7 @@ public class SimulationStagePresenter {
     private StepRunSimulationScene stepRunSimulationScene;
     private SimulationModel quickRunSimulationModel;
     private SimulationModel stepRunSimulationModel;
+    private int stepCounter = 0;
     /**
      * Constructor of the simulation stage presenter, used to instantiate an instance of the presenter.
      * @param mainStagePresenter the presenter which needs to be notified about events on the simulation scenes.
@@ -76,6 +79,11 @@ public class SimulationStagePresenter {
             for (ConfigurationModel rootConfigurationModelChild : rootConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
+            VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
+            String stepToPrint = "Step " + stepCounter + ": " + " -> " + rootConfigurationModel.toString();
+            Label newStepLabel = new Label();
+            newStepLabel.setText(stepToPrint);
+            historyVBox.getChildren().add(newStepLabel);
             //Load scene onto the stage.
             simulationStage.setTitle("Simulation: Step Run");
             Scene scene = new Scene(stepRunSimulationScene, 550, 500);
@@ -84,7 +92,6 @@ public class SimulationStagePresenter {
         mainStagePresenter.getMainStage().getMenuBar().setDisable(true);
         mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(true);
         mainStagePresenter.getMainStage().getInputTextField().setDisable(true);
-        simulationStage.setResizable(false);
         simulationStage.show();
         simulationStage.setOnCloseRequest(event -> {
             mainStagePresenter.getMainStage().getMenuBar().setDisable(false);
@@ -103,7 +110,7 @@ public class SimulationStagePresenter {
         ListView<ConfigurationModel> algorithmListView = quickRunSimulationScene.getAlgorithmlistView();
         if (algorithmListView.getItems().isEmpty()) {
             // Get algorithm path list
-            ArrayList<ConfigurationModel> algorithmPathList = quickRunSimulationModel.getComputationTreeArrayList();
+            ArrayList<ConfigurationModel> algorithmPathList = quickRunSimulationModel.getComputationArrayList();
             algorithmListView.getItems().addAll(algorithmPathList);
             Platform.runLater(() -> algorithmListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
                 @Override
@@ -131,7 +138,7 @@ public class SimulationStagePresenter {
                                 int index = getIndex();
                                 setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
                                 if (item.isInfiniteConfig()) {
-                                    setStyle("-fx-control-inner-background: " + "derive(#ffc023, 50%);");
+                                    setStyle("-fx-control-inner-background: " + "derive(#d469ff, 50%);");
                                     itemToPrint = item.toString() + "  (Possible infinite path!)";
                                 }
                                 if (algorithmPathList.lastIndexOf(item) == index) {
@@ -225,11 +232,11 @@ public class SimulationStagePresenter {
      * @param doubleClickConfiguration the configuration node chosen for its path from the root configuration node to
      * be rendered.
      */
-    public void createIndependentPathSimulationStage(ConfigurationModel doubleClickConfiguration) {
-        ListView<ConfigurationModel> transitionsTakenListView = new ListView<>();
-        transitionsTakenListView.getItems().addAll(doubleClickConfiguration.getPath());
-        setListenerForTransitionListView(transitionsTakenListView);
-        Platform.runLater(() -> transitionsTakenListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
+    public void createConfigurationNodePathStage(ConfigurationModel doubleClickConfiguration) {
+        ListView<ConfigurationModel> configuratioNodePathListView = new ListView<>();
+        configuratioNodePathListView.getItems().addAll(doubleClickConfiguration.getPath());
+        setListenerForTransitionListView(configuratioNodePathListView);
+        Platform.runLater(() -> configuratioNodePathListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
             @Override
             public ListCell<ConfigurationModel> call(ListView<ConfigurationModel> param) {
                 return new ListCell<ConfigurationModel>() {
@@ -241,15 +248,16 @@ public class SimulationStagePresenter {
                             setStyle(null);
                         } else {
                             String itemToPrint = "";
+                            String configurationReachedString = item.toString();
                             if (item.getParentConfiguration() == null) {
                                 // create the string for the root node configuration in the tree
-                                itemToPrint += "At the start state: " + item.getCurrentStateModel().getStateId();
+                                itemToPrint += " -> " + configurationReachedString;
                             } else {
                                 // Create string of the position of the configuration in the tree search
                                 String positionInTreeString = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
                                 String transitionTakenToReachConfigString = item.getTransitionModelTakenToReachCurrentConfiguration().toString();
-                                String configurationReachedString = item.toString();
-                                itemToPrint += positionInTreeString + transitionTakenToReachConfigString + " -> " + configurationReachedString;
+                                itemToPrint += positionInTreeString + transitionTakenToReachConfigString + " -> " +
+                                        configurationReachedString;
                             }
                             setText(itemToPrint);
                         }
@@ -262,11 +270,10 @@ public class SimulationStagePresenter {
             windowTitle = "Success Path";
         }
         //Create a new scene to render computation path. ¬
-        Scene scene = new Scene(transitionsTakenListView, 750, 500);
+        Scene scene = new Scene(configuratioNodePathListView, 750, 500);
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(simulationStage);
-        stage.setResizable(false);
         stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.show();
@@ -289,6 +296,10 @@ public class SimulationStagePresenter {
             stepRunSimulationModel.next(selectedTransitionModel);
             // Search for the next configuration that can be reached given the selected transition to move to
             ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+            // Update simulation computation list
+            stepRunSimulationModel.getComputationArrayList().add(nextConfigurationModel);
+            // Update history list view
+            updateHistoryListView();
             // Find all applicable transitions from the current configuration to a next configuration
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 // Render each next applicable transition onto a the step run transition list
@@ -316,6 +327,37 @@ public class SimulationStagePresenter {
             // Update stack scene
             updateStackViewForSelectedConfiguration(nextConfigurationModel);
         }
+    }
+    /**
+     * Handles the updating of a new item in the step run history list when the user move backward/forward in a
+     * step run simulation.
+     */
+    private void updateHistoryListView() {
+        ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+        ++stepCounter;
+        VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
+        String stepToPrint = "Step " + stepCounter + ": " + " -> " + nextConfigurationModel.toString();
+        Label newStepLabel = new Label();
+        if (nextConfigurationModel.getParentConfiguration() != null) {
+            stepToPrint = "";
+            String transitionTakenToReachConfigString = nextConfigurationModel.getTransitionModelTakenToReachCurrentConfiguration().toString();
+            stepToPrint += "Step " + stepCounter + ". " + transitionTakenToReachConfigString + " -> " +
+                    nextConfigurationModel.toString();
+            if (nextConfigurationModel.isSuccessConfig()) {
+                newStepLabel.setStyle("-fx-background-color: rgba(39,255,0,0.5);");
+                stepToPrint += "[SUCCESS]";
+            } else if (nextConfigurationModel.isFailConfig()) {
+                newStepLabel.setStyle("-fx-background-color: rgba(255,0,56,0.5);");
+                stepToPrint += "[FAIL]";
+            } else if (nextConfigurationModel.isStuckConfig()) {
+                newStepLabel.setStyle("-fx-background-color: rgba(255,138,0,0.5);");
+                stepToPrint += "[STUCK]";
+            } else {
+                newStepLabel.setStyle("-fx-background-color: rgba(255,255,255,0.5);");
+            }
+        }
+        newStepLabel.setText(stepToPrint);
+        historyVBox.getChildren().add(newStepLabel);
     }
     /**
      * Create dynamic listener for items in lists found in the simulation stage to be highlighted in the diagram
@@ -353,12 +395,16 @@ public class SimulationStagePresenter {
      * Moves the step run simulation back to a previous configuration, by computing the previous configuration
      * using the repository of models and formats it to display in the step-run scene.
      */
-    public void stepBack() {
+    public void stepBackward() {
         ListView<TransitionModel> listView = stepRunSimulationScene.getTransitionOptionsListView();
         if (stepRunSimulationModel.getCurrentConfig().getParentConfiguration() != null) {
-            listView.getItems().clear();
+            //Update step run model
             stepRunSimulationModel.previous();
             ConfigurationModel prevConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+            stepRunSimulationModel.getComputationArrayList().add(prevConfigurationModel);
+            //Update step run view
+            updateHistoryListView();
+            listView.getItems().clear();
             for (ConfigurationModel currentConfigurationModelChild : prevConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
@@ -394,5 +440,7 @@ public class SimulationStagePresenter {
     }
     public StepRunSimulationScene getStepRunSimulationScene() {
         return stepRunSimulationScene;
+    }
+    public void createUserStepRunHistoryStage() {
     }
 }

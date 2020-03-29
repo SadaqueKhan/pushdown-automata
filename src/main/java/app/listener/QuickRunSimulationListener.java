@@ -57,7 +57,7 @@ public class QuickRunSimulationListener implements EventHandler {
                         }
                         if (mouseEvent.getClickCount() == 2) {
                             if (event.getSource() instanceof ListView) {
-                                simulationStagePresenter.createIndependentPathSimulationStage(selectedConfiguration);
+                                simulationStagePresenter.createConfigurationNodePathStage(selectedConfiguration);
                             }
                         }
                     }

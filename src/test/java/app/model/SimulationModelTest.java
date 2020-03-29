@@ -73,7 +73,7 @@ public class SimulationModelTest {
         machineModel.addTransitionModelToTransitionModelSet(transitionModel5);
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         simulationModel.createTree();
-        assertTrue(0 < simulationModel.getComputationTreeArrayList().size());
+        assertTrue(0 < simulationModel.getComputationArrayList().size());
     }
     @Test
     public void creatingAComputationTreeShouldCreateAtLeastOneSuccessConfig() {

@@ -25,13 +25,18 @@ public class StepRunSimulationListener implements EventHandler {
      */
     @Override
     public void handle(Event event) {
-        Button isButton = (Button) event.getSource();
-        String buttonText = isButton.getText();
-        if (buttonText.equals("<<< Back")) {
-            simulationStagePresenter.stepBack();
-        }
-        if (buttonText.equals("Forward >>>")) {
-            simulationStagePresenter.stepForward();
+        String eventType = event.getEventType().toString();
+        if (eventType.equals("ACTION")) {
+            if (event.getSource() instanceof Button) {
+                Button isButton = (Button) event.getSource();
+                String buttonText = isButton.getText();
+                if (buttonText.equals("<<< Backward")) {
+                    simulationStagePresenter.stepBackward();
+                }
+                if (buttonText.equals("Forward >>>")) {
+                    simulationStagePresenter.stepForward();
+                }
+            }
         }
     }
 }

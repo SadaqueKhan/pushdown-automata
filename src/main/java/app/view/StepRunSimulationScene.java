@@ -7,8 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import org.controlsfx.control.HiddenSidesPane;
 /**
  * @author Mohammed Sadaque Khan
  * <p>
@@ -20,10 +22,12 @@ public class StepRunSimulationScene extends BorderPane {
     private final SimulationStagePresenter simulationStagePresenter;
     //Reference to UI components for view.
     private ListView<TransitionModel> transitionOptionsListView;
-    private Button backButton;
+    private Button backwardButton;
     private Button forwardButton;
     private Text currentConfigTextField;
+    private VBox historyVBox;
     /**
+     * \
      * Constructor of the step run simulation scene, used to instantiate an instance of the view.
      * @param simulationStagePresenter a reference to the views presenter.
      */
@@ -45,14 +49,24 @@ public class StepRunSimulationScene extends BorderPane {
         setTop(currentConfigTextFieldHBoxContainer);
         //Set up components for the center of the stage
         this.transitionOptionsListView = new ListView<>();
-        setCenter(transitionOptionsListView);
+        this.historyVBox = new VBox();
+        String cssLayout = "-fx-border-color: black;\n" +
+                "-fx-border-insets: 5;\n" +
+                "-fx-border-width: 3;\n" +
+                "-fx-border-style: solid;\n" +
+                "-fx-background-color: white;\n";
+        historyVBox.setStyle(cssLayout);
+        HiddenSidesPane pane = new HiddenSidesPane();
+        pane.setContent(transitionOptionsListView);
+        pane.setRight(historyVBox);
+        setCenter(pane);
         //Set up components for the bottom of the stage
-        backButton = new Button("<<< Back");
+        backwardButton = new Button("<<< Backward");
         forwardButton = new Button("Forward >>>");
-        backButton.setMinWidth(275);
+        backwardButton.setMinWidth(275);
         forwardButton.setMinWidth(275);
         HBox buttonContainer = new HBox();
-        buttonContainer.getChildren().addAll(backButton, forwardButton);
+        buttonContainer.getChildren().addAll(backwardButton, forwardButton);
         buttonContainer.setAlignment(Pos.CENTER);
         setBottom(buttonContainer);
     }
@@ -61,7 +75,7 @@ public class StepRunSimulationScene extends BorderPane {
      */
     private void setUpStepUIListeners() {
         StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationStagePresenter);
-        backButton.setOnAction(stepRunSimulationListener);
+        backwardButton.setOnAction(stepRunSimulationListener);
         forwardButton.setOnAction(stepRunSimulationListener);
     }
     // Getters for UI components of the view.
@@ -70,5 +84,8 @@ public class StepRunSimulationScene extends BorderPane {
     }
     public Text getCurrentConfigTextField() {
         return currentConfigTextField;
+    }
+    public VBox getHistoryVBox() {
+        return historyVBox;
     }
 }

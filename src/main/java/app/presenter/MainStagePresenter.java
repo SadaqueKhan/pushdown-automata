@@ -192,7 +192,7 @@ public class MainStagePresenter extends Application {
                 diagramScenePresenter.loadTransitionsOntoDiagram();
                 diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
                 primaryWindow.setTitle("Pushdown Automata");
-                primaryWindow.setScene(new Scene(mainStage, 1500, 1000));
+                primaryWindow.setScene(new Scene(mainStage, 1200, 800));
                 primaryWindow.setResizable(false);
                 primaryWindow.show();
             }

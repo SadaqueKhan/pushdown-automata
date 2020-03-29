@@ -121,7 +121,7 @@ public class SimulationStagePresenterTest extends ApplicationTest {
                     transitionOptionsListView.getSelectionModel().select(1);
                     simulationStagePresenter.stepForward();
                     String configurationBeforeClickingBack = stepRunSimulationScene.getCurrentConfigTextField().getText();
-                    simulationStagePresenter.stepBack();
+                    simulationStagePresenter.stepBackward();
                     String configurationAfterClickingBack = stepRunSimulationScene.getCurrentConfigTextField().getText();
                     assertFalse(configurationBeforeClickingBack.equals(configurationAfterClickingBack));
                 }
@@ -166,7 +166,7 @@ public class SimulationStagePresenterTest extends ApplicationTest {
                     ListView listView = quickRunSimulationScene.getAlgorithmlistView();
                     listView.getSelectionModel().selectFirst();
                     ConfigurationModel configuration = (ConfigurationModel) listView.getSelectionModel().getSelectedItem();
-                    simulationStagePresenter.createIndependentPathSimulationStage(configuration);
+                    simulationStagePresenter.createConfigurationNodePathStage(configuration);
                     assertFalse(stage.isFocused());
                 }
         );

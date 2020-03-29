@@ -15,7 +15,7 @@ public class SimulationModel {
     private ConfigurationModel currentConfig;
     private final TapeModel currentTapeModel;
     private final StackModel currentStackModel;
-    private final ArrayList<ConfigurationModel> computationTreeArrayList;
+    private final ArrayList<ConfigurationModel> computationArrayList;
     private final ArrayList<ConfigurationModel> leafConfigurationArrayList;
     private boolean isNFA = false;
     private int numOfPossibleSuccessPaths = 0;
@@ -27,7 +27,7 @@ public class SimulationModel {
         this.currentTapeModel = new TapeModel();
         this.currentStackModel = new StackModel();
         this.inputWord = inputWord;
-        computationTreeArrayList = new ArrayList<>();
+        computationArrayList = new ArrayList<>();
         leafConfigurationArrayList = new ArrayList<>();
         //Set the root node
         currentTapeModel.loadInput(inputWord);
@@ -35,7 +35,7 @@ public class SimulationModel {
         currentConfig.setChildrenConfigurations(findChildrenConfigurations(currentConfig));
         currentConfig.markAsVisited();
         //Add currentConfig to the path
-        computationTreeArrayList.add(currentConfig);
+        computationArrayList.add(currentConfig);
     }
     /**
      * Method used to move to the next configuration in a computation given a transition to reach the next
@@ -88,7 +88,7 @@ public class SimulationModel {
             setTypeOfConfiguration();
             int result = next(); // if one is returned more children exist
             if (result == 1) {
-                computationTreeArrayList.add(currentConfig);
+                computationArrayList.add(currentConfig);
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 0) {
@@ -97,14 +97,14 @@ public class SimulationModel {
                 if (currentConfig == null) {
                     break;
                 }
-                computationTreeArrayList.add(currentConfig);
+                computationArrayList.add(currentConfig);
             }
             if (currentConfig.getDepth() == 50) {
                 currentConfig.setInfiniteConfig(true);
                 ++numOfPossibleInfinitePaths;
                 leafConfigurationArrayList.add(currentConfig);
                 previous();
-                computationTreeArrayList.add(currentConfig);
+                computationArrayList.add(currentConfig);
             }
         }
     }
@@ -209,8 +209,8 @@ public class SimulationModel {
     public ConfigurationModel getCurrentConfig() {
         return currentConfig;
     }
-    public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
-        return computationTreeArrayList;
+    public ArrayList<ConfigurationModel> getComputationArrayList() {
+        return computationArrayList;
     }
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
