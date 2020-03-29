@@ -2,6 +2,8 @@ package app.presenter;
 import app.model.MachineModel;
 import app.view.MainStage;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -14,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.controlsfx.control.textfield.TextFields;
 
 import javax.xml.bind.JAXBContext;
@@ -62,6 +65,12 @@ public class MainStagePresenter extends Application {
         this.primaryWindow.setScene(new Scene(mainStage, 1200, 800));
         this.primaryWindow.setResizable(false);
         this.primaryWindow.show();
+        this.primaryWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.exit();
+            }
+        });
     }
     /**
      * Loads the diagram scene onto the main stage when selected via the tab found on in the main stage.
