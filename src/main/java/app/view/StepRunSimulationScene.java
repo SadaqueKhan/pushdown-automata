@@ -5,6 +5,7 @@ import app.presenter.SimulationStagePresenter;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -49,6 +50,11 @@ public class StepRunSimulationScene extends BorderPane {
         setTop(currentConfigTextFieldHBoxContainer);
         //Set up components for the center of the stage
         this.transitionOptionsListView = new ListView<>();
+        ScrollPane historyVBoxScrollPane = new ScrollPane();
+        historyVBoxScrollPane.pannableProperty().set(true);
+        historyVBoxScrollPane.fitToWidthProperty().set(true);
+        historyVBoxScrollPane.fitToHeightProperty().set(true);
+        historyVBoxScrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.historyVBox = new VBox();
         String cssLayout = "-fx-border-color: black;\n" +
                 "-fx-border-insets: 5;\n" +
@@ -56,9 +62,10 @@ public class StepRunSimulationScene extends BorderPane {
                 "-fx-border-style: solid;\n" +
                 "-fx-background-color: white;\n";
         historyVBox.setStyle(cssLayout);
+        historyVBoxScrollPane.setContent(historyVBox);
         HiddenSidesPane pane = new HiddenSidesPane();
         pane.setContent(transitionOptionsListView);
-        pane.setRight(historyVBox);
+        pane.setRight(historyVBoxScrollPane);
         setCenter(pane);
         //Set up components for the bottom of the stage
         backwardButton = new Button("<<< Backward");
