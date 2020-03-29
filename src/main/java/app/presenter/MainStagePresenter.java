@@ -143,9 +143,19 @@ public class MainStagePresenter extends Application {
         mainStage.setAutoCompletionBinding(TextFields.bindAutoCompletion(mainStage.getInputTextField(), mainStage.getInputWordSet()));
     }
     /**
-     * Handles the launching of the GitHub wiki.
+     * Handles the launching of GitHub to the github wiki for this application.
      */
-    public void launchWiki() {
+    public void launchGithubWiki() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata/wiki"));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    }
+    /**
+     * Handles the launching of GitHub to the github code repository for this application.
+     */
+    public void launchGithubCodeRepository() {
         try {
             Desktop.getDesktop().browse(new URI("https://github.com/SadaqueKhan/pushdown-automata"));
         } catch (Exception e1) {

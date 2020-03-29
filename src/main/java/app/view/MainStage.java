@@ -47,6 +47,7 @@ public class MainStage extends BorderPane {
     private CheckMenuItem simulationByQuickRunMenuItem;
     private CheckMenuItem simulationByStepRunMenuItem;
     private MenuBar menuBar;
+    private MenuItem helpCodeItem;
     /**
      * Constructor of the main stage, used to instantiate an instance of this view.
      * @param mainStagePresenter a reference to the views presenter.
@@ -89,10 +90,9 @@ public class MainStage extends BorderPane {
         simulationByQuickRunMenuItem.setSelected(true);
         menuBar.getMenus().add(simulationMenu);
         Menu helpMenu = new Menu("Help");
-        helpMenu.setId("helpMenu");
+        this.helpCodeItem = new MenuItem("Code");
         this.helpGuideItem = new MenuItem("Guide");
-        helpGuideItem.setId("helpGuideItem");
-        helpMenu.getItems().addAll(helpGuideItem);
+        helpMenu.getItems().addAll(helpCodeItem, helpGuideItem);
         menuBar.getMenus().add(helpMenu);
         this.inputTextLabel = new Label("Input Word (acceptance by final state)");
         this.inputTextField = new TextField();
@@ -161,6 +161,7 @@ public class MainStage extends BorderPane {
         acceptanceByEmptyStackMenuItem.setOnAction(mainStageListener);
         simulationByQuickRunMenuItem.setOnAction(mainStageListener);
         simulationByStepRunMenuItem.setOnAction(mainStageListener);
+        helpCodeItem.setOnAction(mainStageListener);
         helpGuideItem.setOnAction(mainStageListener);
     }
     // Getters/Setters for UI components of the view.

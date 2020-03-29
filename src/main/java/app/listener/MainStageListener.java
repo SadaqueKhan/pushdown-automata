@@ -60,8 +60,10 @@ public class MainStageListener implements EventHandler {
                     mainStagePresenter.setSimulationToQuickRun();
                 } else if (isMenuItem.getText().equals("By Step Run")) {
                     mainStagePresenter.setSimulationToStepRun();
+                } else if (isMenuItem.getText().equals("Code")) {
+                    mainStagePresenter.launchGithubCodeRepository();
                 } else if (isMenuItem.getText().equals("Guide")) {
-                    mainStagePresenter.launchWiki();
+                    mainStagePresenter.launchGithubWiki();
                 }
             }
         }
