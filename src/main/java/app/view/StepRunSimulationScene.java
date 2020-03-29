@@ -57,7 +57,6 @@ public class StepRunSimulationScene extends BorderPane {
         historyVBoxScrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
         this.historyVBox = new VBox();
         String cssLayout = "-fx-border-color: black;\n" +
-                "-fx-border-insets: 5;\n" +
                 "-fx-border-width: 3;\n" +
                 "-fx-border-style: solid;\n" +
                 "-fx-background-color: white;\n";
