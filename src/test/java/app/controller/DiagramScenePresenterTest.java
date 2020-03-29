@@ -4,7 +4,7 @@ import app.model.StateModel;
 import app.model.TransitionModel;
 import app.presenter.DiagramScenePresenter;
 import app.presenter.MainStagePresenter;
-import app.view.MainStage;
+import app.view.MainScene;
 import app.view.StateNode;
 import app.view.TransitionNode;
 import javafx.scene.Node;
@@ -34,7 +34,7 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         stage.setAlwaysOnTop(true);
         mainStagePresenter.start(stage);
         this.stage = stage;
-        MainStage mainStage = mainStagePresenter.getMainStage();
+        MainScene mainScene = mainStagePresenter.getMainScene();
         //Machine for On = 1n
         machineModel = mainStagePresenter.getMachineModel();
         StateModel stateModelQ0 = new StateModel();

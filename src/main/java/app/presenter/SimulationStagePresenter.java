@@ -89,14 +89,14 @@ public class SimulationStagePresenter {
             Scene scene = new Scene(stepRunSimulationScene, 550, 500);
             simulationStage.setScene(scene);
         }
-        mainStagePresenter.getMainStage().getMenuBar().setDisable(true);
-        mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(true);
-        mainStagePresenter.getMainStage().getInputTextField().setDisable(true);
+        mainStagePresenter.getMainScene().getMenuBar().setDisable(true);
+        mainStagePresenter.getMainScene().getContainerForCenterNodes().setDisable(true);
+        mainStagePresenter.getMainScene().getInputTextField().setDisable(true);
         simulationStage.show();
         simulationStage.setOnCloseRequest(event -> {
-            mainStagePresenter.getMainStage().getMenuBar().setDisable(false);
-            mainStagePresenter.getMainStage().getContainerForCenterNodes().setDisable(false);
-            mainStagePresenter.getMainStage().getInputTextField().setDisable(false);
+            mainStagePresenter.getMainScene().getMenuBar().setDisable(false);
+            mainStagePresenter.getMainScene().getContainerForCenterNodes().setDisable(false);
+            mainStagePresenter.getMainScene().getInputTextField().setDisable(false);
             // Notify other scenes.
             mainStagePresenter.updateStackScene(new ArrayList<>());
             mainStagePresenter.updateTapeScene(0);

@@ -4,7 +4,7 @@ import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
 import app.view.DiagramScene;
-import app.view.MainStage;
+import app.view.MainScene;
 import app.view.StateNode;
 import app.view.TransitionNode;
 import javafx.application.Platform;
@@ -50,7 +50,7 @@ import java.util.Map;
  * </p>
  */
 public class DiagramScenePresenter {
-    private final MainStage mainStage;
+    private final MainScene mainScene;
     private final MainStagePresenter mainStagePresenter;
     private final MachineModel machineModel;
     private final DiagramScene diagramScene;
@@ -65,13 +65,13 @@ public class DiagramScenePresenter {
     private final Map<StateNode, HashSet<HashSet<Node>>> linkedTransitionViewsMap;
     /**
      * Constructor of the diagram scene presenter, used to instantiate an instance of the presenter.
-     * @param mainStage for which the diagram scene is rendered on.
+     * @param mainScene for which the diagram scene is rendered on.
      * @param mainStagePresenter the presenter which needs to be notified about events on the diagram scene.
      * @param machineModel the model containing the data about the pushdown automaton machine.
      */
-    public DiagramScenePresenter(MainStage mainStage, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
+    public DiagramScenePresenter(MainScene mainScene, MainStagePresenter mainStagePresenter, MachineModel machineModel) {
         this.mainStagePresenter = mainStagePresenter;
-        this.mainStage = mainStage;
+        this.mainScene = mainScene;
         this.machineModel = machineModel;
         this.diagramScene = new DiagramScene(this);
         this.stateMap = new HashMap<>();
@@ -84,7 +84,7 @@ public class DiagramScenePresenter {
      */
     public void loadDiagramViewOntoStage(TransitionTableScenePresenter transitionTableScenePresenter) {
         this.transitionTableScenePresenter = transitionTableScenePresenter;
-        this.mainStage.getContainerForCenterNodes().getChildren().add(diagramScene);
+        this.mainScene.getContainerForCenterNodes().getChildren().add(diagramScene);
     }
     /**
      * Loads state data back the diagram scene.

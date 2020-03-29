@@ -5,7 +5,7 @@ import app.model.TransitionModel;
 import app.presenter.DiagramScenePresenter;
 import app.presenter.MainStagePresenter;
 import app.presenter.TransitionTableScenePresenter;
-import app.view.MainStage;
+import app.view.MainScene;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -30,7 +30,7 @@ public class TransitionTableScenePresenterTest extends ApplicationTest {
         stage.setAlwaysOnTop(true);
         mainStagePresenter.start(stage);
         this.stage = stage;
-        MainStage mainStage = mainStagePresenter.getMainStage();
+        MainScene mainScene = mainStagePresenter.getMainScene();
         //Machine for On = 1n
         machineModel = mainStagePresenter.getMachineModel();
         StateModel stateModelQ0 = new StateModel();

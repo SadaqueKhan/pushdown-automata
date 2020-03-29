@@ -2,7 +2,7 @@ package app.presenter;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.view.MainStage;
+import app.view.MainScene;
 import app.view.TransitionTableScene;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -19,17 +19,17 @@ import java.util.HashSet;
  */
 public class TransitionTableScenePresenter {
     private final MachineModel machineModel;
-    private final MainStage mainStage;
+    private final MainScene mainScene;
     private final TransitionTableScene transitionTableScene;
     private DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the transition table presenter, used to instantiate an instance of the presenter.
-     * @param mainStage for which the transition table scene is rendered on.
+     * @param mainScene for which the transition table scene is rendered on.
      * @param machineModel the model containing the data about the pushdown automaton machine.
      */
-    public TransitionTableScenePresenter(MainStage mainStage, MachineModel machineModel) {
+    public TransitionTableScenePresenter(MainScene mainScene, MachineModel machineModel) {
         this.machineModel = machineModel;
-        this.mainStage = mainStage;
+        this.mainScene = mainScene;
         this.transitionTableScene = new TransitionTableScene(this);
     }
     /**
@@ -38,7 +38,7 @@ public class TransitionTableScenePresenter {
      */
     void loadTransitionTableSceneOntoMainStage(DiagramScenePresenter diagramScenePresenter) {
         this.diagramScenePresenter = diagramScenePresenter;
-        mainStage.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
+        mainScene.getContainerForCenterNodes().getChildren().add(transitionTableScene.getTransitionTableContainer());
     }
     /**
      * Loads transition data onto the transition table scene.

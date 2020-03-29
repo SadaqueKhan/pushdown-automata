@@ -3,7 +3,7 @@ import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
 import app.presenter.MainStagePresenter;
-import app.view.MainStage;
+import app.view.MainScene;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.Assert.*;
 public class MainsStagePresenterTest extends ApplicationTest {
     private MainStagePresenter mainStagePresenter;
-    private MainStage mainStage;
+    private MainScene mainScene;
     private Stage stage;
     @Override
     public void start(Stage stage) throws Exception {
@@ -33,7 +33,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
         stage.setAlwaysOnTop(true);
         mainStagePresenter.start(stage);
         this.stage = stage;
-        this.mainStage = mainStagePresenter.getMainStage();
+        this.mainScene = mainStagePresenter.getMainScene();
         //Machine for On = 1n
         MachineModel machineModel = mainStagePresenter.getMachineModel();
         StateModel stateModelQ0 = new StateModel();
@@ -66,27 +66,27 @@ public class MainsStagePresenterTest extends ApplicationTest {
     }
     @Test
     public void enteringInputWordIntoTextFieldShouldRenderAnInputWordOntoTextField() {
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write("0011");
-        assertEquals("0011", mainStage.getInputTextField().getText());
+        assertEquals("0011", mainScene.getInputTextField().getText());
     }
     @Test
     public void clickingTableTabShouldRenderTransitionScene() {
         WaitForAsyncUtils.waitForFxEvents();
-        clickOn(mainStage.getToggleTransitionTableButton());
-        assertTrue(mainStage.getInputTextField().isDisabled());
+        clickOn(mainScene.getToggleTransitionTableButton());
+        assertTrue(mainScene.getInputTextField().isDisabled());
     }
     @Test
     public void clickingDiagramTabShouldRenderDiagramScene() {
-        clickOn(mainStage.getToggleDiagramButton());
-        assertFalse(mainStage.getInputTextField().isDisabled());
+        clickOn(mainScene.getToggleDiagramButton());
+        assertFalse(mainScene.getInputTextField().isDisabled());
     }
     @Test
     public void enteringInputWordIntoTextFieldWithNoStartStateDefinedShouldRenderAlert() {
         StateModel stateModel = mainStagePresenter.getMachineModel().getStartStateModel();
         stateModel.setStartState(false);
         String inputWordString = "0011";
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
@@ -96,35 +96,35 @@ public class MainsStagePresenterTest extends ApplicationTest {
     @Test
     public void enteringInputWordIntoTextFieldShouldRenderNewTapeScene() {
         String inputWordString = "0011";
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(inputWordString.length(), mainStage.getTapeScene().getTapeViewHBoxContainer().getChildren()
+        assertEquals(inputWordString.length(), mainScene.getTapeScene().getTapeViewHBoxContainer().getChildren()
                 .size());
     }
     @Test
     public void enteringSpaceCharacterIntoTextFieldShouldNotBeAddedToFinalInputWord() {
         String inputWordString = "0011";
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write(inputWordString);
         write(" ");
         write("\u03B5");
         press(KeyCode.ENTER);
         WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(mainStage.getInputTextField().getText(), inputWordString);
+        assertEquals(mainScene.getInputTextField().getText(), inputWordString);
     }
     @Test
     public void updatingTapeSceneShouldRenderNewTapeScene() throws Exception {
         String inputWordString = "0011";
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
         // Avoid throwing IllegalStateException by running from a non-JavaFX thread.
         Platform.runLater(
                 () -> {
                     mainStagePresenter.updateTapeScene(1);
-                    HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
+                    HBox tapeViewVBoxContainer = mainScene.getTapeScene().getTapeViewHBoxContainer();
                     StackPane headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(0);
                     Text tapeItemText = (Text) headPointerStackPane.getChildren().get(1);
                     Polygon tapeItemPointPolygon = (Polygon) headPointerStackPane.getChildren().get(2);
@@ -136,7 +136,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
         Platform.runLater(
                 () -> {
                     mainStagePresenter.updateTapeScene(3);
-                    HBox tapeViewVBoxContainer = mainStage.getTapeScene().getTapeViewHBoxContainer();
+                    HBox tapeViewVBoxContainer = mainScene.getTapeScene().getTapeViewHBoxContainer();
                     StackPane headPointerStackPane = (StackPane) tapeViewVBoxContainer.getChildren().get(2);
                     Text tapeItemText = (Text) headPointerStackPane.getChildren().get(1);
                     Polygon tapeItemPointPolygon = (Polygon) headPointerStackPane.getChildren().get(2);
@@ -158,7 +158,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
                     stackContent.add("c");
                     stackContent.add("k");
                     mainStagePresenter.updateStackScene(stackContent);
-                    assertEquals(5, mainStage.getStackScene().getStackViewVBoxContainer().getChildren()
+                    assertEquals(5, mainScene.getStackScene().getStackViewVBoxContainer().getChildren()
                             .size());
                 }
         );
@@ -166,7 +166,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
                 () -> {
                     stackContent.clear();
                     mainStagePresenter.updateStackScene(stackContent);
-                    assertEquals(1, mainStage.getStackScene().getStackViewVBoxContainer().getChildren()
+                    assertEquals(1, mainScene.getStackScene().getStackViewVBoxContainer().getChildren()
                             .size());
                 }
         );
@@ -174,7 +174,7 @@ public class MainsStagePresenterTest extends ApplicationTest {
     @Test
     public void enteringInputWordIntoTextFieldShouldRenderSimulationStage() {
         String inputWordString = "0011";
-        clickOn(mainStage.getInputTextField());
+        clickOn(mainScene.getInputTextField());
         write(inputWordString);
         assertNull(mainStagePresenter.getSimulationStagePresenter());
         press(KeyCode.ENTER);
@@ -201,27 +201,27 @@ public class MainsStagePresenterTest extends ApplicationTest {
         FxRobot robot = new FxRobot();
         robot.clickOn("#acceptanceMenu").clickOn("#acceptanceByFinalStateMenuItem");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(mainStage.getAcceptanceByFinalStateMenuItem().isSelected());
+        assertTrue(mainScene.getAcceptanceByFinalStateMenuItem().isSelected());
     }
     @Test
     public void pressingAcceptByEmptyStackMenuItemShouldUpdateAcceptanceCriteria() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#acceptanceMenu").clickOn("#acceptanceByEmptyStackMenuItem");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(mainStage.getAcceptanceByEmptyStackMenuItem().isSelected());
+        assertTrue(mainScene.getAcceptanceByEmptyStackMenuItem().isSelected());
     }
     @Test
     public void pressingSimulationQuickRunShouldUpdateSimulationTypeToQuickRun() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByQuickRunMenuItem");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(mainStage.getSimulationByQuickRunMenuItem().isSelected());
+        assertTrue(mainScene.getSimulationByQuickRunMenuItem().isSelected());
     }
     @Test
     public void pressingSimulationStepRunShouldUpdateSimulationTypeToStepRun() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByStepRunMenuItem");
         WaitForAsyncUtils.waitForFxEvents();
-        assertTrue(mainStage.getSimulationByStepRunMenuItem().isSelected());
+        assertTrue(mainScene.getSimulationByStepRunMenuItem().isSelected());
     }
 }

@@ -26,7 +26,7 @@ import java.util.Set;
  * Blueprint for the main scene.
  * </p>
  */
-public class MainStage extends BorderPane {
+public class MainScene extends BorderPane {
     //Reference to views presenter.
     private final MainStagePresenter mainStagePresenter;
     //Reference to UI components for view.
@@ -52,7 +52,7 @@ public class MainStage extends BorderPane {
      * Constructor of the main stage, used to instantiate an instance of this view.
      * @param mainStagePresenter a reference to the views presenter.
      */
-    public MainStage(MainStagePresenter mainStagePresenter) {
+    public MainScene(MainStagePresenter mainStagePresenter) {
         this.mainStagePresenter = mainStagePresenter;
         setUpUIComponents();
         setUpUIListeners();

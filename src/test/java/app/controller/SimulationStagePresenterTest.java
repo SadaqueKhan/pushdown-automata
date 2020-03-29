@@ -5,7 +5,7 @@ import app.model.StateModel;
 import app.model.TransitionModel;
 import app.presenter.MainStagePresenter;
 import app.presenter.SimulationStagePresenter;
-import app.view.MainStage;
+import app.view.MainScene;
 import app.view.QuickRunSimulationScene;
 import app.view.StepRunSimulationScene;
 import javafx.application.Platform;
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class SimulationStagePresenterTest extends ApplicationTest {
     private MachineModel machineModel;
     private Stage stage;
-    private MainStage mainStage;
+    private MainScene mainScene;
     private SimulationStagePresenter simulationStagePresenter;
     private MainStagePresenter mainStagePresenter;
     @Override
@@ -37,7 +37,7 @@ public class SimulationStagePresenterTest extends ApplicationTest {
         stage.setAlwaysOnTop(true);
         mainStagePresenter.start(stage);
         this.stage = stage;
-        mainStage = mainStagePresenter.getMainStage();
+        mainScene = mainStagePresenter.getMainScene();
         //Machine for On = 1n
         machineModel = mainStagePresenter.getMachineModel();
         StateModel stateModelQ0 = new StateModel();
@@ -75,7 +75,7 @@ public class SimulationStagePresenterTest extends ApplicationTest {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByQuickRunMenuItem");
         String inputWordString = "0011";
-        robot.clickOn(mainStage.getInputTextField());
+        robot.clickOn(mainScene.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
         assertNotNull(mainStagePresenter.getSimulationStagePresenter().getQuickRunSimulationScene());
@@ -86,7 +86,7 @@ public class SimulationStagePresenterTest extends ApplicationTest {
         FxRobot robot = new FxRobot();
         robot.clickOn("#simulationMenu").clickOn("#simulationByStepRunMenuItem");
         String inputWordString = "0011";
-        robot.clickOn(mainStage.getInputTextField());
+        robot.clickOn(mainScene.getInputTextField());
         write(inputWordString);
         press(KeyCode.ENTER);
         assertNotNull(mainStagePresenter.getSimulationStagePresenter().getStepRunSimulationScene());
