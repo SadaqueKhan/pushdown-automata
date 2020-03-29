@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -68,12 +69,14 @@ public class StepRunSimulationScene extends BorderPane {
         setCenter(pane);
         //Set up components for the bottom of the stage
         backwardButton = new Button("<<< Backward");
+        backwardButton.setMaxWidth(Double.MAX_VALUE);
         forwardButton = new Button("Forward >>>");
-        backwardButton.setMinWidth(275);
-        forwardButton.setMinWidth(275);
+        forwardButton.setMaxWidth(Double.MAX_VALUE);
         HBox buttonContainer = new HBox();
         buttonContainer.getChildren().addAll(backwardButton, forwardButton);
         buttonContainer.setAlignment(Pos.CENTER);
+        HBox.setHgrow(backwardButton, Priority.ALWAYS);
+        HBox.setHgrow(forwardButton, Priority.ALWAYS);
         setBottom(buttonContainer);
     }
     /**
