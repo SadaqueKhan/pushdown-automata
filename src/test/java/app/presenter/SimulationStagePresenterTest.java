@@ -1,10 +1,8 @@
-package app.controller;
+package app.presenter;
 import app.model.ConfigurationModel;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.presenter.MainStagePresenter;
-import app.presenter.SimulationStagePresenter;
 import app.view.MainScene;
 import app.view.QuickRunSimulationScene;
 import app.view.StepRunSimulationScene;

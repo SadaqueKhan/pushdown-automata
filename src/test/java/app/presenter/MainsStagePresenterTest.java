@@ -1,8 +1,7 @@
-package app.controller;
+package app.presenter;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.presenter.MainStagePresenter;
 import app.view.MainScene;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;

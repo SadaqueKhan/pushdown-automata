@@ -108,11 +108,13 @@ public class MachineModelTest {
         assertFalse(machineModel.isAcceptanceByFinalState());
     }
     @Test
-    public void requestingInitialStateShouldReturnTheInitalState() {
+    public void requestingInitialStateShouldReturnTheInitialState() {
         StateModel stateModel = new StateModel("Q0");
         stateModel.setStartState(true);
-        machineModel.getStateModelSet().add(stateModel);
-        assertEquals(stateModel, machineModel.getStartStateModel());
+        machineModel.addStateModelToStateModelSet(stateModel);
+        StateModel stateModelToCheck = machineModel.getStartStateModel();
+        assertTrue(stateModelToCheck.isStartState());
+        assertEquals(stateModel, stateModelToCheck);
     }
     @Test
     public void requestingNonExistentInitialStateShouldReturnNull() {

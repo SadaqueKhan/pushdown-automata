@@ -1,10 +1,7 @@
-package app.controller;
+package app.presenter;
 import app.model.MachineModel;
 import app.model.StateModel;
 import app.model.TransitionModel;
-import app.presenter.DiagramScenePresenter;
-import app.presenter.MainStagePresenter;
-import app.presenter.TransitionTableScenePresenter;
 import app.view.MainScene;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
