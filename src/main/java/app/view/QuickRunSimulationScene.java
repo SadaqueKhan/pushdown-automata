@@ -11,7 +11,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.HiddenSidesPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.controlsfx.control.SegmentedButton;
 /**
  * @author Mohammed Sadaque Khan
@@ -43,6 +44,12 @@ public class QuickRunSimulationScene extends BorderPane {
      * Sets up the UI components of the view.
      */
     private void setUpUIComponents() {
+        Text simulationFactsText = new Text("Simulation Facts");
+        simulationFactsText.setStyle("-fx-font-weight: bold");
+        simulationFactsText.setUnderline(true);
+        TextFlow textFlow = new TextFlow(simulationFactsText);
+        this.simulationStatsLabel = new Label();
+        simulationStatsLabel.setWrapText(true);
         this.toggleAlgorithmButton = new ToggleButton("Algorithm");
         this.togglePathButton = new ToggleButton("Paths");
         togglePathButton.setId("togglePathButton");
@@ -50,7 +57,7 @@ public class QuickRunSimulationScene extends BorderPane {
         segmentedButton.getButtons().addAll(toggleAlgorithmButton, togglePathButton);
         toggleAlgorithmButton.setSelected(true);
         VBox containerForTopNodes = new VBox();
-        containerForTopNodes.getChildren().addAll(segmentedButton);
+        containerForTopNodes.getChildren().addAll(segmentedButton, textFlow, simulationStatsLabel);
         containerForTopNodes.setPadding(new Insets(10, 10, 10, 10));
         containerForTopNodes.setSpacing(5);
         containerForTopNodes.setAlignment(Pos.TOP_CENTER);
@@ -66,20 +73,7 @@ public class QuickRunSimulationScene extends BorderPane {
         pathsScrollPane = new ScrollPane();
         pathsScrollPane.setContent(pathsVBox);
         pathsScrollPane.setFitToWidth(true);
-        HiddenSidesPane pane = new HiddenSidesPane();
-        pane.setContent(containerForCenterNodes);
-        VBox simulationStatsLabelVBox = new VBox();
-        String cssLayout = "-fx-border-color: black;\n" +
-                "-fx-border-insets: 5;\n" +
-                "-fx-border-width: 3;\n" +
-                "-fx-border-style: solid;\n" +
-                "-fx-background-color: white;\n";
-        simulationStatsLabelVBox.setStyle(cssLayout);
-        this.simulationStatsLabel = new Label();
-        simulationStatsLabel.setWrapText(true);
-        simulationStatsLabelVBox.getChildren().add(simulationStatsLabel);
-        pane.setRight(simulationStatsLabelVBox);
-        setCenter(pane);
+        setCenter(containerForCenterNodes);
     }
     /**
      * Sets up the listeners for UI components of the view.

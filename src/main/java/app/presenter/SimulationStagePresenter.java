@@ -51,18 +51,20 @@ public class SimulationStagePresenter {
             quickRunSimulationModel = new SimulationModel(machineModel, inputWord);
             quickRunSimulationModel.createTree();
             loadAlgorithmScene();
-            String simulationStatsString = "Simulation Facts - " + "\n";
+            String simulationStatsString = "";
             if (quickRunSimulationModel.isNFA()) {
-                simulationStatsString += "\n" + "Type: " + "NFA" + "\n";
+                simulationStatsString += "Type: " + "NFA" + " | ";
             } else {
-                simulationStatsString += "\n" + "Type: " + "DFA" + "\n";
+                simulationStatsString += "Type: " + "DFA" + " | ";
             }
-            simulationStatsString += "\n" + "Input alphabet: " + machineModel.getInputAlphabetSet() + "\n" + "Stack alphabet: " + machineModel.getInputAlphabetSet() + "\n";
-            simulationStatsString += "\n" +
-                    "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + "\n" +
-                    "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + "\n" +
-                    "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + "\n" +
-                    "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
+            simulationStatsString += "Input alphabet: " + machineModel.getInputAlphabetSet() + " | " +
+                    "Stack " +
+                    "alphabet: " + machineModel.getInputAlphabetSet() + " | ";
+            simulationStatsString +=
+                    "Success paths: " + quickRunSimulationModel.getNumOfPossibleSuccessPaths() + " | " +
+                            "Fail paths: " + quickRunSimulationModel.getNumOfPossibleFailPaths() + " | " +
+                            "Stuck paths: " + quickRunSimulationModel.getNumOfPossibleStuckPaths() + " | " +
+                            "Possible infinite paths: " + quickRunSimulationModel.getNumOfPossibleInfinitePaths();
             quickRunSimulationScene.getSimulationStatsLabel().setText(simulationStatsString);
             //Create a new scene to render simulation
             simulationStage.setTitle("Simulation: Quick Run");

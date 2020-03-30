@@ -88,7 +88,7 @@ public class ConfigurationModelTest {
         assertEquals(1, path.size());
     }
     @Test
-    public void anyOtherConfigurationInAComputationTreeOtherThenRootShouldPathListShouldExceedOne() {
+    public void anyOtherConfigurationInAComputationTreeOtherThenRootPathListShouldExceedOne() {
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         simulationModel.createTree();
         ConfigurationModel anyOtherConfigurationExceptRootConfiguration = simulationModel.getComputationArrayList()
