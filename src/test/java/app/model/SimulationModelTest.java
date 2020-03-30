@@ -161,6 +161,36 @@ public class SimulationModelTest {
         assertTrue(0 < simulationModel.getNumOfPossibleFailPaths());
     }
     @Test
+    public void creatingAComputationTreeShouldCreateAtLeastOneLeafConfig() {
+        StateModel stateModelQ0 = new StateModel();
+        stateModelQ0.setStartState(true);
+        stateModelQ0.setFinalState(true);
+        machineModel.addStateModelToStateModelSet(stateModelQ0);
+        StateModel stateModelQ1 = new StateModel();
+        machineModel.addStateModelToStateModelSet(stateModelQ1);
+        StateModel stateModelQ2 = new StateModel();
+        machineModel.addStateModelToStateModelSet(stateModelQ2);
+        StateModel stateModelQ3 = new StateModel();
+        stateModelQ3.setFinalState(true);
+        machineModel.addStateModelToStateModelSet(stateModelQ3);
+        TransitionModel transitionModel1 = new TransitionModel(stateModelQ0, "\u03B5", "\u03B5", stateModelQ1, "$");
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel1);
+        TransitionModel transitionModel2 = new TransitionModel(stateModelQ1, "1", "0", stateModelQ2, "\u03B5");
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel2);
+        TransitionModel transitionModel3 = new TransitionModel(stateModelQ2, "1", "0", stateModelQ2, "\u03B5");
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel3);
+        TransitionModel transitionModel4 = new TransitionModel(stateModelQ2, "\u03B5", "$", stateModelQ3, "\u03B5");
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel4);
+        TransitionModel transitionModel5 = new TransitionModel(stateModelQ1, "0", "\u03B5", stateModelQ1, "0");
+        machineModel.addTransitionModelToTransitionModelSet(transitionModel5);
+        SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
+        simulationModel.createTree();
+        assertTrue(0 < simulationModel.getLeafConfigurationArrayList().size());
+    }
+
+
+
+    @Test
     public void creatingADFAComputationTreeShouldFlagTheComputationAsDFA() {
         StateModel stateModelQ0 = new StateModel();
         stateModelQ0.setStartState(true);

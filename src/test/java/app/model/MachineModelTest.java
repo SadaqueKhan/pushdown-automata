@@ -108,7 +108,8 @@ public class MachineModelTest {
         assertFalse(machineModel.isAcceptanceByFinalState());
     }
     @Test
-    public void requestingInitialStateShouldReturnTheInitialState() {
+    public void retrievingInitialStateFromTheMachineModelShouldReturnTheInitialState() {
+        MachineModel machineModel = new MachineModel();
         StateModel stateModel = new StateModel("Q0");
         stateModel.setStartState(true);
         machineModel.addStateModelToStateModelSet(stateModel);
