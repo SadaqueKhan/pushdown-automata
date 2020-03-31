@@ -33,7 +33,7 @@ public class ConfigurationModel {
         this.currentTapeModel = currentTapeModel;
         this.currentStackModel = currentStackModel;
         this.isVisited = false;
-        this.branch = 1;
+        this.branch = parentConfiguration == null ? 0 : 1;
         this.depth = parentConfiguration == null ? 0 : parentConfiguration.getDepth() + 1;
     }
     /**
