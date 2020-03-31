@@ -33,7 +33,7 @@ public class ConfigurationModel {
         this.currentTapeModel = currentTapeModel;
         this.currentStackModel = currentStackModel;
         this.isVisited = false;
-        this.branch = parentConfiguration == null ? 0 : 1;
+        this.branch = 0;
         this.depth = parentConfiguration == null ? 0 : parentConfiguration.getDepth() + 1;
     }
     /**
@@ -119,10 +119,10 @@ public class ConfigurationModel {
     public void setChildrenConfigurations(List<ConfigurationModel> childrenConfigurations) {
         this.childrenConfigurations = childrenConfigurations;
         // Compute the branch id of this configuration
-        if (this.childrenConfigurations.size() > 1) {
-            int branchId = 1;
+        if (this.childrenConfigurations.size() > 0) {
+            int branchId = 0;
             for (ConfigurationModel configuration : childrenConfigurations) {
-                configuration.setBranch(branchId++);
+                configuration.setBranch(++branchId);
             }
         }
     }
