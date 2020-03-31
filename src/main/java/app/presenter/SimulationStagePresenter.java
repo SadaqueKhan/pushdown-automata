@@ -141,14 +141,15 @@ public class SimulationStagePresenter {
                                 setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");
                                 if (item.isInfiniteConfig()) {
                                     setStyle("-fx-control-inner-background: " + "derive(#d469ff, 50%);");
-                                    itemToPrint = item.toString() + "  (Possible infinite path!)";
+                                    itemToPrint = item.toString() + "  (Possible infinite path, backtracking to last " +
+                                            "configuration!)";
                                 }
                                 if (algorithmPathList.lastIndexOf(item) == index) {
                                     setStyle("-fx-control-inner-background: " + "derive(#ff6c5c, 50%);");
-                                    itemToPrint += " (No More Paths!)";
+                                    itemToPrint += " (No more configurations reachable beyond this point!)";
                                 } else if (algorithmPathList.indexOf(item) < index && index < algorithmPathList.lastIndexOf(item)) {
                                     setStyle("-fx-control-inner-background: " + "derive(#aedaff, 70%);");
-                                    itemToPrint += " (New Path!)";
+                                    itemToPrint += " (New configuration found beyond this point!)";
                                 }
                                 if (item.getParentConfiguration() == null) {
                                     setStyle("-fx-control-inner-background: " + "derive(#eeeeee, 100%);");

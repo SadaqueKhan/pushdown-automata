@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * </p>
  */
 class StackModel {
-    private final ArrayList<String> stack;
+    private ArrayList<String> stack;
     StackModel() {
         stack = new ArrayList<>();
     }
