@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -73,6 +74,8 @@ public class QuickRunSimulationScene extends BorderPane {
         pathsScrollPane = new ScrollPane();
         pathsScrollPane.setContent(pathsVBox);
         pathsScrollPane.setFitToWidth(true);
+        VBox.setVgrow(algorithmlistView, Priority.ALWAYS);
+        VBox.setVgrow(pathAccordion, Priority.ALWAYS);
         setCenter(containerForCenterNodes);
     }
     /**
