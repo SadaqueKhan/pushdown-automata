@@ -87,7 +87,7 @@ public class StepRunSimulationScene extends BorderPane {
         backwardButton.setOnAction(stepRunSimulationListener);
         forwardButton.setOnAction(stepRunSimulationListener);
     }
-    // Getters for UI components of the view.
+    // Getters for UI components of the view that are interacted with in the application.
     public ListView<TransitionModel> getTransitionOptionsListView() {
         return transitionOptionsListView;
     }
