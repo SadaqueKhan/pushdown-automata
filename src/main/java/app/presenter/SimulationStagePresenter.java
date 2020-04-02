@@ -82,7 +82,8 @@ public class SimulationStagePresenter {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(rootConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());
             }
             VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
-            String stepToPrint = "Step " + stepCounter + ": " + " -> " + rootConfigurationModel.toString();
+            String stepToPrint = "At the start configuration" + " : " + " -> " + rootConfigurationModel
+                    .toString();
             Label newStepLabel = new Label();
             newStepLabel.setText(stepToPrint);
             historyVBox.getChildren().add(newStepLabel);
@@ -302,7 +303,7 @@ public class SimulationStagePresenter {
             // Update simulation computation list
             stepRunSimulationModel.getComputationArrayList().add(nextConfigurationModel);
             // Update history list view
-            updateHistoryListView();
+            updateHistoryListView("Forward");
             // Find all applicable transitions from the current configuration to a next configuration
             for (ConfigurationModel nextConfigurationModelChild : nextConfigurationModel.getChildrenConfigurations()) {
                 // Render each next applicable transition onto a the step run transition list
@@ -335,16 +336,20 @@ public class SimulationStagePresenter {
      * Handles the updating of a new item in the step run history list when the user move backward/forward in a
      * step run simulation.
      */
-    private void updateHistoryListView() {
+    private void updateHistoryListView(String typeOfStep) {
         ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
         ++stepCounter;
         VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
-        String stepToPrint = "Step " + stepCounter + ": " + " -> " + nextConfigurationModel.toString();
+        String stepToPrint = "Step " + stepCounter + " ( " + typeOfStep + " ) " + "At the start configuration" + " : " +
+                "" + " -> " +
+                nextConfigurationModel
+                        .toString();
         Label newStepLabel = new Label();
         if (nextConfigurationModel.getParentConfiguration() != null) {
             stepToPrint = "";
             String transitionTakenToReachConfigString = nextConfigurationModel.getTransitionModelTakenToReachCurrentConfiguration().toString();
-            stepToPrint += "Step " + stepCounter + ". " + transitionTakenToReachConfigString + " -> " +
+            stepToPrint += "Step " + stepCounter + " ( " + typeOfStep + " ) " + " : " +
+                    transitionTakenToReachConfigString + " -> " +
                     nextConfigurationModel.toString();
             if (nextConfigurationModel.isSuccessConfig()) {
                 newStepLabel.setStyle("-fx-background-color: rgba(39,255,0,0.5);");
@@ -406,7 +411,7 @@ public class SimulationStagePresenter {
             ConfigurationModel prevConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             stepRunSimulationModel.getComputationArrayList().add(prevConfigurationModel);
             //Update step run view
-            updateHistoryListView();
+            updateHistoryListView("Backward");
             listView.getItems().clear();
             for (ConfigurationModel currentConfigurationModelChild : prevConfigurationModel.getChildrenConfigurations()) {
                 stepRunSimulationScene.getTransitionOptionsListView().getItems().add(currentConfigurationModelChild.getTransitionModelTakenToReachCurrentConfiguration());

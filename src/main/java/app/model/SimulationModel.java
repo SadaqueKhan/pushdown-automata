@@ -84,7 +84,7 @@ public class SimulationModel {
      * Method which generates the computation tree for a given simulation.
      */
     public void createTree() {
-        while (currentConfig.getDepth() < 51) {
+        while (currentConfig.getDepth() < 1000001) {
             setTypeOfConfiguration();
             int result = next(); // if one is returned more children exist
             if (result == 1) {
@@ -99,7 +99,7 @@ public class SimulationModel {
                 }
                 computationArrayList.add(currentConfig);
             }
-            if (currentConfig.getDepth() == 50) {
+            if (currentConfig.getDepth() == 1000000) {
                 currentConfig.setInfiniteConfig(true);
                 ++numOfPossibleInfinitePaths;
                 leafConfigurationArrayList.add(currentConfig);
