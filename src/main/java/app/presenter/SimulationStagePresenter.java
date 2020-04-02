@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -323,7 +322,6 @@ public class SimulationStagePresenter {
             }
             stepRunSimulationScene.getCurrentConfigTextField().setText(currentConfigTextFieldString);
             stepRunSimulationScene.setStyle(style);
-            stepRunSimulationScene.setBackground(Background.EMPTY);
             // Highlight diagram scene
             updateDiagramViewForSelectedConfiguration(nextConfigurationModel);
             // Update tape scene
@@ -430,7 +428,6 @@ public class SimulationStagePresenter {
             }
             stepRunSimulationScene.getCurrentConfigTextField().setText(currentConfigTextFieldString);
             stepRunSimulationScene.setStyle(style);
-            stepRunSimulationScene.setBackground(Background.EMPTY);
             updateDiagramViewForSelectedConfiguration(prevConfigurationModel);
             updateTapeViewForSelectedConfiguration(prevConfigurationModel);
             updateStackViewForSelectedConfiguration(prevConfigurationModel);
