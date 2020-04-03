@@ -16,8 +16,8 @@ public class ConfigurationModel {
     private final TapeModel currentTapeModel;
     private final StackModel currentStackModel;
     private boolean isVisited;
-    private int branch;
-    private final int depth;
+    private final long depth;
+    private long branch;
     private boolean isSuccessConfig = false;
     private boolean isInfiniteConfig = false;
     private boolean isStuckConfig = false;
@@ -38,16 +38,16 @@ public class ConfigurationModel {
     }
     /**
      * Get the branch value to reach this position from the root
-     * @return the branch integer value to reach this position from the root
+     * @return the branch long data type value to reach this position from the root
      */
-    public int getBranch() {
+    public long getBranch() {
         return branch;
     }
     /**
      * Get the depth value to reach this position from the root
-     * @return the depth integer value to reach this position from the root
+     * @return the depth long data type to reach this position from the root
      */
-    public int getDepth() {
+    public long getDepth() {
         return depth;
     }
     /**
