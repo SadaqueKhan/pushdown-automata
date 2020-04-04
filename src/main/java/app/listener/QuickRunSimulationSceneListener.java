@@ -14,14 +14,14 @@ import javafx.scene.input.MouseEvent;
  * Listener attached to quick run simulation scene nodes.
  * </p>
  */
-public class QuickRunSimulationListener implements EventHandler {
+public class QuickRunSimulationSceneListener implements EventHandler {
     private final SimulationStagePresenter simulationStagePresenter;
     /**
      * Constructor of the quick run simulation listener, used to instantiate an instance of the listener.
      * @param simulationStagePresenter a reference to the presenter which responds to the events picked up by the
      * listener.
      */
-    public QuickRunSimulationListener(SimulationStagePresenter simulationStagePresenter) {
+    public QuickRunSimulationSceneListener(SimulationStagePresenter simulationStagePresenter) {
         this.simulationStagePresenter = simulationStagePresenter;
     }
     /**

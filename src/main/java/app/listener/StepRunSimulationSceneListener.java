@@ -9,14 +9,14 @@ import javafx.scene.control.Button;
  * Listener attached to step run simulation scene nodes.
  * </p>
  */
-public class StepRunSimulationListener implements EventHandler {
+public class StepRunSimulationSceneListener implements EventHandler {
     private final SimulationStagePresenter simulationStagePresenter;
     /**
      * Constructor of the step run simulation listener, used to instantiate an instance of the listener.
      * @param simulationStagePresenter a reference to the presenter which responds to the events picked up by the
      * listener.
      */
-    public StepRunSimulationListener(SimulationStagePresenter simulationStagePresenter) {
+    public StepRunSimulationSceneListener(SimulationStagePresenter simulationStagePresenter) {
         this.simulationStagePresenter = simulationStagePresenter;
     }
     /**

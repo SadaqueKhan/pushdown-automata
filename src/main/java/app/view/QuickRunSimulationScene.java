@@ -1,5 +1,5 @@
 package app.view;
-import app.listener.QuickRunSimulationListener;
+import app.listener.QuickRunSimulationSceneListener;
 import app.model.ConfigurationModel;
 import app.presenter.SimulationStagePresenter;
 import javafx.geometry.Insets;
@@ -83,11 +83,11 @@ public class QuickRunSimulationScene extends BorderPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        QuickRunSimulationListener quickRunSimulationListener = new QuickRunSimulationListener(simulationStagePresenter);
+        QuickRunSimulationSceneListener quickRunSimulationSceneListener = new QuickRunSimulationSceneListener(simulationStagePresenter);
         //Link listener to events on UI components for this view.
-        toggleAlgorithmButton.setOnAction(quickRunSimulationListener);
-        togglePathButton.setOnAction(quickRunSimulationListener);
-        algorithmlistView.setOnMouseReleased(quickRunSimulationListener);
+        toggleAlgorithmButton.setOnAction(quickRunSimulationSceneListener);
+        togglePathButton.setOnAction(quickRunSimulationSceneListener);
+        algorithmlistView.setOnMouseReleased(quickRunSimulationSceneListener);
     }
     // Getters for UI components of the view.
     public Label getSimulationStatsLabel() {

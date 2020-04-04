@@ -16,14 +16,14 @@ import javafx.scene.text.Text;
  * Listener attached to diagram scene nodes.
  * </p>
  */
-public class DiagramListener implements EventHandler {
+public class DiagramSceneListener implements EventHandler {
     private final DiagramScenePresenter diagramScenePresenter;
     /**
      * Constructor of the diagram scene listener, used to instantiate an instance of the listener.
      * @param diagramScenePresenter a reference to the presenter which responds to the events picked up by the
      * listener.
      */
-    public DiagramListener(DiagramScenePresenter diagramScenePresenter) {
+    public DiagramSceneListener(DiagramScenePresenter diagramScenePresenter) {
         this.diagramScenePresenter = diagramScenePresenter;
     }
     /**

@@ -1,5 +1,5 @@
 package app.view;
-import app.listener.DiagramListener;
+import app.listener.DiagramSceneListener;
 import app.presenter.DiagramScenePresenter;
 import javafx.scene.layout.Pane;
 /**
@@ -35,9 +35,9 @@ public class DiagramScene extends Pane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        DiagramListener diagramListener = new DiagramListener(diagramScenePresenter);
+        DiagramSceneListener diagramSceneListener = new DiagramSceneListener(diagramScenePresenter);
         //Link listener to events on UI components for this view.
-        this.setOnMousePressed(diagramListener);
+        this.setOnMousePressed(diagramSceneListener);
     }
 }
 

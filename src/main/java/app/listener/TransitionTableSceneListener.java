@@ -9,14 +9,14 @@ import javafx.scene.control.Button;
  * Listener attached to transition table scene nodes.
  * </p>
  */
-public class TransitionTableListener implements EventHandler {
+public class TransitionTableSceneListener implements EventHandler {
     private final TransitionTableScenePresenter transitionTableScenePresenter;
     /**
      * Constructor of the transition table listener, used to instantiate an instance of the listener.
      * @param transitionTableScenePresenter a reference to the presenter which responds to the events picked up by
      * the listener.
      */
-    public TransitionTableListener(TransitionTableScenePresenter transitionTableScenePresenter) {
+    public TransitionTableSceneListener(TransitionTableScenePresenter transitionTableScenePresenter) {
         this.transitionTableScenePresenter = transitionTableScenePresenter;
     }
     /**

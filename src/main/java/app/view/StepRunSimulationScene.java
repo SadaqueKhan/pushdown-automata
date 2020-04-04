@@ -1,5 +1,5 @@
 package app.view;
-import app.listener.StepRunSimulationListener;
+import app.listener.StepRunSimulationSceneListener;
 import app.model.TransitionModel;
 import app.presenter.SimulationStagePresenter;
 import javafx.geometry.Pos;
@@ -83,9 +83,9 @@ public class StepRunSimulationScene extends BorderPane {
      * Sets up the listeners for UI components of the view.
      */
     private void setUpStepUIListeners() {
-        StepRunSimulationListener stepRunSimulationListener = new StepRunSimulationListener(simulationStagePresenter);
-        backwardButton.setOnAction(stepRunSimulationListener);
-        forwardButton.setOnAction(stepRunSimulationListener);
+        StepRunSimulationSceneListener stepRunSimulationSceneListener = new StepRunSimulationSceneListener(simulationStagePresenter);
+        backwardButton.setOnAction(stepRunSimulationSceneListener);
+        forwardButton.setOnAction(stepRunSimulationSceneListener);
     }
     // Getters for UI components of the view that are interacted with in the application.
     public ListView<TransitionModel> getTransitionOptionsListView() {

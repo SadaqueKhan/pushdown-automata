@@ -1,5 +1,5 @@
 package app.view;
-import app.listener.TransitionTableListener;
+import app.listener.TransitionTableSceneListener;
 import app.model.TransitionModel;
 import app.presenter.TransitionTableScenePresenter;
 import javafx.application.Platform;
@@ -145,10 +145,10 @@ public class TransitionTableScene extends BorderPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        TransitionTableListener transitionTableListener = new TransitionTableListener(transitionTableScenePresenter);
+        TransitionTableSceneListener transitionTableSceneListener = new TransitionTableSceneListener(transitionTableScenePresenter);
         //Link listener to events on UI components for this view.
-        submitTransitionButton.setOnAction(transitionTableListener);
-        deleteTransitionButton.setOnAction(transitionTableListener);
+        submitTransitionButton.setOnAction(transitionTableSceneListener);
+        deleteTransitionButton.setOnAction(transitionTableSceneListener);
     }
     /**
      * Dynamic listener for checkboxes for auto-updating, as functionality is limited to just checking if the size of

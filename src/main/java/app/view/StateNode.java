@@ -1,5 +1,5 @@
 package app.view;
-import app.listener.DiagramListener;
+import app.listener.DiagramSceneListener;
 import app.presenter.DiagramScenePresenter;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -121,11 +121,11 @@ public class StateNode extends StackPane {
      */
     private void setUpUIListeners() {
         //Create listener for UI component for this view.
-        DiagramListener diagramListener = new DiagramListener(diagramScenePresenter);
+        DiagramSceneListener diagramSceneListener = new DiagramSceneListener(diagramScenePresenter);
         //Link listener to events on UI components for this view.
-        this.setOnMousePressed(diagramListener);
-        this.setOnMouseDragged(diagramListener);
-        this.setOnMouseReleased(diagramListener);
+        this.setOnMousePressed(diagramSceneListener);
+        this.setOnMouseDragged(diagramSceneListener);
+        this.setOnMouseReleased(diagramSceneListener);
     }
     //Getters for data linked to this view.
     public String getStateId() {
