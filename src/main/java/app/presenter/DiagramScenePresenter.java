@@ -517,7 +517,7 @@ public class DiagramScenePresenter {
             if (newValue == null) {
                 return;
             }
-            if ((newValue.matches("^\\w{1}$")) || newValue.equals("\u03B5")) {
+            if ((newValue.length() == 1 || newValue.equals("\u03B5"))) {
                 return;
             }
             Platform.runLater(() -> {
