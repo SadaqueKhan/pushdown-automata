@@ -185,12 +185,12 @@ public class MainStagePresenter extends Application {
      * Handles the loading of a user defined machine.
      */
     public void loadMachine() {
-        try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Load Machine");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-            File fileChosen = fileChooser.showOpenDialog(primaryWindow);
-            if (fileChosen != null) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Machine");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+        File fileChosen = fileChooser.showOpenDialog(primaryWindow);
+        if (fileChosen != null) {
+            try {
                 JAXBContext jaxbContext = JAXBContext.newInstance(MachineModel.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
@@ -207,9 +207,14 @@ public class MainStagePresenter extends Application {
                 primaryWindow.setScene(new Scene(mainScene, 1200, 800));
                 primaryWindow.setResizable(false);
                 primaryWindow.show();
+            } catch (Exception e2) {
+                Alert invalidActionAlert = new Alert(Alert.AlertType.INFORMATION);
+                invalidActionAlert.setHeaderText("Error");
+                invalidActionAlert.setContentText("The file you selected does not match the XML schema structure of " +
+                        "an automaton that can be loaded into this application.");
+                invalidActionAlert.setTitle("Invalid File");
+                invalidActionAlert.show();
             }
-        } catch (Exception e2) {
-            e2.printStackTrace();
         }
     }
     /**
