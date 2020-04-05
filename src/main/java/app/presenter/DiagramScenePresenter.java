@@ -692,7 +692,6 @@ public class DiagramScenePresenter {
         machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
         machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
         machineModel.removeStateModelFromStateModelSet(stateModelToDelete);
-
         //Retrieve stateview to be deleted
         StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
         //Retrieve and remove linked transition views to state view
@@ -839,6 +838,8 @@ public class DiagramScenePresenter {
         // Resetting the translate positions
         stateNode.setTranslateX(0);
         stateNode.setTranslateY(0);
+        // Relocate state node
+        stateNode.relocate(stateModelDragged.getXCoordinateOnDiagram(), stateModelDragged.getYCoordinateOnDiagram());
     }
     /**
      * Handles the highlighting of the movement to a given configuration.
