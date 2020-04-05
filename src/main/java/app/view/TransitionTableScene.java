@@ -160,7 +160,6 @@ public class TransitionTableScene extends BorderPane {
             if (newValue == null) {
                 return;
             }
-            System.out.println(newValue.length());
             if ((newValue.length() == 1) || newValue.equals("\u03B5")) {
                 return;
             }
