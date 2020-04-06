@@ -112,7 +112,7 @@ public class SimulationStagePresenter {
         ListView<ConfigurationModel> algorithmListView = quickRunSimulationScene.getAlgorithmlistView();
         if (algorithmListView.getItems().isEmpty()) {
             // Get algorithm path list
-            ArrayList<ConfigurationModel> algorithmPathList = quickRunSimulationModel.getComputationArrayList();
+            ArrayList<ConfigurationModel> algorithmPathList = quickRunSimulationModel.getComputationTreeArrayList();
             algorithmListView.getItems().addAll(algorithmPathList);
             Platform.runLater(() -> algorithmListView.setCellFactory(new Callback<ListView<ConfigurationModel>, ListCell<ConfigurationModel>>() {
                 @Override
@@ -178,7 +178,7 @@ public class SimulationStagePresenter {
         Accordion accordion = (Accordion) quickRunSimulationScene.getPathsVBox().getChildren().get(0);
         if (accordion.getPanes().isEmpty()) {
             //Get leaf configurations computed in the simulation model.
-            ArrayList<ConfigurationModel> leafConfigurationPath = quickRunSimulationModel.getLeafConfigurationArrayList();
+            ArrayList<ConfigurationModel> leafConfigurationPath = quickRunSimulationModel.getComputationPathArrayList();
             accordion.getPanes().clear();
             int numPath = 0;
             for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
@@ -300,7 +300,7 @@ public class SimulationStagePresenter {
             // Search for the next configuration that can be reached given the selected transition to move to
             ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
             // Update simulation computation list
-            stepRunSimulationModel.getComputationArrayList().add(nextConfigurationModel);
+            stepRunSimulationModel.getComputationTreeArrayList().add(nextConfigurationModel);
             // Update history list view
             updateHistoryListView("Forward");
             // Find all applicable transitions from the current configuration to a next configuration
@@ -407,7 +407,7 @@ public class SimulationStagePresenter {
             //Update step run model
             stepRunSimulationModel.previous();
             ConfigurationModel prevConfigurationModel = stepRunSimulationModel.getCurrentConfig();
-            stepRunSimulationModel.getComputationArrayList().add(prevConfigurationModel);
+            stepRunSimulationModel.getComputationTreeArrayList().add(prevConfigurationModel);
             //Update step run view
             updateHistoryListView("Backward");
             listView.getItems().clear();

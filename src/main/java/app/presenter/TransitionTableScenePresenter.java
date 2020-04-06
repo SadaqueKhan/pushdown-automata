@@ -109,7 +109,6 @@ public class TransitionTableScenePresenter {
         machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
         machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
         //Update transition table combo boxes
-        updateAvailableStateListForCombobox();
         updateInputAlphabetForComboBox();
         updateStackAlphabetForComboBox();
         // Retrieve current state model from the state model set found in the machine model.
@@ -150,8 +149,6 @@ public class TransitionTableScenePresenter {
         transitionTableScene.getTransitionTable().getItems().add(newTransitionModel);
         //Update combo boxes UI component found in transition table scene.
         updateAvailableStateListForCombobox();
-        updateInputAlphabetForComboBox();
-        updateStackAlphabetForComboBox();
         //Notify diagram presenter to add a new transition node on the diagram scene.
         if (userEntryCurrentStateID.equals(userEntryResultingStateID)) {
             diagramScenePresenter.addReflexiveTransitionToDiagramView(newTransitionModel);

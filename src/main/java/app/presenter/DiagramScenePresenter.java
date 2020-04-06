@@ -290,6 +290,8 @@ public class DiagramScenePresenter {
                 machineModel.getInputAlphabetSet().add(userEntryInputSymbol);
                 machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPop);
                 machineModel.getStackAlphabetSet().add(userEntryStackSymbolToPush);
+                transitionTableScenePresenter.updateInputAlphabetForComboBox();
+                transitionTableScenePresenter.updateStackAlphabetForComboBox();
                 StateModel resultingStateModel = machineModel.getStateModelFromStateModelSet(userEntryResultingState);
                 if (resultingStateModel == null) {
                     resultingStateModel = new StateModel(userEntryResultingState);
@@ -316,8 +318,6 @@ public class DiagramScenePresenter {
                 //Update transition table scene
                 transitionTableScenePresenter.addTransitionModelEntryToTransitionTable(newTransitionModel);
                 transitionTableScenePresenter.updateAvailableStateListForCombobox();
-                transitionTableScenePresenter.updateInputAlphabetForComboBox();
-                transitionTableScenePresenter.updateStackAlphabetForComboBox();
                 //Update diagram scene
                 if (userEntryCurrentState.equals(userEntryResultingState)) {
                     addReflexiveTransitionToDiagramView(newTransitionModel);

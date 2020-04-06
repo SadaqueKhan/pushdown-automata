@@ -15,8 +15,8 @@ public class SimulationModel {
     private ConfigurationModel currentConfig;
     private final TapeModel currentTapeModel;
     private final StackModel currentStackModel;
-    private final ArrayList<ConfigurationModel> computationArrayList;
-    private final ArrayList<ConfigurationModel> leafConfigurationArrayList;
+    private final ArrayList<ConfigurationModel> computationTreeArrayList;
+    private final ArrayList<ConfigurationModel> computationPathArrayList;
     private boolean isNFA = false;
     private int numOfPossibleSuccessPaths = 0;
     private int numOfPossibleFailPaths = 0;
@@ -27,15 +27,15 @@ public class SimulationModel {
         this.currentTapeModel = new TapeModel();
         this.currentStackModel = new StackModel();
         this.inputWord = inputWord;
-        computationArrayList = new ArrayList<>();
-        leafConfigurationArrayList = new ArrayList<>();
+        computationTreeArrayList = new ArrayList<>();
+        computationPathArrayList = new ArrayList<>();
         //Set the root node
         currentTapeModel.loadInput(inputWord);
         currentConfig = new ConfigurationModel(null, null, machineModel.getStartStateModel(), currentTapeModel, currentStackModel);
         currentConfig.setChildrenConfigurations(findChildrenConfigurations(currentConfig));
         currentConfig.markAsVisited();
         //Add currentConfig to the path
-        computationArrayList.add(currentConfig);
+        computationTreeArrayList.add(currentConfig);
     }
     /**
      * Method used to move to the next configuration in a computation given a transition to reach the next
@@ -60,7 +60,7 @@ public class SimulationModel {
                     //no more paths to search for this child
                     if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
                         currentConfig.setStuckConfig(true);
-                        leafConfigurationArrayList.add(currentConfig);
+                        computationPathArrayList.add(currentConfig);
                     }
                 }
             }
@@ -81,6 +81,26 @@ public class SimulationModel {
                 .collect(Collectors.toList());
     }
     /**
+     * Determines whether the configuration is a success configuration or fail configuration.
+     */
+    public void setTypeOfConfiguration() {
+        if (currentTapeModel.isEmpty()) {
+            if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
+                currentConfig.setSuccessConfig(true);
+                computationPathArrayList.add(currentConfig);
+                ++numOfPossibleSuccessPaths;
+            } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
+                currentConfig.setSuccessConfig(true);
+                computationPathArrayList.add(currentConfig);
+                ++numOfPossibleSuccessPaths;
+            } else {
+                currentConfig.setFailConfig(true);
+                computationPathArrayList.add(currentConfig);
+                ++numOfPossibleFailPaths;
+            }
+        }
+    }
+    /**
      * Method which generates the computation tree for a given simulation.
      */
     public void createTree() {
@@ -88,7 +108,7 @@ public class SimulationModel {
             setTypeOfConfiguration();
             int result = next(); // if one is returned more children exist
             if (result == 1) {
-                computationArrayList.add(currentConfig);
+                computationTreeArrayList.add(currentConfig);
             }
             //Returning 8 when no more children present to search for given parent
             if (result == 0) {
@@ -97,34 +117,14 @@ public class SimulationModel {
                 if (currentConfig == null) {
                     break;
                 }
-                computationArrayList.add(currentConfig);
+                computationTreeArrayList.add(currentConfig);
             }
             if (currentConfig.getDepth() == 1000000L) {
                 currentConfig.setInfiniteConfig(true);
                 ++numOfPossibleInfinitePaths;
-                leafConfigurationArrayList.add(currentConfig);
+                computationPathArrayList.add(currentConfig);
                 previous();
-                computationArrayList.add(currentConfig);
-            }
-        }
-    }
-    /**
-     * Determines whether the configuration is a success configuration or fail configuration.
-     */
-    public void setTypeOfConfiguration() {
-        if (currentTapeModel.isEmpty()) {
-            if (machineModel.isAcceptanceByFinalState() && currentConfig.getCurrentStateModel().isFinalState()) {
-                currentConfig.setSuccessConfig(true);
-                leafConfigurationArrayList.add(currentConfig);
-                ++numOfPossibleSuccessPaths;
-            } else if (machineModel.isAcceptanceByEmptyStack() && currentConfig.getStackContent().isEmpty()) {
-                currentConfig.setSuccessConfig(true);
-                leafConfigurationArrayList.add(currentConfig);
-                ++numOfPossibleSuccessPaths;
-            } else {
-                currentConfig.setFailConfig(true);
-                leafConfigurationArrayList.add(currentConfig);
-                ++numOfPossibleFailPaths;
+                computationTreeArrayList.add(currentConfig);
             }
         }
     }
@@ -146,7 +146,7 @@ public class SimulationModel {
             //no more paths to search for this child
             if (!(currentConfig.isSuccessConfig() || currentConfig.isFailConfig())) {
                 currentConfig.setStuckConfig(true);
-                leafConfigurationArrayList.add(currentConfig);
+                computationPathArrayList.add(currentConfig);
                 ++numOfPossibleStuckPaths;
             }
             return 0; // Go back to parent
@@ -209,8 +209,8 @@ public class SimulationModel {
     public ConfigurationModel getCurrentConfig() {
         return currentConfig;
     }
-    public ArrayList<ConfigurationModel> getComputationArrayList() {
-        return computationArrayList;
+    public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
+        return computationTreeArrayList;
     }
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
@@ -224,8 +224,8 @@ public class SimulationModel {
     public int getNumOfPossibleInfinitePaths() {
         return numOfPossibleInfinitePaths;
     }
-    public ArrayList<ConfigurationModel> getLeafConfigurationArrayList() {
-        return leafConfigurationArrayList;
+    public ArrayList<ConfigurationModel> getComputationPathArrayList() {
+        return computationPathArrayList;
     }
     public boolean isNFA() {
         return isNFA;

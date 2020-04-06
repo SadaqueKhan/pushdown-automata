@@ -91,7 +91,7 @@ public class ConfigurationModelTest {
     public void anyOtherConfigurationInAComputationTreeOtherThenRootPathListShouldExceedOne() {
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         simulationModel.createTree();
-        ConfigurationModel anyOtherConfigurationExceptRootConfiguration = simulationModel.getComputationArrayList()
+        ConfigurationModel anyOtherConfigurationExceptRootConfiguration = simulationModel.getComputationTreeArrayList()
                 .stream().filter(config -> (config.getParentConfiguration() != null)).findFirst().orElse(null);
         ArrayList<ConfigurationModel> path = anyOtherConfigurationExceptRootConfiguration.getPath();
         assertTrue(1 < path.size());
@@ -109,7 +109,7 @@ public class ConfigurationModelTest {
     public void requestingToStringOfObjectShouldReturnTapeElementPartOfConfigurationStringAsEmpty() {
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         simulationModel.createTree();
-        ConfigurationModel configurationModelWithEmptyTape = simulationModel.getComputationArrayList()
+        ConfigurationModel configurationModelWithEmptyTape = simulationModel.getComputationTreeArrayList()
                 .stream().filter(ConfigurationModel::isSuccessConfig).findFirst().orElse(null);
         assertThat(configurationModelWithEmptyTape.toString(), containsString("\u03B5"));
     }
@@ -118,7 +118,7 @@ public class ConfigurationModelTest {
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         ConfigurationModel rootConfigurationModel = simulationModel.getCurrentConfig();
         simulationModel.createTree();
-        ConfigurationModel anyOtherConfigurationExceptRootConfiguration = simulationModel.getComputationArrayList()
+        ConfigurationModel anyOtherConfigurationExceptRootConfiguration = simulationModel.getComputationTreeArrayList()
                 .stream().filter(config -> (config != rootConfigurationModel)).findFirst().orElse(null);
         assertNotEquals(anyOtherConfigurationExceptRootConfiguration.toString(), rootConfigurationModel.toString());
     }
@@ -136,7 +136,7 @@ public class ConfigurationModelTest {
         machineModel.addTransitionModelToTransitionModelSet(transitionModel1);
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         simulationModel.createTree();
-        ConfigurationModel checkConfigIsInfinite = simulationModel.getComputationArrayList()
+        ConfigurationModel checkConfigIsInfinite = simulationModel.getComputationTreeArrayList()
                 .stream().filter(config -> (config.isInfiniteConfig())).findFirst().orElse(null);
         assertTrue(checkConfigIsInfinite.isInfiniteConfig());
     }
