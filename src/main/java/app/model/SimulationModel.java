@@ -157,7 +157,7 @@ public class SimulationModel {
             toExplore = childrenConfigurations.get(0);
             //Check if this child is visited
             if (toExplore.isVisited()) {
-                return 0;
+                return 0; // Go back to parent
             }
         } else {
             //Explore non-deterministic path
