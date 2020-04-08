@@ -37,8 +37,8 @@ public class MainScene extends BorderPane {
     private VBox containerForCenterNodes;
     private Set<String> inputWordSet;
     private TapeScene tapeScene;
-    private MenuItem saveMenuItem;
-    private MenuItem loadMenuItem;
+    private MenuItem saveMachineMenuItem;
+    private MenuItem loadMachineMenuItem;
     private CheckMenuItem acceptanceByFinalStateMenuItem;
     private CheckMenuItem acceptanceByEmptyStackMenuItem;
     private Label inputTextLabel;
@@ -67,11 +67,11 @@ public class MainScene extends BorderPane {
         Menu fileMenu = new Menu("File");
         fileMenu.setId("fileMenu");
         this.newMachineMenuItem = new MenuItem("New");
-        this.saveMenuItem = new MenuItem("Save");
-        saveMenuItem.setId("saveMenuItem");
-        this.loadMenuItem = new MenuItem("Load");
-        loadMenuItem.setId("loadMenuItem");
-        fileMenu.getItems().addAll(newMachineMenuItem, saveMenuItem, loadMenuItem);
+        this.saveMachineMenuItem = new MenuItem("Save");
+        saveMachineMenuItem.setId("saveMachineMenuItem");
+        this.loadMachineMenuItem = new MenuItem("Load");
+        loadMachineMenuItem.setId("loadMachineMenuItem");
+        fileMenu.getItems().addAll(newMachineMenuItem, saveMachineMenuItem, loadMachineMenuItem);
         menuBar.getMenus().add(fileMenu);
         Menu acceptanceMenu = new Menu("Acceptance");
         acceptanceMenu.setId("acceptanceMenu");
@@ -158,8 +158,8 @@ public class MainScene extends BorderPane {
         toggleDiagramButton.setOnAction(mainStageListener);
         toggleTransitionTableButton.setOnAction(mainStageListener);
         newMachineMenuItem.setOnAction(mainStageListener);
-        saveMenuItem.setOnAction(mainStageListener);
-        loadMenuItem.setOnAction(mainStageListener);
+        saveMachineMenuItem.setOnAction(mainStageListener);
+        loadMachineMenuItem.setOnAction(mainStageListener);
         acceptanceByFinalStateMenuItem.setOnAction(mainStageListener);
         acceptanceByEmptyStackMenuItem.setOnAction(mainStageListener);
         simulationByQuickRunMenuItem.setOnAction(mainStageListener);
