@@ -48,6 +48,7 @@ public class MainScene extends BorderPane {
     private CheckMenuItem simulationByStepRunMenuItem;
     private MenuBar menuBar;
     private MenuItem helpCodeItem;
+    private MenuItem newMachineMenuItem;
     /**
      * Constructor of the main stage, used to instantiate an instance of this view.
      * @param mainStagePresenter a reference to the views presenter.
@@ -65,11 +66,12 @@ public class MainScene extends BorderPane {
         menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
         fileMenu.setId("fileMenu");
+        this.newMachineMenuItem = new MenuItem("New");
         this.saveMenuItem = new MenuItem("Save");
         saveMenuItem.setId("saveMenuItem");
         this.loadMenuItem = new MenuItem("Load");
         loadMenuItem.setId("loadMenuItem");
-        fileMenu.getItems().addAll(saveMenuItem, loadMenuItem);
+        fileMenu.getItems().addAll(newMachineMenuItem, saveMenuItem, loadMenuItem);
         menuBar.getMenus().add(fileMenu);
         Menu acceptanceMenu = new Menu("Acceptance");
         acceptanceMenu.setId("acceptanceMenu");
@@ -155,6 +157,7 @@ public class MainScene extends BorderPane {
         inputTextField.setOnKeyPressed(mainStageListener);
         toggleDiagramButton.setOnAction(mainStageListener);
         toggleTransitionTableButton.setOnAction(mainStageListener);
+        newMachineMenuItem.setOnAction(mainStageListener);
         saveMenuItem.setOnAction(mainStageListener);
         loadMenuItem.setOnAction(mainStageListener);
         acceptanceByFinalStateMenuItem.setOnAction(mainStageListener);

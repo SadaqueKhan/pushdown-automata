@@ -300,6 +300,24 @@ public class MainStagePresenter extends Application {
             }
         }
     }
+    /**
+     * Create a new machine.
+     */
+    public void newMachine() {
+        primaryWindow.close();
+        this.machineModel = new MachineModel();
+        this.mainScene = new MainScene(this);
+        this.transitionTableScenePresenter = new TransitionTableScenePresenter(mainScene, machineModel);
+        transitionTableScenePresenter.loadTransitionTableView();
+        this.diagramScenePresenter = new DiagramScenePresenter(mainScene, this, machineModel);
+        diagramScenePresenter.loadStatesOntoDiagram();
+        diagramScenePresenter.loadTransitionsOntoDiagram();
+        diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
+        primaryWindow.setTitle("Pushdown Automata");
+        primaryWindow.setScene(new Scene(mainScene, 1200, 800));
+        primaryWindow.setResizable(false);
+        primaryWindow.show();
+    }
     // Getters to provide communication between scenes.
     public MainScene getMainScene() {
         return mainScene;

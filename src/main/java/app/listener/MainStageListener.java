@@ -48,7 +48,9 @@ public class MainStageListener implements EventHandler {
                 }
             } else if (event.getSource() instanceof MenuItem) {
                 MenuItem isMenuItem = (MenuItem) event.getSource();
-                if (isMenuItem.getText().equals("Save")) {
+                if (isMenuItem.getText().equals("New")) {
+                    mainStagePresenter.newMachine();
+                } else if (isMenuItem.getText().equals("Save")) {
                     mainStagePresenter.saveMachine();
                 } else if (isMenuItem.getText().equals("Load")) {
                     mainStagePresenter.loadMachine();
