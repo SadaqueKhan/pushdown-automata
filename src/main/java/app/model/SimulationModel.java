@@ -209,9 +209,6 @@ public class SimulationModel {
     public ConfigurationModel getCurrentConfig() {
         return currentConfig;
     }
-    public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
-        return computationTreeArrayList;
-    }
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
     }
@@ -224,11 +221,14 @@ public class SimulationModel {
     public int getNumOfPossibleInfinitePaths() {
         return numOfPossibleInfinitePaths;
     }
-    public ArrayList<ConfigurationModel> getComputationPathArrayList() {
-        return computationPathArrayList;
-    }
     public boolean isNFA() {
         return isNFA;
+    }
+    public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
+        return computationTreeArrayList;
+    }
+    public ArrayList<ConfigurationModel> getComputationPathArrayList() {
+        return computationPathArrayList;
     }
 }
 
