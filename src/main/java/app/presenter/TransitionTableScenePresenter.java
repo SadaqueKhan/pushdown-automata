@@ -191,12 +191,12 @@ public class TransitionTableScenePresenter {
         ObservableList<TransitionModel> selectedRows = transitionTableScene.getTransitionTable().getSelectionModel().getSelectedItems();
         HashSet<TransitionModel> removeTransitionSet = new HashSet<>();
         removeTransitionSet.addAll(selectedRows);
-        //Update transition model set found in the machine model.
-        machineModel.removeTransitionModelsFromTransitionModelSet(removeTransitionSet);
         //Update transition table UI component.
         transitionTableScene.getTransitionTable().getItems().removeAll(removeTransitionSet);
         //Notify diagram presenter to delete selected transitions node on the diagram scene.
         diagramScenePresenter.deleteTransitionView(removeTransitionSet);
+        //Update transition model set found in the machine model.
+        machineModel.removeTransitionModelsFromTransitionModelSet(removeTransitionSet);
     }
     /**
      * Handles bulk deletion of transitions when a state has been requested to be deleted by the user.

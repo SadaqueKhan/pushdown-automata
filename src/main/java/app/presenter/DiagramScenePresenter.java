@@ -332,6 +332,10 @@ public class DiagramScenePresenter {
             transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
             //Update view
             deleteStateViewOnDiagramView(stateModelSelected);
+            //Update machine model
+            machineModel.removeTransitionModelsFromTransitionModelSet(getExitingTransitionsFromStateModel(stateModelSelected));
+            machineModel.removeTransitionModelsFromTransitionModelSet(getEnteringTransitionsFromStateModel(stateModelSelected));
+            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
         });
         contextMenu.getItems().add(toggleStandardStateItem);
         contextMenu.getItems().add(toggleStartStateItem);
@@ -412,23 +416,24 @@ public class DiagramScenePresenter {
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
     /**
-     * Retrieves the transition models related to a given transition model.
-     * @param transitionModel used to determine all related transition model found in the transition model set in a
-     * machine model.
-     * @return {@code HashSet<TransitionModel>} of related transition models to a given transition model.
+     * Handles deletion of a state node on the diagram scene.
+     * @param stateModelToDelete requested to be deleted from the diagram scene.
      */
-    private HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
-        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
-        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
-        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
-        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
-            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
-            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
-            if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
-                relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
-            }
-        }
-        return relatedTransitionModelsToReturn;
+    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
+        HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
+                (stateModelToDelete);
+        HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
+                (stateModelToDelete);
+        //Retrieve state view to be deleted
+        StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
+        //Retrieve and remove linked transition views to state view
+        deleteTransitionView(exitingTransitionsFromStateModel);
+        deleteTransitionView(enteringTransitionsFromStateModel);
+        // Remove mapping of state view in data structures
+        stateMap.remove(stateModelToDelete);
+        linkedTransitionViewsMap.remove(stateNodeToRemove);
+        //Remove the state view from the diagram view
+        diagramScene.getChildren().remove(stateNodeToRemove);
     }
     /**
      * Handles creation of an arrow tip and linking to a transition node.
@@ -681,29 +686,6 @@ public class DiagramScenePresenter {
         return enteringTransitionFromStateModelToReturn;
     }
     /**
-     * Handles deletion of a state node on the diagram scene.
-     * @param stateModelToDelete requested to be deleted from the diagram scene.
-     */
-    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
-        HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
-                (stateModelToDelete);
-        HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
-                (stateModelToDelete);
-        machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
-        machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
-        machineModel.removeStateModelFromStateModelSet(stateModelToDelete);
-        //Retrieve stateview to be deleted
-        StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
-        //Retrieve and remove linked transition views to state view
-        deleteTransitionView(exitingTransitionsFromStateModel);
-        deleteTransitionView(enteringTransitionsFromStateModel);
-        // Remove mapping of state view in data structures
-        stateMap.remove(stateModelToDelete);
-        linkedTransitionViewsMap.remove(stateNodeToRemove);
-        //Remove the state view from the diagram view
-        diagramScene.getChildren().remove(stateNodeToRemove);
-    }
-    /**
      * Handles deleting of a transition nodes.
      * @param deletedTransitionModelsSet used to determines which transition nodes to delete.
      */
@@ -736,14 +718,19 @@ public class DiagramScenePresenter {
                     for (Node node : nextHashSet) {
                         if (node instanceof TransitionNode) {
                             TransitionNode transitionNodeToUpdate = (TransitionNode) node;
-                            if (transitionNodeToUpdate.getCurrentStateNode().getStateId().equals(currentStateModelID) &&
-                                    transitionNodeToUpdate.getResultingStateNode().getStateId().equals(resultingStateModelID)) {
+                            if (transitionNodeToUpdate.getResultingStateNode().getStateId().equals(resultingStateModelID)) {
                                 if (getRelatedTransitions(deletedTransition).isEmpty()) {
                                     transitionViewNodesToRemoveSet.add(nextHashSet);
                                     stateViewsWithTransitionToRemoveSet.add(currentStateNode);
-                                }
-                                for (TransitionModel transitionModel : getRelatedTransitions(deletedTransition)) {
-                                    transitionNodeToUpdate.getTransitionsListVBox().getChildren().add(new Label(transitionModel.toString()));
+                                } else {
+                                    VBox listOfTransitionsVBox = transitionNodeToUpdate.getTransitionsListVBox();
+                                    Iterator<Node> iter = listOfTransitionsVBox.getChildren().iterator();
+                                    while (iter.hasNext()) {
+                                        Label labelToRemove = (Label) iter.next();
+                                        if (labelToRemove.getText().equals(deletedTransition.toString())) {
+                                            iter.remove();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -774,6 +761,27 @@ public class DiagramScenePresenter {
                 }
             }
         }
+    }
+    /**
+     * Retrieves the transition models related to a given transition model.
+     * @param transitionModel used to determine all related transition model found in the transition model set in a
+     * machine model.
+     * @return {@code HashSet<TransitionModel>} of related transition models to a given transition model.
+     */
+    private HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
+        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
+        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
+        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
+        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
+            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
+            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
+            if (isRelatedTransitionModel != transitionModel) {
+                if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
+                    relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
+                }
+            }
+        }
+        return relatedTransitionModelsToReturn;
     }
     /**
      * Handles when the mouse button has been pressed given the mouse has selected a state node.
