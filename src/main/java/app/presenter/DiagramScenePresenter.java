@@ -332,10 +332,6 @@ public class DiagramScenePresenter {
             transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
             //Update view
             deleteStateViewOnDiagramView(stateModelSelected);
-            //Update machine model
-            machineModel.removeTransitionModelsFromTransitionModelSet(getExitingTransitionsFromStateModel(stateModelSelected));
-            machineModel.removeTransitionModelsFromTransitionModelSet(getEnteringTransitionsFromStateModel(stateModelSelected));
-            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
         });
         contextMenu.getItems().add(toggleStandardStateItem);
         contextMenu.getItems().add(toggleStartStateItem);
@@ -420,20 +416,25 @@ public class DiagramScenePresenter {
      * @param stateModelToDelete requested to be deleted from the diagram scene.
      */
     public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
+        // Retrieve exiting/entering transition model linked to state model to be deleted.
         HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
                 (stateModelToDelete);
         HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
                 (stateModelToDelete);
-        //Retrieve state view to be deleted
+        //Retrieve state view to be deleted.
         StateNode stateNodeToRemove = stateMap.get(stateModelToDelete);
-        //Retrieve and remove linked transition views to state view
+        //Retrieve and remove linked transition views to state view.
         deleteTransitionView(exitingTransitionsFromStateModel);
         deleteTransitionView(enteringTransitionsFromStateModel);
-        // Remove mapping of state view in data structures
+        // Remove mapping of state view in data structures.
         stateMap.remove(stateModelToDelete);
         linkedTransitionViewsMap.remove(stateNodeToRemove);
-        //Remove the state view from the diagram view
+        //Remove the state view from the diagram view.
         diagramScene.getChildren().remove(stateNodeToRemove);
+        //Update machine model.
+        machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
+        machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
+        machineModel.removeStateModelFromStateModelSet(stateModelToDelete);
     }
     /**
      * Handles creation of an arrow tip and linking to a transition node.
@@ -747,7 +748,7 @@ public class DiagramScenePresenter {
                     HashSet<Node> nextHashSet = iter.next();
                     for (HashSet<Node> nodeSetToRemove : transitionViewNodesToRemoveSet) {
                         //Find the hashset containing the components for the transition view in the map = the hashset to remove
-                        if (nextHashSet == nodeSetToRemove) {
+                        if (nextHashSet.equals(nodeSetToRemove)) {
                             for (Node node : nextHashSet) {
                                 if (node instanceof TransitionNode) {
                                     TransitionNode isTransitionNode = (TransitionNode) node;
