@@ -336,11 +336,7 @@ public class SimulationStagePresenter {
      */
     private void updateHistoryListView(String typeOfStep) {
         ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
-        if (typeOfStep.equals("Backward")) {
-            --stepCounter;
-        } else {
-            ++stepCounter;
-        }
+        ++stepCounter;
         VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
         String stepToPrint = "Step " + stepCounter + " ( " + typeOfStep + " ) " + "At the start configuration" + " : " +
                 "" + " -> " +
