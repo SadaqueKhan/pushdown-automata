@@ -335,35 +335,48 @@ public class SimulationStagePresenter {
      * step run simulation.
      */
     private void updateHistoryListView(String typeOfStep) {
-        ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
-        ++stepCounter;
-        VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
-        String stepToPrint = "Step " + stepCounter + " ( " + typeOfStep + " ) " + "At the start configuration" + " : " +
-                "" + " -> " +
-                nextConfigurationModel
+        if (typeOfStep.equals("Backward")) {
+            --stepCounter;
+            if (stepCounter == 0) {
+                ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+                VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
+                String stepToPrint = "At the start configuration" + " : " + " -> " + nextConfigurationModel
                         .toString();
-        Label newStepLabel = new Label();
-        if (nextConfigurationModel.getParentConfiguration() != null) {
-            stepToPrint = "";
-            String transitionTakenToReachConfigString = nextConfigurationModel.getTransitionModelTakenToReachCurrentConfiguration().toString();
-            stepToPrint += "Step " + stepCounter + " ( " + typeOfStep + " ) " + " : " +
-                    transitionTakenToReachConfigString + " -> " +
-                    nextConfigurationModel.toString();
-            if (nextConfigurationModel.isSuccessConfig()) {
-                newStepLabel.setStyle("-fx-background-color: rgba(39,255,0,0.5);");
-                stepToPrint += "[SUCCESS]";
-            } else if (nextConfigurationModel.isFailConfig()) {
-                newStepLabel.setStyle("-fx-background-color: rgba(255,0,56,0.5);");
-                stepToPrint += "[FAIL]";
-            } else if (nextConfigurationModel.isStuckConfig()) {
-                newStepLabel.setStyle("-fx-background-color: rgba(255,138,0,0.5);");
-                stepToPrint += "[STUCK]";
-            } else {
-                newStepLabel.setStyle("-fx-background-color: rgba(255,255,255,0.5);");
+                Label newStepLabel = new Label();
+                newStepLabel.setText(stepToPrint);
+                historyVBox.getChildren().add(newStepLabel);
             }
+        } else {
+            ConfigurationModel nextConfigurationModel = stepRunSimulationModel.getCurrentConfig();
+            ++stepCounter;
+            VBox historyVBox = stepRunSimulationScene.getHistoryVBox();
+            String stepToPrint = "Step " + stepCounter + "At the start configuration" + " : " +
+                    "" + " -> " +
+                    nextConfigurationModel
+                            .toString();
+            Label newStepLabel = new Label();
+            if (nextConfigurationModel.getParentConfiguration() != null) {
+                stepToPrint = "";
+                String transitionTakenToReachConfigString = nextConfigurationModel.getTransitionModelTakenToReachCurrentConfiguration().toString();
+                stepToPrint += "Step " + stepCounter + " : " +
+                        transitionTakenToReachConfigString + " -> " +
+                        nextConfigurationModel.toString();
+                if (nextConfigurationModel.isSuccessConfig()) {
+                    newStepLabel.setStyle("-fx-background-color: rgba(39,255,0,0.5);");
+                    stepToPrint += "[SUCCESS]";
+                } else if (nextConfigurationModel.isFailConfig()) {
+                    newStepLabel.setStyle("-fx-background-color: rgba(255,0,56,0.5);");
+                    stepToPrint += "[FAIL]";
+                } else if (nextConfigurationModel.isStuckConfig()) {
+                    newStepLabel.setStyle("-fx-background-color: rgba(255,138,0,0.5);");
+                    stepToPrint += "[STUCK]";
+                } else {
+                    newStepLabel.setStyle("-fx-background-color: rgba(255,255,255,0.5);");
+                }
+            }
+            newStepLabel.setText(stepToPrint);
+            historyVBox.getChildren().add(newStepLabel);
         }
-        newStepLabel.setText(stepToPrint);
-        historyVBox.getChildren().add(newStepLabel);
     }
     /**
      * Create dynamic listener for items in lists found in the simulation stage to be highlighted in the diagram
