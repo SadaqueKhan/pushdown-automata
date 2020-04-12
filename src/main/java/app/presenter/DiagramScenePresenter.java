@@ -129,6 +129,19 @@ public class DiagramScenePresenter {
         }
         newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram);
         newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram);
+        if (yCoordinateOnDiagram >= 480) {
+            System.out.println("Ypost: " + yCoordinateOnDiagram);
+            newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram - 90);
+            System.out.println("Yafterr: " + newStateModel.getYCoordinateOnDiagram());
+        }
+        System.out.println("XOutpost: " + xCoordinateOnDiagram);
+        if (xCoordinateOnDiagram >= 1200) {
+            System.out.println("Xpost: " + xCoordinateOnDiagram);
+            newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram - 90);
+            System.out.println("Xafter: " + newStateModel.getXCoordinateOnDiagram());
+        }
+
+
         machineModel.addStateModelToStateModelSet(newStateModel);
         addStateViewOntoDiagramView(newStateModel);
         transitionTableScenePresenter.updateAvailableStateListForCombobox();
