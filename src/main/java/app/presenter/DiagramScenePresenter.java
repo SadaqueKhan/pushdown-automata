@@ -129,15 +129,15 @@ public class DiagramScenePresenter {
         }
         newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram);
         newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram);
-        if (yCoordinateOnDiagram >= 480) {
+        if (yCoordinateOnDiagram >= 475) {
             System.out.println("Ypost: " + yCoordinateOnDiagram);
-            newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram - 90);
+            newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram - 100);
             System.out.println("Yafterr: " + newStateModel.getYCoordinateOnDiagram());
         }
         System.out.println("XOutpost: " + xCoordinateOnDiagram);
-        if (xCoordinateOnDiagram >= 1200) {
+        if (xCoordinateOnDiagram >= 1115) {
             System.out.println("Xpost: " + xCoordinateOnDiagram);
-            newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram - 90);
+            newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram - 100);
             System.out.println("Xafter: " + newStateModel.getXCoordinateOnDiagram());
         }
 

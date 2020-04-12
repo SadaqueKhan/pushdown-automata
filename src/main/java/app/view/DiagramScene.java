@@ -28,7 +28,7 @@ public class DiagramScene extends Pane {
                 "-fx-background-color: #f8fffa,\n" +
                 "linear-gradient(from 0.5px 0.0px to 10.5px  0.0px, repeat, black 5%, transparent 5%),\n" +
                 "linear-gradient(from 0.0px 0.5px to  0.0px 10.5px, repeat, black 5%, transparent 5%)");
-        this.setMinSize(200, 500);
+        this.setMinSize(190, 515);
     }
     /**
      * Sets up the listeners for UI components of the view.

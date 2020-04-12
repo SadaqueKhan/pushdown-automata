@@ -121,7 +121,7 @@ public class MainScene extends BorderPane {
         segmentedButton.getButtons().addAll(toggleDiagramButton, toggleTransitionTableButton);
         toggleDiagramButton.setSelected(true);
         this.containerForCenterNodes = new VBox();
-        containerForCenterNodes.setPadding(new Insets(10, 10, 10, 10));
+        containerForCenterNodes.setPadding(new Insets(5, 5, 5, 5));
         containerForCenterNodes.setSpacing(5);
         containerForCenterNodes.setAlignment(Pos.TOP_CENTER);
         String cssLayout = "-fx-border-color: black;\n" +
