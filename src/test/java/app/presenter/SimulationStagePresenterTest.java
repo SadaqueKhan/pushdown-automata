@@ -108,24 +108,6 @@ public class SimulationStagePresenterTest extends ApplicationTest {
         );
     }
     @Test
-    public void pressingBackStepRunSimulationShouldUpdateDisplayBoardWithNewConfiguration() throws Exception {
-        Platform.runLater(
-                () -> {
-                    mainStagePresenter.setSimulationToStepRun();
-                    mainStagePresenter.loadSimulationStage("0011");
-                    SimulationStagePresenter simulationStagePresenter = mainStagePresenter.getSimulationStagePresenter();
-                    StepRunSimulationScene stepRunSimulationScene = simulationStagePresenter.getStepRunSimulationScene();
-                    ListView transitionOptionsListView = stepRunSimulationScene.getTransitionOptionsListView();
-                    transitionOptionsListView.getSelectionModel().select(1);
-                    simulationStagePresenter.stepForward();
-                    String configurationBeforeClickingBack = stepRunSimulationScene.getCurrentConfigTextField().getText();
-                    simulationStagePresenter.stepBackward();
-                    String configurationAfterClickingBack = stepRunSimulationScene.getCurrentConfigTextField().getText();
-                    assertFalse(configurationBeforeClickingBack.equals(configurationAfterClickingBack));
-                }
-        );
-    }
-    @Test
     public void clickingAlgorithmTabShouldRenderPathList() {
         Platform.runLater(
                 () -> {
