@@ -60,8 +60,7 @@ public class MainStagePresenter extends Application {
         diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
         this.primaryWindow = primaryWindow;
         this.primaryWindow.setTitle("Pushdown Automata");
-        this.primaryWindow.setScene(new Scene(mainScene, 1200, 800));
-        this.primaryWindow.setResizable(false);
+        this.primaryWindow.setScene(new Scene(mainScene, 1400, 800));
         this.primaryWindow.show();
         this.primaryWindow.setOnCloseRequest(event -> Platform.exit());
     }
@@ -204,8 +203,7 @@ public class MainStagePresenter extends Application {
                 diagramScenePresenter.loadTransitionsOntoDiagram();
                 diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
                 primaryWindow.setTitle("Pushdown Automata");
-                primaryWindow.setScene(new Scene(mainScene, 1200, 800));
-                primaryWindow.setResizable(false);
+                primaryWindow.setScene(new Scene(mainScene, 1400, 800));
                 primaryWindow.show();
             } catch (Exception e2) {
                 Alert invalidActionAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -314,8 +312,7 @@ public class MainStagePresenter extends Application {
         diagramScenePresenter.loadTransitionsOntoDiagram();
         diagramScenePresenter.loadDiagramViewOntoStage(transitionTableScenePresenter);
         primaryWindow.setTitle("Pushdown Automata");
-        primaryWindow.setScene(new Scene(mainScene, 1200, 800));
-        primaryWindow.setResizable(false);
+        primaryWindow.setScene(new Scene(mainScene, 1400, 800));
         primaryWindow.show();
     }
     // Getters to provide communication between scenes.
