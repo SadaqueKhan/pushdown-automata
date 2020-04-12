@@ -4,8 +4,6 @@ import app.model.StateModel;
 import app.model.TransitionModel;
 import app.view.MainScene;
 import app.view.StateNode;
-import app.view.TransitionNode;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
@@ -17,7 +15,6 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -111,20 +108,6 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         robot.press(KeyCode.ESCAPE);
     }
     @Test
-    public void toggleStateToFinalStateShouldUpdateMachineModel() throws Exception {
-        Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
-        StateModel stateModel = machineModel.getStateModelSet().stream().findFirst().orElse(null);
-        StateNode stateNode = stateMap.get(stateModel);
-        stateNode.relocate(50, 50);
-        FxRobot robot = new FxRobot();
-        robot.rightClickOn(stateNode).clickOn("#toggleFinalStateItem");
-        WaitForAsyncUtils.waitForFxEvents();
-        assertFalse(stateModel.isFinalState());
-        robot.rightClickOn(stateNode).clickOn("#toggleFinalStateItem");
-        WaitForAsyncUtils.waitForFxEvents();
-        assertEquals(true, stateModel.isFinalState());
-    }
-    @Test
     public void toggleStateToStandardStateShouldUpdateMachineModel() throws Exception {
         Map<StateModel, StateNode> stateMap = diagramScenePresenter.getStateMap();
         StateModel stateModel = machineModel.getStateModelSet().stream().findFirst().orElse(null);
@@ -205,23 +188,6 @@ public class DiagramScenePresenterTest extends ApplicationTest {
         FxRobot robot = new FxRobot();
         robot.drag(stateNode, MouseButton.PRIMARY).dropBy(100, 100);
         assertNotEquals(stateModelXCoordinateOnDiagramBeforeDragging, stateModel.getXCoordinateOnDiagram());
-    }
-    @Test
-    public void draggingDirectedTransitionsShouldUpdateTransitionModelCoordinate() throws Exception {
-        TransitionModel transitionModel = machineModel.getTransitionModelSet().stream().findFirst().orElse(null);
-        HashSet<Node> transitionViewSet = diagramScenePresenter.retrieveDirectionalTransitionView(transitionModel);
-        VBox transitionListVBox = null;
-        for (Node node : transitionViewSet) {
-            if (node instanceof TransitionNode) {
-                TransitionNode transitionNodeToUpdate = (TransitionNode) node;
-                transitionListVBox = transitionNodeToUpdate.getTransitionsListVBox();
-            }
-        }
-        transitionListVBox.relocate(50, 50);
-        double transitionModelXCoordinateOnDiagramBeforeDragging = transitionModel.getXCoordinateOnDiagram();
-        FxRobot robot = new FxRobot();
-        robot.drag(transitionListVBox, MouseButton.PRIMARY).dropBy(100, 100);
-        assertNotEquals(transitionModelXCoordinateOnDiagramBeforeDragging, transitionModel.getXCoordinateOnDiagram());
     }
     @Test
     public void draggingReflexiveTransitionsShouldUpdateTransitionModelCoordinate() throws Exception {

@@ -180,22 +180,6 @@ public class MainsStagePresenterTest extends ApplicationTest {
         assertNotNull(mainStagePresenter.getSimulationStagePresenter());
     }
     @Test
-    public void pressingSaveMenuItemShouldLaunchFileExplorer() throws Exception {
-        FxRobot robot = new FxRobot();
-        robot.clickOn("#fileMenu").clickOn("#saveMenuItem");
-        WaitForAsyncUtils.waitForFxEvents();
-        assertFalse(stage.isFocused());
-        robot.press(KeyCode.ESCAPE);
-    }
-    @Test
-    public void pressingLoadMenuItemShouldLaunchFileExplorer() throws Exception {
-        FxRobot robot = new FxRobot();
-        robot.clickOn("#fileMenu").clickOn("#loadMenuItem");
-        WaitForAsyncUtils.waitForFxEvents();
-        assertFalse(stage.isFocused());
-        robot.press(KeyCode.ESCAPE);
-    }
-    @Test
     public void pressingAcceptByFinalStateMenuItemShouldUpdateAcceptanceCriteria() throws Exception {
         FxRobot robot = new FxRobot();
         robot.clickOn("#acceptanceMenu").clickOn("#acceptanceByFinalStateMenuItem");

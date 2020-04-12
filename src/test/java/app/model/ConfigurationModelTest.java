@@ -47,11 +47,6 @@ public class ConfigurationModelTest {
         assertNull(simulationModel.getCurrentConfig().getParentConfiguration());
     }
     @Test
-    public void rootConfigurationBranchIdShouldBeOne() {
-        SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
-        assertEquals(1, simulationModel.getCurrentConfig().getBranch());
-    }
-    @Test
     public void rootConfigurationDepthIdShouldBeZero() {
         SimulationModel simulationModel = new SimulationModel(machineModel, "0011");
         assertEquals(0, simulationModel.getCurrentConfig().getDepth());
