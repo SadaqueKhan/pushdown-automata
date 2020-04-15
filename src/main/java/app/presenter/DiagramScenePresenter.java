@@ -341,10 +341,10 @@ public class DiagramScenePresenter {
             });
         });
         deleteStateItem.setOnAction(e -> {
-            //Notify transition table controller
-            transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
             //Update view
             deleteStateViewOnDiagramView(stateModelSelected);
+            //Notify transition table controller
+            transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
         });
         contextMenu.getItems().add(toggleStandardStateItem);
         contextMenu.getItems().add(toggleStartStateItem);
