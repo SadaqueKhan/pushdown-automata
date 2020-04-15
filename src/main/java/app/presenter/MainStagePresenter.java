@@ -1,5 +1,6 @@
 package app.presenter;
 import app.model.MachineModel;
+import app.model.StateModel;
 import app.view.MainScene;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -306,6 +307,7 @@ public class MainStagePresenter extends Application {
     public void newMachine() {
         primaryWindow.close();
         this.machineModel = new MachineModel();
+        StateModel.num = 0;
         this.mainScene = new MainScene(this);
         this.transitionTableScenePresenter = new TransitionTableScenePresenter(mainScene, machineModel);
         transitionTableScenePresenter.loadTransitionTableView();

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class StateModel {
-    private static int num = 0;
+    public static int num = 0;
     private String stateId;
     private boolean isStartState = false;
     private boolean isFinalState = false;
