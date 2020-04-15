@@ -197,6 +197,7 @@ public class MainStagePresenter extends Application {
                 MachineModel machineModelLoaded = (MachineModel) jaxbUnmarshaller.unmarshal(fileChosen);
                 primaryWindow.close();
                 this.machineModel = machineModelLoaded;
+                StateModel.num = 0;
                 this.mainScene = new MainScene(this);
                 this.transitionTableScenePresenter = new TransitionTableScenePresenter(mainScene, machineModel);
                 transitionTableScenePresenter.loadTransitionTableView();
