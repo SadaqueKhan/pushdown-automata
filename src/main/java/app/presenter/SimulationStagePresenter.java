@@ -169,6 +169,10 @@ public class SimulationStagePresenter {
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().remove(0);
         //Add the algorithm node to the center of the stage
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getAlgorithmlistView());
+        //Remove alterations of the main scene rendered from different scene
+        mainStagePresenter.updateStackScene(new ArrayList<>());
+        mainStagePresenter.updateTapeScene(0);
+        mainStagePresenter.getDiagramScenePresenter().removeHighlightedTransitionView();
     }
     /**
      * Handles the loading of the path scene onto the simulation stage.
@@ -179,7 +183,6 @@ public class SimulationStagePresenter {
         if (accordion.getPanes().isEmpty()) {
             //Get leaf configurations computed in the simulation model.
             ArrayList<ConfigurationModel> leafConfigurationPath = quickRunSimulationModel.getComputationPathArrayList();
-            accordion.getPanes().clear();
             int numPath = 0;
             for (ConfigurationModel leafConfigurationModel : leafConfigurationPath) {
                 ListView<ConfigurationModel> newListView = new ListView<>();
@@ -228,6 +231,10 @@ public class SimulationStagePresenter {
         }
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().remove(0);
         quickRunSimulationScene.getContainerForCenterNodes().getChildren().add(quickRunSimulationScene.getPathsScrollPane());
+        //Remove alterations of the main scene rendered from different scene
+        mainStagePresenter.updateStackScene(new ArrayList<>());
+        mainStagePresenter.updateTapeScene(0);
+        mainStagePresenter.getDiagramScenePresenter().removeHighlightedTransitionView();
     }
     /**
      * Handles the loading of a secondary stage to show the path from the root configuration node to the configuration
@@ -250,17 +257,15 @@ public class SimulationStagePresenter {
                             setText(null);
                             setStyle(null);
                         } else {
-                            String itemToPrint = "";
+                            String itemToPrint = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
                             String configurationReachedString = item.toString();
                             if (item.getParentConfiguration() == null) {
-                                // create the string for the root node configuration in the tree
+                                // Create the string for the root node configuration in the tree
                                 itemToPrint += " -> " + configurationReachedString;
                             } else {
                                 // Create string of the position of the configuration in the tree search
-                                String positionInTreeString = "depth " + item.getDepth() + ":branch " + item.getBranch() + ": ";
                                 String transitionTakenToReachConfigString = item.getTransitionModelTakenToReachCurrentConfiguration().toString();
-                                itemToPrint += positionInTreeString + transitionTakenToReachConfigString + " -> " +
-                                        configurationReachedString;
+                                itemToPrint += transitionTakenToReachConfigString + " -> " + configurationReachedString;
                             }
                             setText(itemToPrint);
                         }
@@ -280,6 +285,12 @@ public class SimulationStagePresenter {
         stage.setTitle(windowTitle);
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(event -> {
+            // Notify other scenes.
+            mainStagePresenter.updateStackScene(new ArrayList<>());
+            mainStagePresenter.updateTapeScene(0);
+            mainStagePresenter.getDiagramScenePresenter().removeHighlightedTransitionView();
+        });
     }
     /**
      * Moves the step run simulation forward to the next applicable configuration, by computing the next configuration
