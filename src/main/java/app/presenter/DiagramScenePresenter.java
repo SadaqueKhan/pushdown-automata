@@ -341,9 +341,9 @@ public class DiagramScenePresenter {
             });
         });
         deleteStateItem.setOnAction(e -> {
-            //Update view
-            deleteStateViewOnDiagramView(stateModelSelected);
-            //Notify transition table controller
+            //Update diagram view
+            deleteStateNodeOnDiagramView(stateModelSelected);
+            //Notify transition table controller to update transition table view
             transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
             //Update machine model.
             HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
@@ -353,7 +353,7 @@ public class DiagramScenePresenter {
             machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
             machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
             machineModel.removeStateModelFromStateModelSet(stateModelSelected);
-            //Notify transition table controller
+            //Notify transition table controller to update combo box form
             transitionTableScenePresenter.updateAvailableStateListForCombobox();
         });
         contextMenu.getItems().add(toggleStandardStateItem);
@@ -438,7 +438,7 @@ public class DiagramScenePresenter {
      * Handles deletion of a state node on the diagram scene.
      * @param stateModelToDelete requested to be deleted from the diagram scene.
      */
-    public void deleteStateViewOnDiagramView(StateModel stateModelToDelete) {
+    public void deleteStateNodeOnDiagramView(StateModel stateModelToDelete) {
         // Retrieve exiting/entering transition model linked to state model to be deleted.
         HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
                 (stateModelToDelete);
