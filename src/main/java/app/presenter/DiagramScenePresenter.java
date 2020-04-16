@@ -345,6 +345,16 @@ public class DiagramScenePresenter {
             deleteStateViewOnDiagramView(stateModelSelected);
             //Notify transition table controller
             transitionTableScenePresenter.deleteTransitionsLinkedToDeletedStateFromTransitionTable(stateModelSelected);
+            //Update machine model.
+            HashSet<TransitionModel> exitingTransitionsFromStateModel = getExitingTransitionsFromStateModel
+                    (stateModelSelected);
+            HashSet<TransitionModel> enteringTransitionsFromStateModel = getEnteringTransitionsFromStateModel
+                    (stateModelSelected);
+            machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
+            machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
+            machineModel.removeStateModelFromStateModelSet(stateModelSelected);
+            //Notify transition table controller
+            transitionTableScenePresenter.updateAvailableStateListForCombobox();
         });
         contextMenu.getItems().add(toggleStandardStateItem);
         contextMenu.getItems().add(toggleStartStateItem);
@@ -444,10 +454,6 @@ public class DiagramScenePresenter {
         linkedTransitionViewsMap.remove(stateNodeToRemove);
         //Remove the state view from the diagram view.
         diagramScene.getChildren().remove(stateNodeToRemove);
-        //Update machine model.
-        machineModel.removeTransitionModelsFromTransitionModelSet(exitingTransitionsFromStateModel);
-        machineModel.removeTransitionModelsFromTransitionModelSet(enteringTransitionsFromStateModel);
-        machineModel.removeStateModelFromStateModelSet(stateModelToDelete);
     }
     /**
      * Handles creation of an arrow tip and linking to a transition node.

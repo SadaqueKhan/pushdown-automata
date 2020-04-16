@@ -209,7 +209,6 @@ public class TransitionTableScenePresenter {
                 (stateModelToDelete);
         transitionTableScene.getTransitionTable().getItems().removeAll(exitingTransitionsFromStateModel);
         transitionTableScene.getTransitionTable().getItems().removeAll(enteringTransitionsFromStateModel);
-        updateAvailableStateListForCombobox();
     }
     /**
      * @param stateModel used to determine all entering transition model from a given state model.
