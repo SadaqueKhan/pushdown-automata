@@ -143,6 +143,15 @@ public class TransitionTableScenePresenter {
                 return;
             }
         }
+        if (getRelatedTransitions(newTransitionModel).size() == 5) {
+            // if transition exists alert the user and don't do anything further
+            Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                    "Limit of 5 related transitions has been reached.", ButtonType.OK);
+            invalidActionAlert.setHeaderText("Information");
+            invalidActionAlert.setTitle("Invalid Action");
+            invalidActionAlert.show();
+            return;
+        }
         //Add transition model into the transition model set found in the machine model.
         machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
         //Update transition table UI component found in transition table scene.
@@ -223,6 +232,28 @@ public class TransitionTableScenePresenter {
         }
         return enteringTransitionFromStateModelToReturn;
     }
+    /**
+     * Retrieves the transition models related to a given transition model.
+     * @param transitionModel used to determine all related transition model found in the transition model set in a
+     * machine model.
+     * @return {@code HashSet<TransitionModel>} of related transition models to a given transition model.
+     */
+    private HashSet<TransitionModel> getRelatedTransitions(TransitionModel transitionModel) {
+        HashSet<TransitionModel> relatedTransitionModelsToReturn = new HashSet<>();
+        StateModel currentStateModelToCompare = transitionModel.getCurrentStateModel();
+        StateModel resultingStateModelToCompare = transitionModel.getResultingStateModel();
+        for (TransitionModel isRelatedTransitionModel : machineModel.getTransitionModelSet()) {
+            StateModel currentStateModel = isRelatedTransitionModel.getCurrentStateModel();
+            StateModel resultingStateModel = isRelatedTransitionModel.getResultingStateModel();
+            if (isRelatedTransitionModel != transitionModel) {
+                if (currentStateModelToCompare.equals(currentStateModel) && resultingStateModelToCompare.equals(resultingStateModel)) {
+                    relatedTransitionModelsToReturn.add(isRelatedTransitionModel);
+                }
+            }
+        }
+        return relatedTransitionModelsToReturn;
+    }
+
     public TransitionTableScene getTransitionTableScene() {
         return transitionTableScene;
     }

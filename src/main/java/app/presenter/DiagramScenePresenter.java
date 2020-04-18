@@ -326,6 +326,15 @@ public class DiagramScenePresenter {
                         return;
                     }
                 }
+                if (getRelatedTransitions(newTransitionModel).size() == 5) {
+                    // if transition exists alert the user and don't do anything further
+                    Alert invalidActionAlert = new Alert(Alert.AlertType.NONE,
+                            "Limit of 5 related transitions has been reached.", ButtonType.OK);
+                    invalidActionAlert.setHeaderText("Information");
+                    invalidActionAlert.setTitle("Invalid Action");
+                    invalidActionAlert.show();
+                    return;
+                }
                 //Add transition model to machinemodel
                 machineModel.addTransitionModelToTransitionModelSet(newTransitionModel);
                 //Update transition table scene
@@ -429,8 +438,14 @@ public class DiagramScenePresenter {
             diagramScene.getChildren().add(sourceCell.getTransitionsListVBox());
             sourceCell.getTransitionsListVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
                     newTransitionModel.getYCoordinateOnDiagram());
+            sourceCell.getTransitionsListVBox().getChildren().add(new Label(newTransitionModel.toString()));
+            sourceCell.getReflexiveArrowShaftArc().setVisible(true);
+            sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
+            return;
         }
+
         sourceCell.getTransitionsListVBox().getChildren().add(new Label(newTransitionModel.toString()));
+        sourceCell.getTransitionsListVBox().relocate(0, 0);
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
         sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
     }
@@ -567,6 +582,7 @@ public class DiagramScenePresenter {
                     if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode() == resultingStateNode) {
                         VBox newTransitionListVBox = transitionNodeToCheck.getTransitionsListVBox();
                         newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
+                        newTransitionListVBox.relocate(0, 0);
                         return;
                     }
                 }
