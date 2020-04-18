@@ -205,28 +205,59 @@ public class SimulationModel {
         }
         currentConfig = previous;
     }
-    // Getters for data pretaining to a simulation found in the attributes of the class. ¬
+    /**
+     * Gets the current configuration of a computation
+     * @return {@code ConfigurationModel} of the current configuration of a computation.
+     */
     public ConfigurationModel getCurrentConfig() {
         return currentConfig;
     }
+    /**
+     * Gets the number of successful paths within a computation
+     * @return the integer value of the number successful paths of a computation.
+     */
     public int getNumOfPossibleSuccessPaths() {
         return numOfPossibleSuccessPaths;
     }
+    /**
+     * Gets the number of failed paths within a computation
+     * @return the integer value of the number failed paths of a computation.
+     */
     public int getNumOfPossibleFailPaths() {
         return numOfPossibleFailPaths;
     }
+    /**
+     * Gets the number of stuck paths within a computation
+     * @return the integer value of the number stuck paths of a computation.
+     */
     public int getNumOfPossibleStuckPaths() {
         return numOfPossibleStuckPaths;
     }
+    /**
+     * Gets the number of infinite paths within a computation
+     * @return the integer value of the number infinite paths of a computation.
+     */
     public int getNumOfPossibleInfinitePaths() {
         return numOfPossibleInfinitePaths;
     }
+    /**
+     * Check if the computation is NFA
+     * @return <tt>true</tt> if the computation is NFA
+     */
     public boolean isNFA() {
         return isNFA;
     }
+    /**
+     * Gets the nodes formed from a computation.
+     * @return an {@code ArrayList<ConfigurationModel>} of the nodes formed from a computation.
+     */
     public ArrayList<ConfigurationModel> getComputationTreeArrayList() {
         return computationTreeArrayList;
     }
+    /**
+     * Gets the leafs nodes formed from a computation.
+     * @return an {@code ArrayList<ConfigurationModel>} of the leaf nodes formed from a computation.
+     */
     public ArrayList<ConfigurationModel> getComputationPathArrayList() {
         return computationPathArrayList;
     }
