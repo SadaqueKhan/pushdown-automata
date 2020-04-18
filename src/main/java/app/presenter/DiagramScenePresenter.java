@@ -130,18 +130,11 @@ public class DiagramScenePresenter {
         newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram);
         newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram);
         if (yCoordinateOnDiagram >= 475) {
-            System.out.println("Ypost: " + yCoordinateOnDiagram);
             newStateModel.setYCoordinateOnDiagram(yCoordinateOnDiagram - 100);
-            System.out.println("Yafterr: " + newStateModel.getYCoordinateOnDiagram());
         }
-        System.out.println("XOutpost: " + xCoordinateOnDiagram);
         if (xCoordinateOnDiagram >= 1115) {
-            System.out.println("Xpost: " + xCoordinateOnDiagram);
             newStateModel.setXCoordinateOnDiagram(xCoordinateOnDiagram - 100);
-            System.out.println("Xafter: " + newStateModel.getXCoordinateOnDiagram());
         }
-
-
         machineModel.addStateModelToStateModelSet(newStateModel);
         addStateViewOntoDiagramView(newStateModel);
         transitionTableScenePresenter.updateAvailableStateListForCombobox();
@@ -156,8 +149,27 @@ public class DiagramScenePresenter {
             //Add transitionview onto diagram view
             if (currentStateModelToLoadID.equals(resultingStateModelToLoadID)) {
                 addReflexiveTransitionToDiagramView(transitionModelToLoad);
+                StateNode sourceCell = stateMap.get(transitionModelToLoad.getCurrentStateModel());
+                sourceCell.getTransitionsListVBox().relocate(transitionModelToLoad.getXCoordinateOnDiagram(),
+                        transitionModelToLoad.getYCoordinateOnDiagram());
             } else {
+                // Add the transition node onto the location saved
                 addDirectionalTransitionToView(transitionModelToLoad);
+                //Relocate related transitions VBox to saved coordinates
+                StateNode currentStateNode = stateMap.get(transitionModelToLoad.getCurrentStateModel());
+                StateNode resultingStateNode = stateMap.get(transitionModelToLoad.getResultingStateModel());
+                HashSet<HashSet<Node>> linkedTransitionViews = linkedTransitionViewsMap.get(currentStateNode);
+                for (HashSet<Node> nextHashSet : linkedTransitionViews) {
+                    for (Node node : nextHashSet) {
+                        if (node instanceof TransitionNode) {
+                            TransitionNode transitionNodeToCheck = (TransitionNode) node;
+                            if (transitionNodeToCheck.getResultingStateNode() == resultingStateNode) {
+                                VBox newTransitionListVBox = transitionNodeToCheck.getTransitionsListVBox();
+                                newTransitionListVBox.relocate(transitionModelToLoad.getXCoordinateOnDiagram(), transitionModelToLoad.getYCoordinateOnDiagram());
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -436,14 +448,7 @@ public class DiagramScenePresenter {
             });
             sourceCell.setTransitionsListVBox(newTransitionsListVBox);
             diagramScene.getChildren().add(sourceCell.getTransitionsListVBox());
-            sourceCell.getTransitionsListVBox().relocate(newTransitionModel.getXCoordinateOnDiagram(),
-                    newTransitionModel.getYCoordinateOnDiagram());
-            sourceCell.getTransitionsListVBox().getChildren().add(new Label(newTransitionModel.toString()));
-            sourceCell.getReflexiveArrowShaftArc().setVisible(true);
-            sourceCell.getReflexiveArrowTipPolygon().setVisible(true);
-            return;
         }
-
         sourceCell.getTransitionsListVBox().getChildren().add(new Label(newTransitionModel.toString()));
         sourceCell.getTransitionsListVBox().relocate(0, 0);
         sourceCell.getReflexiveArrowShaftArc().setVisible(true);
@@ -579,7 +584,7 @@ public class DiagramScenePresenter {
             for (Node node : nextHashSet) {
                 if (node instanceof TransitionNode) {
                     TransitionNode transitionNodeToCheck = (TransitionNode) node;
-                    if (transitionNodeToCheck.getCurrentStateNode() == currentStateNode && transitionNodeToCheck.getResultingStateNode() == resultingStateNode) {
+                    if (transitionNodeToCheck.getResultingStateNode() == resultingStateNode) {
                         VBox newTransitionListVBox = transitionNodeToCheck.getTransitionsListVBox();
                         newTransitionListVBox.getChildren().add(new Label(newTransitionModel.toString()));
                         newTransitionListVBox.relocate(0, 0);
