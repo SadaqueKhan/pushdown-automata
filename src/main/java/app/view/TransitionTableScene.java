@@ -90,6 +90,16 @@ public class TransitionTableScene extends BorderPane {
         currentStateComboBox.setId("currentStateComboBox");
         currentStateComboBox.setEditable(true);
         currentStateComboBox.setPrefWidth(110);
+        currentStateComboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
+                Platform.runLater(() -> {
+                    currentStateComboBox.getEditor().clear();
+                });
+            }
+        });
         gridPane.add(new Label("Current State"), 1, 1);
         gridPane.add(currentStateComboBox, 1, 2);
         this.inputSymbolComboBox = new ComboBox<>();
@@ -115,6 +125,16 @@ public class TransitionTableScene extends BorderPane {
         resultingStateComboBox.setId("resultingStateComboBox");
         resultingStateComboBox.setEditable(true);
         resultingStateComboBox.setPrefWidth(110);
+        resultingStateComboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
+                Platform.runLater(() -> {
+                    resultingStateComboBox.getEditor().clear();
+                });
+            }
+        });
         gridPane.add(new Label("Resulting State"), 5, 1);
         gridPane.add(resultingStateComboBox, 5, 2);
         this.stackSymbolToPushComboBox = new ComboBox<>();
@@ -160,12 +180,11 @@ public class TransitionTableScene extends BorderPane {
             if (newValue == null) {
                 return;
             }
-            if ((newValue.length() == 1) || newValue.equals("\u03B5")) {
-                return;
+            if ((newValue.length() == 2) || newValue.equals("\u03B5")) {
+                Platform.runLater(() -> {
+                    comboBox.getEditor().clear();
+                });
             }
-            Platform.runLater(() -> {
-                comboBox.getEditor().clear();
-            });
         });
     }
     // Getters for UI components of the view.

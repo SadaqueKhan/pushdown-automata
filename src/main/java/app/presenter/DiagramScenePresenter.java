@@ -268,6 +268,16 @@ public class DiagramScenePresenter {
                 availableStateList.add(availableStateModel.getStateId());
             }
             resultingStateComboBox.getItems().addAll(availableStateList);
+            resultingStateComboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    return;
+                }
+                if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
+                    Platform.runLater(() -> {
+                        resultingStateComboBox.getEditor().clear();
+                    });
+                }
+            });
             gridPane.add(new Label("Resulting State"), 5, 1);
             gridPane.add(resultingStateComboBox, 5, 2);
             ComboBox<String> stackSymbolToPushComboBox = new ComboBox<>();
@@ -562,12 +572,11 @@ public class DiagramScenePresenter {
             if (newValue == null) {
                 return;
             }
-            if ((newValue.length() == 1 || newValue.equals("\u03B5"))) {
-                return;
+            if ((newValue.length() == 2 || newValue.equals("\u03B5"))) {
+                Platform.runLater(() -> {
+                    comboBox.getEditor().clear();
+                });
             }
-            Platform.runLater(() -> {
-                comboBox.getEditor().clear();
-            });
         });
     }
     //StateGUIEventResponses
