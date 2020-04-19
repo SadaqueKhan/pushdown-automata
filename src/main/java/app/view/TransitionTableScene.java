@@ -93,6 +93,10 @@ public class TransitionTableScene extends BorderPane {
             if (newValue == null) {
                 return;
             }
+            if (newValue.contains(" ")) {
+                currentStateComboBox.getEditor().setText(oldValue);
+                return;
+            }
             if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
                 currentStateComboBox.getEditor().setText(oldValue);
             }
@@ -124,6 +128,10 @@ public class TransitionTableScene extends BorderPane {
         resultingStateComboBox.setPrefWidth(110);
         resultingStateComboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
+                return;
+            }
+            if (newValue.contains(" ")) {
+                resultingStateComboBox.getEditor().setText(oldValue);
                 return;
             }
             if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
@@ -173,6 +181,10 @@ public class TransitionTableScene extends BorderPane {
     private void setUpComboBoxesListeners(ComboBox comboBox) {
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
+                return;
+            }
+            if (newValue.contains(" ")) {
+                comboBox.getEditor().setText(oldValue);
                 return;
             }
             if ((newValue.length() == 2) || newValue.equals("\u03B5")) {

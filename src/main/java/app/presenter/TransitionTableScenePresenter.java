@@ -253,7 +253,6 @@ public class TransitionTableScenePresenter {
         }
         return relatedTransitionModelsToReturn;
     }
-
     public TransitionTableScene getTransitionTableScene() {
         return transitionTableScene;
     }

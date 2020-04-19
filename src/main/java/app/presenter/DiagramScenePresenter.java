@@ -7,7 +7,6 @@ import app.view.DiagramScene;
 import app.view.MainScene;
 import app.view.StateNode;
 import app.view.TransitionNode;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -272,10 +271,12 @@ public class DiagramScenePresenter {
                 if (newValue == null) {
                     return;
                 }
+                if (newValue.contains(" ")) {
+                    resultingStateComboBox.getEditor().setText(oldValue);
+                    return;
+                }
                 if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
-                    Platform.runLater(() -> {
-                        resultingStateComboBox.getEditor().clear();
-                    });
+                    resultingStateComboBox.getEditor().setText(oldValue);
                 }
             });
             gridPane.add(new Label("Resulting State"), 5, 1);
@@ -572,10 +573,12 @@ public class DiagramScenePresenter {
             if (newValue == null) {
                 return;
             }
-            if ((newValue.length() == 2 || newValue.equals("\u03B5"))) {
-                Platform.runLater(() -> {
-                    comboBox.getEditor().clear();
-                });
+            if (newValue.contains(" ")) {
+                comboBox.getEditor().setText(oldValue);
+                return;
+            }
+            if ((newValue.length() == 2) || newValue.equals("\u03B5")) {
+                comboBox.getEditor().setText(oldValue);
             }
         });
     }
