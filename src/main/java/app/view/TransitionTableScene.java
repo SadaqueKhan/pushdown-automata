@@ -2,7 +2,6 @@ package app.view;
 import app.listener.TransitionTableSceneListener;
 import app.model.TransitionModel;
 import app.presenter.TransitionTableScenePresenter;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -95,9 +94,7 @@ public class TransitionTableScene extends BorderPane {
                 return;
             }
             if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
-                Platform.runLater(() -> {
-                    currentStateComboBox.getEditor().clear();
-                });
+                currentStateComboBox.getEditor().setText(oldValue);
             }
         });
         gridPane.add(new Label("Current State"), 1, 1);
@@ -130,9 +127,7 @@ public class TransitionTableScene extends BorderPane {
                 return;
             }
             if ((newValue.length() == 6) || newValue.equals("\u03B5")) {
-                Platform.runLater(() -> {
-                    resultingStateComboBox.getEditor().clear();
-                });
+                resultingStateComboBox.getEditor().setText(oldValue);
             }
         });
         gridPane.add(new Label("Resulting State"), 5, 1);
@@ -181,9 +176,7 @@ public class TransitionTableScene extends BorderPane {
                 return;
             }
             if ((newValue.length() == 2) || newValue.equals("\u03B5")) {
-                Platform.runLater(() -> {
-                    comboBox.getEditor().clear();
-                });
+                comboBox.getEditor().setText(oldValue);
             }
         });
     }
