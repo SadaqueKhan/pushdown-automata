@@ -47,11 +47,11 @@ _**Disclaimer:**_ **MUST** have the installed the prerequisites specified in the
 3.	Run the commands below to either execute the program or create a JAR
 
 ### Command to run the program
-**Option 1:**
+**Option 1 -**
 
 Executable JAR is pre-configured with the program directory. Double-clicking the JAR is sufficient to run the program. May need to adjust security to allow installation of the program on specific operating systems. Steps in how to do this should be provided by the operating system. 
 
-**Option 2:**
+**Option 2 -**
 
 `mvn exec:java -Dexec.mainClass="app.presenter.MainStagePresenter"`
 
