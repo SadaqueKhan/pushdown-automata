@@ -52,7 +52,7 @@ _**Disclaimer:**_ **MUST** have the installed the prerequisites specified in the
 Executable JAR is pre-configured with the program directory. Double-clicking the JAR is sufficient to run the program. May need to adjust security to allow installation of the program on specific operating systems. Steps in how to do this should be provided by the operating system. 
 
 **Option 2 -**
-
+`mvn clean compile`
 `mvn exec:java -Dexec.mainClass="app.presenter.MainStagePresenter"`
 
 
@@ -74,7 +74,6 @@ _**Disclaimer:**_ **MUST** have the installed the prerequisites specified in the
 3.	Run the below command to execute the tests for the program
 
 ### Command to run the tests
- 
 `mvn test`
 
 # User Guide
