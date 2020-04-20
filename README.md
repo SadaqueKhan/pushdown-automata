@@ -74,3 +74,29 @@ _**Disclaimer:**_ **MUST** have the installed the prerequisites specified in the
 ### Command to run the tests
  
 `mvn test`
+
+# User Guide
+
+[Creating state onto the state diagram.](https://www.youtube.com/watch?v=ohl_LHHfhf4&feature=youtu.be)
+
+[Creating transition onto the state diagram.](https://youtu.be/tMjc_vaEHlE)
+
+[Creating transitions onto the transition table.](https://youtu.be/ZaheIuI1wxY)
+
+[Removing a state from the state diagram.](https://youtu.be/lPCrkA7tvH4)
+
+[Removing a transition from the state diagram.](https://youtu.be/GQOp5PHeiBQ)
+
+[Dragging a state on the state diagram.](https://youtu.be/wDy0bl3sFgM)
+
+[Changing the type of a state.](https://youtu.be/6HDGtL_KZUw)
+
+[Changing acceptance mode of the machine.](https://youtu.be/lZg7plPf5VU)
+
+[Executing quick run simulation of a machine.](https://youtu.be/bNuHzc3VE3A)
+
+[Executing step run simulation of a machine.](https://youtu.be/AvYBnWf3aY4)
+
+[Saving a machine.](https://youtu.be/NTFECOGyu6U)
+
+[Loading a machine.](https://youtu.be/blwCrKSUSuc)
